@@ -86,9 +86,9 @@ namespace AlienEngine.ASL
 
         private TypeDefinition _shader;
 
-        internal ASLShader()
+        public ASLShader()
         {
-            _shader = _loadReflection(GetType());
+            _shader = _loadReflection();
         }
 
         private static readonly Dictionary<string, string> _globalNames = new Dictionary<string, string>();
@@ -352,8 +352,9 @@ namespace AlienEngine.ASL
             return methods;
         }
 
-        private static TypeDefinition _loadReflection(Type t)
+        private TypeDefinition _loadReflection()
         {
+            var t = GetType();
             var resolver = new DefaultAssemblyResolver();
             resolver.AddSearchDirectory(Path.GetDirectoryName(t.Assembly.Location));
             resolver.AddSearchDirectory(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
