@@ -20,6 +20,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -67,6 +68,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="StructTypeConverter.cs" />
+    <Compile Include="Time.cs" />
     <None Include="packages.config" />
     <Compile Include="Class1.cs" />
     <Compile Include="Graphics\Shaders\ASL\ASLException.cs" />
@@ -76,7 +79,6 @@
     <Compile Include="Graphics\Shaders\ASL\ASLShader.Matrices.cs" />
     <Compile Include="Graphics\Shaders\ASL\ASLShader.Samplers.cs" />
     <Compile Include="Graphics\Shaders\ASL\ASLShader.Vectors.cs" />
-    <Compile Include="Graphics\Shaders\ASL\ASLShaderAttribute.cs" />
     <Compile Include="Graphics\Shaders\ASL\ASLShaderAttributeHelper.cs" />
     <Compile Include="Graphics\Shaders\ASL\ASLShaderCompiler.cs" />
     <Compile Include="Graphics\Shaders\ASL\ASLShaderStruct.cs" />
@@ -103,6 +105,7 @@
     <Compile Include="Graphics\Shaders\ASL\TessellationEvaluationShader.cs" />
     <Compile Include="Graphics\Shaders\ASL\VertexShader.cs" />
     <Compile Include="Graphics\Shaders\ASL\VertexShader.LayoutAttribute.cs" />
+    <Compile Include="ILoadFromString.cs" />
     <Compile Include="Math\DualQuaternion.cs" />
     <Compile Include="Math\MathHelper.cs" />
     <Compile Include="Math\Matrix2f.cs" />
