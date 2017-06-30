@@ -8,9 +8,9 @@ namespace AlienEngine.ASL
         /// ASL Shader attribute used to define size of arrays.
         /// </summary>
         [AttributeUsage(AttributeTargets.ReturnValue | AttributeTargets.Field | AttributeTargets.Parameter | AttributeTargets.Property, AllowMultiple = false)]
-        public class ArraySizeAttribute : Attribute
+        public sealed class ArraySizeAttribute : Attribute
         {
-            protected int _arraySize;
+            private int _arraySize;
 
             public ArraySizeAttribute(int size)
             {
@@ -20,7 +20,7 @@ namespace AlienEngine.ASL
             public int ArraySize
             {
                 get { return _arraySize; }
-                protected set
+                private set
                 {
                     _arraySize = value > 0 ? value : 0;
                 }
@@ -53,8 +53,8 @@ namespace AlienEngine.ASL
         /// <summary>
         /// ASL Shader attribute used to enable debug capabilities when compiling the GLSL code.
         /// </summary>
-        [AttributeUsage(AttributeTargets.Class)]
-        public class DebugAttribute : Attribute
+        [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
+        public sealed class DebugAttribute : Attribute
         {
             public DebugAttribute(bool debug)
             {
@@ -68,7 +68,7 @@ namespace AlienEngine.ASL
         /// ASL Shader attribute used to enable GLSL extensions.
         /// </summary>
         [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
-        public class ExtensionAttribute : Attribute
+        public sealed class ExtensionAttribute : Attribute
         {
             internal string ExtensionName { get; private set; }
 
@@ -110,7 +110,7 @@ namespace AlienEngine.ASL
         /// ASL Shader attribute used to define the version of the compiled GLSL code.
         /// </summary>
         [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
-        public class VersionAttribute : Attribute
+        public sealed class VersionAttribute : Attribute
         {
             private int _v = DefaultShaderVersion;
 
@@ -123,6 +123,26 @@ namespace AlienEngine.ASL
             {
                 get { return _v; }
                 private set { _v = value; }
+            }
+        }
+
+        /// <summary>
+        /// ASL Shader attribute used to include parts of GLSL codes.
+        /// </summary>
+        [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
+        public sealed class IncludeAttribute : Attribute
+        {
+            internal string IncludeName { get; private set; }
+            internal Type IncludeType { get; private set; }
+
+            public IncludeAttribute(string extensionName)
+            {
+                IncludeName = extensionName;
+            }
+
+            public IncludeAttribute(Type extensionType)
+            {
+                IncludeType = extensionType;
             }
         }
     }
