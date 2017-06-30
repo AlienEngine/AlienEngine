@@ -93,7 +93,7 @@ namespace AlienEngine.ASL
                 var trans1 = new ReplaceMethodCallsWithOperators(ctx);
                 var trans2 = new RenameLocals();
                 ((IAstTransform)trans1).Run(block);
-                // trans2.Run(block);
+                trans2.Run(block);
 
                 Result = block.AcceptVisitor(this, 0).ToString();
                 Result += Environment.NewLine;
