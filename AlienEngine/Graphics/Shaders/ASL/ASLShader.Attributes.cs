@@ -135,14 +135,14 @@ namespace AlienEngine.ASL
             internal string IncludeName { get; private set; }
             internal Type IncludeType { get; private set; }
 
-            public IncludeAttribute(string extensionName)
+            public IncludeAttribute(string includeName)
             {
-                IncludeName = extensionName;
+                IncludeName = includeName;
             }
 
-            public IncludeAttribute(Type extensionType)
+            public IncludeAttribute(Type includeType)
             {
-                IncludeType = extensionType;
+                IncludeType = includeType;
             }
         }
     }
