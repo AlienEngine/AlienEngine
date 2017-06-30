@@ -5,7 +5,7 @@ namespace AlienEngine.ASL
     public abstract partial class GeometryShader
     {
         [AttributeUsage(AttributeTargets.Field | AttributeTargets.Struct, AllowMultiple = false)]
-        public sealed class LayoutAttribute : ASLShaderAttribute
+        public sealed class LayoutAttribute : Attribute
         {
             public int MaxVertices { get; set; }
             public InputLayout InputID { get; private set; }

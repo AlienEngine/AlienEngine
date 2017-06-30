@@ -9,7 +9,6 @@ namespace AlienEngine.ASL
 
         private static readonly int[] _attribToken = new[]
         {
-            typeof(ASLShader.VaryingAttribute).MetadataToken,
             typeof(ASLShader.InAttribute).MetadataToken,
             typeof(ASLShader.OutAttribute).MetadataToken,
             typeof(ASLShader.BuiltInAttribute).MetadataToken
@@ -20,24 +19,19 @@ namespace AlienEngine.ASL
             return t.Resolve().MetadataToken.ToInt32() == _uniformToken;
         }
 
-        public static bool IsVarying(this TypeReference t)
+        public static bool IsIn(this TypeReference t)
         {
             return t.Resolve().MetadataToken.ToInt32() == _attribToken[0];
         }
 
-        public static bool IsIn(this TypeReference t)
+        public static bool IsOut(this TypeReference t)
         {
             return t.Resolve().MetadataToken.ToInt32() == _attribToken[1];
         }
 
-        public static bool IsOut(this TypeReference t)
-        {
-            return t.Resolve().MetadataToken.ToInt32() == _attribToken[2];
-        }
-
         public static bool IsBuiltIn(this TypeReference t)
         {
-            return t.Resolve().MetadataToken.ToInt32() == _attribToken[3];
+            return t.Resolve().MetadataToken.ToInt32() == _attribToken[2];
         }
 
         public static bool IsAttribute(this TypeReference t)

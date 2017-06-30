@@ -5,7 +5,7 @@ namespace AlienEngine.ASL
     public abstract partial class FragmentShader
     {
         [AttributeUsage(AttributeTargets.Field | AttributeTargets.Struct, AllowMultiple = false)]
-        public sealed class LayoutAttribute : ASLShaderAttribute
+        public sealed class LayoutAttribute : Attribute
         {
             public int Location { get; set; }
             public int Index { get; set; }
