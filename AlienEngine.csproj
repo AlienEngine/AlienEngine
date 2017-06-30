@@ -30,7 +30,34 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ICSharpCode.NRefactory">
+      <HintPath>packages\ICSharpCode.NRefactory.5.5.1\lib\Net40\ICSharpCode.NRefactory.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.NRefactory.Cecil">
+      <HintPath>packages\ICSharpCode.NRefactory.5.5.1\lib\Net40\ICSharpCode.NRefactory.Cecil.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.NRefactory.CSharp">
+      <HintPath>packages\ICSharpCode.NRefactory.5.5.1\lib\Net40\ICSharpCode.NRefactory.CSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.NRefactory.Xml">
+      <HintPath>packages\ICSharpCode.NRefactory.5.5.1\lib\Net40\ICSharpCode.NRefactory.Xml.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.Decompiler">
+      <HintPath>packages\ICSharpCode.Decompiler.2.3.1\lib\Net40\ICSharpCode.Decompiler.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="Mono.Cecil">
+      <HintPath>packages\Mono.Cecil.0.9.6.4\lib\net40\Mono.Cecil.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil.Mdb">
+      <HintPath>packages\Mono.Cecil.0.9.6.4\lib\net40\Mono.Cecil.Mdb.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil.Pdb">
+      <HintPath>packages\Mono.Cecil.0.9.6.4\lib\net40\Mono.Cecil.Pdb.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil.Rocks">
+      <HintPath>packages\Mono.Cecil.0.9.6.4\lib\net40\Mono.Cecil.Rocks.dll</HintPath>
+    </Reference>
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -40,7 +67,42 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="packages.config" />
     <Compile Include="Class1.cs" />
+    <Compile Include="Graphics\Shaders\ASL\ASLException.cs" />
+    <Compile Include="Graphics\Shaders\ASL\ASLShader.Attributes.cs" />
+    <Compile Include="Graphics\Shaders\ASL\ASLShader.cs" />
+    <Compile Include="Graphics\Shaders\ASL\ASLShader.Functions.cs" />
+    <Compile Include="Graphics\Shaders\ASL\ASLShader.Matrices.cs" />
+    <Compile Include="Graphics\Shaders\ASL\ASLShader.Samplers.cs" />
+    <Compile Include="Graphics\Shaders\ASL\ASLShader.Vectors.cs" />
+    <Compile Include="Graphics\Shaders\ASL\ASLShaderAttribute.cs" />
+    <Compile Include="Graphics\Shaders\ASL\ASLShaderAttributeHelper.cs" />
+    <Compile Include="Graphics\Shaders\ASL\ASLShaderCompiler.cs" />
+    <Compile Include="Graphics\Shaders\ASL\ASLShaderStruct.cs" />
+    <Compile Include="Graphics\Shaders\ASL\ASLShaderVariable.cs" />
+    <Compile Include="Graphics\Shaders\ASL\ConstAttribute.cs" />
+    <Compile Include="Graphics\Shaders\ASL\FragmentShader.cs" />
+    <Compile Include="Graphics\Shaders\ASL\FragmentShader.InputLayoutQualifiers.cs" />
+    <Compile Include="Graphics\Shaders\ASL\FragmentShader.LayoutAttribute.cs" />
+    <Compile Include="Graphics\Shaders\ASL\GeometryShader.cs" />
+    <Compile Include="Graphics\Shaders\ASL\GeometryShader.InputLayoutQualifiers.cs" />
+    <Compile Include="Graphics\Shaders\ASL\GeometryShader.LayoutAttribute.cs" />
+    <Compile Include="Graphics\Shaders\ASL\GeometryShader.OutputLayoutQualifiers.cs" />
+    <Compile Include="Graphics\Shaders\ASL\GLSL.cs" />
+    <Compile Include="Graphics\Shaders\ASL\GLSLVisitor.cs" />
+    <Compile Include="Graphics\Shaders\ASL\GLSLVisitor.NotImplemented.cs" />
+    <Compile Include="Graphics\Shaders\ASL\GLSLVisitorBase.Abstract.cs" />
+    <Compile Include="Graphics\Shaders\ASL\GLSLVisitorBase.cs" />
+    <Compile Include="Graphics\Shaders\ASL\GLSLVisitorBase.Illegal.cs" />
+    <Compile Include="Graphics\Shaders\ASL\GLSLVisitorBase.Unsupported.cs" />
+    <Compile Include="Graphics\Shaders\ASL\RenameLocals.cs" />
+    <Compile Include="Graphics\Shaders\ASL\RenderShader.cs" />
+    <Compile Include="Graphics\Shaders\ASL\RenderShader.UniformLayoutQualifiers.cs" />
+    <Compile Include="Graphics\Shaders\ASL\TessellationControlShader.cs" />
+    <Compile Include="Graphics\Shaders\ASL\TessellationEvaluationShader.cs" />
+    <Compile Include="Graphics\Shaders\ASL\VertexShader.cs" />
+    <Compile Include="Graphics\Shaders\ASL\VertexShader.LayoutAttribute.cs" />
     <Compile Include="Math\DualQuaternion.cs" />
     <Compile Include="Math\MathHelper.cs" />
     <Compile Include="Math\Matrix2f.cs" />
