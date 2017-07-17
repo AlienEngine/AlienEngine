@@ -25,7 +25,7 @@ namespace AlienEngine.ASL
             public static bvec2 operator -(bvec2 left, bvec2 right) { throw new NotImplementedException(); }
             public static bvec2 operator *(bvec2 left, bvec2 right) { throw new NotImplementedException(); }
             public static bvec2 operator /(bvec2 left, bvec2 right) { throw new NotImplementedException(); }
-            
+
             public bvec2 xx { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
             public bvec2 xy { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
             public bvec2 yx { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
@@ -71,7 +71,7 @@ namespace AlienEngine.ASL
             public int s { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
             public int t { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
 
-            public int this[int item]{ get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+            public int this[int item] { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
 
             public static ivec2 operator +(ivec2 left, ivec2 right) { throw new NotImplementedException(); }
             public static ivec2 operator -(ivec2 left, ivec2 right) { throw new NotImplementedException(); }
@@ -79,7 +79,15 @@ namespace AlienEngine.ASL
             public static ivec2 operator /(ivec2 left, ivec2 right) { throw new NotImplementedException(); }
 
             public static implicit operator vec2(ivec2 v) { throw new NotImplementedException(); }
-            
+
+            public ivec2 rr { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+            public ivec2 rg { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+            public ivec2 gr { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+            public ivec2 gg { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+            public ivec2 ss { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+            public ivec2 st { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+            public ivec2 ts { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+            public ivec2 tt { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
             public ivec2 xx { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
             public ivec2 xy { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
             public ivec2 yx { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
@@ -125,7 +133,7 @@ namespace AlienEngine.ASL
             public uint s { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
             public uint t { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
 
-            public uint this[int item]{ get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+            public uint this[int item] { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
 
             public static uvec2 operator +(uvec2 left, uvec2 right) { throw new NotImplementedException(); }
             public static uvec2 operator -(uvec2 left, uvec2 right) { throw new NotImplementedException(); }
@@ -133,7 +141,15 @@ namespace AlienEngine.ASL
             public static uvec2 operator /(uvec2 left, uvec2 right) { throw new NotImplementedException(); }
 
             public static implicit operator vec2(uvec2 v) { throw new NotImplementedException(); }
-            
+
+            public uvec2 rr { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+            public uvec2 rg { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+            public uvec2 gr { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+            public uvec2 gg { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+            public uvec2 ss { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+            public uvec2 st { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+            public uvec2 ts { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+            public uvec2 tt { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
             public uvec2 xx { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
             public uvec2 xy { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
             public uvec2 yx { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
@@ -179,16 +195,25 @@ namespace AlienEngine.ASL
             public float s { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
             public float t { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
 
-            public float this[int item]{ get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+            public float this[int item] { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
 
             public static vec2 operator +(vec2 left, vec2 right) { throw new NotImplementedException(); }
+            public static vec2 operator -(vec2 vec) { throw new NotImplementedException(); }
             public static vec2 operator -(vec2 left, vec2 right) { throw new NotImplementedException(); }
             public static vec2 operator *(vec2 left, vec2 right) { throw new NotImplementedException(); }
             public static vec2 operator *(vec2 left, float right) { throw new NotImplementedException(); }
             public static vec2 operator *(float left, vec2 right) { throw new NotImplementedException(); }
-			public static vec2 operator /(vec2 left, vec2 right) { throw new NotImplementedException(); }
+            public static vec2 operator /(vec2 left, vec2 right) { throw new NotImplementedException(); }
             public static vec2 operator /(vec2 left, float right) { throw new NotImplementedException(); }
-            
+
+            public vec2 rr { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+            public vec2 rg { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+            public vec2 gr { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+            public vec2 gg { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+            public vec2 ss { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+            public vec2 st { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+            public vec2 ts { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+            public vec2 tt { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
             public vec2 xx { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
             public vec2 xy { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
             public vec2 yx { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
@@ -234,7 +259,7 @@ namespace AlienEngine.ASL
             public double s { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
             public double t { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
 
-            public double this[int item]{ get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+            public double this[int item] { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
 
             public static dvec2 operator +(dvec2 left, dvec2 right) { throw new NotImplementedException(); }
             public static dvec2 operator -(dvec2 left, dvec2 right) { throw new NotImplementedException(); }
@@ -291,7 +316,7 @@ namespace AlienEngine.ASL
             public bool t { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
             public bool p { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
 
-            public bool this[int item]{ get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+            public bool this[int item] { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
 
             public static bvec3 operator +(bvec3 left, bvec3 right) { throw new NotImplementedException(); }
             public static bvec3 operator -(bvec3 left, bvec3 right) { throw new NotImplementedException(); }
@@ -438,7 +463,7 @@ namespace AlienEngine.ASL
             public int t { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
             public int p { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
 
-            public int this[int item]{ get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+            public int this[int item] { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
 
             public static ivec3 operator +(ivec3 left, ivec3 right) { throw new NotImplementedException(); }
             public static ivec3 operator -(ivec3 left, ivec3 right) { throw new NotImplementedException(); }
@@ -586,7 +611,7 @@ namespace AlienEngine.ASL
             public uint t { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
             public uint p { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
 
-            public uint this[int item]{ get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+            public uint this[int item] { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
 
             public static uvec3 operator +(uvec3 left, uvec3 right) { throw new NotImplementedException(); }
             public static uvec3 operator -(uvec3 left, uvec3 right) { throw new NotImplementedException(); }
@@ -734,16 +759,17 @@ namespace AlienEngine.ASL
             public float t { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
             public float p { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
 
-            public float this[int item]{ get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+            public float this[int item] { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
 
             public static vec3 operator +(vec3 left, vec3 right) { throw new NotImplementedException(); }
             public static vec3 operator -(vec3 left, vec3 right) { throw new NotImplementedException(); }
+            public static vec3 operator -(vec3 vec) { throw new NotImplementedException(); }
             public static vec3 operator *(vec3 left, vec3 right) { throw new NotImplementedException(); }
             public static vec3 operator *(vec3 left, float right) { throw new NotImplementedException(); }
             public static vec3 operator *(float left, vec3 right) { throw new NotImplementedException(); }
-			public static vec3 operator /(vec3 left, vec3 right) { throw new NotImplementedException(); }
+            public static vec3 operator /(vec3 left, vec3 right) { throw new NotImplementedException(); }
             public static vec3 operator /(vec3 left, float right) { throw new NotImplementedException(); }
-            
+
             public vec2 xx { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
             public vec2 xy { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
             public vec2 xz { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
@@ -885,7 +911,7 @@ namespace AlienEngine.ASL
             public double t { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
             public double p { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
 
-            public double this[int item]{ get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+            public double this[int item] { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
 
             public static dvec3 operator +(dvec3 left, dvec3 right) { throw new NotImplementedException(); }
             public static dvec3 operator -(dvec3 left, dvec3 right) { throw new NotImplementedException(); }
@@ -1038,7 +1064,7 @@ namespace AlienEngine.ASL
             public bool p { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
             public bool q { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
 
-            public bool this[int item]{ get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+            public bool this[int item] { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
 
             public static bvec4 operator +(bvec4 left, bvec4 right) { throw new NotImplementedException(); }
             public static bvec4 operator -(bvec4 left, bvec4 right) { throw new NotImplementedException(); }
@@ -1410,7 +1436,7 @@ namespace AlienEngine.ASL
             public int p { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
             public int q { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
 
-            public int this[int item]{ get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+            public int this[int item] { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
 
             public static ivec4 operator +(ivec4 left, ivec4 right) { throw new NotImplementedException(); }
             public static ivec4 operator -(ivec4 left, ivec4 right) { throw new NotImplementedException(); }
@@ -1418,7 +1444,7 @@ namespace AlienEngine.ASL
             public static ivec4 operator /(ivec4 left, ivec4 right) { throw new NotImplementedException(); }
 
             public static implicit operator vec4(ivec4 v) { throw new NotImplementedException(); }
-            
+
             public ivec2 xx { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
             public ivec2 xy { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
             public ivec2 xz { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
@@ -1784,7 +1810,7 @@ namespace AlienEngine.ASL
             public uint p { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
             public uint q { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
 
-            public uint this[int item]{ get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+            public uint this[int item] { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
 
             public static uvec4 operator +(uvec4 left, uvec4 right) { throw new NotImplementedException(); }
             public static uvec4 operator -(uvec4 left, uvec4 right) { throw new NotImplementedException(); }
@@ -2158,16 +2184,16 @@ namespace AlienEngine.ASL
             public float p { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
             public float q { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
 
-            public float this[int item]{ get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+            public float this[int item] { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
 
             public static vec4 operator +(vec4 left, vec4 right) { throw new NotImplementedException(); }
             public static vec4 operator -(vec4 left, vec4 right) { throw new NotImplementedException(); }
             public static vec4 operator *(vec4 left, vec4 right) { throw new NotImplementedException(); }
             public static vec4 operator *(vec4 left, float right) { throw new NotImplementedException(); }
             public static vec4 operator *(float left, vec4 right) { throw new NotImplementedException(); }
-			public static vec4 operator /(vec4 left, vec4 right) { throw new NotImplementedException(); }
+            public static vec4 operator /(vec4 left, vec4 right) { throw new NotImplementedException(); }
             public static vec4 operator /(vec4 left, float right) { throw new NotImplementedException(); }
-            
+
             public vec2 xx { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
             public vec2 xy { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
             public vec2 xz { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
@@ -2249,6 +2275,13 @@ namespace AlienEngine.ASL
             public vec3 wwy { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
             public vec3 wwz { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
             public vec3 www { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+
+            public vec3 rgb { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+            public vec3 rbg { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+            public vec3 brg { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+            public vec3 bgr { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+            public vec3 gbr { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+            public vec3 grb { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
 
             public vec4 xxxx { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
             public vec4 xxxy { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
@@ -2506,6 +2539,13 @@ namespace AlienEngine.ASL
             public vec4 wwwy { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
             public vec4 wwwz { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
             public vec4 wwww { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+
+            public vec4 rgba { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+            public vec4 rbga { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+            public vec4 brga { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+            public vec4 bgra { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+            public vec4 gbra { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+            public vec4 grba { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
         }
 
         [BuiltIn]
@@ -2535,7 +2575,7 @@ namespace AlienEngine.ASL
             public double p { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
             public double q { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
 
-            public double this[int item]{ get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+            public double this[int item] { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
 
             public static dvec4 operator +(dvec4 left, dvec4 right) { throw new NotImplementedException(); }
             public static dvec4 operator -(dvec4 left, dvec4 right) { throw new NotImplementedException(); }
