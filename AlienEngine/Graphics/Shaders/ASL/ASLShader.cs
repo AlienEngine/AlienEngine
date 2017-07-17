@@ -346,7 +346,7 @@ namespace AlienEngine.ASL
                     new KeyValuePair<string, string>(_mainDefinition.Name, string.Join(Environment.NewLine, mainInst) + Environment.NewLine)
                 );
 
-                methods.Insert(0, mainBody);
+                methods.Add(mainBody);
             }
 
             return methods;
