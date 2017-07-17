@@ -525,7 +525,7 @@ namespace AlienEngine
         }
 
         /// <summary>
-        /// Gets or sets an Vector2 with the X and Y components of this instance.
+        /// Gets or sets an Vector2i with the X and Y components of this instance.
         /// </summary>
         public Vector2i XY
         {
@@ -538,7 +538,7 @@ namespace AlienEngine
         }
 
         /// <summary>
-        /// Gets or sets an Vector2 with the X and Z components of this instance.
+        /// Gets or sets an Vector2i with the X and Z components of this instance.
         /// </summary>
         public Vector2i XZ
         {
@@ -551,7 +551,7 @@ namespace AlienEngine
         }
 
         /// <summary>
-        /// Gets or sets an Vector2 with the Y and X components of this instance.
+        /// Gets or sets an Vector2i with the Y and X components of this instance.
         /// </summary>
         public Vector2i YX
         {
@@ -564,7 +564,7 @@ namespace AlienEngine
         }
 
         /// <summary>
-        /// Gets or sets an Vector2 with the Y and Z components of this instance.
+        /// Gets or sets an Vector2i with the Y and Z components of this instance.
         /// </summary>
         public Vector2i YZ
         {
@@ -577,7 +577,7 @@ namespace AlienEngine
         }
 
         /// <summary>
-        /// Gets or sets an Vector2 with the Z and X components of this instance.
+        /// Gets or sets an Vector2i with the Z and X components of this instance.
         /// </summary>
         public Vector2i ZX
         {
@@ -590,7 +590,7 @@ namespace AlienEngine
         }
 
         /// <summary>
-        /// Gets or sets an Vector2 with the Z and Y components of this instance.
+        /// Gets or sets an Vector2i with the Z and Y components of this instance.
         /// </summary>
         public Vector2i ZY
         {
