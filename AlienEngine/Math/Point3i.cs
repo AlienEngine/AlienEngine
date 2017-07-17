@@ -195,6 +195,36 @@ namespace AlienEngine
         }
 
         /// <summary>
+        /// Returns a new <see cref="Point3i"/> with minimal values.
+        /// </summary>
+        /// <param name="a">The first point.</param>
+        /// <param name="b">The second point.</param>
+        public static Point3i Min(Point3i a, Point3i b)
+        {
+            return new Point3i((a.X > b.X) ? b.X : a.X, (a.Y > b.Y) ? b.Y : a.Y, (a.Z > b.Z) ? b.Z : a.Z);
+        }
+
+        /// <summary>
+        /// Returns a new <see cref="Point3i"/> with maximal values.
+        /// </summary>
+        /// <param name="a">The first point.</param>
+        /// <param name="b">The second point.</param>
+        public static Point3i Max(Point3i a, Point3i b)
+        {
+            return new Point3i((a.X < b.X) ? b.X : a.X, (a.Y < b.Y) ? b.Y : a.Y, (a.Z > b.Z) ? b.Z : a.Z);
+        }
+
+        /// <summary>
+        /// Create a <see cref="Vector2i"/> with two <see cref="Point3i"/>.
+        /// </summary>
+        /// <param name="a">The first point.</param>
+        /// <param name="b">The second point.</param>
+        public static Vector3i CreateVector(Point3i a, Point3i b)
+        {
+            return new Vector3i(b.X - a.X, b.Y - a.Y, b.Z - a.Z);
+        }
+
+        /// <summary>
         /// Compare two <see cref="Point3i"/> for equality.
         /// </summary>
         /// <param name="lhs">First Point3i</param>
@@ -286,7 +316,7 @@ namespace AlienEngine
         /// <param name="other">The other Point3i to compare with this instance</param>
         public bool Equals(Point3i other)
         {
-            return Equals(other);
+            return (X == other.X && Y == other.Y && Z == other.Z);
         }
 
         /// <summary>

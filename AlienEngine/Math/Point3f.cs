@@ -195,6 +195,36 @@ namespace AlienEngine
         }
 
         /// <summary>
+        /// Returns a new <see cref="Point3f"/> with minimal values.
+        /// </summary>
+        /// <param name="a">The first point.</param>
+        /// <param name="b">The second point.</param>
+        public static Point3f Min(Point3f a, Point3f b)
+        {
+            return new Point3f((a.X > b.X) ? b.X : a.X, (a.Y > b.Y) ? b.Y : a.Y, (a.Z > b.Z) ? b.Z : a.Z);
+        }
+
+        /// <summary>
+        /// Returns a new <see cref="Point3f"/> with maximal values.
+        /// </summary>
+        /// <param name="a">The first point.</param>
+        /// <param name="b">The second point.</param>
+        public static Point3f Max(Point3f a, Point3f b)
+        {
+            return new Point3f((a.X < b.X) ? b.X : a.X, (a.Y < b.Y) ? b.Y : a.Y, (a.Z > b.Z) ? b.Z : a.Z);
+        }
+
+        /// <summary>
+        /// Create a <see cref="Vector2i"/> with two <see cref="Point3f"/>.
+        /// </summary>
+        /// <param name="a">The first point.</param>
+        /// <param name="b">The second point.</param>
+        public static Vector3f CreateVector(Point3f a, Point3f b)
+        {
+            return new Vector3f(b.X - a.X, b.Y - a.Y, b.Z - a.Z);
+        }
+
+        /// <summary>
         /// Compare two <see cref="Point3f"/> for equality.
         /// </summary>
         /// <param name="lhs">First Point3f</param>
@@ -286,7 +316,7 @@ namespace AlienEngine
         /// <param name="other">The other Point3f to compare with this instance</param>
         public bool Equals(Point3f other)
         {
-            return Equals(other);
+            return (X == other.X && Y == other.Y && Z == other.Z);
         }
 
         /// <summary>

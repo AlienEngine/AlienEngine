@@ -227,6 +227,36 @@ namespace AlienEngine
         }
 
         /// <summary>
+        /// Returns a new <see cref="Point2d"/> with minimal values.
+        /// </summary>
+        /// <param name="a">The first point.</param>
+        /// <param name="b">The second point.</param>
+        public static Point2d Min(Point2d a, Point2d b)
+        {
+            return new Point2d((a.X > b.X) ? b.X : a.X, (a.Y > b.Y) ? b.Y : a.Y);
+        }
+
+        /// <summary>
+        /// Returns a new <see cref="Point2d"/> with maximal values.
+        /// </summary>
+        /// <param name="a">The first point.</param>
+        /// <param name="b">The second point.</param>
+        public static Point2d Max(Point2d a, Point2d b)
+        {
+            return new Point2d((a.X < b.X) ? b.X : a.X, (a.Y < b.Y) ? b.Y : a.Y);
+        }
+
+        /// <summary>
+        /// Create a <see cref="Vector2i"/> with two <see cref="Point2d"/>.
+        /// </summary>
+        /// <param name="a">The first point.</param>
+        /// <param name="b">The second point.</param>
+        public static Vector2d CreateVector(Point2d a, Point2d b)
+        {
+            return new Vector2d(b.X - a.X, b.Y - a.Y);
+        }
+
+        /// <summary>
         /// Add a <see cref="Point2d"/> with a <see cref="Sizef"/>.
         /// </summary>
         /// <param name="point">The <see cref="Point2d"/>.</param>
@@ -340,7 +370,7 @@ namespace AlienEngine
         /// <param name="other">The other Point2d to compare with this instance</param>
         public bool Equals(Point2d other)
         {
-            return Equals(other);
+            return (X == other.X && Y == other.Y);
         }
 
         /// <summary>

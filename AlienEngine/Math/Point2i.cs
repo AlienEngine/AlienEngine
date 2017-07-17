@@ -226,6 +226,46 @@ namespace AlienEngine
         }
 
         /// <summary>
+        /// Returns a new <see cref="Point2i"/> with minimal values.
+        /// </summary>
+        /// <param name="a">The first point.</param>
+        /// <param name="b">The second point.</param>
+        public static Point2i Min(Point2i a, Point2i b)
+        {
+            return new Point2i((a.X > b.X) ? b.X : a.X, (a.Y > b.Y) ? b.Y : a.Y);
+        }
+
+        /// <summary>
+        /// Returns a new <see cref="Point2i"/> with maximal values.
+        /// </summary>
+        /// <param name="a">The first point.</param>
+        /// <param name="b">The second point.</param>
+        public static Point2i Max(Point2i a, Point2i b)
+        {
+            return new Point2i((a.X < b.X) ? b.X : a.X, (a.Y < b.Y) ? b.Y : a.Y);
+        }
+
+        /// <summary>
+        /// Create a <see cref="Vector2i"/> with two <see cref="Point2i"/>.
+        /// </summary>
+        /// <param name="a">The first point.</param>
+        /// <param name="b">The second point.</param>
+        public static Vector2i CreateVector(Point2i a, Point2i b)
+        {
+            return new Vector2i(b.X - a.X, b.Y - a.Y);
+        }
+
+        /// <summary>
+        /// Add two <see cref="Point2i"/>.
+        /// </summary>
+        /// <param name="a">The <see cref="Point2i"/>.</param>
+        /// <param name="b">The <see cref="Point2i"/>.</param>
+        public static Point2i operator +(Point2i a, Point2i b)
+        {
+            return new Point2i(a.X + b.X, a.Y + b.Y);
+        }
+
+        /// <summary>
         /// Add a <see cref="Point2i"/> with a <see cref="Sizef"/>.
         /// </summary>
         /// <param name="point">The <see cref="Point2i"/>.</param>
@@ -245,6 +285,16 @@ namespace AlienEngine
         public static Point2i operator -(Point2i point, Sizei size)
         {
             return new Point2i(point.X - size.Width, point.Y - size.Height);
+        }
+
+        /// <summary>
+        /// Substract a <see cref="Point2i"/> by another.
+        /// </summary>
+        /// <param name="a">The <see cref="Point2i"/>.</param>
+        /// <param name="b">The <see cref="Point2i"/>.</param>
+        public static Point2i operator -(Point2i a, Point2i b)
+        {
+            return new Point2i(a.X - b.X, a.Y - b.Y);
         }
 
         /// <summary>
@@ -339,7 +389,7 @@ namespace AlienEngine
         /// <param name="other">The other Point2i to compare with this instance</param>
         public bool Equals(Point2i other)
         {
-            return Equals(other);
+            return (X == other.X && Y == other.Y);
         }
 
         /// <summary>
