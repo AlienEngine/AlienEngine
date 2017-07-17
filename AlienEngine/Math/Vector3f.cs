@@ -353,6 +353,17 @@ namespace AlienEngine
         }
 
         /// <summary>
+        /// Rotate a vector by an angle.
+        /// </summary>
+        /// <param name="angle">The angle in radians.</param>
+        /// <param name="axis">The axis used for rotation.</param>
+        /// <returns>The result of the operation.</returns>
+        public void Rotate(float angle, Vector3f axis)
+        {
+            this = Rotate(this, angle, axis);
+        }
+
+        /// <summary>
         /// Adds two vectors.
         /// </summary>
         /// <param name="a">Left operand.</param>
@@ -1267,6 +1278,17 @@ namespace AlienEngine
             vec.Y = -vec.Y;
             vec.Z = -vec.Z;
             return vec;
+        }
+
+        /// <summary>
+        /// Multiplies an instance by a scalar.
+        /// </summary>
+        /// <param name="vec">The instance.</param>
+        /// <param name="scale">The scalar.</param>
+        /// <returns>The result of the calculation.</returns>
+        public static Vector3f operator *(Vector3f vec, Vector3f scale)
+        {
+            return Multiply(vec, scale);
         }
 
         /// <summary>
