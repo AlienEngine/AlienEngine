@@ -473,22 +473,22 @@ namespace AlienEngine
         }
 
         /// <summary>
-        /// Returns the Vector3 with the minimum magnitude
+        /// Returns the Vector2i with the minimum magnitude
         /// </summary>
         /// <param name="left">Left operand</param>
         /// <param name="right">Right operand</param>
-        /// <returns>The minimum Vector3</returns>
+        /// <returns>The minimum Vector2i</returns>
         public static Vector2i Min(Vector2i left, Vector2i right)
         {
             return left.LengthSquared < right.LengthSquared ? left : right;
         }
 
         /// <summary>
-        /// Returns the Vector3 with the minimum magnitude
+        /// Returns the Vector2i with the minimum magnitude
         /// </summary>
         /// <param name="left">Left operand</param>
         /// <param name="right">Right operand</param>
-        /// <returns>The minimum Vector3</returns>
+        /// <returns>The minimum Vector2i</returns>
         public static Vector2i Max(Vector2i left, Vector2i right)
         {
             return left.LengthSquared >= right.LengthSquared ? left : right;
