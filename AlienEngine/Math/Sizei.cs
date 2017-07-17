@@ -100,6 +100,24 @@ namespace AlienEngine
         }
 
         /// <summary>
+        /// Gets the width of this Sizei.
+        /// </summary>
+        public int X
+        {
+            get { return Width; }
+            set { Width = value; }
+        }
+
+        /// <summary>
+        /// Gets the height of this Sizei.
+        /// </summary>
+        public int Y
+        {
+            get { return Height; }
+            set { Height = value; }
+        }
+
+        /// <summary>
         /// Scale this Sizei.
         /// </summary>
         /// <param name="factor">The scale factor</param>
@@ -116,6 +134,36 @@ namespace AlienEngine
         public bool IsZero()
         {
             return this == Zero;
+        }
+
+        /// <summary>
+        /// Returns a new <see cref="Sizei"/> with minimal values.
+        /// </summary>
+        /// <param name="a">The first size.</param>
+        /// <param name="b">The second size.</param>
+        public static Sizei Min(Sizei a, Sizei b)
+        {
+            return new Sizei((a.X > b.X) ? b.X : a.X, (a.Y > b.Y) ? b.Y : a.Y);
+        }
+
+        /// <summary>
+        /// Returns a new <see cref="Sizei"/> with maximal values.
+        /// </summary>
+        /// <param name="a">The first size.</param>
+        /// <param name="b">The second size.</param>
+        public static Sizei Max(Sizei a, Sizei b)
+        {
+            return new Sizei((a.X < b.X) ? b.X : a.X, (a.Y < b.Y) ? b.Y : a.Y);
+        }
+
+        /// <summary>
+        /// Adds two <see cref="Sizei"/>.
+        /// </summary>
+        /// <param name="left">The first size.</param>
+        /// <param name="right">The second size.</param>
+        public static Sizei operator +(Sizei left, Sizei right)
+        {
+            return new Sizei(left.Width + right.Width, left.Height + right.Height);
         }
 
         /// <summary>
@@ -160,7 +208,7 @@ namespace AlienEngine
         /// <returns>True, if both instances are equal; false otherwise.</returns>
         public bool Equals(Sizei s)
         {
-            return this == s;
+            return (X == s.X && Y == s.Y);
         }
 
         /// <summary>

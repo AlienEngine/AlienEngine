@@ -100,6 +100,34 @@ namespace AlienEngine
         }
 
         /// <summary>
+        /// Gets the width of this Sizef.
+        /// </summary>
+        public float X
+        {
+            get { return _width; }
+            set
+            {
+                if (value < 0)
+                    throw new ArgumentOutOfRangeException();
+                _width = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets the height of this Sizef.
+        /// </summary>
+        public float Y
+        {
+            get { return _height; }
+            set
+            {
+                if (value < 0)
+                    throw new ArgumentOutOfRangeException();
+                _height = value;
+            }
+        }
+
+        /// <summary>
         /// Scale this Sizef.
         /// </summary>
         /// <param name="factor">The scale factor</param>
@@ -160,7 +188,7 @@ namespace AlienEngine
         /// <returns>True, if both instances are equal; false otherwise.</returns>
         public bool Equals(Sizef s)
         {
-            return this == s;
+            return (X == s.X && Y == s.Y);
         }
 
         /// <summary>
