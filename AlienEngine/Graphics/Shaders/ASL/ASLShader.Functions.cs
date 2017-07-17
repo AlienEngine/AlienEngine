@@ -459,6 +459,7 @@ namespace AlienEngine.ASL
         protected vec2 mix(vec2 x, vec2 y, float a) { throw new NotImplementedException(); }
         [BuiltIn]
         protected vec3 mix(vec3 x, vec2 y, float a) { throw new NotImplementedException(); }
+        protected vec3 mix(vec3 x, vec3 y, float a) { throw new NotImplementedException(); }
         [BuiltIn]
         protected vec4 mix(vec4 x, vec2 y, float a) { throw new NotImplementedException(); }
         [BuiltIn]
@@ -469,6 +470,8 @@ namespace AlienEngine.ASL
         protected vec3 mix(vec3 x, vec3 y, bvec3 a) { throw new NotImplementedException(); }
         [BuiltIn]
         protected vec4 mix(vec4 x, vec4 y, bvec4 a) { throw new NotImplementedException(); }
+        [BuiltIn]
+        protected vec4 mix(vec4 x, vec4 y, float a) { throw new NotImplementedException(); }
 
         [BuiltIn]
         protected float step(float edge, float x) { throw new NotImplementedException(); }
