@@ -1411,15 +1411,15 @@ namespace AlienEngine
             f.Normalize();
 
             Vector3f r = up;
-            r.Normalize();
             r = Vector3f.Cross(r, f);
+            r.Normalize();
 
             Vector3f u = Vector3f.Cross(f, r);
 
-            result.M11 = r.X; result.M12 = r.Y; result.M13 = r.Z; result.M14 = 0;
-            result.M21 = u.X; result.M22 = u.Y; result.M23 = u.Z; result.M24 = 0;
-            result.M31 = f.X; result.M32 = f.Y; result.M33 = f.Z; result.M34 = 0;
-            result.M41 = 0;   result.M42 = 0;   result.M43 = 0;   result.M44 = 1;
+            result.Column0 = new Vector4f(r, 0.0f);
+            result.Column1 = new Vector4f(u, 0.0f);
+            result.Column2 = new Vector4f(f, 0.0f);
+            result.Column3 = Vector4f.UnitW;
 
             return result;
         }
