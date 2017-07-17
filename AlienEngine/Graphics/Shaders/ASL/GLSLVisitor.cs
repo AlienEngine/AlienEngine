@@ -344,6 +344,12 @@ namespace AlienEngine.ASL
                     case BinaryOperatorType.InEquality:
                         result.Append(" != ");
                         break;
+                    case BinaryOperatorType.ConditionalOr:
+                        result.Append(" || ");
+                        break;
+                    case BinaryOperatorType.ConditionalAnd:
+                        result.Append(" && ");
+                        break;
                     default:
                         throw new NotImplementedException();
                 }
