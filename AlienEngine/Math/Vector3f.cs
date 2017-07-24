@@ -978,16 +978,7 @@ namespace AlienEngine
         /// <returns>The result of the operation.</returns>
         public static Vector3f Rotate(Vector3f vec, float angle, Vector3f axis)
         {
-            float halfCos = MathHelper.Cos(angle / 2);
-            float halfSin = MathHelper.Sin(angle / 2);
-
-            float rX = axis.X * halfSin;
-            float rY = axis.Y * halfSin;
-            float rZ = axis.Z * halfSin;
-            float rW = halfCos;
-
-            Quaternion rotation = new Quaternion(rW, rX, rY, rZ);
-
+            Quaternion rotation = Quaternion.FromAxisAngle(axis, angle);
             Vector3f result;
             Transform(ref vec, ref rotation, out result);
             return result;
