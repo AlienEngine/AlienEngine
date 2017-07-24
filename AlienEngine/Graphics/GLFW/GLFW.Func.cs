@@ -2,7 +2,7 @@ using System;
 using System.Runtime.InteropServices;
 using System.Security;
 
-namespace AlienEngine.Graphics.GLFW
+namespace AlienEngine.Core.Graphics.GLFW
 {
     static partial class GLFW
     {
@@ -1215,7 +1215,7 @@ namespace AlienEngine.Graphics.GLFW
         /// <param name="key">The key to query, or <see cref="GLFW.KeyCode.Unknown"/>.</param>
         /// <param name="scancode">The scancode of the key to query.</param>
         /// <returns>The localized name of the key, or <c>null</c>.</returns>
-        public static unsafe string GetKeyName(Input.KeyCode key, int scancode) => Marshal.PtrToStringAnsi(glfwGetKeyName(Convert.ToInt32(key), scancode));
+        public static unsafe string GetKeyName(KeyCode key, int scancode) => Marshal.PtrToStringAnsi(glfwGetKeyName(Convert.ToInt32(key), scancode));
 
         [DllImport(Library, CallingConvention = CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
         static extern IntPtr glfwGetKeyName(int key, int scancode);
@@ -1257,7 +1257,7 @@ namespace AlienEngine.Graphics.GLFW
         /// <returns><c>true</c> if the button was pressed, <c>false</c> otherwise.</returns>
         [DllImport(Library, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwGetMouseButton"), SuppressUnmanagedCodeSecurity]
         [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern bool GetMouseButton([MarshalAs(UnmanagedType.Struct)] GLFW.Window window, Input.MouseButton button);
+        public static extern bool GetMouseButton([MarshalAs(UnmanagedType.Struct)] GLFW.Window window, MouseButton button);
 
         /// <summary>
         /// <para>This function returns the position of the cursor, in screen coordinates, relative
@@ -1527,7 +1527,7 @@ namespace AlienEngine.Graphics.GLFW
         /// <returns><c>true</c> if the joystick is present, or <c>false</c> otherwise.</returns>
         [DllImport(Library, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwJoystickPresent"), SuppressUnmanagedCodeSecurity]
         [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern bool JoystickPresent(Input.Joysticks joy);
+        public static extern bool JoystickPresent(Joysticks joy);
 
         /// <summary>
         /// <para>This function returns the values of all axes of the specified joystick. Each
@@ -1539,7 +1539,7 @@ namespace AlienEngine.Graphics.GLFW
         /// <param name="joy">The joystick to query.</param>
         /// <returns>An array of axis values, or <c>null</c> if the joystick is not
         /// present.</returns>
-        public static unsafe float[] GetJoystickAxes(Input.Joysticks joy)
+        public static unsafe float[] GetJoystickAxes(Joysticks joy)
         {
             int n;
             var array = glfwGetJoystickAxes((int)joy, &n);
@@ -1564,7 +1564,7 @@ namespace AlienEngine.Graphics.GLFW
         /// <param name="joy">The joystick to query.</param>
         /// <returns>An array of button states, or <c>null</c> if the joystick is not
         /// present.</returns>
-        public static unsafe bool[] GetJoystickButtons(Input.Joysticks joy)
+        public static unsafe bool[] GetJoystickButtons(Joysticks joy)
         {
             int n;
             var array = glfwGetJoystickButtons((int)joy, &n);
@@ -1595,7 +1595,7 @@ namespace AlienEngine.Graphics.GLFW
         /// <param name="joy">The joystick to query.</param>
         /// <returns>The UTF-8 encoded name of the joystick, or <c>null</c> if the joystick is not
         /// present.</returns>
-        public static string GetJoystickName(Input.Joysticks joy) => GLFW.FromUTF8(glfwGetJoystickName((int)joy));
+        public static string GetJoystickName(Joysticks joy) => GLFW.FromUTF8(glfwGetJoystickName((int)joy));
 
         [DllImport(Library, CallingConvention = CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
         static extern unsafe IntPtr glfwGetJoystickName(int joy);

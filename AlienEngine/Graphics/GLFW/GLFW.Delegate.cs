@@ -1,6 +1,6 @@
 using System.Runtime.InteropServices;
 
-namespace AlienEngine.Graphics.GLFW
+namespace AlienEngine.Core.Graphics.GLFW
 {
     static partial class GLFW
     {
@@ -23,7 +23,7 @@ namespace AlienEngine.Graphics.GLFW
         /// down.</param>
         /// <seealso cref="SetCharModsCallback(Window, CharModsFunc)"/>
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        public delegate void CharModsFunc([MarshalAs(UnmanagedType.Struct)] Window window, uint codepoint, Input.KeyMods mods);
+        public delegate void CharModsFunc([MarshalAs(UnmanagedType.Struct)] Window window, uint codepoint, KeyMods mods);
 
         /// <summary>
         /// The function signature for cursor enter/leave callbacks.
@@ -87,7 +87,7 @@ namespace AlienEngine.Graphics.GLFW
         /// down.</param>
         /// <seealso cref="SetKeyCallback(Window, KeyFunc)"/>
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        public delegate void KeyFunc([MarshalAs(UnmanagedType.Struct)] Window window, Input.KeyCode key, int scancode, Input.InputState state, Input.KeyMods mods);
+        public delegate void KeyFunc([MarshalAs(UnmanagedType.Struct)] Window window, KeyCode key, int scancode, InputState state, KeyMods mods);
 
         /// <summary>
         /// The function signature for joystick configuration callbacks.
@@ -96,7 +96,7 @@ namespace AlienEngine.Graphics.GLFW
         /// <param name="evt">One of <see cref="ConnectionEvent"/>.</param>
         /// <seealso cref="SetJoystickCallback(JoystickFunc)"/>
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        public delegate void JoystickFunc(Input.Joysticks joy, ConnectionEvent evt);
+        public delegate void JoystickFunc(Joysticks joy, ConnectionEvent evt);
 
         /// <summary>
         /// The function signature for monitor configuration callbacks.
@@ -118,7 +118,7 @@ namespace AlienEngine.Graphics.GLFW
         /// down.</param>
         /// <seealso cref="SetMouseButtonCallback(Window, MouseButtonFunc)"/>
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        public delegate void MouseButtonFunc([MarshalAs(UnmanagedType.Struct)] Window window, Input.MouseButton button, Input.InputState state, Input.KeyMods mods);
+        public delegate void MouseButtonFunc([MarshalAs(UnmanagedType.Struct)] Window window, MouseButton button, InputState state, KeyMods mods);
 
         /// <summary>
         /// The function signature for scroll callbacks.

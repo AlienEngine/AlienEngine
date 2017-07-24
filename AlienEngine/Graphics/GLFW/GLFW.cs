@@ -3,7 +3,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace AlienEngine.Graphics.GLFW
+namespace AlienEngine.Core.Graphics.GLFW
 {
     /// <summary>
     /// <a href="http://www.glfw.org/">GLFW 3</a> bindings.

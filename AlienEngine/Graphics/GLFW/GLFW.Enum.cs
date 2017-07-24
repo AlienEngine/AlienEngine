@@ -1,6 +1,6 @@
 using System;
 
-namespace AlienEngine.Graphics.GLFW
+namespace AlienEngine.Core.Graphics.GLFW
 {
     static partial class GLFW
     {
