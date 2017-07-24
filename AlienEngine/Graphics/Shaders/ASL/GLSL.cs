@@ -113,8 +113,7 @@ namespace AlienEngine.ASL
             internal static readonly Dictionary<Type, string> Qualifiers = new Dictionary<Type, string>() {
                 { typeof(InAttribute),      "in" },
                 { typeof(OutAttribute),     "out" },
-                { typeof(UniformAttribute), "uniform" },
-                { typeof(ConstAttribute),   "const"}
+                { typeof(UniformAttribute), "uniform" }
             };
 
             internal static readonly Dictionary<string, Type> TypeMap = new Dictionary<string, Type> {
