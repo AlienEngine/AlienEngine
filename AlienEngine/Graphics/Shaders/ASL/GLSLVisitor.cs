@@ -689,6 +689,11 @@ namespace AlienEngine.ASL
 
                 return result;
             }
+
+            public override StringBuilder VisitParenthesizedExpression(ParenthesizedExpression parenthesizedExpression, int data)
+            {
+                return parenthesizedExpression.Expression.AcceptVisitor(this, data);
+            }
         }
     }
 }

@@ -18,11 +18,6 @@ namespace AlienEngine.ASL
                 return null;
             }
 
-            public override StringBuilder VisitParenthesizedExpression(ParenthesizedExpression parenthesizedExpression, int data)
-            {
-                throw new NotImplementedException();
-            }
-
             public override StringBuilder VisitThisReferenceExpression(ThisReferenceExpression thisReferenceExpression, int data)
             {
                 return null;
