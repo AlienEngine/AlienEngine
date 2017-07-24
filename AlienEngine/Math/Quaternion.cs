@@ -194,6 +194,43 @@ namespace AlienEngine
         }
 
         /// <summary>
+        /// Convert the current <see cref="Quaternion"/> to euler angles.
+        /// </summary>
+        public Vector3f ToEulerAngles()
+        {
+            float xsqr = X * X;
+            float ysqr = Y * Y;
+            float zsqr = Z * Z;
+
+            float s = X * Y + Z * W;
+
+            float x, y, z;
+
+            float x1 = 2.0f * (W * X + Y * Z);
+            float x2 = 1.0f - 2.0f * (xsqr + ysqr);
+            x = MathHelper.Atan(x1, x2);
+
+            float t = 2.0f * (W * Y - Z * X);
+            t = ((t > 1.0f) ? 1.0f : t);
+            t = ((t < -1.0f) ? -1.0f : t);
+            y = MathHelper.Asin(t);
+
+            float z1 = 2.0f * (W * Z + X * Y);
+            float z2 = 1.0f - 2.0f * (ysqr + zsqr);
+            z = MathHelper.Atan(z1, z2);
+
+            return new Vector3f(x, y, z);
+        }
+
+        /// <summary>
+        /// Convert the current <see cref="Quaternion"/> to euler angles.
+        /// </summary>
+        public void ToEulerAngles(out Vector3f angles)
+        {
+            angles = ToEulerAngles();
+        }
+
+        /// <summary>
         /// Convert the current quaternion to axis angle representation
         /// </summary>
         /// <param name="axis">The resultant axis</param>
@@ -522,6 +559,60 @@ namespace AlienEngine
             return FromRotationMatrix(Rotation);
         }
 
+        /// <summary>
+        /// Create a new <see cref="Quaternion"/> from euler angles.
+        /// </summary>
+        /// <param name="yaw">The rotation angle on th X axis.</param>
+        /// <param name="pitch">The rotation angle on th Y axis.</param>
+        /// <param name="roll">The rotation angle on th Z axis.</param>
+        public static Quaternion FromEulerAngles(float yaw, float pitch, float roll)
+        {
+            Quaternion q = new Quaternion();
+
+            float t0 = MathHelper.Cos(yaw * 0.5f);
+            float t1 = MathHelper.Sin(yaw * 0.5f);
+            float t2 = MathHelper.Cos(roll * 0.5f);
+            float t3 = MathHelper.Sin(roll * 0.5f);
+            float t4 = MathHelper.Cos(pitch * 0.5f);
+            float t5 = MathHelper.Sin(pitch * 0.5f);
+
+            q.W = t0 * t2 * t4 + t1 * t3 * t5;
+            q.X = t0 * t3 * t4 - t1 * t2 * t5;
+            q.Y = t0 * t2 * t5 + t1 * t3 * t4;
+            q.Z = t1 * t2 * t4 - t0 * t3 * t5;
+
+            return q;
+        }
+
+        /// <summary>
+        /// Create a new <see cref="Quaternion"/> from euler angles.
+        /// </summary>
+        /// <param name="yawPitchRoll">The rotaion angles on all axis.</param>
+        public static Quaternion FromEulerAngles(Vector3f yawPitchRoll)
+        {
+            return FromEulerAngles(yawPitchRoll.X, yawPitchRoll.Y, yawPitchRoll.Z);
+        }
+
+        /// <summary>
+        /// Create a new <see cref="Quaternion"/> from euler angles.
+        /// </summary>
+        /// <param name="yaw">The rotation angle on th X axis.</param>
+        /// <param name="pitch">The rotation angle on th Y axis.</param>
+        /// <param name="roll">The rotation angle on th Z axis.</param>
+        public static void FromEulerAngles(float yaw, float pitch, float roll, out Quaternion q)
+        {
+            q = FromEulerAngles(yaw, pitch, roll);
+        }
+
+        /// <summary>
+        /// Create a new <see cref="Quaternion"/> from euler angles.
+        /// </summary>
+        /// <param name="yawPitchRoll">The rotaion angles on all axis.</param>
+        public static void FromEulerAngles(Vector3f yawPitchRoll, out Quaternion q)
+        {
+            q = FromEulerAngles(yawPitchRoll);
+        }
+
         private static readonly int[] rotationLookup = new int[] { 1, 2, 0 };
 
         /// <summary>
@@ -627,6 +718,24 @@ namespace AlienEngine
                 return Normalize(result);
             else
                 return Identity;
+        }
+
+        /// <summary>
+        /// Converts the given <see cref="Quaternion"/> to euler angles.
+        /// </summary>
+        /// <param name="quat">The <see cref="Quaternion"/> to convert</param>
+        public static Vector3f ToEulerAngles(Quaternion quat)
+        {
+            return quat.ToEulerAngles();
+        }
+
+        /// <summary>
+        /// Converts the given <see cref="Quaternion"/> to euler angles.
+        /// </summary>
+        /// <param name="quat">The <see cref="Quaternion"/> to convert</param>
+        public static void ToEulerAngles(Quaternion quat, out Vector3f angles)
+        {
+            quat.ToEulerAngles(out angles);
         }
 
         /// <summary>
