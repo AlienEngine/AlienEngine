@@ -452,5 +452,41 @@ namespace AlienEngine
         {
             return System.Math.Max(System.Math.Min(n, max), min);
         }
+
+        /// <summary>
+        /// Check if a number is between a minimum and a maximum.
+        /// </summary>
+        /// <param name="n">The number to check.</param>
+        /// <param name="min">The minimum allowed value.</param>
+        /// <param name="max">The maximum allowed value.</param>
+        /// <returns>true, if n is between min and max.</returns>
+        public static bool Between(int n, int min, int max)
+        {
+            return n >= min && n <= max;
+        }
+
+        /// <summary>
+        /// Check if a number is between a minimum and a maximum.
+        /// </summary>
+        /// <param name="n">The number to check.</param>
+        /// <param name="min">The minimum allowed value.</param>
+        /// <param name="max">The maximum allowed value.</param>
+        /// <returns>true, if n is between min and max.</returns>
+        public static bool Between(float n, float min, float max)
+        {
+            return n >= min && n <= max;
+        }
+
+        /// <summary>
+        /// Check if a number is between a minimum and a maximum.
+        /// </summary>
+        /// <param name="n">The number to check.</param>
+        /// <param name="min">The minimum allowed value.</param>
+        /// <param name="max">The maximum allowed value.</param>
+        /// <returns>true, if n is between min and max.</returns>
+        public static bool Between(double n, double min, double max)
+        {
+            return n >= min && n <= max;
+        }
     }
 }
