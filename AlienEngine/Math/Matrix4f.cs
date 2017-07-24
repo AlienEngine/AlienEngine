@@ -779,8 +779,8 @@ namespace AlienEngine
 
             result = Identity;
             result.Row1.Y = cos;
-            result.Row1.Z = sin;
-            result.Row2.Y = -sin;
+            result.Row1.Z = -sin;
+            result.Row2.Y = sin;
             result.Row2.Z = cos;
         }
 
@@ -808,8 +808,8 @@ namespace AlienEngine
 
             result = Identity;
             result.Row0.X = cos;
-            result.Row0.Z = -sin;
-            result.Row2.X = sin;
+            result.Row0.Z = sin;
+            result.Row2.X = -sin;
             result.Row2.Z = cos;
         }
 
@@ -837,8 +837,8 @@ namespace AlienEngine
 
             result = Identity;
             result.Row0.X = cos;
-            result.Row0.Y = sin;
-            result.Row1.X = -sin;
+            result.Row0.Y = -sin;
+            result.Row1.X = sin;
             result.Row1.Y = cos;
         }
 
