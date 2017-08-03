@@ -32,6 +32,7 @@ using System.Text;
 using System.Diagnostics;
 
 using AlienEngine.Core.Audio.OpenAL;
+using AlienEngine.Core.Resources;
 
 namespace AlienEngine.Core.Audio
 {
@@ -351,6 +352,9 @@ namespace AlienEngine.Core.Audio
                 available_contexts.Add(this.context_handle, this);
                 context_exists = true;
             }
+
+            // Register this resource as a disposable resource.
+            ResourcesManager.AddDisposableResource(this);
         }
 
         #endregion --- Private Methods ---
