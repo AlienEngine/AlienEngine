@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using AlienEngine.Core.Game;
 using AlienEngine.Graphics;
-using AlienEngine.Graphics.Shaders;
-using AlienEngine.Core.Game;
 
 namespace AlienEngine
 {
