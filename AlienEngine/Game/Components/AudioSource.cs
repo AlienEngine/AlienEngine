@@ -1,7 +1,6 @@
+using AlienEngine.Core.Audio.OpenAL;
 using System;
 using System.IO;
-using AlienEngine.Core.Audio.OpenAL;
-using AlienEngine.Core.Resources;
 
 namespace AlienEngine
 {
@@ -16,6 +15,7 @@ namespace AlienEngine
         private float _lengthSeconds;
 
         public bool AutoPlay = false;
+        public bool IsBackgroundSound = false;
 
         public AudioClip Clip;
 
@@ -33,8 +33,6 @@ namespace AlienEngine
             {
                 throw new NotSupportedException("File format not supported");
             }
-
-            ResourcesManager.AddOnDisposeEvent(Dispose);
         }
 
         public AudioSource(Stream file, string extension)
@@ -135,6 +133,10 @@ namespace AlienEngine
 
         public override void Start()
         {
+            EfxAuxiliarySendFilterGainAuto = !IsBackgroundSound;
+            EfxAuxiliarySendFilterGainHighFrequencyAuto = !IsBackgroundSound;
+            EfxDirectFilterGainHighFrequencyAuto = !IsBackgroundSound;
+
             if (AutoPlay)
                 PlaySound();
 
@@ -145,12 +147,12 @@ namespace AlienEngine
 
             gameElement.LocalTransform.OnRotationChange += ((_old, _new) =>
             {
-                var q = Matrix4f.CreateRotation(_new);
-                AL.Source(SourceHandle, ALSource3f.Direction, -q.Column2.X, q.Column2.Y, q.Column2.Z);
+                Vector3f _forward = gameElement.LocalTransform.ForwardVector;
+                AL.Source(SourceHandle, ALSource3f.Direction, ref _forward);
             });
         }
 
-        public void Dispose()
+        public override void Stop()
         {
             AL.DeleteBuffers(1, ref BufferHandle);
             Buffer = 0;
@@ -199,19 +201,19 @@ namespace AlienEngine
             }
         }
 
-        //public Vector3f Direction
-        //{
-        //    get
-        //    {
-        //        Vector3f result = new Vector3f();
-        //        AL.GetSource(SourceHandle, ALSource3f.Direction, out result.X, out result.Y, out result.Z);
-        //        return result;
-        //    }
-        //    set
-        //    {
-        //        AL.Source(SourceHandle, ALSource3f.Direction, value.X, value.Y, value.Z);
-        //    }
-        //}
+        public Vector3f Direction
+        {
+            get
+            {
+                Vector3f result = new Vector3f();
+                AL.GetSource(SourceHandle, ALSource3f.Direction, out result.X, out result.Y, out result.Z);
+                return result;
+            }
+            set
+            {
+                AL.Source(SourceHandle, ALSource3f.Direction, value.X, value.Y, value.Z);
+            }
+        }
 
         public Vector3f Velocity
         {
