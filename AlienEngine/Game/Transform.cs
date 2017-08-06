@@ -7,7 +7,7 @@ namespace AlienEngine
     {
         #region Private Fields
 
-        private Vector3f _position;
+        private Vector3f _translation;
         private Vector3f _rotation;
         private Vector3f _scale;
 
@@ -15,23 +15,30 @@ namespace AlienEngine
 
         #region Properties
 
-        private static Camera Camera
+        /// <summary>
+        /// Gets and sets the translation.
+        /// </summary>
+        public Point3f Position
         {
-            get { return Game.CurrentCamera.GetComponent<Camera>(); }
+            get { return (Point3f)_translation; }
+            set
+            {
+                Translation = Point3f.CreateVector(Point3f.Zero, value);
+            }
         }
 
         /// <summary>
-        /// Gets and sets the position.
+        /// Gets and sets the translation.
         /// </summary>
-        public Vector3f Position
+        public Vector3f Translation
         {
-            get { return _position; }
+            get { return _translation; }
             set
             {
                 Transform _oldT = this;
-                Vector3f _old = _position;
-                _position = value;
-                OnPositionChange?.Invoke(_old, _position);
+                Vector3f _old = _translation;
+                _translation = value;
+                OnPositionChange?.Invoke(_old, _translation);
                 OnAllChange?.Invoke(_oldT, this);
             }
         }
@@ -68,6 +75,65 @@ namespace AlienEngine
             }
         }
 
+        /// <summary>
+        /// Get/set the forward vector of <see cref="GameElement"/>.
+        /// </summary>
+        public Vector3f ForwardVector
+        {
+            get
+            {
+                Vector3f forwardVector;
+                Matrix4f transformation = GetTransformation();
+
+                forwardVector.X = transformation[0, 2];
+                forwardVector.Y = transformation[1, 2];
+                forwardVector.Z = transformation[2, 2];
+
+                return ((-forwardVector).Normalized);
+            }
+            set
+            {
+                Vector3f targetPosition = Translation + value.Normalized;
+                LookAt(targetPosition);
+            }
+        }
+
+        /// <summary>
+        /// Get the right vector of this <see cref="GameElement"/>.
+        /// </summary>
+        public Vector3f RightVector
+        {
+            get
+            {
+                Vector3f rightVector;
+                Matrix4f transformation = GetTransformation();
+
+                rightVector.X = transformation[0, 0];
+                rightVector.Y = transformation[1, 0];
+                rightVector.Z = transformation[2, 0];
+
+                return (rightVector.Normalized);
+            }
+        }
+
+        /// <summary>
+        /// Get/set the up vector of this <see cref="GameElement"/>.
+        /// </summary>
+        public Vector3f UpVector
+        {
+            get
+            {
+                Vector3f upVector;
+                Matrix4f transformation = GetTransformation();
+
+                upVector.X = transformation[0, 1];
+                upVector.Y = transformation[1, 1];
+                upVector.Z = transformation[2, 1];
+
+                return (upVector.Normalized);
+            }
+        }
+
         #endregion
 
         #region Delegates
@@ -91,7 +157,7 @@ namespace AlienEngine
         #region Events
 
         /// <summary>
-        /// Event triggered when the position of this <see cref="GameElement"/> change.
+        /// Event triggered when the translation of this <see cref="GameElement"/> change.
         /// </summary>
         public event OnChange OnPositionChange;
 
@@ -111,7 +177,7 @@ namespace AlienEngine
         public event OnTransformChange OnAllChange;
 
         /// <summary>
-        /// Event triggered when a value (rotation, position, scale) of this <see cref="GameElement"/> change.
+        /// Event triggered when a value (rotation, translation, scale) of this <see cref="GameElement"/> change.
         /// </summary>
         public void AddOnChangeEvent(OnChange e)
         {
@@ -126,14 +192,14 @@ namespace AlienEngine
 
         public Transform()
         {
-            SetPosition(new Vector3f(0, 0, 0));
+            SetTranslation(new Vector3f(0, 0, 0));
             SetRotation(new Vector3f(0, 0, 0));
             SetScale(new Vector3f(1, 1, 1));
         }
 
         internal Transform(Graphics.MeshTransformation transform)
         {
-            SetPosition(transform.Position);
+            SetTranslation(transform.Position);
             SetRotation(transform.Rotation);
             SetScale(transform.Scale);
         }
@@ -147,7 +213,7 @@ namespace AlienEngine
         /// </summary>
         public Matrix4f GetTransformation()
         {
-            Matrix4f t = Matrix4f.CreateTranslation(_position);
+            Matrix4f t = Matrix4f.CreateTranslation(_translation);
             Matrix4f r = Matrix4f.CreateRotation(_rotation);
             Matrix4f s = Matrix4f.CreateScale(_scale);
 
@@ -160,9 +226,10 @@ namespace AlienEngine
         /// <returns></returns>
         public Matrix4f GetProjectedTransformation()
         {
+            Camera _camera = Game.CurrentScene.PrimaryCamera.GetComponent<Camera>();
             Matrix4f f = GetTransformation();
-            Matrix4f v = Camera.ViewMatrix;
-            Matrix4f p = Camera.ProjectionMatrix;
+            Matrix4f v = _camera.ViewMatrix;
+            Matrix4f p = _camera.ProjectionMatrix;
             //Matrix4f r = Matrix4f.Look(Camera.Forward, Camera.Up);
             //Matrix4f t = Matrix4f.CreateTranslation(Camera.Position);
 
@@ -174,9 +241,9 @@ namespace AlienEngine
         /// </summary>
         /// <param name="direction">The direction to follow.</param>
         /// <param name="speed">The move speed.</param>
-        public void Move(Vector3f direction, float speed)
+        public void Move(Vector3f direction, float speed = 1)
         {
-            Position += direction * speed;
+            Translation += direction * speed;
         }
 
         /// <summary>
@@ -184,7 +251,7 @@ namespace AlienEngine
         /// </summary>
         /// <param name="angles">The x, y and z angles of rotation.</param>
         /// <param name="speed">The rotation speed.</param>
-        public void Rotate(Vector3f angles, float speed)
+        public void Rotate(Vector3f angles, float speed = 1)
         {
             Rotation += angles * speed;
         }
@@ -194,7 +261,7 @@ namespace AlienEngine
         /// </summary>
         /// <param name="angle">The x angle of rotation.</param>
         /// <param name="speed">The rotation speed.</param>
-        public void RotateX(float angle, float speed)
+        public void RotateX(float angle, float speed = 1)
         {
             Vector3f rot = Rotation;
             rot.X += angle * speed;
@@ -206,7 +273,7 @@ namespace AlienEngine
         /// </summary>
         /// <param name="angle">The y angle of rotation.</param>
         /// <param name="speed">The rotation speed.</param>
-        public void RotateY(float angle, float speed)
+        public void RotateY(float angle, float speed = 1)
         {
             Vector3f rot = Rotation;
             rot.Y += angle * speed;
@@ -218,7 +285,7 @@ namespace AlienEngine
         /// </summary>
         /// <param name="angle">The z angle of rotation.</param>
         /// <param name="speed">The rotation speed.</param>
-        public void RotateZ(float angle, float speed)
+        public void RotateZ(float angle, float speed = 1)
         {
             Vector3f rot = Rotation;
             rot.Z += angle * speed;
@@ -230,7 +297,7 @@ namespace AlienEngine
         /// </summary>
         /// <param name="additive">The amount of additive scale.</param>
         /// <param name="speed">The scaling speed.</param>
-        public void Rescale(Vector3f additive, float speed)
+        public void Rescale(Vector3f additive, float speed = 1)
         {
             Scale += additive * speed;
         }
@@ -245,7 +312,7 @@ namespace AlienEngine
         }
 
         /// <summary>
-        /// Scales this <see cref="GameElement"/> with a <paramref name="factor"/> for all the axis.
+        /// Scales this <see cref="GameElement"/> with a <paramref name="factor"/> for all axis.
         /// </summary>
         /// <param name="factor">The amount scale factor for all axis.</param>
         public void Rescale(float factor)
@@ -262,23 +329,32 @@ namespace AlienEngine
         }
 
         /// <summary>
-        /// Sets the position of this <see cref="GameElement"/>.
+        /// Sets the translation of this <see cref="GameElement"/>.
         /// </summary>
-        /// <param name="position">The new position.</param>
-        public void SetPosition(Vector3f position)
+        /// <param name="translation">The new translation.</param>
+        public void SetTranslation(Vector3f translation)
         {
-            Position = position;
+            Translation = translation;
         }
 
         /// <summary>
-        /// Sets the position of this <see cref="GameElement"/>.
+        /// Sets the translation of this <see cref="GameElement"/>.
         /// </summary>
-        /// <param name="x">The new position at the X axis.</param>
-        /// <param name="y">The new position at the Y axis.</param>
-        /// <param name="z">The new position at the Z axis.</param>
-        public void SetPosition(float x, float y, float z)
+        /// <param name="x">The new translation at the X axis.</param>
+        /// <param name="y">The new translation at the Y axis.</param>
+        /// <param name="z">The new translation at the Z axis.</param>
+        public void SetTranslation(float x, float y, float z)
         {
-            SetPosition(new Vector3f(x, y, z));
+            SetTranslation(new Vector3f(x, y, z));
+        }
+
+        /// <summary>
+        /// Sets the translation of this <see cref="GameElement"/>.
+        /// </summary>
+        /// <param name="position">The new translation for all axis.</param>
+        public void SetTranslation(float translation)
+        {
+            SetTranslation(new Vector3f(translation));
         }
 
         /// <summary>
@@ -302,6 +378,42 @@ namespace AlienEngine
         }
 
         /// <summary>
+        /// Sets the rotation of this <see cref="GameElement"/>.
+        /// </summary>
+        /// <param name="angle">The new rotation angle for all axis.</param>
+        public void SetRotation(float angle)
+        {
+            SetRotation(new Vector3f(angle));
+        }
+
+        /// <summary>
+        /// Sets the rotation of this <see cref="GameElement"/> at the X axis.
+        /// </summary>
+        /// <param name="angle">The new rotation angle for the X axis.</param>
+        public void SetRotationX(float angle)
+        {
+            SetRotation(new Vector3f(angle, Rotation.Y, Rotation.Z));
+        }
+
+        /// <summary>
+        /// Sets the rotation of this <see cref="GameElement"/> at the Y axis.
+        /// </summary>
+        /// <param name="angle">The new rotation angle for the Y axis.</param>
+        public void SetRotationY(float angle)
+        {
+            SetRotation(new Vector3f(Rotation.X, angle, Rotation.Z));
+        }
+
+        /// <summary>
+        /// Sets the rotation of this <see cref="GameElement"/> at the Z axis.
+        /// </summary>
+        /// <param name="angle">The new rotation angle for the Z axis.</param>
+        public void SetRotationZ(float angle)
+        {
+            SetRotation(new Vector3f(Rotation.X, Rotation.Y, angle));
+        }
+        
+        /// <summary>
         /// Sets the scale of this <see cref="GameElement"/>.
         /// </summary>
         /// <param name="scale">The new scale.</param>
@@ -321,6 +433,69 @@ namespace AlienEngine
             SetScale(new Vector3f(x, y, z));
         }
 
+        /// <summary>
+        /// Sets the scale of this <see cref="GameElement"/>.
+        /// </summary>
+        /// <param name="scale">The new scale factor for all axis.</param>
+        public void SetScale(float scale)
+        {
+            SetScale(new Vector3f(scale));
+        }
+
+        /// <summary>
+        /// Sets the scale of this <see cref="GameElement"/> at the X axis.
+        /// </summary>
+        /// <param name="scale">The new scale factor for the X axis.</param>
+        public void SetScaleX(float scale)
+        {
+            SetScale(new Vector3f(scale, Scale.Y, Scale.Z));
+        }
+
+        /// <summary>
+        /// Sets the scale of this <see cref="GameElement"/> at the Y axis.
+        /// </summary>
+        /// <param name="scale">The new scale factor for the Y axis.</param>
+        public void SetScaleY(float scale)
+        {
+            SetScale(new Vector3f(Scale.X, scale, Scale.Z));
+        }
+
+        /// <summary>
+        /// Sets the scale of this <see cref="GameElement"/> at the Z axis.
+        /// </summary>
+        /// <param name="scale">The new scale factor for the Z axis.</param>
+        public void SetScaleZ(float scale)
+        {
+            SetScale(new Vector3f(Scale.X, Scale.Y, scale));
+        }
+
+        /// <summary>
+        /// Makes this <see cref="GameElement"/> look at the given <paramref name="targetPosition"/>.
+        /// </summary>
+        /// <param name="targetPosition">The target translation to look at.</param>
+        public void LookAt(Point3f targetPosition)
+        {
+            Matrix4f lookAtMatrix = Matrix4f.LookAt(Position, targetPosition, UpVector);
+            Matrix4f transformation = Matrix4f.CreateTranslation(Translation);
+            Matrix4f ret = (lookAtMatrix * transformation);
+
+            Rotation = ret.GetEulerAngles();
+            //LookAt(Point3f.CreateVector(Position, targetPosition));
+        }
+
+        /// <summary>
+        /// Makes this <see cref="GameElement"/> look at the given <paramref name="direction"/>.
+        /// </summary>
+        /// <param name="direction">The direction to look at.</param>
+        public void LookAt(Vector3f direction)
+        {
+            Matrix4f lookAtMatrix = Matrix4f.LookAt(-direction, UpVector);
+            Matrix4f transformation = Matrix4f.CreateTranslation(-Translation);
+            Matrix4f ret = (lookAtMatrix * transformation);
+
+            Rotation = ret.GetEulerAngles();
+        }
+
         #endregion
 
         #region IEquatable Implementation
@@ -332,7 +507,7 @@ namespace AlienEngine
         /// <param name="right">The second <see cref="Transform"/>.</param>
         public static bool operator ==(Transform left, Transform right)
         {
-            return left.Position == right.Position && left.Rotation == right.Rotation && left.Scale == right.Scale;
+            return left.Translation == right.Translation && left.Rotation == right.Rotation && left.Scale == right.Scale;
         }
 
         /// <summary>
@@ -370,7 +545,7 @@ namespace AlienEngine
         /// <returns>A System.Int32 containing the unique hashcode for this instance.</returns>
         public override int GetHashCode()
         {
-            return Position.GetHashCode() * Rotation.GetHashCode() * Scale.GetHashCode();
+            return Translation.GetHashCode() * Rotation.GetHashCode() * Scale.GetHashCode();
         }
 
         #endregion
