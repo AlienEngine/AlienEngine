@@ -82,6 +82,9 @@ namespace AlienEngine.Core.Graphics.OpenGL
 
         #region Overloads
         #region ActiveTexture
+        /// <summary>
+        /// Sets the active texture unit.
+        /// </summary>
         [CLSCompliant(false)]
         public static void ActiveTexture(uint textureUnit)
         {
