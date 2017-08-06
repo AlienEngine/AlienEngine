@@ -189,7 +189,15 @@ namespace AlienEngine
         /// </summary>
         public Matrix4f Transposed
         {
-            get { return new Matrix4f(new Vector4f(Row0.X, Row1.X, Row2.X, Row3.X), new Vector4f(Row0.Y, Row1.Y, Row2.Y, Row3.Y), new Vector4f(Row0.Z, Row1.Z, Row2.Z, Row3.Z), new Vector4f(Row0.W, Row1.W, Row2.W, Row3.W)); }
+            get
+            {
+                return new Matrix4f(
+                    new Vector4f(Row0.X, Row1.X, Row2.X, Row3.X),
+                    new Vector4f(Row0.Y, Row1.Y, Row2.Y, Row3.Y),
+                    new Vector4f(Row0.Z, Row1.Z, Row2.Z, Row3.Z),
+                    new Vector4f(Row0.W, Row1.W, Row2.W, Row3.W)
+                );
+            }
         }
 
         /// <summary>
@@ -231,6 +239,8 @@ namespace AlienEngine
         {
             get
             {
+                var _oneOverDeterminant = OneOverDeterminant;
+
                 Matrix3f det11 = new Matrix3f(M22, M23, M24, M32, M33, M34, M42, M43, M44);
                 Matrix3f det12 = new Matrix3f(M21, M23, M24, M31, M33, M34, M41, M43, M44);
                 Matrix3f det13 = new Matrix3f(M21, M22, M24, M31, M32, M34, M41, M42, M44);
@@ -249,22 +259,22 @@ namespace AlienEngine
                 Matrix3f det44 = new Matrix3f(M11, M12, M13, M21, M22, M23, M31, M32, M33);
 
                 return new Matrix4f(
-                    +det11.Determinant * OneOverDeterminant,
-                    -det12.Determinant * OneOverDeterminant,
-                    +det13.Determinant * OneOverDeterminant,
-                    -det14.Determinant * OneOverDeterminant,
-                    -det21.Determinant * OneOverDeterminant,
-                    +det22.Determinant * OneOverDeterminant,
-                    -det23.Determinant * OneOverDeterminant,
-                    +det24.Determinant * OneOverDeterminant,
-                    +det31.Determinant * OneOverDeterminant,
-                    -det32.Determinant * OneOverDeterminant,
-                    +det33.Determinant * OneOverDeterminant,
-                    -det34.Determinant * OneOverDeterminant,
-                    -det41.Determinant * OneOverDeterminant,
-                    +det42.Determinant * OneOverDeterminant,
-                    -det43.Determinant * OneOverDeterminant,
-                    +det44.Determinant * OneOverDeterminant
+                    +det11.Determinant * _oneOverDeterminant,
+                    -det12.Determinant * _oneOverDeterminant,
+                    +det13.Determinant * _oneOverDeterminant,
+                    -det14.Determinant * _oneOverDeterminant,
+                    -det21.Determinant * _oneOverDeterminant,
+                    +det22.Determinant * _oneOverDeterminant,
+                    -det23.Determinant * _oneOverDeterminant,
+                    +det24.Determinant * _oneOverDeterminant,
+                    +det31.Determinant * _oneOverDeterminant,
+                    -det32.Determinant * _oneOverDeterminant,
+                    +det33.Determinant * _oneOverDeterminant,
+                    -det34.Determinant * _oneOverDeterminant,
+                    -det41.Determinant * _oneOverDeterminant,
+                    +det42.Determinant * _oneOverDeterminant,
+                    -det43.Determinant * _oneOverDeterminant,
+                    +det44.Determinant * _oneOverDeterminant
                 ).Transposed;
             }
         }
@@ -491,10 +501,8 @@ namespace AlienEngine
         #region GetTranslate
 
         /// <summary>
-        /// Gets translate factor in the specified <paramref name="matrix"/>.
+        /// Gets translate factor in the specified.
         /// </summary>
-        /// <param name="matrix">The matrix to extract the translate factor.</param>
-        /// <returns></returns>
         public Vector3f GetTranslate()
         {
             return new Vector3f(Row3.X, Row3.Y, Row3.Z);
@@ -505,13 +513,31 @@ namespace AlienEngine
         #region GetScale
 
         /// <summary>
-        /// Gets scale factor in the specified <paramref name="matrix"/>.
+        /// Gets scale factor in the specified.
         /// </summary>
-        /// <param name="matrix">The matrix to extract the translate factor.</param>
-        /// <returns></returns>
         public Vector3f GetScale()
         {
-            return new Vector3f(Row0.X, Row1.Y, Row2.Z);
+            return new Vector3f(Row0.Length, Row1.Length, Row2.Length);
+        }
+
+        #endregion
+
+        #region GetRotation
+
+        public Matrix4f GetRotationMatrix()
+        {
+            var ret = Identity;
+
+            ret.Row0 = new Vector4f(Row0.XYZ, 0) / Row0.Length;
+            ret.Row1 = new Vector4f(Row1.XYZ, 0) / Row1.Length;
+            ret.Row2 = new Vector4f(Row2.XYZ, 0) / Row2.Length;
+
+            return ret;
+        }
+
+        public Vector3f GetEulerAngles()
+        {
+            return GetRotationMatrix().ToEulerAngles();
         }
 
         #endregion
@@ -538,6 +564,15 @@ namespace AlienEngine
             Translate(new Vector3f(x, y, z));
         }
 
+        /// <summary>
+        /// Applies a translation transformation to this matrix.
+        /// </summary>
+        /// <param name="factor">Single factor for X, Y, and Z axis.</param>
+        public void Translate(float factor)
+        {
+            Translate(new Vector3f(factor));
+        }
+
         #endregion
 
         #region Rotate
@@ -549,7 +584,7 @@ namespace AlienEngine
         /// <param name="v">The vector to rotate by.</param>
         public void Rotate(Vector3f v, float angle)
         {
-            this = CreateRotation(v, angle) * this;
+            this = CreateFromAxisAngle(v, angle) * this;
         }
 
         /// <summary>
@@ -599,6 +634,15 @@ namespace AlienEngine
             this = CreateScale(x, y, z) * this;
         }
 
+        /// <summary>
+        /// Applies a scale transformation to this matrix.
+        /// </summary>
+        /// <param name="scale">Scale factor for X, Y, and Z axis.</param>
+        public void Scale(float scale)
+        {
+            this = CreateScale(scale) * this;
+        }
+
         #endregion
 
         #region Static
@@ -610,7 +654,19 @@ namespace AlienEngine
         /// </summary>
         /// <param name="axis">The axis to rotate about.</param>
         /// <param name="angle">Angle in radians to rotate counter-clockwise (looking in the direction of the given axis).</param>
-        /// <param name="result">A matrix instance.</param>
+        public static Matrix4f CreateFromAxisAngle(Vector3f axis, float angle)
+        {
+            Matrix4f result;
+            CreateFromAxisAngle(axis, angle, out result);
+            return result;
+        }
+
+        /// <summary>
+        /// Build a rotation matrix from the specified axis/angle rotation.
+        /// </summary>
+        /// <param name="axis">The axis to rotate about.</param>
+        /// <param name="angle">Angle in radians to rotate counter-clockwise (looking in the direction of the given axis).</param>
+        /// <param name="result">A <see cref="Matrix4f"/> instance.</param>
         public static void CreateFromAxisAngle(Vector3f axis, float angle, out Matrix4f result)
         {
             // normalize and create a local copy of the vector.
@@ -624,42 +680,32 @@ namespace AlienEngine
 
             // do the conversion math once
             float tXX = t * axisX * axisX,
-            tXY = t * axisX * axisY,
-            tXZ = t * axisX * axisZ,
-            tYY = t * axisY * axisY,
-            tYZ = t * axisY * axisZ,
-            tZZ = t * axisZ * axisZ;
+                  tXY = t * axisX * axisY,
+                  tXZ = t * axisX * axisZ,
+                  tYY = t * axisY * axisY,
+                  tYZ = t * axisY * axisZ,
+                  tZZ = t * axisZ * axisZ;
 
             float sinX = sin * axisX,
-            sinY = sin * axisY,
-            sinZ = sin * axisZ;
+                  sinY = sin * axisY,
+                  sinZ = sin * axisZ;
 
             result.Row0.X = tXX + cos;
             result.Row0.Y = tXY - sinZ;
             result.Row0.Z = tXZ + sinY;
             result.Row0.W = 0;
+
             result.Row1.X = tXY + sinZ;
             result.Row1.Y = tYY + cos;
             result.Row1.Z = tYZ - sinX;
             result.Row1.W = 0;
+
             result.Row2.X = tXZ - sinY;
             result.Row2.Y = tYZ + sinX;
             result.Row2.Z = tZZ + cos;
             result.Row2.W = 0;
-            result.Row3 = Vector4f.UnitW;
-        }
 
-        /// <summary>
-        /// Build a rotation matrix from the specified axis/angle rotation.
-        /// </summary>
-        /// <param name="axis">The axis to rotate about.</param>
-        /// <param name="angle">Angle in radians to rotate counter-clockwise (looking in the direction of the given axis).</param>
-        /// <returns>A matrix instance.</returns>
-        public static Matrix4f CreateFromAxisAngle(Vector3f axis, float angle)
-        {
-            Matrix4f result;
-            CreateFromAxisAngle(axis, angle, out result);
-            return result;
+            result.Row3 = Vector4f.UnitW;
         }
 
         #endregion
@@ -718,40 +764,6 @@ namespace AlienEngine
         }
 
         /// <summary>
-        /// Create a rotation matrix about an arbitrary axis.
-        /// </summary>
-        /// <param name="axis">Arbitrary axis for rotation.</param>
-        /// <param name="angle">Amount to rotate in radians.</param>
-        /// <returns>A Matrix4f object that contains the rotation matrix.</returns>
-        public static Matrix4f CreateRotation(Vector3f axis, float angle)
-        {
-            float cos = MathHelper.Cos(angle);
-            float sin = MathHelper.Sin(angle);
-            float tan = 1.0f - cos;
-            return new Matrix4f(
-                new Vector4f(
-                    tan * axis.X * axis.X + cos,
-                    tan * axis.X * axis.Y - sin * axis.Z,
-                    tan * axis.X * axis.Z + sin * axis.Y,
-                    0.0f
-                ),
-                new Vector4f(
-                    tan * axis.Y * axis.X + sin * axis.Z,
-                    tan * axis.Y * axis.Y + cos,
-                    tan * axis.Y * axis.Z - sin * axis.X,
-                    0.0f
-                ),
-                new Vector4f(
-                    tan * axis.Z * axis.X - sin * axis.Y,
-                    tan * axis.Z * axis.Y + sin * axis.X,
-                    tan * axis.Z * axis.Z + cos,
-                    0.0f
-                ),
-                new Vector4f(0.0f, 0.0f, 0.0f, 1.0f)
-            );
-        }
-
-        /// <summary>
         /// Builds a rotation matrix for a rotation.
         /// </summary>
         /// <param name="angleX">X rotation.</param>
@@ -764,7 +776,7 @@ namespace AlienEngine
             Matrix4f rXZ = CreateRotationY(angleY);
             Matrix4f rYZ = CreateRotationX(angleX);
 
-            return rXY * (rXZ * rYZ);
+            return (rYZ * rXZ) * rXY;
         }
 
         /// <summary>
@@ -778,10 +790,10 @@ namespace AlienEngine
             float sin = MathHelper.Sin(angle);
 
             result = Identity;
-            result.Row1.Y = cos;
-            result.Row1.Z = -sin;
-            result.Row2.Y = sin;
-            result.Row2.Z = cos;
+            result.Row1.Y = +cos;
+            result.Row1.Z = +sin;
+            result.Row2.Y = -sin;
+            result.Row2.Z = +cos;
         }
 
         /// <summary>
@@ -807,10 +819,10 @@ namespace AlienEngine
             float sin = MathHelper.Sin(angle);
 
             result = Identity;
-            result.Row0.X = cos;
-            result.Row0.Z = sin;
-            result.Row2.X = -sin;
-            result.Row2.Z = cos;
+            result.Row0.X = +cos;
+            result.Row0.Z = -sin;
+            result.Row2.X = +sin;
+            result.Row2.Z = +cos;
         }
 
         /// <summary>
@@ -836,10 +848,10 @@ namespace AlienEngine
             float sin = MathHelper.Sin(angle);
 
             result = Identity;
-            result.Row0.X = cos;
-            result.Row0.Y = -sin;
-            result.Row1.X = sin;
-            result.Row1.Y = cos;
+            result.Row0.X = +cos;
+            result.Row0.Y = +sin;
+            result.Row1.X = -sin;
+            result.Row1.Y = +cos;
         }
 
         /// <summary>
@@ -1095,21 +1107,16 @@ namespace AlienEngine
         public static void CreatePerspectiveFieldOfView(float fovy, float aspect, float zNear, float zFar, out Matrix4f result)
         {
             if (fovy <= 0 || fovy > MathHelper.Pi)
-            {
                 throw new ArgumentOutOfRangeException("fovy");
-            }
+
             if (aspect <= 0)
-            {
                 throw new ArgumentOutOfRangeException("aspect");
-            }
+
             if (zNear <= 0)
-            {
                 throw new ArgumentOutOfRangeException("zNear");
-            }
+
             if (zFar <= 0)
-            {
                 throw new ArgumentOutOfRangeException("zFar");
-            }
 
             float yMax = zNear * MathHelper.Tan(0.5f * fovy);
             float yMin = -yMax;
@@ -1169,17 +1176,13 @@ namespace AlienEngine
         public static void CreatePerspectiveOffCenter(float left, float right, float bottom, float top, float zNear, float zFar, out Matrix4f result)
         {
             if (zNear <= 0)
-            {
                 throw new ArgumentOutOfRangeException("zNear");
-            }
+
             if (zFar <= 0)
-            {
                 throw new ArgumentOutOfRangeException("zFar");
-            }
+
             if (zNear >= zFar)
-            {
                 throw new ArgumentOutOfRangeException("zNear");
-            }
 
             float x = (2.0f * zNear) / (right - left);
             float y = (2.0f * zNear) / (top - bottom);
@@ -1323,6 +1326,7 @@ namespace AlienEngine
         {
             if (delta.X <= 0 || delta.Y <= 0)
                 throw new ArgumentOutOfRangeException();
+
             var result = new Matrix4f(1.0f);
 
             if (!(delta.X > (0f) && delta.Y > (0f)))
@@ -1351,9 +1355,9 @@ namespace AlienEngine
         /// <param name="target">Target position in world space</param>
         /// <param name="up">Up vector in world space (should not be parallel to the camera direction, that is target - eye)</param>
         /// <returns>A Matrix4f that transforms world space to camera space</returns>
-        public static Matrix4f LookAt(Vector3f eye, Vector3f target, Vector3f up)
+        public static Matrix4f LookAt(Point3f eye, Point3f target, Vector3f up)
         {
-            Vector3f z = Vector3f.Normalize(eye - target);
+            Vector3f z = Vector3f.Normalize(Point3f.CreateVector(target, eye));
             Vector3f x = Vector3f.Normalize(Vector3f.Cross(up, z));
             Vector3f y = Vector3f.Normalize(Vector3f.Cross(z, x));
 
@@ -1394,7 +1398,7 @@ namespace AlienEngine
         /// <returns>A Matrix4f that transforms world space to camera space</returns>
         public static Matrix4f LookAt(float eyeX, float eyeY, float eyeZ, float targetX, float targetY, float targetZ, float upX, float upY, float upZ)
         {
-            return LookAt(new Vector3f(eyeX, eyeY, eyeZ), new Vector3f(targetX, targetY, targetZ), new Vector3f(upX, upY, upZ));
+            return LookAt(new Point3f(eyeX, eyeY, eyeZ), new Point3f(targetX, targetY, targetZ), new Vector3f(upX, upY, upZ));
         }
 
         /// <summary>
@@ -1403,7 +1407,7 @@ namespace AlienEngine
         /// <param name="forward">Eye (camera) forward vector in world space</param>
         /// <param name="up">Up vector in world space (should not be parallel to the camera direction, that is target - eye)</param>
         /// <returns>A Matrix4f that transforms world space to camera space</returns>
-        public static Matrix4f Look(Vector3f forward, Vector3f up)
+        public static Matrix4f LookAt(Vector3f forward, Vector3f up)
         {
             Matrix4f result = Identity;
 
@@ -1434,9 +1438,9 @@ namespace AlienEngine
         /// <param name="upY">Up vector in world space (should not be parallel to the camera direction, that is target - eye)</param>
         /// <param name="upZ">Up vector in world space (should not be parallel to the camera direction, that is target - eye)</param>
         /// <returns>A Matrix4f that transforms world space to camera space</returns>
-        public static Matrix4f Look(float eyeX, float eyeY, float eyeZ, float upX, float upY, float upZ)
+        public static Matrix4f LookAt(float eyeX, float eyeY, float eyeZ, float upX, float upY, float upZ)
         {
-            return Look(new Vector3f(eyeX, eyeY, eyeZ), new Vector3f(upX, upY, upZ));
+            return LookAt(new Vector3f(eyeX, eyeY, eyeZ), new Vector3f(upX, upY, upZ));
         }
 
         #endregion
@@ -1468,14 +1472,17 @@ namespace AlienEngine
             result.Row0.Y = Vector4f.Dot(left.Row0, right.Column1);
             result.Row0.Z = Vector4f.Dot(left.Row0, right.Column2);
             result.Row0.W = Vector4f.Dot(left.Row0, right.Column3);
+
             result.Row1.X = Vector4f.Dot(left.Row1, right.Column0);
             result.Row1.Y = Vector4f.Dot(left.Row1, right.Column1);
             result.Row1.Z = Vector4f.Dot(left.Row1, right.Column2);
             result.Row1.W = Vector4f.Dot(left.Row1, right.Column3);
+
             result.Row2.X = Vector4f.Dot(left.Row2, right.Column0);
             result.Row2.Y = Vector4f.Dot(left.Row2, right.Column1);
             result.Row2.Z = Vector4f.Dot(left.Row2, right.Column2);
             result.Row2.W = Vector4f.Dot(left.Row2, right.Column3);
+
             result.Row3.X = Vector4f.Dot(left.Row3, right.Column0);
             result.Row3.Y = Vector4f.Dot(left.Row3, right.Column1);
             result.Row3.Z = Vector4f.Dot(left.Row3, right.Column2);
@@ -1639,12 +1646,106 @@ namespace AlienEngine
         }
 
         /// <summary>
-        /// Returns the <see cref="Quaternion"/> (the rotate factor) of this instance.
+        /// Gets Euler angles from this <see cref="Matrix4f"/> (supposed to be a rotation matrix).
         /// </summary>
-        /// <returns>The <see cref="Quaternion"/> (the rotate factor) of this instance.</returns>
+        public Vector3f ToEulerAngles()
+        {
+            Vector3f ret = Vector3f.Zero;
+
+            // If cos(angle_y) is null
+            if (M11 == 0 && M12 == 0 && M23 == 0 && M33 == 0)
+            {
+                ret.Z = 0;
+                ret.Y = MathHelper.PiOver2;
+                ret.X = MathHelper.Atan(M21, M22);
+            }
+            else
+            {
+                ret.Z = MathHelper.Atan(M12, M11);
+                ret.Y = MathHelper.Atan(-M13, MathHelper.Sqrt(M11 * M11 + M12 * M12));
+                ret.X = MathHelper.Atan(M23, M33);
+            }
+
+            return ret;
+        }
+
+        /// <summary>
+        /// Transform this matrix to a <see cref="Quaternion"/>.
+        /// </summary>
+        /// <returns></returns>
         public Quaternion ToQuaternion()
         {
-            return ToMatrix3f().ToQuaternion();
+            float x = 0, y = 0, z = 0, w = 0;
+
+            // detect biggest in w, x, y, z.
+            float fourWSquaredMinus1 = +M11 + M22 + M33;
+            float fourXSquaredMinus1 = +M11 - M22 - M33;
+            float fourYSquaredMinus1 = -M11 + M22 - M33;
+            float fourZSquaredMinus1 = -M11 - M22 + M33;
+
+            int biggestIndex = 0;
+
+            float biggest = fourWSquaredMinus1;
+
+            if (fourXSquaredMinus1 > biggest)
+            {
+                biggest = fourXSquaredMinus1;
+                biggestIndex = 1;
+            }
+            if (fourYSquaredMinus1 > biggest)
+            {
+                biggest = fourYSquaredMinus1;
+                biggestIndex = 2;
+            }
+            if (fourZSquaredMinus1 > biggest)
+            {
+                biggest = fourZSquaredMinus1;
+                biggestIndex = 3;
+            }
+
+            // sqrt and division
+            float biggestVal = MathHelper.Sqrt(biggest + 1) * 0.5f;
+            float mult = 0.25f / biggestVal;
+
+            // get output
+            switch (biggestIndex)
+            {
+                case 0:
+                    w = biggestVal;
+                    x = (M23 - M32) * mult;
+                    y = (M31 - M13) * mult;
+                    z = (M12 - M21) * mult;
+                    break;
+
+                case 1:
+                    x = biggestVal;
+                    w = (M23 - M32) * mult;
+                    y = (M12 + M21) * mult;
+                    z = (M31 + M13) * mult;
+                    break;
+
+                case 2:
+                    y = biggestVal;
+                    w = (M31 - M13) * mult;
+                    x = (M12 + M21) * mult;
+                    z = (M23 + M32) * mult;
+                    break;
+
+                case 3:
+                    z = biggestVal;
+                    w = (M12 - M21) * mult;
+                    x = (M31 + M13) * mult;
+                    y = (M23 + M32) * mult;
+                    break;
+
+                default:
+                    break;
+            }
+
+            if (x == 0.0f && y == 0.0f && z == 0.0f)
+                return new Quaternion(1, 1, 1, 1);
+            else
+                return new Quaternion(w, -x, -y, -z);
         }
 
         /// <summary>
