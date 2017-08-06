@@ -746,6 +746,8 @@ namespace AlienEngine.ASL
             public vec3(vec2 xy, float z) { throw new NotImplementedException(); }
             public vec3(float x, vec2 yz) { throw new NotImplementedException(); }
             public vec3(float x, float y, float z) { throw new NotImplementedException(); }
+            public vec3(vec3 value) { throw new NotImplementedException(); }
+            public vec3(vec4 value) { throw new NotImplementedException(); }
 
             public float x { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
             public float y { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
@@ -766,7 +768,9 @@ namespace AlienEngine.ASL
             public static vec3 operator -(vec3 vec) { throw new NotImplementedException(); }
             public static vec3 operator *(vec3 left, vec3 right) { throw new NotImplementedException(); }
             public static vec3 operator *(vec3 left, float right) { throw new NotImplementedException(); }
+            public static vec3 operator -(vec3 left, float right) { throw new NotImplementedException(); }
             public static vec3 operator *(float left, vec3 right) { throw new NotImplementedException(); }
+            public static vec3 operator -(float left, vec3 right) { throw new NotImplementedException(); }
             public static vec3 operator /(vec3 left, vec3 right) { throw new NotImplementedException(); }
             public static vec3 operator /(vec3 left, float right) { throw new NotImplementedException(); }
 
@@ -2190,7 +2194,9 @@ namespace AlienEngine.ASL
             public static vec4 operator -(vec4 left, vec4 right) { throw new NotImplementedException(); }
             public static vec4 operator *(vec4 left, vec4 right) { throw new NotImplementedException(); }
             public static vec4 operator *(vec4 left, float right) { throw new NotImplementedException(); }
+            public static vec4 operator -(vec4 left, float right) { throw new NotImplementedException(); }
             public static vec4 operator *(float left, vec4 right) { throw new NotImplementedException(); }
+            public static vec4 operator -(float left, vec4 right) { throw new NotImplementedException(); }
             public static vec4 operator /(vec4 left, vec4 right) { throw new NotImplementedException(); }
             public static vec4 operator /(vec4 left, float right) { throw new NotImplementedException(); }
 
