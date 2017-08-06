@@ -12,6 +12,18 @@ namespace AlienEngine.ASL
         [BuiltIn]
         protected readonly int gl_InvocationID;
 
+        [BuiltIn]
+        protected struct gl_Vertex
+        {
+            public vec4 gl_Position;
+            public float gl_PointSize;
+            public float[] gl_ClipDistance;
+        }
+
+        [In]
+        [BuiltIn]
+        protected gl_Vertex[] gl_in;
+
         [Out]
         [BuiltIn]
         protected vec4 gl_Position;
