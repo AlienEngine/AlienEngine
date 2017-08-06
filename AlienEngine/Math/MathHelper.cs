@@ -114,7 +114,7 @@ namespace AlienEngine
         /// <param name="x">The value</param>
         public static float Acos(float x)
         {
-            return (float)System.Math.Acos(x);
+            return (float)Math.Acos(x);
         }
 
         /// <summary>
@@ -125,7 +125,7 @@ namespace AlienEngine
         {
             if (x < (1f))
                 return 0f;
-            return (float)System.Math.Log(x + System.Math.Sqrt(x * x - (1f)));
+            return (float)Math.Log(x + Math.Sqrt(x * x - (1f)));
         }
 
         /// <summary>
@@ -134,7 +134,7 @@ namespace AlienEngine
         /// <param name="x">The value.</param>
         public static float Asin(float x)
         {
-            return (float)System.Math.Asin(x);
+            return (float)Math.Asin(x);
         }
 
         /// <summary>
@@ -143,7 +143,7 @@ namespace AlienEngine
         /// <param name="x">The value</param>
         public static float Asinh(float x)
         {
-            return (float)(x < 0f ? -1f : (x > 0f ? 1f : 0f)) * (float)System.Math.Log(System.Math.Abs(x) + System.Math.Sqrt(1f + x * x));
+            return (x < 0f ? -1f : (x > 0f ? 1f : 0f)) * (float)Math.Log(Math.Abs(x) + Math.Sqrt(1f + x * x));
         }
 
         /// <summary>
@@ -153,7 +153,7 @@ namespace AlienEngine
         /// <param name="x">The second value.</param>
         public static float Atan(float y, float x)
         {
-            return (float)System.Math.Atan2(y, x);
+            return (float)Math.Atan2(y, x);
         }
 
         /// <summary>
@@ -162,7 +162,7 @@ namespace AlienEngine
         /// <param name="y_over_x">The value.</param>
         public static float Atan(float y_over_x)
         {
-            return (float)System.Math.Atan(y_over_x);
+            return (float)Math.Atan(y_over_x);
         }
 
         /// <summary>
@@ -171,9 +171,9 @@ namespace AlienEngine
         /// <param name="x">The value.</param>
         public static float Atanh(float x)
         {
-            if (System.Math.Abs(x) >= 1f)
+            if (Math.Abs(x) >= 1f)
                 return 0f;
-            return (0.5f) * (float)System.Math.Log((1f + x) / (1f - x));
+            return (0.5f) * (float)Math.Log((1f + x) / (1f - x));
         }
 
         /// <summary>
@@ -182,7 +182,7 @@ namespace AlienEngine
         /// <param name="angle">The angle.</param>
         public static float Cos(float angle)
         {
-            return (float)System.Math.Cos(angle);
+            return (float)Math.Cos(angle);
         }
 
         /// <summary>
@@ -191,7 +191,7 @@ namespace AlienEngine
         /// <param name="angle">The angle.</param>
         public static float Cosh(float angle)
         {
-            return (float)System.Math.Cosh(angle);
+            return (float)Math.Cosh(angle);
         }
 
         /// <summary>
@@ -200,7 +200,7 @@ namespace AlienEngine
         /// <param name="angle">The angle.</param>
         public static float Sin(float angle)
         {
-            return (float)System.Math.Sin(angle);
+            return (float)Math.Sin(angle);
         }
 
         /// <summary>
@@ -209,7 +209,7 @@ namespace AlienEngine
         /// <param name="angle">The angle.</param>
         public static float Sinh(float angle)
         {
-            return (float)System.Math.Sinh(angle);
+            return (float)Math.Sinh(angle);
         }
 
         /// <summary>
@@ -218,7 +218,7 @@ namespace AlienEngine
         /// <param name="angle">The angle.</param>
         public static float Tan(float angle)
         {
-            return (float)System.Math.Tan(angle);
+            return (float)Math.Tan(angle);
         }
 
         /// <summary>
@@ -227,7 +227,7 @@ namespace AlienEngine
         /// <param name="angle">The angle.</param>
         public static float Tanh(float angle)
         {
-            return (float)System.Math.Tanh(angle);
+            return (float)Math.Tanh(angle);
         }
 
         /// <summary>
@@ -239,7 +239,7 @@ namespace AlienEngine
         {
             if (n < 0)
                 throw new ArgumentOutOfRangeException("n", "Must be positive.");
-            return (long)System.Math.Pow(2, System.Math.Ceiling(System.Math.Log((double)n, 2)));
+            return (long)Math.Pow(2, Math.Ceiling(Math.Log(n, 2)));
         }
 
         /// <summary>
@@ -251,7 +251,7 @@ namespace AlienEngine
         {
             if (n < 0)
                 throw new ArgumentOutOfRangeException("n", "Must be positive.");
-            return (int)System.Math.Pow(2, System.Math.Ceiling(System.Math.Log((double)n, 2)));
+            return (int)Math.Pow(2, Math.Ceiling(Math.Log(n, 2)));
         }
 
         /// <summary>
@@ -263,7 +263,7 @@ namespace AlienEngine
         {
             if (n < 0)
                 throw new ArgumentOutOfRangeException("n", "Must be positive.");
-            return (float)System.Math.Pow(2, System.Math.Ceiling(System.Math.Log((double)n, 2)));
+            return (float)Math.Pow(2, Math.Ceiling(Math.Log(n, 2)));
         }
 
         /// <summary>
@@ -275,7 +275,65 @@ namespace AlienEngine
         {
             if (n < 0)
                 throw new ArgumentOutOfRangeException("n", "Must be positive.");
-            return System.Math.Pow(2, System.Math.Ceiling(System.Math.Log((double)n, 2)));
+            return Math.Pow(2, Math.Ceiling(Math.Log(n, 2)));
+        }
+
+        /// <summary>
+        /// Returns the previous power of two that is smaller than the specified number.
+        /// </summary>
+        /// <param name="n">Value to round down</param>
+        /// <returns>Rounded down to the nearest power of two</returns>
+        public static long PreviousPowerOfTwo(long n)
+        {
+            if (n < 0)
+                throw new ArgumentOutOfRangeException("n", "Must be positive.");
+            n = n | (n >> 1);
+            n = n | (n >> 2);
+            n = n | (n >> 4);
+            n = n | (n >> 8);
+            n = n | (n >> 16);
+            return n - (n >> 1);
+        }
+
+        /// <summary>
+        /// Returns the previous power of two that is smaller than the specified number.
+        /// </summary>
+        /// <param name="n">Value to round down</param>
+        /// <returns>Rounded down to the nearest power of two</returns>
+        public static int PreviousPowerOfTwo(int n)
+        {
+            if (n < 0)
+                throw new ArgumentOutOfRangeException("n", "Must be positive.");
+            n = n | (n >> 1);
+            n = n | (n >> 2);
+            n = n | (n >> 4);
+            n = n | (n >> 8);
+            n = n | (n >> 16);
+            return n - (n >> 1);
+        }
+
+        /// <summary>
+        /// Returns the previous power of two that is smaller than the specified number.
+        /// </summary>
+        /// <param name="n">Value to round down</param>
+        /// <returns>Rounded down to the nearest power of two</returns>
+        public static float PreviousPowerOfTwo(float n)
+        {
+            if (n < 0)
+                throw new ArgumentOutOfRangeException("n", "Must be positive.");
+            return (float)Math.Pow(2, Math.Floor(Math.Log(n, 2)));
+        }
+
+        /// <summary>
+        /// Returns the previous power of two that is smaller than the specified number.
+        /// </summary>
+        /// <param name="n">Value to round down</param>
+        /// <returns>Rounded down to the nearest power of two</returns>
+        public static double PreviousPowerOfTwo(double n)
+        {
+            if (n < 0)
+                throw new ArgumentOutOfRangeException("n", "Must be positive.");
+            return Math.Pow(2, Math.Floor(Math.Log(n, 2)));
         }
 
         /// <summary>
@@ -380,7 +438,7 @@ namespace AlienEngine
         /// <returns>The angle expressed in radians</returns>
         public static float Deg2Rad(float degrees)
         {
-            const float degToRad = (float)Tau / 360.0f;
+            const float degToRad = Pi / 180.0f;
             return degrees * degToRad;
         }
 
@@ -391,7 +449,7 @@ namespace AlienEngine
         /// <returns>The angle expressed in degrees</returns>
         public static float Rad2Deg(float radians)
         {
-            const float radToDeg = 360.0f / (float)Tau;
+            const float radToDeg = 180.0f / Pi;
             return radians * radToDeg;
         }
 
@@ -402,7 +460,7 @@ namespace AlienEngine
         /// <returns>The angle expressed in radians</returns>
         public static double Deg2Rad(double degrees)
         {
-            const double degToRad = System.Math.PI / 180.0;
+            const double degToRad = Pi / 180.0;
             return degrees * degToRad;
         }
 
@@ -413,7 +471,7 @@ namespace AlienEngine
         /// <returns>The angle expressed in degrees</returns>
         public static double Rad2Deg(double radians)
         {
-            const double radToDeg = 180.0 / System.Math.PI;
+            const double radToDeg = 180.0 / Pi;
             return radians * radToDeg;
         }
 
@@ -426,7 +484,7 @@ namespace AlienEngine
         /// <returns>min, if n is lower than min; max, if n is higher than max; n otherwise.</returns>
         public static int Clamp(int n, int min, int max)
         {
-            return System.Math.Max(System.Math.Min(n, max), min);
+            return Math.Max(Math.Min(n, max), min);
         }
 
         /// <summary>
@@ -438,7 +496,7 @@ namespace AlienEngine
         /// <returns>min, if n is lower than min; max, if n is higher than max; n otherwise.</returns>
         public static float Clamp(float n, float min, float max)
         {
-            return System.Math.Max(System.Math.Min(n, max), min);
+            return Math.Max(Math.Min(n, max), min);
         }
 
         /// <summary>
@@ -450,7 +508,7 @@ namespace AlienEngine
         /// <returns>min, if n is lower than min; max, if n is higher than max; n otherwise.</returns>
         public static double Clamp(double n, double min, double max)
         {
-            return System.Math.Max(System.Math.Min(n, max), min);
+            return Math.Max(Math.Min(n, max), min);
         }
 
         /// <summary>
