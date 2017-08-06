@@ -1,14 +1,19 @@
 ﻿using System;
 using System.Drawing;
 using AlienEngine.Core.Graphics.OpenGL;
+using AlienEngine.Core.Game;
+using AlienEngine.Core.Resources;
+using System.Collections.Generic;
 
-namespace AlienEngine.Graphics
+namespace AlienEngine.Core.Graphics
 {
     /// <summary>
     /// Encapsulates a frame buffer and its associated depth buffer (if applicable).
     /// </summary>
     public class FBO : IDisposable
     {
+        private Dictionary<FramebufferAttachment, uint> _attachementMap;
+
         #region Properties
         /// <summary>
         /// The ID for the entire framebuffer object.
@@ -47,6 +52,11 @@ namespace AlienEngine.Graphics
         /// Specifies whether to build mipmaps after the frame buffer is unbound.
         /// </summary>
         public bool MipMaps { get; private set; }
+
+        /// <summary>
+        /// Specifies whether the FBO is multisampled.
+        /// </summary>
+        public bool Multisampled { get; private set; }
         #endregion
 
         #region Constructor and Destructor
@@ -58,7 +68,7 @@ namespace AlienEngine.Graphics
         /// <param name="attachment">Specifies the attachment to use for the frame buffer.</param>
         /// <param name="format">Specifies the internal pixel format for the frame buffer.</param>
         /// <param name="mipmaps">Specifies whether to build mipmaps after the frame buffer is unbound.</param>
-        public FBO(int width, int height, FramebufferAttachment attachment = FramebufferAttachment.ColorAttachment0, PixelInternalFormat format = PixelInternalFormat.Rgba8, bool mipmaps = true)
+        public FBO(int width, int height, FramebufferAttachment attachment = FramebufferAttachment.ColorAttachment0, PixelInternalFormat format = PixelInternalFormat.Rgba8, bool mipmaps = true, bool renderbuffer = true, bool multisampled = false)
             : this(new Sizei(width, height), new FramebufferAttachment[] { attachment }, format, mipmaps)
         {
         }
@@ -70,7 +80,7 @@ namespace AlienEngine.Graphics
         /// <param name="attachment">Specifies the attachment to use for the frame buffer.</param>
         /// <param name="format">Specifies the internal pixel format for the frame buffer.</param>
         /// <param name="mipmaps">Specifies whether to build mipmaps after the frame buffer is unbound.</param>
-        public FBO(Sizei size, FramebufferAttachment attachment = FramebufferAttachment.ColorAttachment0, PixelInternalFormat format = PixelInternalFormat.Rgba8, bool mipmaps = true)
+        public FBO(Sizei size, FramebufferAttachment attachment = FramebufferAttachment.ColorAttachment0, PixelInternalFormat format = PixelInternalFormat.Rgba8, bool mipmaps = true, bool renderbuffer = true, bool multisampled = false)
             : this(size, new FramebufferAttachment[] { attachment }, format, mipmaps)
         {
         }
@@ -84,32 +94,46 @@ namespace AlienEngine.Graphics
         /// <param name="mipmaps">Specifies whether to build mipmaps after the frame buffer is unbound.</param>
         /// <param name="filterType">Specifies the type of filtering to apply to the frame buffer when bound as a texture.</param>
         /// <param name="pixelType">Specifies the pixel type to use for the underlying format of the frame buffer.</param>
-        public FBO(Sizei size, FramebufferAttachment[] attachments, PixelInternalFormat format, bool mipmaps = false, TextureParameter filterType = TextureParameter.Linear, PixelType pixelType = PixelType.UnsignedByte)
+        public FBO(Sizei size, FramebufferAttachment[] attachments, PixelInternalFormat format, bool mipmaps = false, TextureParameter filterType = TextureParameter.Linear, PixelType pixelType = PixelType.UnsignedByte, bool renderbuffer = true, bool multisampled = false)
         {
-            this.Size = size;
-            this.Attachments = attachments;
-            this.Format = format;
-            this.MipMaps = mipmaps;
+            Size = size;
+            Attachments = attachments;
+            Format = format;
+            MipMaps = mipmaps;
+            Multisampled = multisampled;
 
             // First create the framebuffer
             BufferID = GL.GenFramebuffer();
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, BufferID);
 
+            _attachementMap = new Dictionary<FramebufferAttachment, uint>();
+            TextureTarget textureTarget = Multisampled ? TextureTarget.Texture2DMultisample : TextureTarget.Texture2D;
+
             if (Attachments.Length == 1 && Attachments[0] == FramebufferAttachment.DepthAttachment)
             {
                 // if this is a depth attachment only
                 TextureID = new uint[] { GL.GenTexture() };
-                GL.BindTexture(TextureTarget.Texture2D, TextureID[0]);
+                GL.BindTexture(textureTarget, TextureID[0]);
 
-                GL.TexImage2D(TextureTarget.Texture2D, 0, Format, Size.Width, Size.Height, 0, PixelFormat.DepthComponent, PixelType.Float, IntPtr.Zero);
-                GL.TexParameteri(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, TextureParameter.Nearest);
-                GL.TexParameteri(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, TextureParameter.Nearest);
-                GL.TexParameteri(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, TextureParameter.ClampToEdge);
-                GL.TexParameteri(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, TextureParameter.ClampToEdge);
+                if (Multisampled)
+                {
+                    GL.TexImage2DMultisample(textureTarget, GameSettings.MultisampleLevel, Format, Size.Width, Size.Height, true);
+                }
+                else
+                {
+                    GL.TexImage2D(textureTarget, 0, Format, Size.Width, Size.Height, 0, PixelFormat.DepthComponent, PixelType.Float, IntPtr.Zero);
+                    GL.TexParameteri(textureTarget, TextureParameterName.TextureMagFilter, TextureParameter.Nearest);
+                    GL.TexParameteri(textureTarget, TextureParameterName.TextureMinFilter, TextureParameter.Nearest);
+                    GL.TexParameteri(textureTarget, TextureParameterName.TextureWrapS, TextureParameter.ClampToEdge);
+                    GL.TexParameteri(textureTarget, TextureParameterName.TextureWrapT, TextureParameter.ClampToEdge);
+                }
 
-                GL.FramebufferTexture(FramebufferTarget.Framebuffer, FramebufferAttachment.DepthAttachment, TextureID[0], 0);
+                GL.BindTexture(textureTarget, 0);
+                GL.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.DepthAttachment, textureTarget, TextureID[0], 0);
                 GL.DrawBuffer(DrawBufferMode.None);
                 GL.ReadBuffer(ReadBufferMode.None);
+
+                _attachementMap.Add(FramebufferAttachment.DepthAttachment, 0);
             }
             else
             {
@@ -120,34 +144,60 @@ namespace AlienEngine.Graphics
                 // Bind the n texture buffers to the framebuffer
                 for (int i = 0; i < Attachments.Length; i++)
                 {
-                    GL.BindTexture(TextureTarget.Texture2D, TextureID[i]);
-                    GL.TexImage2D(TextureTarget.Texture2D, 0, Format, Size.Width, Size.Height, 0, PixelFormat.Rgba, pixelType, IntPtr.Zero);
-                    if (MipMaps)
+                    GL.BindTexture(textureTarget, TextureID[i]);
+
+                    if (Multisampled)
                     {
-                        GL.TexParameteri(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, TextureParameter.Linear);
-                        GL.TexParameteri(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, TextureParameter.LinearMipMapLinear);
-                        GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
+                        GL.TexImage2DMultisample(textureTarget, GameSettings.MultisampleLevel, Format, Size.Width, Size.Height, true);
                     }
                     else
                     {
-                        GL.TexParameteri(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, filterType);
-                        GL.TexParameteri(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, filterType);
+                        GL.TexImage2D(textureTarget, 0, Format, Size.Width, Size.Height, 0, PixelFormat.Rgba, pixelType, IntPtr.Zero);
+
+                        if (MipMaps)
+                        {
+                            GL.TexParameteri(textureTarget, TextureParameterName.TextureMagFilter, TextureParameter.Linear);
+                            GL.TexParameteri(textureTarget, TextureParameterName.TextureMinFilter, TextureParameter.LinearMipMapLinear);
+                            GL.GenerateMipmap(Multisampled ? GenerateMipmapTarget.Texture2DMultisample : GenerateMipmapTarget.Texture2D);
+                        }
+                        else
+                        {
+                            GL.TexParameteri(textureTarget, TextureParameterName.TextureMagFilter, filterType);
+                            GL.TexParameteri(textureTarget, TextureParameterName.TextureMinFilter, filterType);
+                        }
                     }
-                    GL.FramebufferTexture(FramebufferTarget.Framebuffer, Attachments[i], TextureID[i], 0);
+
+                    GL.BindTexture(textureTarget, 0);
+                    GL.FramebufferTexture2D(FramebufferTarget.Framebuffer, Attachments[i], textureTarget, TextureID[i], 0);
+
+                    _attachementMap.Add(Attachments[i], TextureID[i]);
                 }
 
-                // Create and attach a 24-bit depth buffer to the framebuffer
-                DepthID = GL.GenTexture();
-                GL.BindTexture(TextureTarget.Texture2D, DepthID);
+                if (renderbuffer)
+                {
+                    // Create and attach a 24-bit depth buffer to the framebuffer
+                    DepthID = GL.GenRenderbuffer();
+                    GL.BindRenderbuffer(RenderbufferTarget.Renderbuffer, DepthID);
 
-                GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Depth24Stencil8, Size.Width, Size.Height, 0, PixelFormat.DepthStencil, PixelType.UnsignedInt248, IntPtr.Zero);
-                GL.TexParameteri(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, TextureParameter.Nearest);
-                GL.TexParameteri(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, TextureParameter.Nearest);
-                GL.TexParameteri(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, TextureParameter.ClampToEdge);
-                GL.TexParameteri(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, TextureParameter.ClampToEdge);
+                    if (Multisampled)
+                        GL.RenderbufferStorageMultisample(RenderbufferTarget.Renderbuffer, GameSettings.MultisampleLevel, PixelInternalFormat.Depth32fStencil8, Size.Width, Size.Height);
+                    else
+                        GL.RenderbufferStorage(RenderbufferTarget.Renderbuffer, PixelInternalFormat.Depth24Stencil8, Size.Width, Size.Height);
 
-                GL.FramebufferTexture(FramebufferTarget.Framebuffer, FramebufferAttachment.DepthAttachment, DepthID, 0);
-                GL.FramebufferTexture(FramebufferTarget.Framebuffer, FramebufferAttachment.StencilAttachment, DepthID, 0);
+                    GL.BindRenderbuffer(RenderbufferTarget.Renderbuffer, 0);
+                    GL.FramebufferRenderbuffer(FramebufferTarget.Framebuffer, FramebufferAttachment.DepthStencilAttachment, RenderbufferTarget.Renderbuffer, DepthID);
+
+                    //GL.TexParameteri(textureTarget, TextureParameterName.TextureMagFilter, TextureParameter.Nearest);
+                    //GL.TexParameteri(textureTarget, TextureParameterName.TextureMinFilter, TextureParameter.Nearest);
+                    //GL.TexParameteri(textureTarget, TextureParameterName.TextureWrapS, TextureParameter.ClampToEdge);
+                    //GL.TexParameteri(textureTarget, TextureParameterName.TextureWrapT, TextureParameter.ClampToEdge);
+
+                    //GL.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.DepthAttachment, textureTarget, DepthID, 0);
+                    //GL.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.StencilAttachment, textureTarget, DepthID, 0);
+
+                    _attachementMap.Add(FramebufferAttachment.DepthStencilAttachment, DepthID);
+                    //_attachementMap.Add(FramebufferAttachment.StencilAttachment, DepthID);
+                }
             }
 
             // Build the framebuffer and check for errors
@@ -157,7 +207,11 @@ namespace AlienEngine.Graphics
                 Console.WriteLine("Frame buffer did not compile correctly.  Returned {0}, glError: {1}", status.ToString(), GL.GetError().ToString());
             }
 
+            // Make sure this framebuffer is not modified from outside
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
+
+            // Register this framebuffer as a disposable object
+            ResourcesManager.AddDisposableResource(this);
         }
 
         /// <summary>
@@ -178,11 +232,13 @@ namespace AlienEngine.Graphics
         /// <param name="clear">True to clear both the color and depth buffer bits of the FBO before enabling.</param>
         public void Enable(bool clear = true)
         {
+            TextureTarget textureTarget = Multisampled ? TextureTarget.Texture2DMultisample : TextureTarget.Texture2D;
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, BufferID);
+
             if (Attachments.Length == 1)
             {
-                GL.BindTexture(TextureTarget.Texture2D, TextureID[0]);
-                GL.FramebufferTexture(FramebufferTarget.Framebuffer, Attachments[0], TextureID[0], 0);
+                GL.BindTexture(textureTarget, TextureID[0]);
+                GL.FramebufferTexture2D(FramebufferTarget.Framebuffer, Attachments[0], textureTarget, TextureID[0], 0);
             }
             else
             {
@@ -190,13 +246,13 @@ namespace AlienEngine.Graphics
 
                 for (int i = 0; i < Attachments.Length; i++)
                 {
-                    GL.BindTexture(TextureTarget.Texture2D, TextureID[i]);
-                    GL.FramebufferTexture(FramebufferTarget.Framebuffer, Attachments[i], TextureID[i], 0);
+                    GL.BindTexture(textureTarget, TextureID[i]);
+                    GL.FramebufferTexture2D(FramebufferTarget.Framebuffer, Attachments[i], textureTarget, TextureID[i], 0);
                     buffers[i] = (DrawBuffersEnum)Attachments[i];
                 }
 
-                GL.BindTexture(TextureTarget.Texture2D, DepthID);
-                GL.FramebufferTexture(FramebufferTarget.Framebuffer, FramebufferAttachment.DepthAttachment, DepthID, 0);
+                GL.BindTexture(textureTarget, DepthID);
+                GL.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.DepthAttachment, textureTarget, DepthID, 0);
 
                 if (Attachments.Length > 1) GL.DrawBuffers(Attachments.Length, buffers);
             }
@@ -207,26 +263,45 @@ namespace AlienEngine.Graphics
             if (clear)
             {
                 if (Attachments.Length == 1 && Attachments[0] == FramebufferAttachment.DepthAttachment)
-                    GL.Clear(ClearBufferMask.DepthBufferBit);
+                    Renderer.ClearScreen(ClearBufferMask.DepthBufferBit);
                 else
-                    GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+                    Renderer.ClearScreen(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit | ClearBufferMask.StencilBufferBit);
             }
         }
 
         /// <summary>
         /// Unbinds the framebuffer and then generates the mipmaps of each renderbuffer.
         /// </summary>
-        public void Disable()
+        public void Disable(FBO screenFBO = null)
         {
-            // unbind this framebuffer (does not guarantee the correct framebuffer is bound)
+            // Copy framebuffer texture to a not multisampled FBO if this one is.
+            if (Multisampled)
+            {
+                GL.BindFramebuffer(FramebufferTarget.ReadFramebuffer, BufferID);
+                GL.BindFramebuffer(FramebufferTarget.DrawFramebuffer, (screenFBO != null) ? screenFBO.BufferID : 0);
+                GL.BlitFramebuffer(0, 0, Size.Width, Size.Height, 0, 0, Size.Width, Size.Height, ClearBufferMask.ColorBufferBit, BlitFramebufferFilter.Nearest);
+            }
+
+            // Unbind this framebuffer (does not guarantee the correct framebuffer is bound)
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
 
-            // have to generate mipmaps here
-            for (int i = 0; i < Attachments.Length && MipMaps; i++)
+            if (MipMaps)
             {
-                GL.BindTexture(TextureTarget.Texture2D, TextureID[i]);
-                GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
+                // Have to generate mipmaps here
+                for (int i = 0; i < Attachments.Length && MipMaps; i++)
+                {
+                    GL.BindTexture(Multisampled ? TextureTarget.Texture2DMultisample : TextureTarget.Texture2D, TextureID[i]);
+                    GL.GenerateMipmap(Multisampled ? GenerateMipmapTarget.Texture2DMultisample : GenerateMipmapTarget.Texture2D);
+                }
             }
+        }
+        #endregion
+
+        #region Get Texture ID
+        [CLSCompliant(false)]
+        public uint GetTextureID(FramebufferAttachment attachement)
+        {
+            return _attachementMap[attachement];
         }
         #endregion
 
