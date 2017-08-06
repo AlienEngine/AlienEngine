@@ -17,13 +17,11 @@
 // USA
 #endregion
 
-using System;
-
 namespace AlienEngine
 {
     /// <summary>
     /// Dual quaternion class represents a dual quaternion which an represent multiple transfromations
-    /// in a in single structure an alternative to a 4x4 matrix 
+    /// in a single structure an alternative to a 4x4 matrix 
     /// </summary>
     public class DualQuaternion
     {
@@ -90,10 +88,10 @@ namespace AlienEngine
         /// </summary>
         /// <param name='real'>Real.</param>
         /// <param name='dual'>Dual.</param>
-        DualQuaternion(Quaternion real, Quaternion dual)
+        private DualQuaternion(Quaternion real, Quaternion dual)
         {
-            this.Real = real;
-            this.Dual = dual;
+            Real = real;
+            Dual = dual;
         }
 
         #endregion
