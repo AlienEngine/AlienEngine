@@ -73,28 +73,53 @@ namespace AlienEngine.Core.Graphics.OpenGL
         public const int NONE = 0;
 
         /// <summary>
-        /// Layout location of vertices positions in shaders.
+        /// Layout location of vertex positions in shaders.
         /// </summary>
-        public const int POSITION_LOCATION = 0;
+        public const int VERTEX_POSITION_LOCATION = 0;
 
         /// <summary>
-        /// Layout location of texture coordinates in shaders.
+        /// Layout location of vertex colors in shaders.
         /// </summary>
-        public const int UV_LOCATION = 1;
+        public const int VERTEX_COLOR_LOCATION = 1;
 
         /// <summary>
-        /// Layout position of normal coordinates in shaders.
+        /// Layout location of vertex texture coordinates in shaders.
         /// </summary>
-        public const int NORMAL_LOCATION = 2;
+        public const int VERTEX_TEXTURE_COORD_LOCATION = 2;
+
+        /// <summary>
+        /// Layout position of vertex normal coordinates in shaders.
+        /// </summary>
+        public const int VERTEX_NORMAL_LOCATION = 3;
+
+        /// <summary>
+        /// Layout position of vertex tangents in shaders.
+        /// </summary>
+        public const int VERTEX_TANGENT_LOCATION = 4;
+
+        /// <summary>
+        /// Layout position of vertex bitangents in shaders.
+        /// </summary>
+        public const int VERTEX_BITANGENT_LOCATION = 5;
 
         public const int COLOR_TEXTURE_UNIT_INDEX = 0;
+
         public const int SHADOW_TEXTURE_UNIT_INDEX = 1;
+
         public const int NORMAL_TEXTURE_UNIT_INDEX = 2;
+
         public const int RANDOM_TEXTURE_UNIT_INDEX = 3;
+
         public const int DISPLACEMENT_TEXTURE_UNIT_INDEX = 4;
+
         public const int MOTION_TEXTURE_UNIT_INDEX = 5;
+
         public const int CASCACDE_SHADOW_TEXTURE_UNIT0_INDEX = SHADOW_TEXTURE_UNIT_INDEX;
+
         public const int CASCACDE_SHADOW_TEXTURE_UNIT1_INDEX = 6;
+
         public const int CASCACDE_SHADOW_TEXTURE_UNIT2_INDEX = 7;
+
+        public const int EMISSIVE_TEXTURE_UNIT_INDEX = 8;
     }
 }
