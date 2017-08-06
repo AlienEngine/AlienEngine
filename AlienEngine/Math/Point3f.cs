@@ -215,7 +215,7 @@ namespace AlienEngine
         }
 
         /// <summary>
-        /// Create a <see cref="Vector2i"/> with two <see cref="Point3f"/>.
+        /// Create a <see cref="Vector3f"/> with two <see cref="Point3f"/>.
         /// </summary>
         /// <param name="a">The first point.</param>
         /// <param name="b">The second point.</param>
@@ -262,6 +262,15 @@ namespace AlienEngine
         public static bool operator !=(Point3f lhs, Point3f rhs)
         {
             return !(lhs == rhs);
+        }
+
+        /// <summary>
+        /// Converts a <see cref="Vector3f"/> in a <see cref="Point3f"/>.
+        /// </summary>
+        /// <param name="vector"></param>
+        public static explicit operator Point3f(Vector3f vector)
+        {
+            return new Point3f(vector.X, vector.Y, vector.Z);
         }
 
         /// <summary>
