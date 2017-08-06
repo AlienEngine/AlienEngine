@@ -35,7 +35,7 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// Sets the active texture unit.
         /// </summary>
         /// <param name="texture">A <see cref="TextureUnit"/> specifying the texture unit.</param>
-        public delegate void ActiveTexture(TextureUnit texture);
+        public delegate void ActiveTexture(uint texture);
 
         /// <summary>
         /// Sets multisample coverage parameters.
@@ -64,7 +64,7 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <summary>
         /// Sets the active texture unit.
         /// </summary>
-        public static ActiveTexture ActiveTexture;
+        public static ActiveTexture _ActiveTexture;
 
         /// <summary>
         /// Sets multisample coverage parameters.
@@ -81,6 +81,14 @@ namespace AlienEngine.Core.Graphics.OpenGL
         #endregion
 
         #region Overloads
+        #region ActiveTexture
+        [CLSCompliant(false)]
+        public static void ActiveTexture(uint textureUnit)
+        {
+            _ActiveTexture((uint)TextureUnit.Texture0 + textureUnit);
+        }
+        #endregion
+
         #region CompressedTexImage1D
         /// <summary>
         /// Loads a compressed 1D texture.
@@ -491,7 +499,7 @@ namespace AlienEngine.Core.Graphics.OpenGL
 
         private static void Load_VERSION_1_3()
         {
-            ActiveTexture = GetAddress<ActiveTexture>("glActiveTexture");
+            _ActiveTexture = GetAddress<ActiveTexture>("glActiveTexture");
             SampleCoverage = GetAddress<SampleCoverage>("glSampleCoverage");
             _CompressedTexImage1D = GetAddress<CompressedTexImage1D>("glCompressedTexImage1D");
             _CompressedTexImage2D = GetAddress<CompressedTexImage2D>("glCompressedTexImage2D");
@@ -501,7 +509,7 @@ namespace AlienEngine.Core.Graphics.OpenGL
             _CompressedTexSubImage3D = GetAddress<CompressedTexSubImage3D>("glCompressedTexSubImage3D");
             _GetCompressedTexImage = GetAddress<GetCompressedTexImage>("glGetCompressedTexImage");
 
-            VERSION_1_3 = VERSION_1_2 && ActiveTexture != null && SampleCoverage != null && _CompressedTexImage3D != null &&
+            VERSION_1_3 = VERSION_1_2 && _ActiveTexture != null && SampleCoverage != null && _CompressedTexImage3D != null &&
                 _CompressedTexSubImage3D != null && _GetCompressedTexImage != null;
         }
     }
