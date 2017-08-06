@@ -8,7 +8,7 @@ namespace AlienEngine.Core.Graphics.GLFW
     /// <summary>
     /// <a href="http://www.glfw.org/">GLFW 3</a> bindings.
     /// </summary>
-    public static partial class GLFW
+    internal static partial class GLFW
     {
         /// <summary>
         /// Adds the specified native directory path to the Path environment variable to facilitate
