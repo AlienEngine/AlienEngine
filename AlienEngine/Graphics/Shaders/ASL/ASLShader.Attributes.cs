@@ -10,21 +10,11 @@ namespace AlienEngine.ASL
         [AttributeUsage(AttributeTargets.ReturnValue | AttributeTargets.Field | AttributeTargets.Parameter | AttributeTargets.Property, AllowMultiple = false)]
         public sealed class ArraySizeAttribute : Attribute
         {
-            private int _arraySize;
-
             public ArraySizeAttribute(int size)
-            {
-                ArraySize = size;
-            }
+            { }
 
-            public int ArraySize
-            {
-                get { return _arraySize; }
-                private set
-                {
-                    _arraySize = value > 0 ? value : 0;
-                }
-            }
+            public ArraySizeAttribute(string size)
+            { }
         }
 
         /// <summary>
@@ -40,14 +30,8 @@ namespace AlienEngine.ASL
         [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property | AttributeTargets.Method | AttributeTargets.Class | AttributeTargets.Struct, AllowMultiple = false)]
         public sealed class CommentAttribute : Attribute
         {
-            private string _comment = string.Empty;
-
             public CommentAttribute(string comment)
-            {
-                Comment = _comment;
-            }
-
-            public string Comment { get; private set; }
+            { }
         }
 
         /// <summary>
@@ -61,7 +45,7 @@ namespace AlienEngine.ASL
                 Debug = debug;
             }
 
-            public bool Debug { get; private set; }
+            internal bool Debug { get; private set; }
         }
 
         /// <summary>
@@ -90,7 +74,13 @@ namespace AlienEngine.ASL
         /// </summary>
         [AttributeUsage(AttributeTargets.Struct, AllowMultiple = false)]
         public sealed class InterfaceBlockAttribute : Attribute
-        { }
+        {
+            public InterfaceBlockAttribute()
+            { }
+
+            public InterfaceBlockAttribute(string blockNamespace)
+            { }
+        }
 
         /// <summary>
         /// ASL Shader attribute used to create a GLSL member with the "out" qualifier.
