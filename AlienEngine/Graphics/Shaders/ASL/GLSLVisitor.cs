@@ -196,7 +196,13 @@ namespace AlienEngine.ASL
                 var m = mref != null ? mref.Resolve() : invocationExpression.Annotation<MethodDefinition>();
 
                 if (m.DeclaringType.MetadataToken.ToInt32() == typeof(ASLShader).MetadataToken)
-                    return result.Append(m.Name).Append("(").Append(ArgsToString(invocationExpression.Arguments)).Append(")");
+                {
+                    if (m.Name == "__output")
+                    {
+                        return result.Append(ArgsToString(invocationExpression.Arguments));
+                    }
+                    else return result.Append(m.Name).Append("(").Append(ArgsToString(invocationExpression.Arguments)).Append(")");
+                }
 
                 RegisterMethod(m);
                 result.Append(m.Name);
@@ -411,7 +417,7 @@ namespace AlienEngine.ASL
             public override StringBuilder VisitVariableDeclarationStatement(VariableDeclarationStatement variableDeclarationStatement, int data)
             {
                 var result = new StringBuilder();
-                const string V = "[]";
+                const string brackets = "[]";
 
                 var type = variableDeclarationStatement.Type.AcceptVisitor(this, data);
                 foreach (var v in variableDeclarationStatement.Variables)
@@ -419,20 +425,30 @@ namespace AlienEngine.ASL
                     var varName = v.AcceptVisitor(this, data);
                     if (variableDeclarationStatement.Type is ComposedType)
                     {
-                        if (type.ToString().EndsWith(V))
-                            type.Remove(type.Length - V.Length, V.Length);
-                        if (!varName.ToString().EndsWith(V))
-                            varName.Append(V);
+                        if (type.ToString().EndsWith(brackets))
+                            type.Remove(type.Length - brackets.Length, brackets.Length);
+                        if (!varName.ToString().EndsWith(brackets))
+                        {
+                            varName.Append(brackets[0]);
+                            // TODO: Find a way to get the size of the array here...
+                            //varName.Append(((ArrayInitializerExpression)v.Initializer).Elements.Count);
+                            varName.Append(brackets[1]);
+                        }
                     }
                     else
                     {
                         var tref = variableDeclarationStatement.Type.Annotation<TypeReference>();
                         if (tref != null && tref.IsArray)
                         {
-                            if (type.ToString().EndsWith(V))
-                                type.Remove(type.Length - V.Length, V.Length);
-                            if (!varName.ToString().EndsWith(V))
-                                varName.Append(V);
+                            if (type.ToString().EndsWith(brackets))
+                                type.Remove(type.Length - brackets.Length, brackets.Length);
+                            if (!varName.ToString().EndsWith(brackets))
+                            {
+                                varName.Append(brackets[0]);
+                                // TODO: Find a way to get the size of the array here...
+                                //varName.Append(((ArrayInitializerExpression)v.Initializer).Elements.Count);
+                                varName.Append(brackets[1]);
+                            }
                         }
                     }
                     result.Append(type).Append(" ").Append(varName).Append(";");
@@ -692,7 +708,11 @@ namespace AlienEngine.ASL
 
             public override StringBuilder VisitParenthesizedExpression(ParenthesizedExpression parenthesizedExpression, int data)
             {
-                return parenthesizedExpression.Expression.AcceptVisitor(this, data);
+                var result = new StringBuilder();
+                result.Append("(");
+                result.Append(parenthesizedExpression.Expression.AcceptVisitor(this, data));
+                result.Append(")");
+                return result;
             }
         }
     }
