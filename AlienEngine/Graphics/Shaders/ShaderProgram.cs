@@ -1,12 +1,12 @@
-﻿using System;
+﻿using AlienEngine.ASL;
+using AlienEngine.Core.Graphics.OpenGL;
+using AlienEngine.Core.Resources;
+using System;
 using System.Collections.Generic;
 using System.Text;
-using AlienEngine.ASL;
-using AlienEngine.Core.Graphics.OpenGL;
 using System.Text.RegularExpressions;
-using AlienEngine.Core.Resources;
 
-namespace AlienEngine.Graphics.Shaders
+namespace AlienEngine.Core.Graphics.Shaders
 {
     public class ShaderProgram : IDisposable
     {
@@ -136,6 +136,8 @@ namespace AlienEngine.Graphics.Shaders
                 Console.WriteLine(ostr);
 
             _compiled = true;
+
+            OnCompile?.Invoke();
         }
 
         private void _create(string vertexShader, string fragmentShader = null, string geometryShader = null, string tesscontrolShader = null, string tessevalShader = null)
@@ -149,6 +151,9 @@ namespace AlienEngine.Graphics.Shaders
             _uniformLocationsCache = new Dictionary<string, int>();
             _valuesMap = new Dictionary<string, object>();
 
+            // Setting default globals
+            SetGlobal("MAX_NUMBER_OF_LIGHTS", Math.Max(1, Game.Game.CurrentScene.Lights.Length).ToString());
+
             ResourcesManager.AddDisposableResource(this);
         }
 
@@ -159,13 +164,11 @@ namespace AlienEngine.Graphics.Shaders
         public ShaderProgram(string vertexShader, string fragmentShader = null, string geometryShader = null, string tesscontrolShader = null, string tessevalShader = null)
         {
             _create(vertexShader, fragmentShader, geometryShader, tesscontrolShader, tessevalShader);
-            _compile();
         }
 
         public ShaderProgram(VertexShader vertexShader, FragmentShader fragmentShader = null, GeometryShader geometryShader = null, TessellationControlShader tesscontrolShader = null, TessellationEvaluationShader tessevalShader = null)
         {
             _create(new ASLShaderCompiler(vertexShader).Shader, new ASLShaderCompiler(fragmentShader).Shader, new ASLShaderCompiler(geometryShader).Shader, new ASLShaderCompiler(tesscontrolShader).Shader, new ASLShaderCompiler(tessevalShader).Shader);
-            _compile();
         }
 
         #endregion
@@ -186,6 +189,11 @@ namespace AlienEngine.Graphics.Shaders
 
         #region Public Members
 
+        /// <summary>
+        /// Event triggered when this <see cref="ShaderProgram"/> has been compiled.
+        /// </summary>
+        public event Action OnCompile;
+
         public enum SwitchResult
         {
             Switched,
@@ -197,7 +205,7 @@ namespace AlienEngine.Graphics.Shaders
         /// Specifies the OpenGL shader program ID.
         /// </summary>
         [CLSCompliant(false)]
-        public uint ProgramID { get { return _program; } }
+        public uint ID { get { return _program; } }
 
         /// <summary>
         /// Specifies the current shader program used.
@@ -253,6 +261,13 @@ namespace AlienEngine.Graphics.Shaders
                 GL.UniformMatrix4(location, data);
         }
 
+        public void SetUniform(string name, Matrix3f data)
+        {
+            int location = _getUniformLocation(name);
+            if (location >= 0 && _checkCache(name, data))
+                GL.UniformMatrix3(location, data);
+        }
+
         public void SetUniform(string name, bool data)
         {
             int location = _getUniformLocation(name);
@@ -265,6 +280,13 @@ namespace AlienEngine.Graphics.Shaders
             int location = _getUniformLocation(name);
             if (location >= 0 && _checkCache(name, data))
                 GL.Uniform1f(location, data);
+        }
+
+        public void SetUniform(string name, double data)
+        {
+            int location = _getUniformLocation(name);
+            if (location >= 0 && _checkCache(name, data))
+                GL.Uniform1d(location, data);
         }
 
         [CLSCompliant(false)]
@@ -440,20 +462,20 @@ namespace AlienEngine.Graphics.Shaders
 
         protected virtual void Dispose(bool disposing)
         {
-            if (ProgramID != 0)
+            if (ID != 0)
             {
                 // Make sure this program isn't being used
-                if (CurrentProgram != null && CurrentProgram.ProgramID == ProgramID) Unbind();
+                if (CurrentProgram != null && CurrentProgram.ID == ID) Unbind();
 
-                GL.DetachShader(ProgramID, _vertexShaderHandle);
-                GL.DetachShader(ProgramID, _fragmentShaderHandle);
-                GL.DetachShader(ProgramID, _geometryShaderHandle);
+                GL.DetachShader(ID, _vertexShaderHandle);
+                GL.DetachShader(ID, _fragmentShaderHandle);
+                GL.DetachShader(ID, _geometryShaderHandle);
                 if (UseTesselation)
                 {
-                    GL.DetachShader(ProgramID, _tessCShaderHandle);
-                    GL.DetachShader(ProgramID, _tessEShaderHandle);
+                    GL.DetachShader(ID, _tessCShaderHandle);
+                    GL.DetachShader(ID, _tessEShaderHandle);
                 }
-                GL.DeleteProgram(ProgramID);
+                GL.DeleteProgram(ID);
 
                 _program = 0;
             }
