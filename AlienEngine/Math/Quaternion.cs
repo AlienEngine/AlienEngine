@@ -82,7 +82,7 @@ namespace AlienEngine
         /// <summary>
         /// Defines the identity quaternion.
         /// </summary>
-        public static readonly Quaternion Identity = new Quaternion(0, 0, 0, 1);
+        public static readonly Quaternion Identity = new Quaternion(1, 0, 0, 0);
 
 
         /// <summary>
@@ -551,28 +551,30 @@ namespace AlienEngine
         /// <param name="Axis">An array of 3 axis.</param>
         public static Quaternion FromAxis(Vector3f xvec, Vector3f yvec, Vector3f zvec)
         {
-            Matrix4f Rotation = new Matrix4f(
-                new Vector4f(xvec.X, yvec.X, zvec.X, 0),
-                new Vector4f(xvec.Y, yvec.Y, zvec.Y, 0),
-                new Vector4f(xvec.Z, yvec.Z, zvec.Z, 0),
-                Vector4f.Zero);
+            Matrix4f Rotation = new Matrix4f();
+
+            Rotation.Column0 = new Vector4f(xvec, 0);
+            Rotation.Column1 = new Vector4f(yvec, 0);
+            Rotation.Column2 = new Vector4f(zvec, 0);
+            Rotation.Column3 = Vector4f.UnitW;
+
             return FromRotationMatrix(Rotation);
         }
 
         /// <summary>
         /// Create a new <see cref="Quaternion"/> from euler angles.
         /// </summary>
-        /// <param name="yaw">The rotation angle on th X axis.</param>
+        /// <param name="roll">The rotation angle on th X axis.</param>
         /// <param name="pitch">The rotation angle on th Y axis.</param>
-        /// <param name="roll">The rotation angle on th Z axis.</param>
-        public static Quaternion FromEulerAngles(float yaw, float pitch, float roll)
+        /// <param name="yaw">The rotation angle on th Z axis.</param>
+        public static Quaternion FromEulerAngles(float roll, float pitch, float yaw)
         {
             Quaternion q = new Quaternion();
 
-            float t0 = MathHelper.Cos(yaw * 0.5f);
-            float t1 = MathHelper.Sin(yaw * 0.5f);
-            float t2 = MathHelper.Cos(roll * 0.5f);
-            float t3 = MathHelper.Sin(roll * 0.5f);
+            float t0 = MathHelper.Cos(roll * 0.5f);
+            float t1 = MathHelper.Sin(roll * 0.5f);
+            float t2 = MathHelper.Cos(yaw * 0.5f);
+            float t3 = MathHelper.Sin(yaw * 0.5f);
             float t4 = MathHelper.Cos(pitch * 0.5f);
             float t5 = MathHelper.Sin(pitch * 0.5f);
 
@@ -613,7 +615,7 @@ namespace AlienEngine
             q = FromEulerAngles(yawPitchRoll);
         }
 
-        private static readonly int[] rotationLookup = new int[] { 1, 2, 0 };
+        private static readonly int[] _rotationLookup = new int[] { 1, 2, 0 };
 
         /// <summary>
         /// Creates an orientation Quaternion from a target Matrix4 rotational matrix.
@@ -625,27 +627,25 @@ namespace AlienEngine
 
             float t_trace = rotation[0].X + rotation[1].Y + rotation[2].Z;
             float t_root = 0.0f;
+            Quaternion t_return = Quaternion.Zero;
 
             if (t_trace > 0.0)
             {   // |w| > 1/2
-                Quaternion t_return = Quaternion.Zero;
                 t_root = MathHelper.Sqrt(t_trace + 1.0);
                 t_return.W = 0.5f * t_root;
                 t_root = 0.5f / t_root;
                 t_return.X = (rotation[2].Y - rotation[1].Z) * t_root;
                 t_return.Y = (rotation[0].Z - rotation[2].X) * t_root;
                 t_return.Z = (rotation[1].X - rotation[0].Y) * t_root;
-                return t_return;
             }
             else
             {   // |w| <= 1/2
-                Quaternion t_return = Quaternion.Zero;
 
                 int i = 0;
                 if (rotation[1].Y > rotation[0].X) i = 1;
                 if (rotation[2].Z > rotation[i][i]) i = 2;
-                int j = rotationLookup[i];
-                int k = rotationLookup[j];
+                int j = _rotationLookup[i];
+                int k = _rotationLookup[j];
 
                 t_root = MathHelper.Sqrt(rotation[i][i] - rotation[j][j] - rotation[k][k] + 1.0f);
                 t_return[i] = 0.5f * t_root;
@@ -653,8 +653,12 @@ namespace AlienEngine
                 t_return.W = (rotation[k][j] - rotation[j][k]) * t_root;
                 t_return[j] = (rotation[j][i] + rotation[i][j]) * t_root;
                 t_return[k] = (rotation[k][i] + rotation[i][k]) * t_root;
-                return t_return;
             }
+
+            if (t_return.X == 0 && t_return.Y == 0 && t_return.Z == 0)
+                return new Quaternion(Vector4f.One);
+
+            return Quaternion.Conjugate(t_return);
         }
 
         /// <summary>
