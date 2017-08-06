@@ -549,6 +549,16 @@ namespace AlienEngine.ASL
 
         [BuiltIn]
         protected vec3 cross(vec3 x) { throw new NotImplementedException(); }
+        [BuiltIn]
+        protected vec3 cross(vec3 x, vec3 y) { throw new NotImplementedException(); }
+        [BuiltIn]
+        protected vec3 cross(vec2 x) { throw new NotImplementedException(); }
+        [BuiltIn]
+        protected vec3 cross(vec2 x, vec2 y) { throw new NotImplementedException(); }
+        [BuiltIn]
+        protected vec3 cross(vec4 x) { throw new NotImplementedException(); }
+        [BuiltIn]
+        protected vec3 cross(vec4 x, vec4 y) { throw new NotImplementedException(); }
 
         [BuiltIn]
         protected float normalize(float x) { throw new NotImplementedException(); }
