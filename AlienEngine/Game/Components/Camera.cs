@@ -1,10 +1,14 @@
 ﻿using AlienEngine.Core.Game;
-using AlienEngine.Graphics;
+using AlienEngine.Core.Graphics;
 
 namespace AlienEngine
 {
     public class Camera : Component
     {
+        #region Static members
+        public static readonly Camera None = new Camera(Vector3f.Zero, Vector3f.Zero, 1.0f, 1.0f, 2.0f) { ViewportSize = Sizei.One };
+        #endregion
+
         #region Fields
         private ClearScreenTypes _clearScreenType = ClearScreenTypes.Color;
         private ProjectionTypes _projectionType = ProjectionTypes.Perspective;
@@ -20,10 +24,12 @@ namespace AlienEngine
         private Matrix4f _viewMatrix;
         private Matrix4f _cubemapMatrix;
 
-        private Sizef _viewportSize;
+        private Sizei _viewportSize;
 
         private Cubemap _cubemap;
         private Color4 _clearColor;
+
+        private bool _isPrimary;
 
         private bool _shouldUpdate = false;
         #endregion
@@ -97,7 +103,7 @@ namespace AlienEngine
         /// <summary>
         /// Gets or sets the field of view.
         /// </summary>
-        public float FOV
+        public float FieldOfView
         {
             get { return _fov; }
             set
@@ -136,7 +142,7 @@ namespace AlienEngine
         /// <summary>
         /// Gets or sets the viewport size.
         /// </summary>
-        public Sizef ViewportSize
+        public Sizei ViewportSize
         {
             get { return _viewportSize; }
             set
@@ -249,6 +255,16 @@ namespace AlienEngine
         {
             get { return _clearColor; }
             set { _clearColor = value; }
+        }
+
+        /// <summary>
+        /// Defines if this <see cref="Camera"/> is the primary camera
+        /// used by the <see cref="Game"/>.
+        /// </summary>
+        public bool IsPrimary
+        {
+            get { return _isPrimary; }
+            set { _isPrimary = value; }
         }
         #endregion
 
@@ -459,7 +475,7 @@ namespace AlienEngine
         /// Sets the viewport size of this <see cref="Camera"/>.
         /// </summary>
         /// <param name="size">The new viewport <see cref="Sizef"/>.</param>
-        public void SetSize(Sizef size)
+        public void SetViewportSize(Sizei size)
         {
             ViewportSize = size;
         }
@@ -468,9 +484,9 @@ namespace AlienEngine
         /// Sets the viewport width of this <see cref="Camera"/>.
         /// </summary>
         /// <param name="width">The new width.</param>
-        public void SetWidth(float width)
+        public void SetViewportWidth(int width)
         {
-            Sizef v = new Sizef(width, _viewportSize.Height);
+            Sizei v = new Sizei(width, _viewportSize.Height);
             ViewportSize = v;
         }
 
@@ -478,10 +494,25 @@ namespace AlienEngine
         /// Sets the viewport height of this <see cref="Camera"/>.
         /// </summary>
         /// <param name="height">The new height.</param>
-        public void SetHeight(float height)
+        public void SetViewportHeight(int height)
         {
-            Sizef v = new Sizef(_viewportSize.Width, height);
+            Sizei v = new Sizei(_viewportSize.Width, height);
             ViewportSize = v;
+        }
+
+        /// <summary>
+        /// Makes this <see cref="Camera"/> as the primary
+        /// camera renderer of the <see cref="Scene"/>.
+        /// </summary>
+        public void MakePrimary()
+        {
+            if (!IsPrimary && gameElement.ParentScene.PrimaryCamera != gameElement)
+            {
+                IsPrimary = true;
+                gameElement.ParentScene.SetPrimaryCamera(gameElement);
+
+                _shouldUpdate = true;
+            }
         }
 
         private void _setProjectionMatrix()
@@ -494,12 +525,12 @@ namespace AlienEngine
 
         private void _setViewMatrix()
         {
-            _viewMatrix = Matrix4f.CreateTranslation(-gameElement.WorldTransform.Position) * Matrix4f.Look(_forward, _up);
+            _viewMatrix = Matrix4f.CreateTranslation(-gameElement.WorldTransform.Translation) * Matrix4f.LookAt(_forward, _up);
         }
 
         private void _setCubemapMatrix()
         {
-            _cubemapMatrix = Matrix4f.Look(_forward, _up);
+            _cubemapMatrix = Matrix4f.LookAt(_forward, _up);
         }
         #endregion
     }
