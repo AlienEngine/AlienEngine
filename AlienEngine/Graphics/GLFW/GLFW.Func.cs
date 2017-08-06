@@ -10,7 +10,17 @@ namespace AlienEngine.Core.Graphics.GLFW
         const string Library = "libglfw.so";
         #else
         const string Library = "glfw.dll";
-        #endif
+#endif
+
+        private static bool _initialized = false;
+
+        /// <summary>
+        /// Check if the GLFW library has been initialized.
+        /// </summary>
+        public static bool IsInitialized
+        {
+            get { return _initialized; }
+        }
 
         /// <summary>
         /// <para>This function initializes the GLFW library. Before most GLFW functions can be
@@ -30,7 +40,19 @@ namespace AlienEngine.Core.Graphics.GLFW
         /// <seealso cref="Terminate"/>
         [DllImport(Library, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwInit"), SuppressUnmanagedCodeSecurity]
         [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern bool Init();
+        private static extern bool Init();
+
+        /// <summary>
+        /// Initialize the GLFW library.
+        /// </summary>
+        /// <returns>true if GLFW has been initialized successfully, false otherwise.</returns>
+        public static bool Initialize()
+        {
+            if (!_initialized)
+                _initialized = Init();
+
+            return _initialized;
+        }
 
         /// <summary>
         /// <para>This function destroys all remaining windows and cursors, restores any modified
@@ -46,7 +68,16 @@ namespace AlienEngine.Core.Graphics.GLFW
         /// </remarks>
         /// <seealso cref="Init"/>
         [DllImport(Library, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwTerminate"), SuppressUnmanagedCodeSecurity]
-        public static extern void Terminate();
+        private static extern void Terminate();
+
+        /// <summary>
+        /// Shutdown GLFW and release all allocated resources.
+        /// </summary>
+        public static void Shutdown()
+        {
+            if (_initialized)
+                Terminate();
+        }
 
         /// <summary>
         /// This function retrieves the major, minor and revision numbers of the GLFW library. It is
