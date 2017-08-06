@@ -298,6 +298,14 @@ namespace AlienEngine
         }
 
         /// <summary>
+        /// Gets the normalized instance of t <see cref="Vector3f"/>.
+        /// </summary>
+        public Vector3f Normalized
+        {
+            get { return Normalize(this); }
+        }
+
+        /// <summary>
         /// Scales the Vector3f to unit length.
         /// </summary>
         public void Normalize()
