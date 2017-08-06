@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AlienEngine.Core.Audio.OpenAL;
-using AlienEngine.Core.Game;
+﻿using AlienEngine.Core.Audio.OpenAL;
 
 namespace AlienEngine
 {
@@ -57,7 +51,7 @@ namespace AlienEngine
         }
 
         /// <summary>
-        /// The gain od the sound listener.
+        /// The gain of the sound listener.
         /// </summary>
         /// <returns>The gain.</returns>
         public float Gain
@@ -71,16 +65,24 @@ namespace AlienEngine
 
             gameElement.LocalTransform.OnPositionChange += ((_old, _new) =>
             {
-                AL.Listener(ALListener3f.Position, _new.X, _new.Y, _new.Z);
-                AL.Listener(ALListener3f.Velocity, _new.X - _old.X, _new.Y - _old.Y, _new.Z - _old.Z);
+                Vector3f _delta = _new - _old;
+                AL.Listener(ALListener3f.Position, ref _new);
+                AL.Listener(ALListener3f.Velocity, ref _delta);
             });
 
             gameElement.LocalTransform.OnRotationChange += ((_old, _new) =>
             {
-                Matrix3f r = Matrix4f.CreateRotation(_new).ToMatrix3f();
-                float[] coords = new float[] { -r.Column2.X, r.Column2.Y, r.Column2.Z, -r.Column1.X, r.Column1.Y, r.Column1.Z };
-                AL.Listener(ALListenerfv.Orientation, ref coords);
+                Vector3f _forward = gameElement.LocalTransform.ForwardVector,
+                         _up = gameElement.LocalTransform.UpVector;
+
+                AL.Listener(ALListenerfv.Orientation, ref _forward, ref _up);
             });
+        }
+
+        public override void Update()
+        {
+            // Reset Velocity
+            AL.Listener(ALListener3f.Velocity, Vector3f.Zero.X, Vector3f.Zero.Y, Vector3f.Zero.Z);
         }
 
         /// <summary>
@@ -88,9 +90,11 @@ namespace AlienEngine
         /// </summary>
         public void MakeCurrent()
         {
-            if (Game.CurrentAudioListener != gameElement)
+            if (gameElement.ParentScene.AudioListener != gameElement)
             {
-                Game.SetCurrentAudioListener(gameElement);
+                gameElement.ParentScene.AudioListener.GetComponent<AudioListener>().Disable();
+                gameElement.ParentScene.SetAudioListener(gameElement);
+                Enable();
                 Update();
             }
         }
