@@ -62,10 +62,10 @@ namespace AlienEngine.Core.Audio.OpenAL
         ///<summary>Indicate the gain (volume amplification) applied. Type: float. Range: [0.0f - ? ] A value of 1.0 means un-attenuated/unchanged. Each division by 2 equals an attenuation of -6dB. Each multiplicaton with 2 equals an amplification of +6dB. A value of 0.0f is meaningless with respect to a logarithmic scale; it is interpreted as zero volume - the channel is effectively disabled.</summary>
         Gain = 0x100A,
 
-        ///<summary>Indicate minimum Source attenuation. Type: float Range: [0.0f - 1.0f] (Logarthmic)</summary>
+        ///<summary>Indicate minimum Source attenuation. Type: float Range: [0.0f - 1.0f] (Logarithmic)</summary>
         MinGain = 0x100D,
 
-        ///<summary>Indicate maximum Source attenuation. Type: float Range: [0.0f - 1.0f] (Logarthmic)</summary>
+        ///<summary>Indicate maximum Source attenuation. Type: float Range: [0.0f - 1.0f] (Logarithmic)</summary>
         MaxGain = 0x100E,
 
         ///<summary>Directional Source, inner cone angle, in degrees. Range: [0-360] Default: 360</summary>
