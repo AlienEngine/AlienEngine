@@ -543,6 +543,21 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <param name="size">The size of the data store in bytes.</param>
         /// <param name="data">The data that will be loaded, or <b>IntPtr.Zero</b> if nothing is to be loaded.</param>
         /// <param name="usage">A <see cref="BufferUsageHint"/> specifying the usage of the data store.</param>
+        public static void BufferData<T>(BufferTarget target, int size, ref T data, BufferUsageHint usage) where T : struct
+        {
+            IntPtr _data = Marshal.AllocHGlobal(BlittableValueType<T>.Stride);
+            Marshal.StructureToPtr(data, _data, false);
+            if (IntPtr.Size == 4) BufferData_32(target, size, _data, usage);
+            else BufferData_64(target, size, _data, usage);
+        }
+
+        /// <summary>
+        /// Creates a data store (and loads data into it).
+        /// </summary>
+        /// <param name="target">A <see cref="BufferTarget"/> specifying the target.</param>
+        /// <param name="size">The size of the data store in bytes.</param>
+        /// <param name="data">The data that will be loaded, or <b>IntPtr.Zero</b> if nothing is to be loaded.</param>
+        /// <param name="usage">A <see cref="BufferUsageHint"/> specifying the usage of the data store.</param>
         public static void BufferData(BufferTarget target, int size, IntPtr data, BufferUsageHint usage)
         {
             if (IntPtr.Size == 4) BufferData_32(target, size, data, usage);
