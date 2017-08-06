@@ -600,7 +600,7 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <param name="internalformat">A <see cref="glInternalFormat"/> specifying the internal format of the storage.</param>
         /// <param name="width">The width of the storage in pixels.</param>
         /// <param name="height">The height of the storage in pixels.</param>
-        public delegate void RenderbufferStorage(RenderbufferTarget target, InternalFormat internalformat, int width, int height);
+        public delegate void RenderbufferStorage(RenderbufferTarget target, PixelInternalFormat internalformat, int width, int height);
 
         /// <summary>
         /// Returns the value of a renderbuffer parameter.
@@ -744,7 +744,7 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <param name="internalformat">A <see cref="glInternalFormat"/> specifying the internal format of the storage.</param>
         /// <param name="width">The width of the storage in pixels.</param>
         /// <param name="height">The height of the storage in pixels.</param>
-        public delegate void RenderbufferStorageMultisample(RenderbufferTarget target, int samples, InternalFormat internalformat, int width, int height);
+        public delegate void RenderbufferStorageMultisample(RenderbufferTarget target, int samples, PixelInternalFormat internalformat, int width, int height);
 
         /// <summary>
         /// Attachs a layer of a level of a texture as a buffer to a attachment of the currently bound framebuffer bound to a specific framebuffer target.

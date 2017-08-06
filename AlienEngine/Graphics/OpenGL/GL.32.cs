@@ -170,7 +170,7 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <param name="width">The width of the texture.</param>
         /// <param name="height">The height of the texture.</param>
         /// <param name="fixedsamplelocations">Specifies whether the image will use identical sample locations and the same number of samples for all texels in the image, and the sample locations will not depend on the internal format or size of the image.</param>
-        public delegate void TexImage2DMultisample(TextureTarget target, int samples, InternalFormat internalformat, int width, int height, [MarshalAs(UnmanagedType.I1)] bool fixedsamplelocations);
+        public delegate void TexImage2DMultisample(TextureTarget target, int samples, PixelInternalFormat internalformat, int width, int height, [MarshalAs(UnmanagedType.I1)] bool fixedsamplelocations);
 
         /// <summary>
         /// Creates storage for a 3D multisample texture.
@@ -182,7 +182,7 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <param name="height">The height of the texture.</param>
         /// <param name="depth">The depth of the texture.</param>
         /// <param name="fixedsamplelocations">Specifies whether the image will use identical sample locations and the same number of samples for all texels in the image, and the sample locations will not depend on the internal format or size of the image.</param>
-        public delegate void TexImage3DMultisample(TextureTarget target, int samples, InternalFormat internalformat, int width, int height, int depth, [MarshalAs(UnmanagedType.I1)] bool fixedsamplelocations);
+        public delegate void TexImage3DMultisample(TextureTarget target, int samples, PixelInternalFormat internalformat, int width, int height, int depth, [MarshalAs(UnmanagedType.I1)] bool fixedsamplelocations);
 
         /// <summary>
         /// Retrieves the location of a sample.
