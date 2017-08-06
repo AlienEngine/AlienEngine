@@ -82,7 +82,7 @@ namespace AlienEngine.ASL
         [BuiltIn]
         protected const int gl_MaxVertexUniformComponents = 1024;
 
-        private const BindingFlags _flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static;
+        private const BindingFlags _flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static | BindingFlags.FlattenHierarchy;
 
         private TypeDefinition _shader;
 
@@ -123,17 +123,6 @@ namespace AlienEngine.ASL
                     yield return ext.ExtensionName;
             else
                 yield break;
-        }
-
-        internal IEnumerable<FieldInfo> GetConstants()
-        {
-            foreach (var field in GetType().GetFields(_flags))
-            {
-                var constant = field.GetCustomAttributes(typeof(UniformAttribute), true);
-                var builtin = field.GetCustomAttributes(typeof(BuiltInAttribute), true);
-                if ((constant != null && constant.Length > 0) && (builtin == null || builtin.Length == 0))
-                    yield return field;
-            }
         }
 
         internal IEnumerable<ASLShaderVariable> GetUniforms()
@@ -350,6 +339,17 @@ namespace AlienEngine.ASL
             }
 
             return methods;
+        }
+
+        /// <summary>
+        /// Outputs an hard coded block of code in the compiled
+        /// GLSL source.
+        /// </summary>
+        /// <param name="code">The block of code to output.</param>
+        [CLSCompliant(false)]
+        protected void __output(string code)
+        {
+            throw new NotImplementedException();
         }
 
         private TypeDefinition _loadReflection()
