@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using AlienEngine.Graphics.Shaders;
+using AlienEngine.Core.Graphics.Shaders;
 using AlienEngine.Graphics;
 
 namespace AlienEngine.Core.Graphics.OpenGL
@@ -173,6 +173,7 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <param name="data">The data to store in the VBO.</param>
         /// <param name="hint">The buffer usage hint (usually StaticDraw).</param>
         /// <returns>The buffer ID of the VBO on success, 0 on failure.</returns>
+        [CLSCompliant(false)]
         public static uint CreateVBO<T>(BufferTarget target, [In, Out] T[] data, BufferUsageHint hint)
             where T : struct
         {
@@ -196,6 +197,7 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <param name="hint">The buffer usage hint (usually StaticDraw).</param>
         /// <param name="length">The length of the VBO (will take the first 'length' elements from data).</param>
         /// <returns>The buffer ID of the VBO on success, 0 on failure.</returns>
+        [CLSCompliant(false)]
         public static uint CreateVBO<T>(BufferTarget target, [In, Out] T[] data, BufferUsageHint hint, int length)
             where T : struct
         {
@@ -220,6 +222,7 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <param name="position">Starting element of the data that will be copied into the VBO.</param>
         /// <param name="length">The length of the VBO (will take the first 'length' elements from data).</param>
         /// <returns>The buffer ID of the VBO on success, 0 on failure.</returns>
+        [CLSCompliant(false)]
         public static uint CreateVBO<T>(BufferTarget target, [In, Out] T[] data, BufferUsageHint hint, int position, int length)
             where T : struct
         {
@@ -243,6 +246,7 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <param name="data2">The second array of Vector3f data (usually normal).</param>
         /// <param name="hint">Specifies expected usage pattern of the data store.</param>
         /// <returns>The buffer ID of the VBO on success, 0 on failure.</returns>
+        [CLSCompliant(false)]
         public static uint CreateInterleavedVBO(BufferTarget target, Vector3f[] data1, Vector3f[] data2, BufferUsageHint hint)
         {
             if (data2.Length != data1.Length) throw new Exception("Data lengths must be identical to construct an interleaved VBO.");
@@ -272,6 +276,7 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <param name="data3">The Vector2f data (usually UV).</param>
         /// <param name="hint">Specifies expected usage pattern of the data store.</param>
         /// <returns>The buffer ID of the VBO on success, 0 on failure.</returns>
+        [CLSCompliant(false)]
         public static uint CreateInterleavedVBO(BufferTarget target, Vector3f[] data1, Vector3f[] data2, Vector2f[] data3, BufferUsageHint hint)
         {
             if (data2.Length != data1.Length || data3.Length != data1.Length) throw new Exception("Data lengths must be identical to construct an interleaved VBO.");
@@ -304,6 +309,7 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <param name="data3">The third array of Vector3f data (usually tangent).</param>
         /// <param name="hint">Specifies expected usage pattern of the data store.</param>
         /// <returns>The buffer ID of the VBO on success, 0 on failure.</returns>
+        [CLSCompliant(false)]
         public static uint CreateInterleavedVBO(BufferTarget target, Vector3f[] data1, Vector3f[] data2, Vector3f[] data3, BufferUsageHint hint)
         {
             if (data2.Length != data1.Length || data3.Length != data1.Length) throw new Exception("Data lengths must be identical to construct an interleaved VBO.");
@@ -338,6 +344,7 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <param name="data4">The Vector2f data (usually UV).</param>
         /// <param name="hint">Specifies expected usage pattern of the data store.</param>
         /// <returns>The buffer ID of the VBO on success, 0 on failure.</returns>
+        [CLSCompliant(false)]
         public static uint CreateInterleavedVBO(BufferTarget target, Vector3f[] data1, Vector3f[] data2, Vector3f[] data3, Vector2f[] data4, BufferUsageHint hint)
         {
             if (data2.Length != data1.Length || data3.Length != data1.Length || data4.Length != data1.Length)
@@ -380,6 +387,7 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <param name="stride">The stride of the VBO.</param>
         /// <param name="eboHandle">The element buffer handle.</param>
         /// <returns>The vertex array object (VAO) ID.</returns>
+        [CLSCompliant(false)]
         public static uint CreateVAO(ShaderProgram program, uint vbo, int[] sizes, VertexAttribPointerType[] types, BufferTarget[] targets, string[] names, int stride, uint eboHandle)
         {
             uint vaoHandle = GL.GenVertexArray();
@@ -392,7 +400,7 @@ namespace AlienEngine.Core.Graphics.OpenGL
                 GL.EnableVertexAttribArray(i);
                 GL.BindBuffer(targets[i], vbo);
                 GL.VertexAttribPointer(i, sizes[i], types[i], true, stride, offset);
-                GL.BindAttribLocation(program.ProgramID, i, names[i]);
+                GL.BindAttribLocation(program.ID, i, names[i]);
             }
 
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, eboHandle);
@@ -429,7 +437,7 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <param name="Program">Specifies the handle of the program object whose executables are to be used as part of current rendering state.</param>
         public static void UseShaderProgram(ShaderProgram Program)
         {
-            GL.UseProgram(Program.ProgramID);
+            GL.UseProgram(Program.ID);
         }
 
         /// <summary>
@@ -452,7 +460,7 @@ namespace AlienEngine.Core.Graphics.OpenGL
         [CLSCompliant(false)]
         public static uint GetShaderProgramUniformBlockIndex(ShaderProgram program, string uniformBlockName)
         {
-            return GL.GetUniformBlockIndex(program.ProgramID, uniformBlockName);
+            return GL.GetUniformBlockIndex(program.ID, uniformBlockName);
         }
 
         /// <summary>
@@ -474,7 +482,7 @@ namespace AlienEngine.Core.Graphics.OpenGL
         public static void BindBufferToShaderAttribute<T>(VBO<T> buffer, ShaderProgram program, string attributeName)
             where T : struct
         {
-            uint location = (uint)GL.GetAttribLocation(program.ProgramID, attributeName);
+            uint location = (uint)GL.GetAttribLocation(program.ID, attributeName);
 
             GL.EnableVertexAttribArray(location);
             GL.BindVBO(buffer);
@@ -620,6 +628,7 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <param name="target">Specifies the target buffer object.  Must be ArrayBuffer, ElementArrayBuffer, PixelPackBuffer or PixelUnpackBuffer.</param>
         /// <param name="data">The new data that will be copied to the data store.</param>
         /// <param name="length">The size in bytes of the data store region being replaced.</param>
+        [CLSCompliant(false)]
         public static void BufferSubData<T>(uint vboID, BufferTarget target, T[] data, int length)
             where T : struct
         {
@@ -634,6 +643,12 @@ namespace AlienEngine.Core.Graphics.OpenGL
             {
                 handle.Free();
             }
+        }
+
+        [CLSCompliant(false)]
+        public static void DeleteTexture(uint texture)
+        {
+            GL.DeleteTextures(1, new uint[] { texture });
         }
 
         //public static void VertexPointer(int size, VertexPointerType type, int stride, int pointer)
