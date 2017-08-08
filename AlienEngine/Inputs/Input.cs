@@ -76,7 +76,7 @@ namespace AlienEngine
         #endregion
 
         #region Members
-        public static bool Held(KeyCode key)
+        public static bool Holding(KeyCode key)
         {
             return Keyboard.GetKey(key);
         }
@@ -86,7 +86,7 @@ namespace AlienEngine
             return Keyboard.GetKeyUp(key);
         }
 
-        public static bool Down(KeyCode key)
+        public static bool Pressed(KeyCode key)
         {
             return Keyboard.GetKeyDown(key);
         }
@@ -101,7 +101,7 @@ namespace AlienEngine
             return Mouse.GetButtonUp(key);
         }
 
-        public static bool Down(MouseButton key)
+        public static bool Pressed(MouseButton key)
         {
             return Mouse.GetButtonDown(key);
         }
@@ -118,17 +118,17 @@ namespace AlienEngine
 
         public static CursorState GetCursorState()
         {
-            return (CursorState)GLFW.GetInputMode(Game.Window, GLFW.InputMode.Cursor);
+            return Game.Window.GetCursorState();
         }
 
-        internal static void BackupEvents()
+        public static void BackupEvents()
         {
             BackupKeyEvents();
             BackupMouseMoveEvents();
             BackupTextInputEvents();
         }
 
-        internal static void ClearEvents(bool backup = false)
+        public static void ClearEvents(bool backup = false)
         {
             if (backup) BackupEvents();
 
@@ -137,19 +137,19 @@ namespace AlienEngine
             ClearTextInputEvents();
         }
 
-        internal static void RestoreEvents()
+        public static void RestoreEvents()
         {
             RestoreKeyEvents();
             RestoreMouseMoveEvents();
             RestoreTextInputEvents();
         }
 
-        internal static void BackupKeyEvents()
+        public static void BackupKeyEvents()
         {
             _keyEventsBackup = _keyEvents;
         }
 
-        internal static void ClearKeyEvents(bool backup = false)
+        public static void ClearKeyEvents(bool backup = false)
         {
             if (backup) BackupKeyEvents();
 
@@ -157,7 +157,7 @@ namespace AlienEngine
             Refresh();
         }
 
-        internal static void RestoreKeyEvents()
+        public static void RestoreKeyEvents()
         {
             if (_keyEventsBackup != null)
             {
@@ -167,12 +167,12 @@ namespace AlienEngine
             }
         }
 
-        internal static void BackupTextInputEvents()
+        public static void BackupTextInputEvents()
         {
             _textEventsBackup = _textEvents;
         }
 
-        internal static void ClearTextInputEvents(bool backup = false)
+        public static void ClearTextInputEvents(bool backup = false)
         {
             if (backup) BackupTextInputEvents();
 
@@ -180,7 +180,7 @@ namespace AlienEngine
             Refresh();
         }
 
-        internal static void RestoreTextInputEvents()
+        public static void RestoreTextInputEvents()
         {
             if (_textEventsBackup != null)
             {
@@ -190,12 +190,12 @@ namespace AlienEngine
             }
         }
 
-        internal static void BackupMouseMoveEvents()
+        public static void BackupMouseMoveEvents()
         {
             _mouseMoveEventsBackup = _mouseMoveEvents;
         }
 
-        internal static void ClearMouseMoveEvents(bool backup = false)
+        public static void ClearMouseMoveEvents(bool backup = false)
         {
             if (backup) BackupMouseMoveEvents();
 
@@ -203,7 +203,7 @@ namespace AlienEngine
             Refresh();
         }
 
-        internal static void RestoreMouseMoveEvents()
+        public static void RestoreMouseMoveEvents()
         {
             if (_mouseMoveEventsBackup != null)
             {
@@ -254,8 +254,8 @@ namespace AlienEngine
 
         public static void Refresh()
         {
-            GLFW.SetKeyCallback(Game.Window, null);
-            GLFW.SetKeyCallback(Game.Window, (w, key, scancode, state, mods) =>
+            GLFW.SetKeyCallback(Game.Window.Handle, null);
+            GLFW.SetKeyCallback(Game.Window.Handle, (w, key, scancode, state, mods) =>
             {
                 foreach (var e in _keyEvents)
                 {
@@ -263,8 +263,8 @@ namespace AlienEngine
                 }
             });
 
-            GLFW.SetCharCallback(Game.Window, null);
-            GLFW.SetCharCallback(Game.Window, (w, code) =>
+            GLFW.SetCharCallback(Game.Window.Handle, null);
+            GLFW.SetCharCallback(Game.Window.Handle, (w, code) =>
             {
                 foreach (var e in _textEvents)
                 {
@@ -272,8 +272,8 @@ namespace AlienEngine
                 }
             });
 
-            GLFW.SetCursorPosCallback(Game.Window, null);
-            GLFW.SetCursorPosCallback(Game.Window, (w, x, y) =>
+            GLFW.SetCursorPosCallback(Game.Window.Handle, null);
+            GLFW.SetCursorPosCallback(Game.Window.Handle, (w, x, y) =>
             {
                 foreach (var e in _mouseMoveEvents)
                 {

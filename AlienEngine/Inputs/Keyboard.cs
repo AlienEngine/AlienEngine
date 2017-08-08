@@ -26,7 +26,7 @@ namespace AlienEngine.Core.Inputs
 
         public static bool GetKey(KeyCode keyCode)
         {
-            return GLFW.GetKey(Game.Game.Window, (int)keyCode);
+            return GLFW.GetKey(Game.Game.Window.Handle, (int)keyCode);
         }
 
         public static bool GetKeyDown(KeyCode keyCode)

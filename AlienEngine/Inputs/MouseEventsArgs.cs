@@ -9,46 +9,46 @@ namespace AlienEngine
 
     public class MouseEventArgs : EventArgs
     {
-        public Point2i Location { get; private set; }
-        public Point2i LastLocaton { get; private set; }
-        public Input.MouseButton Button { get; private set; }
-        public Input.InputState State { get; private set; }
+        public Point2d Location { get; private set; }
+        public Point2d LastLocaton { get; private set; }
+        public MouseButton Button { get; private set; }
+        public InputState State { get; private set; }
 
         public MouseEventArgs(Click MousePosition, Click LastMousePosition)
-            : this(new Point2i(MousePosition.X, MousePosition.Y), MousePosition.Button, MousePosition.State)
+            : this(new Point2d(MousePosition.X, MousePosition.Y), MousePosition.Button, MousePosition.State)
         {
-            this.LastLocaton = new Point2i(LastMousePosition.X, LastMousePosition.Y);
+            this.LastLocaton = new Point2d(LastMousePosition.X, LastMousePosition.Y);
         }
 
         public MouseEventArgs()
-            : this(new Point2i(0, 0))
+            : this(new Point2d(0, 0))
         {
         }
 
-        public MouseEventArgs(Point2i Location)
+        public MouseEventArgs(Point2d Location)
         {
-            this.LastLocaton = new Point2i(Location.X, Location.Y);
+            this.LastLocaton = new Point2d(Location.X, Location.Y);
             this.Location = this.LastLocaton;
         }
 
-        public MouseEventArgs(Point2i Location, Input.MouseButton Button, Input.InputState State)
+        public MouseEventArgs(Point2d Location, MouseButton Button, InputState State)
         {
-            this.LastLocaton = new Point2i(Location.X, Location.Y);
+            this.LastLocaton = new Point2d(Location.X, Location.Y);
             this.Location = this.LastLocaton;
             this.Button = Button;
             this.State = State;
         }
 
-        internal void SetLocation(Point2i Location)
+        internal void SetLocation(Point2d Location)
         {
             this.LastLocaton = this.Location;
-            this.Location = new Point2i(Location.X, Location.Y);
+            this.Location = new Point2d(Location.X, Location.Y);
         }
 
-        internal void SetState(Point2i Location, Input.MouseButton Button, Input.InputState State)
+        internal void SetState(Point2d Location, MouseButton Button, InputState State)
         {
             this.LastLocaton = this.Location;
-            this.Location = new Point2i(Location.X, Location.Y);
+            this.Location = new Point2d(Location.X, Location.Y);
             this.Button = Button;
             this.State = State;
         }
@@ -74,12 +74,12 @@ namespace AlienEngine
         /// <summary>
         /// The mouse button pressed on the click event.
         /// </summary>
-        public Input.MouseButton Button;
+        public MouseButton Button;
 
         /// <summary>
         /// True if the mouse button has been pressed, false if it has been released.
         /// </summary>
-        public Input.InputState State;
+        public InputState State;
         #endregion
 
         #region Methods
@@ -90,7 +90,7 @@ namespace AlienEngine
         /// <param name="y">The y-location of the mouse wrt the top-left.</param>
         /// <param name="button">The mouse button pressed on the click event.</param>
         /// <param name="pressed">True if the mouse has been pressed, false if released.</param>
-        public Click(int x, int y, Input.MouseButton button, Input.InputState state)
+        public Click(int x, int y, MouseButton button, InputState state)
         {
             X = x;
             Y = y;
@@ -108,7 +108,7 @@ namespace AlienEngine
         /// <param name="right">True if the right button is pressed.</param>
         /// <param name="pressed">True if the mouse has been pressed, false if released.</param>
         public Click(int x, int y, bool left, bool middle, bool right, bool pressed) :
-            this(x, y, (left ? Input.MouseButton.LeftClick : (right ? Input.MouseButton.RightClick : Input.MouseButton.MiddleClick)), pressed ? Input.InputState.Press : Input.InputState.Release) { }
+            this(x, y, (left ? MouseButton.LeftClick : (right ? MouseButton.RightClick : MouseButton.MiddleClick)), pressed ? InputState.Press : InputState.Release) { }
 
         /// <summary>
         /// A new click object with button data.
@@ -118,7 +118,7 @@ namespace AlienEngine
         /// <param name="right">True if the right button is pressed.</param>
         /// <param name="pressed">True if the mouse has been pressed, false if released.</param>
         //public Click(bool left, bool middle, bool right, bool pressed) :
-        //    this(Input.MousePosition.x, Input.MousePosition.y, left, middle, right, pressed) { }
+        //    this(MousePosition.x, MousePosition.y, left, middle, right, pressed) { }
 
         /// <summary>
         /// ToString override to give some information about the mouse state.

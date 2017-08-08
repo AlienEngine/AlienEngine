@@ -21,7 +21,7 @@ namespace AlienEngine.Core.Inputs
             {
                 PreviousPosition = mousePosition;
                 mousePosition = value;
-                GLFW.SetCursorPos(Game.Game.Window, value.X, value.Y);
+                GLFW.SetCursorPos(Game.Game.Window.Handle, value.X, value.Y);
             }
         }
 
@@ -35,11 +35,11 @@ namespace AlienEngine.Core.Inputs
         {
             get
             {
-                return GLFW.GetInputMode(Game.Game.Window, GLFW.InputMode.Cursor) == (int)GLFW.CursorMode.Disabled;
+                return GLFW.GetInputMode(Game.Game.Window.Handle, GLFW.InputMode.Cursor) == (int)GLFW.CursorMode.Disabled;
             }
             set
             {
-                GLFW.SetInputMode(Game.Game.Window, GLFW.InputMode.Cursor, value ? GLFW.CursorMode.Disabled : GLFW.CursorMode.Normal);
+                GLFW.SetInputMode(Game.Game.Window.Handle, GLFW.InputMode.Cursor, value ? GLFW.CursorMode.Disabled : GLFW.CursorMode.Normal);
             }
         }
 
@@ -47,11 +47,11 @@ namespace AlienEngine.Core.Inputs
         {
             get
             {
-                return GLFW.GetInputMode(Game.Game.Window, GLFW.InputMode.Cursor) == (int)GLFW.CursorMode.Hidden;
+                return GLFW.GetInputMode(Game.Game.Window.Handle, GLFW.InputMode.Cursor) == (int)GLFW.CursorMode.Hidden;
             }
             set
             {
-                GLFW.SetInputMode(Game.Game.Window, GLFW.InputMode.Cursor, value ? GLFW.CursorMode.Hidden : GLFW.CursorMode.Normal);
+                GLFW.SetInputMode(Game.Game.Window.Handle, GLFW.InputMode.Cursor, value ? GLFW.CursorMode.Hidden : GLFW.CursorMode.Normal);
             }
         }
 
@@ -64,7 +64,7 @@ namespace AlienEngine.Core.Inputs
         public static void Update()
         {
             Point2d pos;
-            GLFW.GetCursorPos(Game.Game.Window, out pos.X, out pos.Y);
+            GLFW.GetCursorPos(Game.Game.Window.Handle, out pos.X, out pos.Y);
             Position = pos;
 
             _currentButtons.Clear();
@@ -75,7 +75,7 @@ namespace AlienEngine.Core.Inputs
 
         public static bool GetButton(MouseButton keyCode)
         {
-            return GLFW.GetMouseButton(Game.Game.Window, keyCode);
+            return GLFW.GetMouseButton(Game.Game.Window.Handle, keyCode);
         }
 
         public static bool GetButtonDown(MouseButton keyCode)
@@ -87,6 +87,5 @@ namespace AlienEngine.Core.Inputs
         {
             return !GetButton(keyCode) && _currentButtons.Contains(keyCode);
         }
-
     }
 }

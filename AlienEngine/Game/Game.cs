@@ -1,28 +1,21 @@
-using AlienEngine.Core.Graphics.GLFW;
+using AlienEngine.AssetsManager;
+using AlienEngine.Core.Graphics;
 
 namespace AlienEngine.Core.Game
 {
-    public static class Game
+    public class Game
     {
+        private static Game _instance = null;
+
         /// <summary>
         /// The window who handle the game.
         /// </summary>
-        private static GLFW.Window _gameWindow = GLFW.Window.None;
+        private static GameWindow _gameWindow = GameWindow.None;
 
         /// <summary>
         /// The current scene.
         /// </summary>
         private static Scene _currentScene;
-
-        /// <summary>
-        /// The current camera of the scene.
-        /// </summary>
-        private static GameElement _currentCamera = null;
-
-        /// <summary>
-        /// The current sound listener of the scene.
-        /// </summary>
-        private static GameElement _currentAudioListener = null;
 
         /// <summary>
         /// Define if the game has already started.
@@ -32,7 +25,7 @@ namespace AlienEngine.Core.Game
         /// <summary>
         /// The window who handle the game.
         /// </summary>
-        public static GLFW.Window Window
+        public static GameWindow Window
         {
             get { return _gameWindow; }
         }
@@ -43,22 +36,6 @@ namespace AlienEngine.Core.Game
         public static Scene CurrentScene
         {
             get { return _currentScene; }
-        }
-
-        /// <summary>
-        /// The primary camera (the currently used one) of the game.
-        /// </summary>
-        public static GameElement CurrentCamera
-        {
-            get { return _currentCamera; }
-        }
-
-        /// <summary>
-        /// The current sound listener.
-        /// </summary>
-        public static GameElement CurrentAudioListener
-        {
-            get { return _currentAudioListener; }
         }
 
         public static bool HasStarted
@@ -76,27 +53,20 @@ namespace AlienEngine.Core.Game
             _hasStarted = false;
         }
 
-        public static void SetPrimaryCamera(GameElement c)
-        {
-            if (c.HasComponent<Camera>())
-                _currentCamera = c;
-        }
-
-        public static void SetGameWindow(GLFW.Window w)
+        public static void SetGameWindow(GameWindow w)
         {
             _gameWindow = w;
             Input.Refresh();
         }
 
-        public static void SetCurrentAudioListener(GameElement c)
-        {
-            if (c.HasComponent<AudioListener>())
-                _currentAudioListener = c;
-        }
-
-        public static void SetCurrentScene(Scene scene)
+        public static void LoadScene(Scene scene)
         {
             _currentScene = scene;
+        }
+
+        public static void LoadScene(SceneAsset scene)
+        {
+
         }
     }
 }
