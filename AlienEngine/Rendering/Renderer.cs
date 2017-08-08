@@ -1,14 +1,12 @@
-﻿using AlienEngine.Core.Graphics.OpenGL;
+﻿using AlienEngine.Core.Game;
 using AlienEngine.Core.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using AlienEngine.Core.Graphics.OpenGL;
 using AlienEngine.Core.Graphics.Shaders;
 using AlienEngine.Shaders;
+using System;
+using System.Collections.Generic;
 
-namespace AlienEngine.Core.Game
+namespace AlienEngine.Core.Rendering
 {
     public enum RendererBackupMode
     {
@@ -255,7 +253,7 @@ namespace AlienEngine.Core.Game
             BackupState(RendererBackupMode.DepthTest);
             DepthTest(true, DepthFunction.Lequal);
 
-            Camera _camera = Game.CurrentScene.PrimaryCamera.GetComponent<Camera>();
+            Camera _camera = Game.Game.CurrentScene.PrimaryCamera.GetComponent<Camera>();
 
             switch (_camera.ClearScreenType)
             {

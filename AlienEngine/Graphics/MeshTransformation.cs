@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.InteropServices;
 
-namespace AlienEngine.Graphics
+namespace AlienEngine.Core.Graphics
 {
     [StructLayout(LayoutKind.Sequential)]
     internal struct MeshTransformation

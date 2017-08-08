@@ -1,7 +1,6 @@
 ﻿using AlienEngine.Core.Game;
 using AlienEngine.Core.Graphics;
 using AlienEngine.Core.Graphics.Shaders;
-using AlienEngine.Graphics;
 using AlienEngine.Core.Graphics.Shaders.Samples;
 
 namespace AlienEngine.Shaders

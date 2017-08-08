@@ -2,13 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace AlienEngine.Graphics
+namespace AlienEngine.Core.Graphics
 {
     [StructLayout(LayoutKind.Explicit)]
-    internal struct MeshEntry
+    public struct MeshEntry
     {
         [FieldOffset(0)]
         public int NumIndices;

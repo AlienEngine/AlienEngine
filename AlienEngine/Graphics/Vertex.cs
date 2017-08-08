@@ -1,18 +1,14 @@
-﻿using System;
-
-namespace AlienEngine.Graphics
+﻿namespace AlienEngine.Core.Graphics
 {
     public struct Vertex
     {
-        public readonly static int SIZE = 3;
-
         // Position of the vertex
         private Vector3f _pos;
 
-        // Texture of the vertex
+        // Texture coordinates of the vertex
         private Vector2f _tex;
 
-        // Normal of the vertex
+        // Normal vector of the vertex
         private Vector3f _normal;
 
         /// <summary>
@@ -21,6 +17,7 @@ namespace AlienEngine.Graphics
         public Vector3f Position
         {
             get { return _pos; }
+            set { _pos = value; }
         }
 
         /// <summary>
@@ -29,6 +26,7 @@ namespace AlienEngine.Graphics
         public Vector2f UV
         {
             get { return _tex; }
+            set { _tex = value; }
         }
 
         /// <summary>
@@ -37,6 +35,7 @@ namespace AlienEngine.Graphics
         public Vector3f Normal
         {
             get { return _normal; }
+            set { _normal = value; }
         }
 
         /// <summary>
@@ -50,11 +49,6 @@ namespace AlienEngine.Graphics
             _pos = pos;
             _tex = uv;
             _normal = normal;
-        }
-
-        public void SetPosition(Vector3f pos)
-        {
-            _pos = pos;
         }
     }
 }

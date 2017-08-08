@@ -1,7 +1,7 @@
 ﻿using AlienEngine.Core.Game;
 using AlienEngine.Core.Graphics.OpenGL;
 using AlienEngine.Core.Graphics.Shaders;
-using AlienEngine.Graphics;
+using AlienEngine.Imaging;
 using System;
 using System.Runtime.InteropServices;
 
@@ -11,15 +11,13 @@ namespace AlienEngine
     {
         private ShaderProgram _shader;
 
-        [CLSCompliant(false)]
-        public enum MaterialBlendMode : uint
+        public enum MaterialBlendMode : int
         {
             Default = 0,
             Additive = 1
         }
 
-        [CLSCompliant(false)]
-        public enum MaterialShadingMode : uint
+        public enum MaterialShadingMode : int
         {
             None = 0,
             Flat = 1,
@@ -34,7 +32,7 @@ namespace AlienEngine
             Fresnel = 10
         }
 
-        [CLSCompliant(false)]
+        public int TextureTilling;
         public MaterialBlendMode BlendMode;
         public float BumpScaling;
         public Color4 ColorAmbient;
@@ -75,7 +73,6 @@ namespace AlienEngine
         public float Opacity;
         public int PropertyCount;
         public float Reflectivity;
-        [CLSCompliant(false)]
         public MaterialShadingMode ShadingMode;
         public float Shininess;
         public float ShininessStrength;
@@ -143,7 +140,7 @@ namespace AlienEngine
             ShaderProgram.SetUniform("i_v_matrix", i_v_matrix);
             ShaderProgram.SetUniform("i_p_matrix", i_p_matrix);
 
-            // Sets light informations
+            // Sets lights informations
             var ligths = Game.CurrentScene.Lights;
             var max_nb = ligths.Length;
             ShaderProgram.SetUniform("lights_nb", max_nb);
@@ -166,6 +163,9 @@ namespace AlienEngine
             ShaderProgram.SetUniform("c_position", Game.CurrentScene.PrimaryCamera.WorldTransform.Translation);
             ShaderProgram.SetUniform("c_rotation", Game.CurrentScene.PrimaryCamera.WorldTransform.Rotation);
             ShaderProgram.SetUniform("c_depthDistances", new Vector2f(_camera.Near, _camera.Far));
+
+            // Sets material data
+            ShaderProgram.SetUniform("materialState.textureTilling", Math.Max(0, TextureTilling));
 
             // Sets material data disponibility informations
             ShaderProgram.SetUniform("materialState.hasColorAmbient", HasColorAmbient);

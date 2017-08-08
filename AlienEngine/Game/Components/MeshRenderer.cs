@@ -1,5 +1,6 @@
 ﻿using AlienEngine.Core.Game;
-using AlienEngine.Graphics;
+using AlienEngine.Core.Graphics;
+using AlienEngine.Core.Rendering;
 
 namespace AlienEngine
 {
@@ -21,11 +22,10 @@ namespace AlienEngine
         }
 
         /// <summary>
-        /// Create a new MeshRenderer with the given mesh and the
-        /// associated shader program.
+        /// Create a new MeshRenderer with the given mesh.
         /// </summary>
         /// <param name="mesh">The <see cref="Mesh"/> to render.</param>
-        internal MeshRenderer(Mesh mesh)
+        public MeshRenderer(Mesh mesh)
         {
             _mesh = mesh;
         }

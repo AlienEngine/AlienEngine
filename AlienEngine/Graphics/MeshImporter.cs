@@ -1,5 +1,6 @@
 ﻿using AlienEngine.Core.Graphics.OpenGL;
 using AlienEngine.Core.Resources;
+using AlienEngine.Imaging;
 using Assimp;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AlienEngine.Graphics
+namespace AlienEngine.Core.Graphics
 {
     public class MeshImporter : IDisposable
     {
@@ -69,18 +70,18 @@ namespace AlienEngine.Graphics
                 // Generate and populate the buffers with vertex attributes and the indices
                 GL.BindBuffer(BufferTarget.ArrayBuffer, _buffers[POS_VB]);
                 GL.BufferData(BufferTarget.ArrayBuffer, Marshal.SizeOf(posArray[0]) * posArray.Length, posArray, BufferUsageHint.StaticDraw);
-                GL.EnableVertexAttribArray(GL.POSITION_LOCATION);
-                GL.VertexAttribPointer(GL.POSITION_LOCATION, 3, VertexAttribPointerType.Float, false, 0, 0);
+                GL.EnableVertexAttribArray(GL.VERTEX_POSITION_LOCATION);
+                GL.VertexAttribPointer(GL.VERTEX_POSITION_LOCATION, 3, VertexAttribPointerType.Float, false, 0, 0);
 
                 GL.BindBuffer(BufferTarget.ArrayBuffer, _buffers[TEXCOORD_VB]);
                 GL.BufferData(BufferTarget.ArrayBuffer, Marshal.SizeOf(uvArray[0]) * uvArray.Length, uvArray, BufferUsageHint.StaticDraw);
-                GL.EnableVertexAttribArray(GL.UV_LOCATION);
-                GL.VertexAttribPointer(GL.UV_LOCATION, 2, VertexAttribPointerType.Float, false, 0, 0);
+                GL.EnableVertexAttribArray(GL.VERTEX_TEXTURE_COORD_LOCATION);
+                GL.VertexAttribPointer(GL.VERTEX_TEXTURE_COORD_LOCATION, 2, VertexAttribPointerType.Float, false, 0, 0);
 
                 GL.BindBuffer(BufferTarget.ArrayBuffer, _buffers[NORMAL_VB]);
                 GL.BufferData(BufferTarget.ArrayBuffer, Marshal.SizeOf(normArray[0]) * normArray.Length, normArray, BufferUsageHint.StaticDraw);
-                GL.EnableVertexAttribArray(GL.NORMAL_LOCATION);
-                GL.VertexAttribPointer(GL.NORMAL_LOCATION, 3, VertexAttribPointerType.Float, false, 0, 0);
+                GL.EnableVertexAttribArray(GL.VERTEX_NORMAL_LOCATION);
+                GL.VertexAttribPointer(GL.VERTEX_NORMAL_LOCATION, 3, VertexAttribPointerType.Float, false, 0, 0);
 
                 GL.BindBuffer(BufferTarget.ElementArrayBuffer, _buffers[INDEX_BUFFER]);
                 GL.BufferData(BufferTarget.ElementArrayBuffer, Marshal.SizeOf(indArray[0]) * indArray.Length, indArray, BufferUsageHint.StaticRead);
@@ -113,7 +114,7 @@ namespace AlienEngine.Graphics
             var _tempGameMesh = new GameElement(node.Name);
 
             var meshTrasform = new MeshTransformation(node.Transform);
-            _tempGameMesh.LocalTransform.Position = meshTrasform.Position;
+            _tempGameMesh.LocalTransform.Translation = meshTrasform.Position;
             _tempGameMesh.LocalTransform.Rotation = meshTrasform.Rotation;
             _tempGameMesh.LocalTransform.Scale = meshTrasform.Scale;
 
@@ -280,61 +281,61 @@ namespace AlienEngine.Graphics
                 if (material.HasTextureAmbient)
                 {
                     _materials[i].HasTextureAmbient = true;
-                    _materials[i].TextureAmbient = new Texture(Core.Graphics.OpenGL.TextureTarget.Texture2D, _getTextureFullPath(material.TextureAmbient));
+                    _materials[i].TextureAmbient = new Texture(_getTextureFullPath(material.TextureAmbient), Core.Graphics.OpenGL.TextureTarget.Texture2D);
                 }
 
                 if (material.HasTextureDiffuse)
                 {
                     _materials[i].HasTextureDiffuse = true;
-                    _materials[i].TextureDiffuse = new Texture(Core.Graphics.OpenGL.TextureTarget.Texture2D, _getTextureFullPath(material.TextureDiffuse));
+                    _materials[i].TextureDiffuse = new Texture(_getTextureFullPath(material.TextureDiffuse), Core.Graphics.OpenGL.TextureTarget.Texture2D);
                 }
 
                 if (material.HasTextureDisplacement)
                 {
                     _materials[i].HasTextureDisplacement = true;
-                    _materials[i].TextureDisplacement = new Texture(Core.Graphics.OpenGL.TextureTarget.Texture2D, _getTextureFullPath(material.TextureDisplacement));
+                    _materials[i].TextureDisplacement = new Texture(_getTextureFullPath(material.TextureDisplacement), Core.Graphics.OpenGL.TextureTarget.Texture2D);
                 }
 
                 if (material.HasTextureEmissive)
                 {
                     _materials[i].HasTextureEmissive = true;
-                    _materials[i].TextureEmissive = new Texture(Core.Graphics.OpenGL.TextureTarget.Texture2D, _getTextureFullPath(material.TextureEmissive));
+                    _materials[i].TextureEmissive = new Texture(_getTextureFullPath(material.TextureEmissive), Core.Graphics.OpenGL.TextureTarget.Texture2D);
                 }
 
                 if (material.HasTextureHeight)
                 {
                     _materials[i].HasTextureHeight = true;
-                    _materials[i].TextureHeight = new Texture(Core.Graphics.OpenGL.TextureTarget.Texture2D, _getTextureFullPath(material.TextureHeight));
+                    _materials[i].TextureHeight = new Texture(_getTextureFullPath(material.TextureHeight), Core.Graphics.OpenGL.TextureTarget.Texture2D);
                 }
 
                 if (material.HasTextureLightMap)
                 {
                     _materials[i].HasTextureLightMap = true;
-                    _materials[i].TextureLightMap = new Texture(Core.Graphics.OpenGL.TextureTarget.Texture2D, _getTextureFullPath(material.TextureLightMap));
+                    _materials[i].TextureLightMap = new Texture(_getTextureFullPath(material.TextureLightMap), Core.Graphics.OpenGL.TextureTarget.Texture2D);
                 }
 
                 if (material.HasTextureNormal)
                 {
                     _materials[i].HasTextureNormal = true;
-                    _materials[i].TextureNormal = new Texture(Core.Graphics.OpenGL.TextureTarget.Texture2D, _getTextureFullPath(material.TextureNormal));
+                    _materials[i].TextureNormal = new Texture(_getTextureFullPath(material.TextureNormal), Core.Graphics.OpenGL.TextureTarget.Texture2D);
                 }
 
                 if (material.HasTextureOpacity)
                 {
                     _materials[i].HasTextureOpacity = true;
-                    _materials[i].TextureOpacity = new Texture(Core.Graphics.OpenGL.TextureTarget.Texture2D, _getTextureFullPath(material.TextureOpacity));
+                    _materials[i].TextureOpacity = new Texture(_getTextureFullPath(material.TextureOpacity), Core.Graphics.OpenGL.TextureTarget.Texture2D);
                 }
 
                 if (material.HasTextureReflection)
                 {
                     _materials[i].HasTextureReflection = true;
-                    _materials[i].TextureReflection = new Texture(Core.Graphics.OpenGL.TextureTarget.Texture2D, _getTextureFullPath(material.TextureReflection));
+                    _materials[i].TextureReflection = new Texture(_getTextureFullPath(material.TextureReflection), Core.Graphics.OpenGL.TextureTarget.Texture2D);
                 }
 
                 if (material.HasTextureSpecular)
                 {
                     _materials[i].HasTextureSpecular = true;
-                    _materials[i].TextureSpecular = new Texture(Core.Graphics.OpenGL.TextureTarget.Texture2D, _getTextureFullPath(material.TextureSpecular));
+                    _materials[i].TextureSpecular = new Texture(_getTextureFullPath(material.TextureSpecular), Core.Graphics.OpenGL.TextureTarget.Texture2D);
                 }
 
                 if (material.HasName)
@@ -387,7 +388,7 @@ namespace AlienEngine.Graphics
 
                 _materials[i].PropertyCount = material.PropertyCount;
 
-                _materials[i].Program = new AlienEngine.Shaders.DiffuseShaderProgram();
+                _materials[i].ShaderProgram = new AlienEngine.Shaders.DiffuseShaderProgram();
             }
         }
     

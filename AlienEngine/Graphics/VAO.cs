@@ -1,9 +1,9 @@
 ﻿using System;
-using AlienEngine.Graphics.Shaders;
+using AlienEngine.Core.Graphics.Shaders;
 using AlienEngine.Core.Graphics.OpenGL;
 using AlienEngine.Core.Resources;
 
-namespace AlienEngine.Graphics
+namespace AlienEngine.Core.Graphics
 {
     public class VAO<T1> : GenericVAO
         where T1 : struct
@@ -347,7 +347,7 @@ namespace AlienEngine.Graphics
                     continue;
                 }
 
-                int loc = GL.GetAttribLocation(program.ProgramID, vbos[i].Name);
+                int loc = GL.GetAttribLocation(program.ID, vbos[i].Name);
                 if (loc == -1) throw new Exception(string.Format("Shader did not contain '{0}'.", vbos[i].Name));
 
                 GL.EnableVertexAttribArray((uint)loc);
@@ -540,8 +540,19 @@ namespace AlienEngine.Graphics
                 ID = GL.GenVertexArray();
                 if (ID != 0)
                 {
-                    GL.BindVertexArray(ID);
-                    BindAttributes(Program);
+                    if (Program.Compiled)
+                    {
+                        GL.BindVertexArray(ID);
+                        BindAttributes(Program);
+                    }
+                    else
+                    {
+                        Program.OnCompile += () =>
+                        {
+                            GL.BindVertexArray(ID);
+                            BindAttributes(Program);
+                        };
+                    }
                 }
                 GL.BindVertexArray(0);
 
@@ -615,7 +626,7 @@ namespace AlienEngine.Graphics
 
             // Note:  Since the shader is already compiled, we cannot set the attribute locations.
             //  Instead we must query the shader for the locations that the linker chose and use them.
-            int loc = GL.GetAttribLocation(program.ProgramID, "in_position");
+            int loc = GL.GetAttribLocation(program.ID, "in_position");
             if (loc == -1) throw new Exception("Shader did not contain 'in_position'.");
 
             GL.EnableVertexAttribArray((uint)loc);
@@ -624,7 +635,7 @@ namespace AlienEngine.Graphics
 
             if (normal != null && normal.ID != 0)
             {
-                loc = GL.GetAttribLocation(program.ProgramID, "in_normal");
+                loc = GL.GetAttribLocation(program.ID, "in_normal");
                 if (loc != -1)
                 {
                     GL.EnableVertexAttribArray((uint)loc);
@@ -635,7 +646,7 @@ namespace AlienEngine.Graphics
 
             if (uv != null && uv.ID != 0)
             {
-                loc = GL.GetAttribLocation(program.ProgramID, "in_uv");
+                loc = GL.GetAttribLocation(program.ID, "in_uv");
                 if (loc != -1)
                 {
                     GL.EnableVertexAttribArray((uint)loc);
@@ -646,7 +657,7 @@ namespace AlienEngine.Graphics
 
             if (tangent != null && tangent.ID != 0)
             {
-                loc = GL.GetAttribLocation(program.ProgramID, "in_tangent");
+                loc = GL.GetAttribLocation(program.ID, "in_tangent");
                 if (loc != -1)
                 {
                     GL.EnableVertexAttribArray((uint)loc);
@@ -695,6 +706,11 @@ namespace AlienEngine.Graphics
             BindAttributes(program);
             if (Offset == 0) GL.DrawElements(DrawMode, VertexCount, DrawElementsType.UnsignedInt, 0);
             else GL.DrawElementsBaseVertex(DrawMode, VertexCount, DrawElementsType.UnsignedInt, 0, Offset);
+        }
+
+        public void DrawOffset(int offset)
+        {
+
         }
         #endregion
 

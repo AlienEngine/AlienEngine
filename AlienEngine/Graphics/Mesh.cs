@@ -5,9 +5,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
 
-namespace AlienEngine.Graphics
+namespace AlienEngine.Core.Graphics
 {
-    internal class Mesh
+    public class Mesh
     {
         private uint _vao;
 

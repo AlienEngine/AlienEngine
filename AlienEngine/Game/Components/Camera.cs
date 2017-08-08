@@ -1,5 +1,5 @@
 ﻿using AlienEngine.Core.Game;
-using AlienEngine.Core.Graphics;
+using AlienEngine.Imaging;
 
 namespace AlienEngine
 {

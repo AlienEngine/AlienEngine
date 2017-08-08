@@ -1,8 +1,8 @@
-﻿using System;
-using System.Drawing;
+﻿using AlienEngine.Core.Game;
 using AlienEngine.Core.Graphics.OpenGL;
-using AlienEngine.Core.Game;
+using AlienEngine.Core.Rendering;
 using AlienEngine.Core.Resources;
+using System;
 using System.Collections.Generic;
 
 namespace AlienEngine.Core.Graphics
