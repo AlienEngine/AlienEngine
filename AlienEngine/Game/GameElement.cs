@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AlienEngine.Core.Game;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,16 +8,27 @@ namespace AlienEngine
 {
     public class GameElement
     {
+        private Scene _parentScene;
+
         #region Static Members
 
         #region Properties
+        internal Scene ParentScene
+        {
+            get { return _parentScene; }
+            set { _parentScene = value; }
+        }
+
         public static GameElement Empty { get { return new GameElement("GameElement"); } }
+
+        private static Dictionary<string, int> _namesCounter;
         #endregion Properties
 
         #region Methods
         static GameElement()
         {
             _gameElements = new Dictionary<string, GameElement>();
+            _namesCounter = new Dictionary<string, int>();
         }
 
         public static GameElement Get(string name)
@@ -34,10 +46,15 @@ namespace AlienEngine
 
         public static void Add(string name, GameElement gameElement)
         {
+            if (_namesCounter.ContainsKey(gameElement.Name))
+                _namesCounter[gameElement.Name]++;
+            else
+                _namesCounter[gameElement.Name] = 0;
+
             if (!Is(name))
                 _gameElements.Add(name, gameElement);
             else
-                throw new InvalidOperationException();
+                _gameElements.Add(name + "___" + _namesCounter[gameElement.Name], gameElement);
         }
 
         public static void Remove(string name)
@@ -82,7 +99,7 @@ namespace AlienEngine
 
         #region Fields
         private List<IComponent> _attachedComponents;
-        private List<GameElement> _childs;
+        private GameElementCollection _childs;
         private string _name;
         private GameElement _parent;
         private static Dictionary<string, GameElement> _gameElements;
@@ -92,7 +109,7 @@ namespace AlienEngine
         #region Properties
         private Vector3f _realScale { get { return (Parent != null) ? Parent._realScale * LocalTransform.Scale : LocalTransform.Scale; } }
         private Vector3f _realRotation { get { return (Parent != null) ? Parent._realRotation + LocalTransform.Rotation : LocalTransform.Rotation; } }
-        private Vector3f _realPosition { get { return (Parent != null) ? Parent._realPosition + (LocalTransform.Position * _realScale) : LocalTransform.Position; } }
+        private Vector3f _realPosition { get { return (Parent != null) ? Parent._realPosition + (LocalTransform.Translation * _realScale) : LocalTransform.Translation; } }
         #endregion Properties
 
         #endregion Private Members
@@ -104,7 +121,7 @@ namespace AlienEngine
 
         public GameElement Parent { get { return _parent; } }
 
-        public bool HasChilds { get { return _childs.Count > 0; } }
+        public bool HasChilds { get { return _childs.Length > 0; } }
 
         /// <summary>
         /// Get local transformations for this <see cref="GameElement"/>.
@@ -129,7 +146,7 @@ namespace AlienEngine
             {
                 _worldTransform.SetScale(_realScale);
                 _worldTransform.SetRotation(_realRotation);
-                _worldTransform.SetPosition(_realPosition);
+                _worldTransform.SetTranslation(_realPosition);
                 return _worldTransform;
             }
         }
@@ -139,7 +156,7 @@ namespace AlienEngine
         public GameElement(string name)
         {
             _attachedComponents = new List<IComponent>();
-            _childs = new List<GameElement>();
+            _childs = new GameElementCollection();
             _name = name;
             _worldTransform = new Transform();
             LocalTransform = new Transform();
@@ -160,28 +177,31 @@ namespace AlienEngine
 
         public bool HasChild(GameElement child)
         {
-            bool found = false;
-
             foreach (GameElement c in _childs)
-                if (c == child) found = true;
+                if (c == child) return true;
 
-            return found;
+            return false;
         }
 
         public bool HasChild(string name)
         {
-            bool found = false;
-
             foreach (GameElement c in _childs)
-                if (c.Name == name) found = true;
+                if (c.Name == name) return true;
 
-            return found;
+            return false;
         }
 
         public GameElement FindChild(string name)
         {
             foreach (GameElement c in _childs)
+            {
                 if (c.Name == name) return c;
+                else
+                {
+                    GameElement ret = c.FindChild(name);
+                    if (ret != null) return ret;
+                }
+            }
 
             return null;
         }
@@ -199,7 +219,7 @@ namespace AlienEngine
         public T GetComponent<T>() where T : Component
         {
             foreach (IComponent component in _attachedComponents)
-                if (component is T) return (T)component;
+                if (component is T) return component as T;
 
             return null;
         }
@@ -209,7 +229,19 @@ namespace AlienEngine
             List<T> collection = new List<T>();
 
             foreach (IComponent component in _attachedComponents)
-                if (component is T) collection.Add((T)component);
+                if (component is T) collection.Add(component as T);
+
+            return collection.ToArray();
+        }
+
+        public T[] GetComponentsChilds<T>() where T : Component
+        {
+            List<T> collection = new List<T>();
+
+            collection.AddRange(GetComponents<T>());
+
+            foreach (GameElement c in _childs)
+                collection.AddRange(c.GetComponents<T>());
 
             return collection.ToArray();
         }
@@ -220,6 +252,18 @@ namespace AlienEngine
             {
                 component.SetGameElement(this);
                 _attachedComponents.Add(component);
+            }
+        }
+
+        public void AttachComponents(params Component[] components)
+        {
+            foreach (Component component in components)
+            {
+                if (!HasComponent(component))
+                {
+                    component.SetGameElement(this);
+                    _attachedComponents.Add(component);
+                }
             }
         }
 
@@ -248,11 +292,10 @@ namespace AlienEngine
 
         public bool HasComponent<T>() where T : Component
         {
-            bool exists = false;
             foreach (IComponent component in _attachedComponents)
-                if (component is T) exists = true;
+                if (component is T) return true;
 
-            return exists;
+            return false;
         }
 
         public void Start()
