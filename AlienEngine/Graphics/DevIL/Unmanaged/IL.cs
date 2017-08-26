@@ -774,7 +774,7 @@ namespace AlienEngine.Core.Graphics.DevIL.Unmanaged {
         [DllImportAttribute(ILDLL, EntryPoint = "ilKeyColour", CallingConvention = CallingConvention.StdCall)]
         public static extern void SetKeyColor(float red, float green, float blue, float alpha);
 
-        public static void SetKeyColor(Color color) {
+        public static void SetKeyColor(Color4 color) {
             SetKeyColor(color.R, color.G, color.B, color.A);
         }
 

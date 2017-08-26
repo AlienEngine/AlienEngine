@@ -494,8 +494,10 @@ namespace AlienEngine.Core.Graphics.DevIL
             // Must be Format32bppArgb file format, so convert it if it isn't in that format
             System.Drawing.Imaging.BitmapData bitmapData = bmp.LockBits(new System.Drawing.Rectangle(0, 0, Width, Height), System.Drawing.Imaging.ImageLockMode.WriteOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
 
+            Bind();
             IL.ConvertImage(DataFormat.BGRA, DataType.UnsignedByte); // support for non 32bit images..
             IL.CopyPixels(0, 0, 0, Width, Height, 1, DataFormat.BGRA, DataType.UnsignedByte, bitmapData.Scan0);
+            Unbind();
 
             bmp.UnlockBits(bitmapData);
 

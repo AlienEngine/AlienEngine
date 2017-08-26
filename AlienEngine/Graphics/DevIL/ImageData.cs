@@ -22,179 +22,236 @@
 
 using AlienEngine.Core.Graphics.DevIL.Unmanaged;
 
-namespace AlienEngine.Core.Graphics.DevIL {
-    public class ImageData {
+namespace AlienEngine.Core.Graphics.DevIL
+{
+    public class ImageData
+    {
         private ImageInfo m_info;
         private byte[] m_data;
         private byte[] m_compressedData;
         private byte[] m_paletteData;
 
-        public DataFormat Format {
-            get {
+        public DataFormat Format
+        {
+            get
+            {
                 return m_info.Format;
             }
         }
 
-        public CompressedDataFormat DxtcFormat {
-            get {
+        public CompressedDataFormat DxtcFormat
+        {
+            get
+            {
                 return m_info.DxtcFormat;
             }
         }
 
-        public DataType DataType {
-            get {
+        public DataType DataType
+        {
+            get
+            {
                 return m_info.DataType;
             }
         }
 
-        public PaletteType PaletteType {
-            get {
+        public PaletteType PaletteType
+        {
+            get
+            {
                 return m_info.PaletteType;
             }
         }
 
-        public DataFormat PaletteBaseType {
-            get {
+        public DataFormat PaletteBaseType
+        {
+            get
+            {
                 return m_info.PaletteBaseType;
             }
         }
 
-        public CubeMapFace CubeFace {
-            get {
+        public CubeMapFace CubeFace
+        {
+            get
+            {
                 return m_info.CubeFlags;
             }
         }
 
-        public OriginLocation Origin {
-            get {
+        public OriginLocation Origin
+        {
+            get
+            {
                 return m_info.Origin;
             }
         }
 
-        public int Width {
-            get {
+        public int Width
+        {
+            get
+            {
                 return m_info.Width;
             }
         }
 
-        public int Height {
-            get {
+        public int Height
+        {
+            get
+            {
                 return m_info.Height;
             }
         }
 
-        public int Depth {
-            get {
+        public int Depth
+        {
+            get
+            {
                 return m_info.Depth;
             }
         }
 
-        public int BitsPerPixel {
-            get {
+        public int BitsPerPixel
+        {
+            get
+            {
                 return m_info.BitsPerPixel;
             }
         }
 
-        public int BytesPerPixel {
-            get {
+        public int BytesPerPixel
+        {
+            get
+            {
                 return m_info.BytesPerPixel;
             }
         }
 
-        public int ChannelCount {
-            get {
+        public int ChannelCount
+        {
+            get
+            {
                 return m_info.Channels;
             }
         }
 
-        public int Duration {
-            get {
+        public int Duration
+        {
+            get
+            {
                 return m_info.Duration;
             }
         }
 
-        public int SizeOfData {
-            get {
+        public int SizeOfData
+        {
+            get
+            {
                 return m_info.SizeOfData;
             }
         }
 
-        public int OffsetX {
-            get {
+        public int OffsetX
+        {
+            get
+            {
                 return m_info.OffsetX;
             }
         }
 
-        public int OffsetY {
-            get {
+        public int OffsetY
+        {
+            get
+            {
                 return m_info.OffsetY;
             }
         }
 
-        public int PlaneSize {
-            get {
+        public int PlaneSize
+        {
+            get
+            {
                 return m_info.PlaneSize;
             }
         }
 
-        public int PaletteBytesPerPixel {
-            get {
+        public int PaletteBytesPerPixel
+        {
+            get
+            {
                 return m_info.PaletteBytesPerPixel;
             }
         }
 
-        public int PaletteColumnCount {
-            get {
+        public int PaletteColumnCount
+        {
+            get
+            {
                 return m_info.PaletteColumnCount;
             }
         }
 
-        public bool HasDXTCData {
-            get {
+        public bool HasDXTCData
+        {
+            get
+            {
                 return m_info.HasDXTC && m_compressedData != null;
             }
         }
 
-        public bool HasPaletteData {
-            get {
+        public bool HasPaletteData
+        {
+            get
+            {
                 return m_info.HasPalette && m_paletteData != null;
             }
         }
 
-        public bool IsCubeMap {
-            get {
+        public bool IsCubeMap
+        {
+            get
+            {
                 return m_info.IsCubeMap;
             }
         }
 
-        public bool IsSphereMap {
-            get {
+        public bool IsSphereMap
+        {
+            get
+            {
                 return m_info.IsSphereMap;
             }
         }
 
-        public byte[] Data {
-            get {
+        public byte[] Data
+        {
+            get
+            {
                 return m_data;
             }
         }
 
-        public byte[] CompressedData {
-            get {
+        public byte[] CompressedData
+        {
+            get
+            {
                 return m_compressedData;
             }
         }
 
-        public byte[] PaletteData {
-            get {
+        public byte[] PaletteData
+        {
+            get
+            {
                 return m_paletteData;
             }
         }
 
         private ImageData() { }
 
-        internal static ImageData Load(Subimage subimage) {
-            if(!subimage.Activate())
+        internal static ImageData Load(Subimage subimage)
+        {
+            if (!subimage.Activate())
                 return null;
 
             ImageData imageData = new ImageData();
@@ -202,14 +259,16 @@ namespace AlienEngine.Core.Graphics.DevIL {
             imageData.m_data = IL.GetImageData();
 
             //If no uncompressed data, we're here by accident, abort
-            if(imageData.m_data == null)
+            if (imageData.m_data == null)
                 return null;
 
-            if(imageData.m_info.HasDXTC) {
+            if (imageData.m_info.HasDXTC)
+            {
                 imageData.m_compressedData = IL.GetDxtcData(imageData.DxtcFormat);
             }
 
-            if(imageData.m_info.HasPalette) {
+            if (imageData.m_info.HasPalette)
+            {
                 imageData.m_paletteData = IL.GetPaletteData();
             }
 

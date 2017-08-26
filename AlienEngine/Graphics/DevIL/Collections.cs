@@ -22,17 +22,21 @@
 
 using System.Collections.Generic;
 
-namespace AlienEngine.Core.Graphics.DevIL {
+namespace AlienEngine.Core.Graphics.DevIL
+{
 
-    public class MipMapChain : List<ImageData> {
-
-    }
-
-    public class MipMapChainCollection : List<MipMapChain> {
+    public class MipMapChain : List<ImageData>
+    {
 
     }
 
-    public class AnimationChainCollection : List<ManagedImage> {
+    public class MipMapChainCollection : List<MipMapChain>
+    {
+
+    }
+
+    public class AnimationChainCollection : List<ManagedImage>
+    {
 
     }
 }

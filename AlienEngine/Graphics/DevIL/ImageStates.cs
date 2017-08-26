@@ -23,13 +23,16 @@
 using System;
 using AlienEngine.Core.Graphics.DevIL.Unmanaged;
 
-namespace AlienEngine.Core.Graphics.DevIL {
+namespace AlienEngine.Core.Graphics.DevIL
+{
 
-    public interface IImageState {
+    public interface IImageState
+    {
         void Apply();
     }
 
-    public sealed class ImageState : IImageState {
+    public sealed class ImageState : IImageState
+    {
         private bool m_useAbsoluteFormat = false;
         private bool m_useAbsoluteDataType = false;
         private bool m_useAbsoluteOrigin = false;
@@ -37,186 +40,248 @@ namespace AlienEngine.Core.Graphics.DevIL {
         private DataFormat m_absoluteFormat = DataFormat.BGRA;
         private DataType m_absoluteDataType = DataType.UnsignedByte;
         private OriginLocation m_absoluteOrigin = OriginLocation.LowerLeft;
-        private Color m_keyColor = new Color(1, 0, 1, 1); 
+        private Color4 m_keyColor = new Color4(1, 0, 1, 1);
 
         private bool m_convertPalette = false;
         private bool m_defaultImageOnFail = false;
         private bool m_useColorKey = false;
         private bool m_blitBlend = true;
 
-        public bool UseAbsoluteFormat {
-            get {
+        public bool UseAbsoluteFormat
+        {
+            get
+            {
                 return m_useAbsoluteFormat;
             }
-            set {
+            set
+            {
                 m_useAbsoluteFormat = value;
             }
         }
 
-        public bool UseAbsoluteDataType {
-            get {
+        public bool UseAbsoluteDataType
+        {
+            get
+            {
                 return m_useAbsoluteDataType;
             }
-            set {
+            set
+            {
                 m_useAbsoluteDataType = value;
             }
         }
 
-        public bool UseAbsoluteOrigin {
-            get {
+        public bool UseAbsoluteOrigin
+        {
+            get
+            {
                 return m_useAbsoluteOrigin;
             }
-            set {
+            set
+            {
                 m_useAbsoluteOrigin = value;
             }
         }
 
-        public DataFormat AbsoluteFormat {
-            get {
+        public DataFormat AbsoluteFormat
+        {
+            get
+            {
                 return m_absoluteFormat;
             }
-            set {
+            set
+            {
                 m_absoluteFormat = value;
                 UseAbsoluteFormat = true;
             }
         }
 
-        public DataType AbsoluteDataType {
-            get {
+        public DataType AbsoluteDataType
+        {
+            get
+            {
                 return m_absoluteDataType;
             }
-            set {
+            set
+            {
                 m_absoluteDataType = value;
                 UseAbsoluteDataType = true;
             }
         }
 
-        public OriginLocation AbsoluteOrigin {
-            get {
+        public OriginLocation AbsoluteOrigin
+        {
+            get
+            {
                 return m_absoluteOrigin;
             }
-            set {
+            set
+            {
                 m_absoluteOrigin = value;
                 UseAbsoluteOrigin = true;
             }
         }
 
-        public bool ConvertPalette {
-            get {
+        public bool ConvertPalette
+        {
+            get
+            {
                 return m_convertPalette;
             }
-            set {
+            set
+            {
                 m_convertPalette = value;
             }
         }
 
-        public bool DefaultImageOnFail {
-            get {
+        public bool DefaultImageOnFail
+        {
+            get
+            {
                 return m_defaultImageOnFail;
             }
-            set {
+            set
+            {
                 m_defaultImageOnFail = value;
             }
         }
 
-        public bool UseColorKey {
-            get {
+        public bool UseColorKey
+        {
+            get
+            {
                 return m_useColorKey;
             }
-            set {
+            set
+            {
                 m_useColorKey = value;
             }
         }
 
-        public Color ColorKey {
-            get {
+        public Color4 ColorKey
+        {
+            get
+            {
                 return m_keyColor;
             }
-            set {
+            set
+            {
                 m_keyColor = value;
                 m_useColorKey = true;
             }
         }
 
-        public bool BlitBlend {
-            get {
+        public bool BlitBlend
+        {
+            get
+            {
                 return m_blitBlend;
             }
-            set {
+            set
+            {
                 m_blitBlend = value;
             }
         }
 
-        public void Apply() {
-            if(!IL.IsInitialized) {
+        public void Apply()
+        {
+            if (!IL.IsInitialized)
+            {
                 return;
             }
 
-            if(m_useAbsoluteFormat) {
+            if (m_useAbsoluteFormat)
+            {
                 IL.Enable(ILEnable.AbsoluteFormat);
-            } else {
+            }
+            else
+            {
                 IL.Disable(ILEnable.AbsoluteFormat);
             }
 
             IL.SetDataFormat(m_absoluteFormat);
 
-            if(m_useAbsoluteDataType) {
+            if (m_useAbsoluteDataType)
+            {
                 IL.Enable(ILEnable.AbsoluteType);
-            } else {
+            }
+            else
+            {
                 IL.Disable(ILEnable.AbsoluteType);
             }
 
             IL.SetDataType(m_absoluteDataType);
 
-            if(m_useAbsoluteOrigin) {
+            if (m_useAbsoluteOrigin)
+            {
                 IL.Enable(ILEnable.AbsoluteOrigin);
-            } else {
+            }
+            else
+            {
                 IL.Disable(ILEnable.AbsoluteOrigin);
             }
 
             IL.SetOriginLocation(m_absoluteOrigin);
 
-            if(m_convertPalette) {
+            if (m_convertPalette)
+            {
                 IL.Enable(ILEnable.ConvertPalette);
-            } else {
+            }
+            else
+            {
                 IL.Disable(ILEnable.ConvertPalette);
             }
 
-            if(m_defaultImageOnFail) {
+            if (m_defaultImageOnFail)
+            {
                 IL.Enable(ILEnable.DefaultOnFail);
-            } else {
+            }
+            else
+            {
                 IL.Disable(ILEnable.DefaultOnFail);
             }
 
-            if(m_useColorKey) {
+            if (m_useColorKey)
+            {
                 IL.Enable(ILEnable.UseColorKey);
                 IL.SetKeyColor(m_keyColor);
-            } else {
+            }
+            else
+            {
                 IL.Disable(ILEnable.UseColorKey);
             }
 
-            if(m_blitBlend) {
+            if (m_blitBlend)
+            {
                 IL.Enable(ILEnable.BlitBlend);
-            } else {
+            }
+            else
+            {
                 IL.Disable(ILEnable.BlitBlend);
             }
         }
     }
 
-    public sealed class LanguageState : IImageState {
+    public sealed class LanguageState : IImageState
+    {
         private Language m_language = Language.English;
 
-        public Language Language {
-            get {
+        public Language Language
+        {
+            get
+            {
                 return m_language;
             }
-            set {
+            set
+            {
                 m_language = value;
             }
         }
 
-        public void Apply() {
-            if(!ILU.IsInitialized) {
+        public void Apply()
+        {
+            if (!ILU.IsInitialized)
+            {
                 return;
             }
 
@@ -224,30 +289,39 @@ namespace AlienEngine.Core.Graphics.DevIL {
         }
     }
 
-    public sealed class HintState : IImageState {
+    public sealed class HintState : IImageState
+    {
         private CompressionHint m_compressHint = CompressionHint.UseCompression;
         private MemoryHint m_memHint = MemoryHint.Fastest;
 
-        public CompressionHint CompressionHint {
-            get {
+        public CompressionHint CompressionHint
+        {
+            get
+            {
                 return m_compressHint;
             }
-            set {
+            set
+            {
                 m_compressHint = value;
             }
         }
 
-        public MemoryHint MemoryHint {
-            get {
+        public MemoryHint MemoryHint
+        {
+            get
+            {
                 return m_memHint;
             }
-            set {
+            set
+            {
                 m_memHint = value;
             }
         }
 
-        public void Apply() {
-            if(!IL.IsInitialized) {
+        public void Apply()
+        {
+            if (!IL.IsInitialized)
+            {
                 return;
             }
 
@@ -256,40 +330,52 @@ namespace AlienEngine.Core.Graphics.DevIL {
         }
     }
 
-    public sealed class QuantizationState : IImageState {
+    public sealed class QuantizationState : IImageState
+    {
         private Quantization m_quantMode = Quantization.Wu;
         private int m_maxQuantIndices = 256;
         private int m_neuQuantSample = 15;
 
-        public Quantization QuantizationMode {
-            get {
+        public Quantization QuantizationMode
+        {
+            get
+            {
                 return m_quantMode;
             }
-            set {
+            set
+            {
                 m_quantMode = value;
             }
         }
 
-        public int MaxQuantizationIndices {
-            get {
+        public int MaxQuantizationIndices
+        {
+            get
+            {
                 return m_maxQuantIndices;
             }
-            set {
+            set
+            {
                 m_maxQuantIndices = value;
             }
         }
 
-        public int NeuQuantizationSamples {
-            get {
+        public int NeuQuantizationSamples
+        {
+            get
+            {
                 return m_neuQuantSample;
             }
-            set {
+            set
+            {
                 m_neuQuantSample = value;
             }
         }
 
-        public void Apply() {
-            if(!IL.IsInitialized) {
+        public void Apply()
+        {
+            if (!IL.IsInitialized)
+            {
                 return;
             }
 
@@ -299,50 +385,65 @@ namespace AlienEngine.Core.Graphics.DevIL {
         }
     }
 
-    public sealed class CompressionState : IImageState {
+    public sealed class CompressionState : IImageState
+    {
         private CompressionAlgorithm m_compression = CompressionAlgorithm.ZLib;
         private CompressedDataFormat m_dxtcFormat = CompressedDataFormat.DXT1;
         private CompressedDataFormat m_vtfCompression = CompressedDataFormat.None;
         private bool m_keepDxtcData = false;
 
-        public CompressionAlgorithm Compression {
-            get {
+        public CompressionAlgorithm Compression
+        {
+            get
+            {
                 return m_compression;
             }
-            set {
+            set
+            {
                 m_compression = value;
             }
         }
 
-        public CompressedDataFormat DxtcFormat {
-            get {
+        public CompressedDataFormat DxtcFormat
+        {
+            get
+            {
                 return m_dxtcFormat;
             }
-            set {
+            set
+            {
                 m_dxtcFormat = value;
             }
         }
 
-        public CompressedDataFormat VtfCompression {
-            get {
+        public CompressedDataFormat VtfCompression
+        {
+            get
+            {
                 return m_vtfCompression;
             }
-            set {
+            set
+            {
                 m_vtfCompression = value;
             }
         }
 
-        public bool KeepDxtcData {
-            get {
+        public bool KeepDxtcData
+        {
+            get
+            {
                 return m_keepDxtcData;
             }
-            set {
+            set
+            {
                 m_keepDxtcData = value;
             }
         }
 
-        public void Apply() {
-            if(!IL.IsInitialized) {
+        public void Apply()
+        {
+            if (!IL.IsInitialized)
+            {
                 return;
             }
 
@@ -353,56 +454,75 @@ namespace AlienEngine.Core.Graphics.DevIL {
         }
     }
 
-    public class SaveState : IImageState {
+    public class SaveState : IImageState
+    {
         private bool m_saveInterlaced = false;
         private bool m_overwriteExistingFile = false;
         private CompressionLibrary m_compressionLibrary = CompressionLibrary.Default;
 
-        public bool SaveInterlaced {
-            get {
+        public bool SaveInterlaced
+        {
+            get
+            {
                 return m_saveInterlaced;
             }
-            set {
+            set
+            {
                 m_saveInterlaced = value;
             }
         }
 
-        public bool OverwriteExistingFile {
-            get {
+        public bool OverwriteExistingFile
+        {
+            get
+            {
                 return m_overwriteExistingFile;
             }
-            set {
+            set
+            {
                 m_overwriteExistingFile = value;
             }
         }
 
-        public CompressionLibrary CompressionLibrary {
-            get {
+        public CompressionLibrary CompressionLibrary
+        {
+            get
+            {
                 return m_compressionLibrary;
             }
-            set {
+            set
+            {
                 m_compressionLibrary = value;
             }
         }
 
-        public virtual void Apply() {
-            if(!IL.IsInitialized) {
+        public virtual void Apply()
+        {
+            if (!IL.IsInitialized)
+            {
                 return;
             }
 
-            if(m_saveInterlaced) {
+            if (m_saveInterlaced)
+            {
                 IL.Enable(ILEnable.SaveInterlaced);
-            } else {
+            }
+            else
+            {
                 IL.Disable(ILEnable.SaveInterlaced);
             }
 
-            if(m_overwriteExistingFile) {
+            if (m_overwriteExistingFile)
+            {
                 IL.Enable(ILEnable.OverwriteExistingFile);
-            } else {
+            }
+            else
+            {
                 IL.Disable(ILEnable.OverwriteExistingFile);
             }
 
-            switch(m_compressionLibrary) {
+            switch (m_compressionLibrary)
+            {
                 case CompressionLibrary.Default:
                     IL.Disable(ILEnable.NvidiaCompression);
                     IL.Disable(ILEnable.SquishCompression);
@@ -419,100 +539,130 @@ namespace AlienEngine.Core.Graphics.DevIL {
         }
     }
 
-    public sealed class JpgSaveState : SaveState {
+    public sealed class JpgSaveState : SaveState
+    {
         private int m_jpgQuality = 99;
         private JpgSaveFormat m_jpgSaveFormat = JpgSaveFormat.Jfif;
         private bool m_jpgProgressive = false;
 
-        public int JpgQuality {
-            get {
+        public int JpgQuality
+        {
+            get
+            {
                 return m_jpgQuality;
             }
-            set {
+            set
+            {
                 m_jpgQuality = value;
             }
         }
 
-        public JpgSaveFormat JpgSaveFormat {
-            get {
+        public JpgSaveFormat JpgSaveFormat
+        {
+            get
+            {
                 return m_jpgSaveFormat;
             }
-            set {
+            set
+            {
                 m_jpgSaveFormat = value;
             }
         }
 
-        public bool UseJpgProgressive {
-            get {
+        public bool UseJpgProgressive
+        {
+            get
+            {
                 return m_jpgProgressive;
             }
-            set {
+            set
+            {
                 m_jpgProgressive = value;
             }
         }
 
-        public override void Apply() {
-            if(!IL.IsInitialized) {
+        public override void Apply()
+        {
+            if (!IL.IsInitialized)
+            {
                 return;
             }
 
             IL.SetInteger(ILIntegerMode.JpgQuality, m_jpgQuality);
             IL.SetJpgSaveFormat(m_jpgSaveFormat);
 
-            if(m_jpgProgressive) {
+            if (m_jpgProgressive)
+            {
                 IL.Enable(ILEnable.JpgProgressive);
-            } else {
+            }
+            else
+            {
                 IL.Disable(ILEnable.JpgProgressive);
             }
         }
     }
 
-    public sealed class TgaSaveState : SaveState {
+    public sealed class TgaSaveState : SaveState
+    {
         private String m_tgaId = String.Empty;
         private String m_tgaAuthName = String.Empty;
         private String m_tgaAuthComment = String.Empty;
         private bool m_useTgaRle = false;
         private bool m_tgaCreateTimeStamp = false;
 
-        public String TgaID {
-            get {
+        public String TgaID
+        {
+            get
+            {
                 return m_tgaId;
             }
-            set {
+            set
+            {
                 m_tgaId = value;
             }
         }
 
-        public String TgaAuthorName {
-            get {
+        public String TgaAuthorName
+        {
+            get
+            {
                 return m_tgaAuthName;
             }
-            set {
+            set
+            {
                 m_tgaAuthName = value;
             }
         }
 
-        public String TgaAuthorComment {
-            get {
+        public String TgaAuthorComment
+        {
+            get
+            {
                 return m_tgaAuthComment;
             }
-            set {
+            set
+            {
                 m_tgaAuthComment = value;
             }
         }
 
-        public bool UseTgaRle {
-            get {
+        public bool UseTgaRle
+        {
+            get
+            {
                 return m_useTgaRle;
             }
-            set {
+            set
+            {
                 m_useTgaRle = value;
             }
         }
 
-        public override void Apply() {
+        public override void Apply()
+        {
             base.Apply();
-            if(!IL.IsInitialized) {
+            if (!IL.IsInitialized)
+            {
                 return;
             }
 
@@ -524,51 +674,66 @@ namespace AlienEngine.Core.Graphics.DevIL {
         }
     }
 
-    public sealed class TiffSaveState : SaveState {
+    public sealed class TiffSaveState : SaveState
+    {
         private String m_tifAuthName = String.Empty;
         private String m_tifDescription = String.Empty;
         private String m_tifDocumentName = String.Empty;
         private String m_tifHostComputer = String.Empty;
 
-        public String TifAuthorName {
-            get {
+        public String TifAuthorName
+        {
+            get
+            {
                 return m_tifAuthName;
             }
-            set {
+            set
+            {
                 m_tifAuthName = value;
             }
         }
 
-        public String TifDescription {
-            get {
+        public String TifDescription
+        {
+            get
+            {
                 return m_tifDescription;
             }
-            set {
+            set
+            {
                 m_tifDescription = value;
             }
         }
 
-        public String TifDocumentName {
-            get {
+        public String TifDocumentName
+        {
+            get
+            {
                 return m_tifDocumentName;
             }
-            set {
+            set
+            {
                 m_tifDocumentName = value;
             }
         }
 
-        public String TifHostComputer {
-            get {
+        public String TifHostComputer
+        {
+            get
+            {
                 return m_tifHostComputer;
             }
-            set {
+            set
+            {
                 m_tifHostComputer = value;
             }
         }
 
-        public override void Apply() {
+        public override void Apply()
+        {
             base.Apply();
-            if(!IL.IsInitialized) {
+            if (!IL.IsInitialized)
+            {
                 return;
             }
 
@@ -579,61 +744,79 @@ namespace AlienEngine.Core.Graphics.DevIL {
         }
     }
 
-    public sealed class PngSaveState : SaveState {
+    public sealed class PngSaveState : SaveState
+    {
         private int m_pngAlphaIndex = -1;
         private String m_pngAuthName = String.Empty;
         private String m_pngTitle = String.Empty;
         private String m_pngDescription = String.Empty;
         private bool m_usePngInterlace = false;
 
-        public int PngAlphaIndex {
-            get {
+        public int PngAlphaIndex
+        {
+            get
+            {
                 return m_pngAlphaIndex;
             }
-            set {
+            set
+            {
                 m_pngAlphaIndex = value;
             }
         }
 
-        public String PngAuthorName {
-            get {
+        public String PngAuthorName
+        {
+            get
+            {
                 return m_pngAuthName;
             }
-            set {
+            set
+            {
                 m_pngAuthName = value;
             }
         }
 
-        public String PngTitle {
-            get {
+        public String PngTitle
+        {
+            get
+            {
                 return m_pngTitle;
             }
-            set {
+            set
+            {
                 m_pngTitle = value;
             }
         }
 
-        public String PngDescription {
-            get {
+        public String PngDescription
+        {
+            get
+            {
                 return m_pngDescription;
             }
-            set {
+            set
+            {
                 m_pngDescription = value;
             }
         }
 
-        public bool UsePngInterlace {
-            get {
+        public bool UsePngInterlace
+        {
+            get
+            {
                 return m_usePngInterlace;
             }
-            set {
+            set
+            {
                 m_usePngInterlace = value;
             }
         }
 
-        public override void Apply() {
+        public override void Apply()
+        {
             base.Apply();
-            if(!IL.IsInitialized) {
+            if (!IL.IsInitialized)
+            {
                 return;
             }
 
@@ -645,31 +828,40 @@ namespace AlienEngine.Core.Graphics.DevIL {
         }
     }
 
-    public sealed class BmpSaveState : SaveState {
+    public sealed class BmpSaveState : SaveState
+    {
         private bool m_useBmpRle = false;
         private int m_pcdPicNumber = 2;
 
-        public bool UseBmpRle {
-            get {
+        public bool UseBmpRle
+        {
+            get
+            {
                 return m_useBmpRle;
             }
-            set {
+            set
+            {
                 m_useBmpRle = value;
             }
         }
 
-        public int PcdPicNumber {
-            get {
+        public int PcdPicNumber
+        {
+            get
+            {
                 return m_pcdPicNumber;
             }
-            set {
+            set
+            {
                 m_pcdPicNumber = value;
             }
         }
 
-        public override void Apply() {
+        public override void Apply()
+        {
             base.Apply();
-            if(!IL.IsInitialized) {
+            if (!IL.IsInitialized)
+            {
                 return;
             }
 
@@ -678,21 +870,27 @@ namespace AlienEngine.Core.Graphics.DevIL {
         }
     }
 
-    public sealed class SgiSaveState : SaveState {
+    public sealed class SgiSaveState : SaveState
+    {
         private bool m_useSgiRle = false;
 
-        public bool UseSgiRle {
-            get {
+        public bool UseSgiRle
+        {
+            get
+            {
                 return m_useSgiRle;
             }
-            set {
+            set
+            {
                 m_useSgiRle = value;
             }
         }
 
-        public override void Apply() {
+        public override void Apply()
+        {
             base.Apply();
-            if(!IL.IsInitialized) {
+            if (!IL.IsInitialized)
+            {
                 return;
             }
 

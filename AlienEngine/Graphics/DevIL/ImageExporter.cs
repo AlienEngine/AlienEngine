@@ -24,26 +24,34 @@ using System;
 using System.IO;
 using AlienEngine.Core.Graphics.DevIL.Unmanaged;
 
-namespace AlienEngine.Core.Graphics.DevIL {
-    public sealed class ImageExporter : IDisposable {
+namespace AlienEngine.Core.Graphics.DevIL
+{
+    public sealed class ImageExporter : IDisposable
+    {
         private bool m_isDisposed;
 
-        public bool IsDisposed {
-            get {
+        public bool IsDisposed
+        {
+            get
+            {
                 return m_isDisposed;
             }
         }
 
-        public ImageExporter() {
+        public ImageExporter()
+        {
             m_isDisposed = false;
         }
 
-        ~ImageExporter() {
+        ~ImageExporter()
+        {
             Dispose(false);
         }
 
-        public bool SaveImage(Image image, String filename) {
-            if(!image.IsValid || String.IsNullOrEmpty(filename)) {
+        public bool SaveImage(Image image, String filename)
+        {
+            if (!image.IsValid || String.IsNullOrEmpty(filename))
+            {
                 return false;
             }
 
@@ -53,8 +61,10 @@ namespace AlienEngine.Core.Graphics.DevIL {
             return IL.SaveImage(filename);
         }
 
-        public bool SaveImage(Image image, ImageType imageType, String filename) {
-            if(!image.IsValid || imageType == ImageType.Unknown || String.IsNullOrEmpty(filename)) {
+        public bool SaveImage(Image image, ImageType imageType, String filename)
+        {
+            if (!image.IsValid || imageType == ImageType.Unknown || String.IsNullOrEmpty(filename))
+            {
                 return false;
             }
 
@@ -64,8 +74,10 @@ namespace AlienEngine.Core.Graphics.DevIL {
             return IL.SaveImage(imageType, filename);
         }
 
-        public bool SaveImageToStream(Image image, ImageType imageType, Stream stream) {
-            if(!image.IsValid || imageType == ImageType.Unknown || stream == null || !stream.CanWrite) {
+        public bool SaveImageToStream(Image image, ImageType imageType, Stream stream)
+        {
+            if (!image.IsValid || imageType == ImageType.Unknown || stream == null || !stream.CanWrite)
+            {
                 return false;
             }
 
@@ -75,23 +87,29 @@ namespace AlienEngine.Core.Graphics.DevIL {
             return IL.SaveImageToStream(imageType, stream);
         }
 
-        public String[] GetSupportedExtensions() {
+        public String[] GetSupportedExtensions()
+        {
             return IL.GetExportExtensions();
         }
 
-        private void CheckDisposed() {
-            if(m_isDisposed) {
+        private void CheckDisposed()
+        {
+            if (m_isDisposed)
+            {
                 throw new ObjectDisposedException("Exporter has been disposed.");
             }
         }
 
-        public void Dispose() {
+        public void Dispose()
+        {
             Dispose(true);
             GC.SuppressFinalize(this);
         }
 
-        private void Dispose(bool disposing) {
-            if(!m_isDisposed) {
+        private void Dispose(bool disposing)
+        {
+            if (!m_isDisposed)
+            {
                 m_isDisposed = true;
             }
         }

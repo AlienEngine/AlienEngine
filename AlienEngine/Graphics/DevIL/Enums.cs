@@ -22,11 +22,13 @@
 
 using AlienEngine.Core.Graphics.DevIL.Unmanaged;
 
-namespace AlienEngine.Core.Graphics.DevIL {
+namespace AlienEngine.Core.Graphics.DevIL
+{
     /// <summary>
     /// Enumerates data types.
     /// </summary>
-    public enum DataType {
+    public enum DataType
+    {
         /// <summary>
         /// 8-Bit signed byte.
         /// </summary>
@@ -77,7 +79,8 @@ namespace AlienEngine.Core.Graphics.DevIL {
     /// <summary>
     /// Enumerates uncompressed data formats.
     /// </summary>
-    public enum DataFormat {
+    public enum DataFormat
+    {
         ColorIndex = ILDefines.IL_COLOR_INDEX,
         Alpha = ILDefines.IL_ALPHA,
         RGB = ILDefines.IL_RGB,
@@ -91,7 +94,8 @@ namespace AlienEngine.Core.Graphics.DevIL {
     /// <summary>
     /// Enumerates compressed data formats.
     /// </summary>
-    public enum CompressedDataFormat {
+    public enum CompressedDataFormat
+    {
         /// <summary>
         /// No compression.
         /// </summary>
@@ -155,7 +159,8 @@ namespace AlienEngine.Core.Graphics.DevIL {
     /// <summary>
     /// Enumerates the image origin.
     /// </summary>
-    public enum OriginLocation {
+    public enum OriginLocation
+    {
         /// <summary>
         /// Origin is the lower left hand corner, ideal for OpenGL.
         /// </summary>
@@ -170,7 +175,8 @@ namespace AlienEngine.Core.Graphics.DevIL {
     /// <summary>
     /// Enumerates palette types.
     /// </summary>
-    public enum PaletteType {
+    public enum PaletteType
+    {
         None = ILDefines.IL_PAL_NONE,
         RGB24 = ILDefines.IL_PAL_RGB24,
         RGB32 = ILDefines.IL_PAL_RGB32,
@@ -183,7 +189,8 @@ namespace AlienEngine.Core.Graphics.DevIL {
     /// <summary>
     /// Enumerates the compression algorithm DevIL uses.
     /// </summary>
-    public enum CompressionAlgorithm {
+    public enum CompressionAlgorithm
+    {
         /// <summary>
         /// No compression
         /// </summary>
@@ -203,7 +210,8 @@ namespace AlienEngine.Core.Graphics.DevIL {
     /// <summary>
     /// Enumerates DevIL compression library options.
     /// </summary>
-    public enum CompressionLibrary {
+    public enum CompressionLibrary
+    {
         /// <summary>
         /// Use the default compression.
         /// </summary>
@@ -220,7 +228,8 @@ namespace AlienEngine.Core.Graphics.DevIL {
         Squish
     }
 
-    public enum Quantization {
+    public enum Quantization
+    {
         Wu = ILDefines.IL_WU_QUANT,
         Neu = ILDefines.IL_NEU_QUANT
     }
@@ -229,7 +238,8 @@ namespace AlienEngine.Core.Graphics.DevIL {
     /// Enumerates the faces of an environment map (cubemap) or denotes
     /// a sphere map.
     /// </summary>
-    public enum CubeMapFace {
+    public enum CubeMapFace
+    {
         /// <summary>
         /// No face defined.
         /// </summary>
@@ -274,7 +284,8 @@ namespace AlienEngine.Core.Graphics.DevIL {
     /// <summary>
     /// Enumerates image types that can be loaded by DevIL.
     /// </summary>
-    public enum ImageType {
+    public enum ImageType
+    {
         /// <summary>
         /// Unknown image type.
         /// </summary>
@@ -541,18 +552,21 @@ namespace AlienEngine.Core.Graphics.DevIL {
         Mp3 = 0x0452
     }
 
-    public enum JpgSaveFormat {
+    public enum JpgSaveFormat
+    {
         Jpg = ILDefines.IL_JPG,
         Jfif = ILDefines.IL_JFIF
     }
 
-    public enum MemoryHint {
+    public enum MemoryHint
+    {
         Fastest = ILDefines.IL_FASTEST,
         LessMemory = ILDefines.IL_LESS_MEM,
         DontCare = ILDefines.IL_DONT_CARE
     }
 
-    public enum CompressionHint {
+    public enum CompressionHint
+    {
         UseCompression = ILDefines.IL_USE_COMPRESSION,
         NoCompression = ILDefines.IL_NO_COMPRESSION,
         DontCare = ILDefines.IL_DONT_CARE
@@ -561,7 +575,8 @@ namespace AlienEngine.Core.Graphics.DevIL {
     /// Enumerates the available error string translations for
     /// <see cref="ILU.GetErrorString"/>.
     /// </summary>
-    public enum Language {
+    public enum Language
+    {
         English = ILUDefines.ILU_ENGLISH,
         Arabic = ILUDefines.ILU_ARABIC,
         Dutch = ILUDefines.ILU_DUTCH,
@@ -575,7 +590,8 @@ namespace AlienEngine.Core.Graphics.DevIL {
     /// Enumerates the filter used in <see cref="ILU.Scale"/>. The default
     /// is Nearest.
     /// </summary>
-    public enum SamplingFilter {
+    public enum SamplingFilter
+    {
         /// <summary>
         /// Uses a nearest filter to scale the image
         /// </summary>
@@ -627,7 +643,8 @@ namespace AlienEngine.Core.Graphics.DevIL {
     /// Enumerates possible image placements for the <see cref="ILU.EnlargeCanvas"/> function.
     /// The default is Center.
     /// </summary>
-    public enum Placement {
+    public enum Placement
+    {
         /// <summary>
         /// Places the image in the lower left of the enlarged canvas.
         /// </summary>

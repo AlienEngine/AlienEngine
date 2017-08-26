@@ -22,20 +22,27 @@
 
 using AlienEngine.Core.Graphics.DevIL.Unmanaged;
 
-namespace AlienEngine.Core.Graphics.DevIL {
-    public class FilterEngine {
+namespace AlienEngine.Core.Graphics.DevIL
+{
+    public class FilterEngine
+    {
 
-        public SamplingFilter SamplingFilter {
-            get {
+        public SamplingFilter SamplingFilter
+        {
+            get
+            {
                 return ILU.GetSamplingFilter();
             }
-            set {
+            set
+            {
                 ILU.SetSamplingFilter(value);
             }
         }
 
-        public bool Alienify(Image image) {
-            if(image == null || !image.IsValid) {
+        public bool Alienify(Image image)
+        {
+            if (image == null || !image.IsValid)
+            {
                 return false;
             }
 
@@ -43,8 +50,10 @@ namespace AlienEngine.Core.Graphics.DevIL {
             return ILU.Alienify();
         }
 
-        public bool BlurAverage(Image image, int iterations) {
-            if(image == null || !image.IsValid) {
+        public bool BlurAverage(Image image, int iterations)
+        {
+            if (image == null || !image.IsValid)
+            {
                 return false;
             }
 
@@ -52,8 +61,10 @@ namespace AlienEngine.Core.Graphics.DevIL {
             return ILU.BlurAverage(iterations);
         }
 
-        public bool BlurGaussian(Image image, int iterations) {
-            if(image == null || !image.IsValid) {
+        public bool BlurGaussian(Image image, int iterations)
+        {
+            if (image == null || !image.IsValid)
+            {
                 return false;
             }
 
@@ -61,8 +72,10 @@ namespace AlienEngine.Core.Graphics.DevIL {
             return ILU.BlurGaussian(iterations);
         }
 
-        public bool BuildMipMaps(Image image) {
-            if(image == null || !image.IsValid) {
+        public bool BuildMipMaps(Image image)
+        {
+            if (image == null || !image.IsValid)
+            {
                 return false;
             }
 
@@ -70,8 +83,10 @@ namespace AlienEngine.Core.Graphics.DevIL {
             return ILU.BuildMipMaps();
         }
 
-        public bool Contrast(Image image, float contrast) {
-            if(image == null || !image.IsValid) {
+        public bool Contrast(Image image, float contrast)
+        {
+            if (image == null || !image.IsValid)
+            {
                 return false;
             }
 
@@ -79,8 +94,10 @@ namespace AlienEngine.Core.Graphics.DevIL {
             return ILU.Contrast(contrast);
         }
 
-        public bool Convolution(Image image, int[] matrix, int scale, int bias) {
-            if(image == null || !image.IsValid) {
+        public bool Convolution(Image image, int[] matrix, int scale, int bias)
+        {
+            if (image == null || !image.IsValid)
+            {
                 return false;
             }
 
@@ -88,8 +105,10 @@ namespace AlienEngine.Core.Graphics.DevIL {
             return ILU.Convolution(matrix, scale, bias);
         }
 
-        public bool EdgeDetectE(Image image) {
-            if(image == null || !image.IsValid) {
+        public bool EdgeDetectE(Image image)
+        {
+            if (image == null || !image.IsValid)
+            {
                 return false;
             }
 
@@ -97,8 +116,10 @@ namespace AlienEngine.Core.Graphics.DevIL {
             return ILU.EdgeDetectE();
         }
 
-        public bool EdgeDetectP(Image image) {
-            if(image == null || !image.IsValid) {
+        public bool EdgeDetectP(Image image)
+        {
+            if (image == null || !image.IsValid)
+            {
                 return false;
             }
 
@@ -106,8 +127,10 @@ namespace AlienEngine.Core.Graphics.DevIL {
             return ILU.EdgeDetectP();
         }
 
-        public bool EdgeDetectS(Image image) {
-            if(image == null || !image.IsValid) {
+        public bool EdgeDetectS(Image image)
+        {
+            if (image == null || !image.IsValid)
+            {
                 return false;
             }
 
@@ -115,8 +138,10 @@ namespace AlienEngine.Core.Graphics.DevIL {
             return ILU.EdgeDetectS();
         }
 
-        public bool Emboss(Image image) {
-            if(image == null || !image.IsValid) {
+        public bool Emboss(Image image)
+        {
+            if (image == null || !image.IsValid)
+            {
                 return false;
             }
 
@@ -124,8 +149,10 @@ namespace AlienEngine.Core.Graphics.DevIL {
             return ILU.Emboss();
         }
 
-        public bool Equalize(Image image) {
-            if(image == null || !image.IsValid) {
+        public bool Equalize(Image image)
+        {
+            if (image == null || !image.IsValid)
+            {
                 return false;
             }
 
@@ -133,8 +160,10 @@ namespace AlienEngine.Core.Graphics.DevIL {
             return ILU.Equalize();
         }
 
-        public bool GammaCorrect(Image image, float gamma) {
-            if(image == null || !image.IsValid) {
+        public bool GammaCorrect(Image image, float gamma)
+        {
+            if (image == null || !image.IsValid)
+            {
                 return false;
             }
 
@@ -142,8 +171,10 @@ namespace AlienEngine.Core.Graphics.DevIL {
             return ILU.GammaCorrect(gamma);
         }
 
-        public bool InvertAlpha(Image image) {
-            if(image == null || !image.IsValid) {
+        public bool InvertAlpha(Image image)
+        {
+            if (image == null || !image.IsValid)
+            {
                 return false;
             }
 
@@ -151,8 +182,10 @@ namespace AlienEngine.Core.Graphics.DevIL {
             return ILU.InvertAlpha();
         }
 
-        public bool Negative(Image image) {
-            if(image == null || !image.IsValid) {
+        public bool Negative(Image image)
+        {
+            if (image == null || !image.IsValid)
+            {
                 return false;
             }
 
@@ -160,8 +193,10 @@ namespace AlienEngine.Core.Graphics.DevIL {
             return ILU.Negative();
         }
 
-        public bool Noisify(Image image, float tolerance) {
-            if(image == null || !image.IsValid) {
+        public bool Noisify(Image image, float tolerance)
+        {
+            if (image == null || !image.IsValid)
+            {
                 return false;
             }
 
@@ -169,17 +204,21 @@ namespace AlienEngine.Core.Graphics.DevIL {
             return ILU.Noisify(tolerance);
         }
 
-        public bool Pixelize(Image image, int pixelSize) {
-            if(image == null || !image.IsValid) {
+        public bool Pixelize(Image image, int pixelSize)
+        {
+            if (image == null || !image.IsValid)
+            {
                 return false;
             }
 
             IL.BindImage(image.ImageID);
-            return ILU.Pixelize( pixelSize);
+            return ILU.Pixelize(pixelSize);
         }
 
-        public bool Saturate(Image image, float saturation) {
-            if(image == null || !image.IsValid) {
+        public bool Saturate(Image image, float saturation)
+        {
+            if (image == null || !image.IsValid)
+            {
                 return false;
             }
 
@@ -187,8 +226,10 @@ namespace AlienEngine.Core.Graphics.DevIL {
             return ILU.Saturate(saturation);
         }
 
-        public bool Saturate(Image image, float red, float green, float blue, float saturation) {
-            if(image == null || !image.IsValid) {
+        public bool Saturate(Image image, float red, float green, float blue, float saturation)
+        {
+            if (image == null || !image.IsValid)
+            {
                 return false;
             }
 
@@ -196,17 +237,21 @@ namespace AlienEngine.Core.Graphics.DevIL {
             return ILU.Saturate(red, green, blue, saturation);
         }
 
-        public bool Sharpen(Image image, float factor, int iterations) {
-            if(image == null || !image.IsValid) {
+        public bool Sharpen(Image image, float factor, int iterations)
+        {
+            if (image == null || !image.IsValid)
+            {
                 return false;
             }
 
             IL.BindImage(image.ImageID);
-            return ILU.Sharpen(factor,  iterations);
+            return ILU.Sharpen(factor, iterations);
         }
 
-        public bool Wave(Image image, float angle) {
-            if(image == null || !image.IsValid) {
+        public bool Wave(Image image, float angle)
+        {
+            if (image == null || !image.IsValid)
+            {
                 return false;
             }
 

@@ -24,11 +24,13 @@ using System;
 using System.IO;
 using System.Runtime.InteropServices;
 
-namespace AlienEngine.Core.Graphics.DevIL {
+namespace AlienEngine.Core.Graphics.DevIL
+{
     /// <summary>
     /// Helper static class containing functions that aid dealing with unmanaged memory to managed memory conversions.
     /// </summary>
-    public static class MemoryHelper {
+    public static class MemoryHelper
+    {
 
         /// <summary>
         /// Reads a byte buffer from unmanaged memory.
@@ -36,8 +38,9 @@ namespace AlienEngine.Core.Graphics.DevIL {
         /// <param name="pointer">Pointer to unmanaged memory</param>
         /// <param name="numBytes">Number of bytes to read</param>
         /// <returns>Byte buffer, or null if the pointer was no valid</returns>
-        public static byte[] ReadByteBuffer(IntPtr pointer, int numBytes) {
-            if(pointer == IntPtr.Zero)
+        public static byte[] ReadByteBuffer(IntPtr pointer, int numBytes)
+        {
+            if (pointer == IntPtr.Zero)
                 return null;
 
             byte[] bytes = new byte[numBytes];
@@ -54,7 +57,8 @@ namespace AlienEngine.Core.Graphics.DevIL {
         /// <param name="pointer">Pointer to unmanaged memory</param>
         /// <param name="length">Number of elements to marshal</param>
         /// <returns>Managed array, or null if the pointer was not valid</returns>
-        public static T[] MarshalArray<T>(IntPtr pointer, int length) where T : struct {
+        public static T[] MarshalArray<T>(IntPtr pointer, int length) where T : struct
+        {
             return MarshalArray<T>(pointer, length, false);
         }
 
@@ -68,27 +72,34 @@ namespace AlienEngine.Core.Graphics.DevIL {
         /// <param name="length">Number of elements to marshal</param>
         /// <param name="pointerToPointer">True if the unmanaged pointer is void** or not.</param>
         /// <returns>Managed array, or null if the pointer was not valid</returns>
-        public static T[] MarshalArray<T>(IntPtr pointer, int length, bool pointerToPointer) where T : struct {
-            if(pointer == IntPtr.Zero) {
+        public static T[] MarshalArray<T>(IntPtr pointer, int length, bool pointerToPointer) where T : struct
+        {
+            if (pointer == IntPtr.Zero)
+            {
                 return null;
             }
 
-            try {
+            try
+            {
                 Type type = typeof(T);
                 //If the pointer is a void** we need to step by the pointer size, otherwise it's just a void* and step by the type size.
                 int stride = (pointerToPointer) ? IntPtr.Size : Marshal.SizeOf(typeof(T));
                 T[] array = new T[length];
 
-                for(int i = 0; i < length; i++) {
+                for (int i = 0; i < length; i++)
+                {
                     IntPtr currPos = pointer + (stride * i);
                     //If pointer is a void**, read the current position to get the proper pointer
-                    if(pointerToPointer) {
+                    if (pointerToPointer)
+                    {
                         currPos = Marshal.ReadIntPtr(currPos);
                     }
-                    array[i] = (T) Marshal.PtrToStructure(currPos, type);
+                    array[i] = (T)Marshal.PtrToStructure(currPos, type);
                 }
                 return array;
-            } catch(Exception) {
+            }
+            catch (Exception)
+            {
                 return null;
             }
         }
@@ -99,11 +110,13 @@ namespace AlienEngine.Core.Graphics.DevIL {
         /// <typeparam name="T">Struct type</typeparam>
         /// <param name="ptr">Pointer to marshal</param>
         /// <returns>Marshaled structure</returns>
-        public static T MarshalStructure<T>(IntPtr ptr) where T : struct {
-            if(ptr == IntPtr.Zero) {
+        public static T MarshalStructure<T>(IntPtr ptr) where T : struct
+        {
+            if (ptr == IntPtr.Zero)
+            {
                 return default(T);
             }
-            return (T) Marshal.PtrToStructure(ptr, typeof(T));
+            return (T)Marshal.PtrToStructure(ptr, typeof(T));
         }
 
         /// <summary>
@@ -111,7 +124,8 @@ namespace AlienEngine.Core.Graphics.DevIL {
         /// </summary>
         /// <param name="value">Value to round up</param>
         /// <returns>Rounded up to the nearest power of two</returns>
-        public static int RoundUpToPowerOfTwo(int value) {
+        public static int RoundUpToPowerOfTwo(int value)
+        {
             value = value - 1;
             value = value | (value >> 1);
             value = value | (value >> 2);
@@ -126,7 +140,8 @@ namespace AlienEngine.Core.Graphics.DevIL {
         /// </summary>
         /// <param name="value">Value to round down</param>
         /// <returns>Rounded down to the nearest power of two</returns>
-        public static int RoundDownToPowerOfTwo(int value) {
+        public static int RoundDownToPowerOfTwo(int value)
+        {
             value = value | (value >> 1);
             value = value | (value >> 2);
             value = value | (value >> 4);
@@ -142,14 +157,16 @@ namespace AlienEngine.Core.Graphics.DevIL {
         /// </summary>
         /// <param name="value">Value to be rounded to the nearest power of two</param>
         /// <returns>Neaerst power of two</returns>
-        public static int RoundToNearestPowerOfTwo(int value) {
+        public static int RoundToNearestPowerOfTwo(int value)
+        {
             int up = RoundUpToPowerOfTwo(value);
             int down = RoundDownToPowerOfTwo(value);
             int upDiff = Math.Abs(up - value);
             int downDiff = Math.Abs(value - down);
 
             //In the advent of a tie, prefer to round up
-            if(downDiff < upDiff) {
+            if (downDiff < upDiff)
+            {
                 return down;
             }
             return up;
@@ -161,8 +178,10 @@ namespace AlienEngine.Core.Graphics.DevIL {
         /// </summary>
         /// <param name="format">DataFormat</param>
         /// <returns>Number of components.</returns>
-        public static int GetFormatComponentCount(DataFormat format) {
-            switch(format) {
+        public static int GetFormatComponentCount(DataFormat format)
+        {
+            switch (format)
+            {
                 case DataFormat.ColorIndex:
                 case DataFormat.Luminance:
                 case DataFormat.Alpha:
@@ -185,8 +204,10 @@ namespace AlienEngine.Core.Graphics.DevIL {
         /// </summary>
         /// <param name="palette">Palette</param>
         /// <returns>Number of components/channels in the palette</returns>
-        public static int GetPaletteComponentCount(PaletteType palette) {
-            switch(palette) {
+        public static int GetPaletteComponentCount(PaletteType palette)
+        {
+            switch (palette)
+            {
                 case PaletteType.RGB24:
                 case PaletteType.BGR24:
                     return 3;
@@ -205,8 +226,10 @@ namespace AlienEngine.Core.Graphics.DevIL {
         /// </summary>
         /// <param name="palette">Palette</param>
         /// <returns>Base format</returns>
-        public static DataFormat GetPaletteBaseFormat(PaletteType palette) {
-            switch(palette) {
+        public static DataFormat GetPaletteBaseFormat(PaletteType palette)
+        {
+            switch (palette)
+            {
                 case PaletteType.RGB24:
                     return DataFormat.RGB;
                 case PaletteType.RGB32:
@@ -229,8 +252,10 @@ namespace AlienEngine.Core.Graphics.DevIL {
         /// </summary>
         /// <param name="dataType">DataType</param>
         /// <returns>Bytes per component/channel</returns>
-        public static int GetDataTypeSize(DataType dataType) {
-            switch(dataType) {
+        public static int GetDataTypeSize(DataType dataType)
+        {
+            switch (dataType)
+            {
                 case DataType.Byte:
                 case DataType.UnsignedByte:
                     return 1;
@@ -255,7 +280,8 @@ namespace AlienEngine.Core.Graphics.DevIL {
         /// <param name="format">DataFormat</param>
         /// <param name="dataType">DataType</param>
         /// <returns>bytes per pixel</returns>
-        public static int GetBpp(DataFormat format, DataType dataType) {
+        public static int GetBpp(DataFormat format, DataType dataType)
+        {
             return GetDataTypeSize(dataType) * GetFormatComponentCount(format);
         }
 
@@ -268,14 +294,18 @@ namespace AlienEngine.Core.Graphics.DevIL {
         /// <param name="format">DataFormat</param>
         /// <param name="dataType">DataType</param>
         /// <returns>Total size of the image, in bytes</returns>
-        public static int GetDataSize(int width, int height, int depth, DataFormat format, DataType dataType) {
-            if(width <= 0) {
+        public static int GetDataSize(int width, int height, int depth, DataFormat format, DataType dataType)
+        {
+            if (width <= 0)
+            {
                 width = 1;
             }
-            if(height <= 0) {
+            if (height <= 0)
+            {
                 height = 1;
             }
-            if(depth <= 0) {
+            if (depth <= 0)
+            {
                 depth = 1;
             }
             return width * height * depth * GetBpp(format, dataType);
@@ -289,8 +319,10 @@ namespace AlienEngine.Core.Graphics.DevIL {
         /// <param name="stream">Stream to read all bytes from</param>
         /// <param name="initialLength">Initial buffer length, default is 32K</param>
         /// <returns>The byte array containing all the bytes from the stream</returns>
-        public static byte[] ReadStreamFully(Stream stream, int initialLength) {
-            if(initialLength < 1) {
+        public static byte[] ReadStreamFully(Stream stream, int initialLength)
+        {
+            if (initialLength < 1)
+            {
                 initialLength = 32768; //Init to 32K if not a valid initial length
             }
 
@@ -298,22 +330,25 @@ namespace AlienEngine.Core.Graphics.DevIL {
             int position = 0;
             int chunk;
 
-            while((chunk = stream.Read(buffer, position, buffer.Length - position)) > 0) {
+            while ((chunk = stream.Read(buffer, position, buffer.Length - position)) > 0)
+            {
                 position += chunk;
 
                 //If we reached the end of the buffer check to see if there's more info
-                if(position == buffer.Length) {
+                if (position == buffer.Length)
+                {
                     int nextByte = stream.ReadByte();
 
                     //If -1 we reached the end of the stream
-                    if(nextByte == -1) {
+                    if (nextByte == -1)
+                    {
                         return buffer;
                     }
 
                     //Not at the end, need to resize the buffer
                     byte[] newBuffer = new byte[buffer.Length * 2];
                     Array.Copy(buffer, newBuffer, buffer.Length);
-                    newBuffer[position] = (byte) nextByte;
+                    newBuffer[position] = (byte)nextByte;
                     buffer = newBuffer;
                     position++;
                 }

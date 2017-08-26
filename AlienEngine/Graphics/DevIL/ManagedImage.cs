@@ -22,29 +22,37 @@
 
 using AlienEngine.Core.Graphics.DevIL.Unmanaged;
 
-namespace AlienEngine.Core.Graphics.DevIL {
-    public class ManagedImage {
+namespace AlienEngine.Core.Graphics.DevIL
+{
+    public class ManagedImage
+    {
         private MipMapChainCollection m_faces;
         private AnimationChainCollection m_animChain;
 
         //May hold a single face representing a 2D image or faces of a cubemap
-        public MipMapChainCollection Faces {
-            get {
+        public MipMapChainCollection Faces
+        {
+            get
+            {
                 return m_faces;
             }
         }
 
-        public AnimationChainCollection AnimationChain {
-            get {
+        public AnimationChainCollection AnimationChain
+        {
+            get
+            {
                 return m_animChain;
             }
         }
 
-        public ManagedImage(Image image) {
+        public ManagedImage(Image image)
+        {
             m_faces = new MipMapChainCollection();
             m_animChain = new AnimationChainCollection();
 
-            if(!image.IsValid) {
+            if (!image.IsValid)
+            {
                 return;
             }
 
@@ -53,53 +61,60 @@ namespace AlienEngine.Core.Graphics.DevIL {
             LoadAnimationChain(imageID);
         }
 
-        private ManagedImage(ImageID imageID, int imageNum) {
+        private ManagedImage(ImageID imageID, int imageNum)
+        {
             m_faces = new MipMapChainCollection();
             m_animChain = new AnimationChainCollection();
 
             LoadFaces(imageID, imageNum);
         }
 
-        private void LoadAnimationChain(ImageID imageID) {
+        private void LoadAnimationChain(ImageID imageID)
+        {
             IL.BindImage(imageID);
 
             //Get total number of images in array (including first)
             int imageCount = IL.ilGetInteger(ILDefines.IL_NUM_IMAGES) + 1;
 
             //If just one image, we aren't really an animation chain
-            if(imageCount > 1) {
+            if (imageCount > 1)
+            {
                 m_animChain.Add(this);
-                for(int i = 1; i < imageCount; i++) {
+                for (int i = 1; i < imageCount; i++)
+                {
                     ManagedImage image = new ManagedImage(imageID, i);
                     //If the image wasn't valid, don't add it
-                    if(image.Faces.Count != 0)
+                    if (image.Faces.Count != 0)
                         m_animChain.Add(image);
                 }
             }
         }
 
-        private void LoadFaces(ImageID imageID, int imageNum) {
+        private void LoadFaces(ImageID imageID, int imageNum)
+        {
             IL.BindImage(imageID);
-            if(!IL.ActiveImage(imageNum))
+            if (!IL.ActiveImage(imageNum))
                 return;
 
             //Get total number of faces (including base face)
             int faceCount = IL.ilGetInteger(ILDefines.IL_NUM_FACES) + 1;
 
             //Get the first face and every other as a mip map chain, when we hit a null, we break
-            for(int i = 0; i < faceCount; i++) {
+            for (int i = 0; i < faceCount; i++)
+            {
                 MipMapChain mipMapChain = CreateMipMapChain(imageID, imageNum, i);
-                if(mipMapChain == null)
+                if (mipMapChain == null)
                     break;
                 m_faces.Add(mipMapChain);
             }
         }
 
-        private MipMapChain CreateMipMapChain(ImageID imageID, int imageNum, int faceNum) {
+        private MipMapChain CreateMipMapChain(ImageID imageID, int imageNum, int faceNum)
+        {
             IL.BindImage(imageID);
-            if(!IL.ActiveImage(imageNum))
+            if (!IL.ActiveImage(imageNum))
                 return null;
-            if(!IL.ActiveFace(faceNum))
+            if (!IL.ActiveFace(faceNum))
                 return null;
 
             //Get total number of mipmaps (including base face)
@@ -107,9 +122,10 @@ namespace AlienEngine.Core.Graphics.DevIL {
             MipMapChain mipMapChain = new MipMapChain();
 
             //Get the first mipmap and every other, when we hit a null, we break
-            for(int i = 0; i < mipMapCount; i++) {
+            for (int i = 0; i < mipMapCount; i++)
+            {
                 ImageData data = ImageData.Load(new Subimage(imageID, imageNum, faceNum, 0, i));
-                if(data == null)
+                if (data == null)
                     break;
                 mipMapChain.Add(data);
             }
