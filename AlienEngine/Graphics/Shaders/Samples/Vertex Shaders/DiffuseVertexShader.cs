@@ -18,10 +18,8 @@ namespace AlienEngine.Core.Graphics.Shaders.Samples
 
         #region Fragment shader inputs
         [Out] vec3 normal;
-        //[Out] vec4 color;
         [Out] vec2 uv;
         [Out] vec3 position;
-        [Out] mat3 tbn;
         #endregion
 
         #region Transformation matrices

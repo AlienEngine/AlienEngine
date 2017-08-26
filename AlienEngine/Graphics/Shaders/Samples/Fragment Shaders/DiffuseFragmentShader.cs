@@ -12,6 +12,7 @@ namespace AlienEngine.Core.Graphics.Shaders.Samples
         // --------------------
         struct MaterialState
         {
+            public int textureTilling;
             public uint blendMode;
             public float bumpScaling;
             public vec4 colorAmbient;
@@ -65,6 +66,7 @@ namespace AlienEngine.Core.Graphics.Shaders.Samples
             public sampler2D textureReflection;
             public sampler2D textureSpecular;
         }
+
         // --------------------
         // Light State
         // --------------------
@@ -101,11 +103,7 @@ namespace AlienEngine.Core.Graphics.Shaders.Samples
 
         [In] vec3 normal;
         [In] vec2 uv;
-        //[In] vec2 color;
-        //[In] vec2 tbn;
         [In] vec3 position;
-
-        // [Out] vec4 fragment;
 
         #region Lights
         // Lights
@@ -142,7 +140,7 @@ namespace AlienEngine.Core.Graphics.Shaders.Samples
         // Rotation
         [Uniform]
         vec3 c_rotation;
-        // Near/Far planes distances
+        // Near and Far planes distances
         [Uniform]
         vec2 c_depthDistances;
         #endregion
@@ -224,6 +222,7 @@ namespace AlienEngine.Core.Graphics.Shaders.Samples
         void main()
         {
             vec3 _normal = normalize(normal);
+            vec2 _uv = uv * materialState.textureTilling;
             vec4 _totalLight = new vec4(0);
 
             for (int i = 0; i < lights_nb; i++)
@@ -250,48 +249,12 @@ namespace AlienEngine.Core.Graphics.Shaders.Samples
             // Diffuse Texture Light Intensity
             if (materialState.hasTextureDiffuse)
             {
-                gl_FragColor = texture(materialState.textureDiffuse, uv) * _totalLight;
+                gl_FragColor = texture(materialState.textureDiffuse, _uv) * _totalLight;
             }
             else
             {
-                gl_FragColor = _totalLight * materialState.colorDiffuse;
+                gl_FragColor = _totalLight;
             }
-
-            //float Ip = 1 / length(ld);
-            //vec3 H = normalize(ld + viewport_vector);
-
-            //// Ambient Light Intensity
-            //vec4 ambientColorIntensity = colorAmbient; // Ka * Ia
-
-            //// Diffuse Light Intensity
-            //vec4 diffuseColorIntensity = colorDiffuse * Ip * max(0, dot(normalize(normal), normalize(ld))); // Kd * Ip * (N.L)
-            //diffuseColorIntensity = clamp(diffuseColorIntensity, 0.0f, 1.0f);
-
-            //// Specular Light Intensity
-            //vec4 specularColorIntensity = colorSpecular * Ip * pow(max(0, dot(normalize(normal), H)), shininess); // Ks * Ip * (R.V)^n
-            //specularColorIntensity = clamp(specularColorIntensity, 0.0f, 1.0f);
-
-            //// Edge detection
-            ////Black color if dot product is smaller than 0.3
-            ////else keep the same colors
-            ////float edgeDetection = (dot(normalize(viewport_vector), normalize(normal)) > 0.3f) ? 1 : 0;
-
-            ////vec4 color = new vec4(edgeDetection * (ambientColorIntensity.rgb + diffuseColorIntensity.rgb + specularColorIntensity.rgb + diffuseTextureIntensity.rgb), opacity * (ambientColorIntensity.a + diffuseColorIntensity.a + specularColorIntensity.a + diffuseTextureIntensity.a));
-
-            ////float intensity = dot(normalize(ld), normalize(normal));
-
-            ////if (intensity > 0.95f)
-            ////    color = new vec4(color.rgb * 1.00f, color.a);
-            ////else if (intensity < 0.95f && intensity > 0.5f)
-            ////    color = new vec4(color.rgb * 0.95f, color.a);
-            ////else if (intensity < 0.5f && intensity > 0.25f)
-            ////    color = new vec4(color.rgb * 0.5f, color.a);
-            ////else if (intensity < 0.25f && intensity > 0.0f)
-            ////    color = new vec4(color.rgb * 0.25f, color.a);
-            ////else
-            ////    color = new vec4(color.rgb * 0.1f, color.a);
-
-            //gl_FragColor = diffuseColorIntensity * new vec4(ambientColorIntensity.rgb + diffuseColorIntensity.rgb + specularColorIntensity.rgb, opacity * min(1.0f, ambientColorIntensity.a + diffuseColorIntensity.a + specularColorIntensity.a));
         }
     }
 }
