@@ -85,6 +85,9 @@ namespace AlienEngine.Core.Graphics.Shaders
 
         private void _compile()
         {
+            // Setting default globals
+            SetGlobal("MAX_NUMBER_OF_LIGHTS", Math.Max(1, Game.Game.CurrentScene.Lights.Length).ToString());
+
             _program = GL.CreateProgram();
 
             Console.WriteLine("Compiling vertex shader");
@@ -150,9 +153,6 @@ namespace AlienEngine.Core.Graphics.Shaders
             _compiled = false;
             _uniformLocationsCache = new Dictionary<string, int>();
             _valuesMap = new Dictionary<string, object>();
-
-            // Setting default globals
-            SetGlobal("MAX_NUMBER_OF_LIGHTS", Math.Max(1, Game.Game.CurrentScene.Lights.Length).ToString());
 
             ResourcesManager.AddDisposableResource(this);
         }
