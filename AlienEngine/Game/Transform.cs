@@ -1,4 +1,5 @@
 ﻿using AlienEngine.Core.Game;
+using AlienEngine.Core.Graphics;
 using System;
 
 namespace AlienEngine
@@ -197,7 +198,7 @@ namespace AlienEngine
             SetScale(new Vector3f(1, 1, 1));
         }
 
-        internal Transform(Graphics.MeshTransformation transform)
+        internal Transform(MeshTransformation transform)
         {
             SetTranslation(transform.Position);
             SetRotation(transform.Rotation);
@@ -227,6 +228,7 @@ namespace AlienEngine
         public Matrix4f GetProjectedTransformation()
         {
             Camera _camera = Game.CurrentScene.PrimaryCamera.GetComponent<Camera>();
+
             Matrix4f f = GetTransformation();
             Matrix4f v = _camera.ViewMatrix;
             Matrix4f p = _camera.ProjectionMatrix;
@@ -412,7 +414,7 @@ namespace AlienEngine
         {
             SetRotation(new Vector3f(Rotation.X, Rotation.Y, angle));
         }
-        
+
         /// <summary>
         /// Sets the scale of this <see cref="GameElement"/>.
         /// </summary>
@@ -530,7 +532,7 @@ namespace AlienEngine
         }
 
         /// <summary>
-        /// Compares this object instance to another object for equality. 
+        /// Compares this object instance to another object for equality.
         /// </summary>
         /// <param name="other">The other object to be used in the comparison.</param>
         /// <returns>True if both objects are <see cref="Transform"/> of equal value. Otherwise it returns false.</returns>
