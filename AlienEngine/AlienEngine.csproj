@@ -278,7 +278,6 @@
     <Compile Include="Inputs\KeyMods.cs" />
     <Compile Include="Inputs\MouseButton.cs" />
     <Compile Include="Physics\ColliderShapes.cs" />
-    <Compile Include="Physics\Dummy.cs" />
     <Compile Include="Utils\ConvertX.cs" />
     <Compile Include="Utils\CPUInfo.cs" />
     <Compile Include="Utils\GetProcAddress.cs" />
@@ -335,7 +334,6 @@
     <Compile Include="Inputs\Joystick.cs" />
     <Compile Include="Inputs\Keyboard.cs" />
     <Compile Include="Inputs\Mouse.cs" />
-    <Compile Include="Math\Half.cs" />
     <Compile Include="Platform\Platform.cs" />
     <Compile Include="StructTypeConverter.cs" />
     <Compile Include="Game\Time.cs" />
