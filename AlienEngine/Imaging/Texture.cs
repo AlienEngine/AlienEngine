@@ -88,7 +88,7 @@ namespace AlienEngine.Imaging
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
+                Console.WriteLine("Texture load error: " + e.Message);
             }
 
             return ret;
