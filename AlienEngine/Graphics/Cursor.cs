@@ -1,19 +1,31 @@
-﻿using AlienEngine.Core.Game;
-using AlienEngine.Graphics.GLFW;
+﻿using AlienEngine.Core.Graphics.DevIL;
+using AlienEngine.Core.Graphics.DevIL.Unmanaged;
+using AlienEngine.Core.Resources;
 using System;
 
-namespace AlienEngine
+namespace AlienEngine.Core.Graphics
 {
+    /// <summary>
+    /// Manage cursors used in a <see cref="GameWindow"/> 
+    /// </summary>
     public class Cursor : IDisposable
     {
         #region Fields
-        private GLFW.Cursor _cursor;
-        private GLFW.Image _image;
+        private GLFW.GLFW.Cursor _cursor;
+        private GLFW.GLFW.Image _image;
         private int xhot = 0;
         private int yhot = 0;
         #endregion
 
         #region Properties
+        /// <summary>
+        /// Internal cursor's pointer.
+        /// </summary>
+        internal GLFW.GLFW.Cursor Handle
+        {
+            get { return _cursor; }
+        }
+
         /// <summary>
         /// The height of this cursor.
         /// </summary>
@@ -100,13 +112,19 @@ namespace AlienEngine
         #endregion
 
         #region Constructor
-        public Cursor()
+        private Cursor(GLFW.GLFW.Cursor cursor)
         {
-            _image = new GLFW.Image();
-            _cursor = GLFW.CreateStandardCursor(CursorType.Arrow);
+            _image = new GLFW.GLFW.Image();
+            _cursor = cursor;
             HotX = 0;
             HotY = 0;
         }
+
+        public Cursor() : this(GLFW.GLFW.CreateStandardCursor(CursorType.Arrow))
+        { }
+
+        public Cursor(CursorType type) : this(GLFW.GLFW.CreateStandardCursor(type))
+        { }
 
         public Cursor(int hotX, int hotY) : this()
         {
@@ -114,11 +132,9 @@ namespace AlienEngine
             HotY = hotY;
         }
 
-        public Cursor(string image, int hotX, int hotY) : this()
+        public Cursor(string image, int hotX, int hotY) : this(hotX, hotY)
         {
-            HotX = hotX;
-            HotY = hotY;
-            LoadImage(image);
+            FromImage(image);
         }
         #endregion
 
@@ -127,36 +143,38 @@ namespace AlienEngine
         /// Load an image and use it as a cursor.
         /// </summary>
         /// <param name="image">The path to the image.</param>
-        public void LoadImage(string image)
+        public void FromImage(string image)
         {
-            using (var ms = new System.IO.MemoryStream())
-            {
-                System.Drawing.Bitmap img = (System.Drawing.Bitmap)System.Drawing.Image.FromFile(image);
-                img.Save(ms, System.Drawing.Imaging.ImageFormat.Bmp);
+            ImageImporter importer = new ImageImporter();
+            Image img = importer.LoadImage(image);
 
-                _image.Height = img.Height;
-                _image.Width = img.Width;
-                _image.Pixels = ms.ToArray();
+            importer.Dispose();
 
-                _cursor = GLFW.CreateCursor(_image, HotX, HotY);
-            }
+            img.Bind();
+            _image.Width = img.Width;
+            _image.Height = img.Height;
+            _image.Pixels = IL.CopyPixels(0, 0, 0, img.Width, img.Height, 1, DataFormat.BGRA, DataType.UnsignedByte);
+            img.Unbind();
+
+            img.Dispose();
+
+            _cursor = GLFW.GLFW.CreateCursor(_image, HotX, HotY);
         }
 
         /// <summary>
         /// Use this cursor.
         /// </summary>
-        public void Set()
+        public void Use()
         {
-            GLFW.Cursor cur = GLFW.CreateCursor(_image, HotX, HotY);
-            GLFW.SetCursor(Game.Window, cur);
+            Game.Game.Window.SetCursor(this);
         }
 
         /// <summary>
         /// Unuse this cursor and restore the default one.
         /// </summary>
-        public void Unset()
+        public void Unuse()
         {
-            GLFW.SetCursor(Game.Window, GLFW.Cursor.None);
+            Game.Game.Window.SetCursor(None);
         }
 
         /// <summary>
@@ -164,44 +182,51 @@ namespace AlienEngine
         /// </summary>
         public void Destroy()
         {
-            GLFW.DestroyCursor(_cursor);
+            GLFW.GLFW.DestroyCursor(_cursor);
         }
         #endregion
 
         #region Static Members
         /// <summary>
-        /// Set the cursor by the standard <see cref="CursorType"/>.
+        /// Gets an empty cursor.
+        /// </summary>
+        public static Cursor None
+        {
+            get { return new Cursor(GLFW.GLFW.Cursor.None); }
+        }
+        
+        /// <summary>
+        /// Sets the cursor by the standard <see cref="CursorType"/>.
         /// </summary>
         /// <param name="type">The cursor type.</param>
         public static void SetCursor(CursorType type)
         {
-            GLFW.Cursor cur = GLFW.CreateStandardCursor(type);
-            GLFW.SetCursor(Game.Window, cur);
+            Game.Game.Window.SetCursor(new Cursor(type));
         }
 
         /// <summary>
-        /// Set the cursor by a <see cref="Cursor"/> instance.
+        /// Sets the cursor by a <see cref="Cursor"/> instance.
         /// </summary>
         /// <param name="cursor">The cursor to use.</param>
         public static void SetCursor(Cursor cursor)
         {
-            cursor.Set();
+            cursor.Use();
         }
 
         /// <summary>
-        /// Create a <see cref="Cursor"/> from an image file.
+        /// Creates a <see cref="Cursor"/> from an image file.
         /// </summary>
         /// <param name="image">The path to the image file.</param>
         public static Cursor CreateCursor(string image)
         {
             Cursor cur = new Cursor();
-            cur.LoadImage(image);
+            cur.FromImage(image);
 
             return cur;
         }
 
         /// <summary>
-        /// Destroy the <paramref name="cursor"/>.
+        /// Destroys the <paramref name="cursor"/>.
         /// </summary>
         /// <param name="cursor">The cursor to destroy.</param>
         public static void DestroyCursor(Cursor cursor)
