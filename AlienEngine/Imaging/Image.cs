@@ -2,25 +2,34 @@
 using AlienEngine.Core.Graphics.DevIL.Unmanaged;
 using AlienEngine.Core.Resources;
 using System;
+using System.Drawing;
 using DevILImage = AlienEngine.Core.Graphics.DevIL.Image;
 
 namespace AlienEngine.Imaging
 {
     /// <summary>
-    /// Loads image files.
+    /// Load, manage, transform and convert image files.
     /// </summary>
     public class Image : IDisposable
     {
-        private int _w;
-        private int _h;
-        private byte[] _p;
+        #region Private fields
+
+        private int _x;
+        private int _y;
+        private int _z;
+        private int _d;
+        private DataFormat _f;
+        private DataType _t;
+        private DevILImage _i;
+
+        #endregion
 
         /// <summary>
         /// The width of the image.
         /// </summary>
         public int Width
         {
-            get { return _w; }
+            get { return _i.Width; }
         }
 
         /// <summary>
@@ -28,7 +37,7 @@ namespace AlienEngine.Imaging
         /// </summary>
         public int Height
         {
-            get { return _h; }
+            get { return _i.Height; }
         }
 
         /// <summary>
@@ -36,7 +45,19 @@ namespace AlienEngine.Imaging
         /// </summary>
         public byte[] Pixels
         {
-            get { return _p; }
+            get
+            {
+                // Bind the current DevIL image
+                _i.Bind();
+
+                // Get image pixels
+                var _p = IL.CopyPixels(_x, _y, _z, Width, Height, _d, _f, _t);
+
+                // Make sure this image will not be modified from outside
+                _i.Unbind();
+
+                return _p;
+            }
         }
 
         /// <summary>
@@ -54,21 +75,61 @@ namespace AlienEngine.Imaging
         public Image(string file, int offsetX = 0, int offsetY = 0, int offsetZ = 0, int width = 0, int height = 0, int depth = 1, DataFormat format = DataFormat.BGRA, DataType type = DataType.UnsignedByte)
         {
             ImageImporter importer = new ImageImporter();
-            DevILImage image = importer.LoadImage(file);
+            _i = importer.LoadImage(file);
 
             // Dispose the importer
             importer.Dispose();
 
-            _w = width == 0 ? image.Width : width;
-            _h = height == 0 ? image.Height : height;
-            _p = IL.CopyPixels(offsetX, offsetY, offsetZ, _w, _h, depth, format, type);
-
-            // Dispose the DevIL image
-            image.Dispose();
+            // Populate fields
+            _x = offsetX;
+            _y = offsetY;
+            _z = offsetZ;
+            _d = depth;
+            _f = format;
+            _t = type;
 
             // Register this resource as a disposable resource
             ResourcesManager.AddDisposableResource(this);
         }
+
+        #region Public members
+
+        /// <summary>
+        /// Flips this image.
+        /// </summary>
+        /// <returns>true when success, false otherwise</returns>
+        public bool Flip()
+        {
+            return TransformEngine.FlipImage(_i);
+        }
+
+        /// <summary>
+        /// Mirrors this image.
+        /// </summary>
+        /// <returns>true when success, false otherwise</returns>
+        public bool Mirror()
+        {
+            return TransformEngine.Mirror(_i);
+        }
+
+        /// <summary>
+        /// Crops this image.
+        /// </summary>
+        /// <returns>true when success, false otherwise</returns>
+        public bool Crop(int x, int y, int z, int width, int height, int depth)
+        {
+            return TransformEngine.Crop(_i, x, y, z, width, height, depth);
+        }
+
+        /// <summary>
+        /// Converts this <see cref="Image"/> to a <see cref="System.Drawing.Bitmap"/>.
+        /// </summary>
+        public Bitmap ToBitmap()
+        {
+            return _i.ToBitmap();
+        }
+
+        #endregion
 
         #region Static members
 
@@ -91,8 +152,7 @@ namespace AlienEngine.Imaging
         {
             if (!disposedValue)
             {
-                _p = null;
-
+                _i.Dispose();
                 disposedValue = true;
             }
         }
