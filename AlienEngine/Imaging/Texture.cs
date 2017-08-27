@@ -65,7 +65,7 @@ namespace AlienEngine.Imaging
                 // Dispose the importer
                 _importer.Dispose();
 
-                // Bind the impi]orted Image
+                // Bind the imported Image
                 _image.Bind();
 
                 // TODO: Apply image filters here
