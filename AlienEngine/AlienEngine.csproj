@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -9,8 +9,11 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>AlienEngine</RootNamespace>
     <AssemblyName>AlienEngine</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -21,6 +24,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -29,49 +33,315 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <WarningLevel>4</WarningLevel>
+    <Optimize>false</Optimize>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <WarningLevel>4</WarningLevel>
+    <Optimize>true</Optimize>
+    <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug Linux|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;LINUX</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug Linux|x64'">
+    <Prefer32Bit>false</Prefer32Bit>
+    <OutputPath>bin\Debug Linux</OutputPath>
+    <WarningLevel>4</WarningLevel>
+    <Optimize>false</Optimize>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug Linux|x86'">
+    <Prefer32Bit>false</Prefer32Bit>
+    <OutputPath>bin\Debug Linux</OutputPath>
+    <WarningLevel>4</WarningLevel>
+    <Optimize>false</Optimize>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>AlienEngine.pfx</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <DelaySign>false</DelaySign>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ICSharpCode.NRefactory">
-      <HintPath>..\packages\ICSharpCode.NRefactory.5.5.1\lib\Net40\ICSharpCode.NRefactory.dll</HintPath>
-    </Reference>
-    <Reference Include="ICSharpCode.NRefactory.Cecil">
-      <HintPath>..\packages\ICSharpCode.NRefactory.5.5.1\lib\Net40\ICSharpCode.NRefactory.Cecil.dll</HintPath>
-    </Reference>
-    <Reference Include="ICSharpCode.NRefactory.CSharp">
-      <HintPath>..\packages\ICSharpCode.NRefactory.5.5.1\lib\Net40\ICSharpCode.NRefactory.CSharp.dll</HintPath>
-    </Reference>
-    <Reference Include="ICSharpCode.NRefactory.Xml">
-      <HintPath>..\packages\ICSharpCode.NRefactory.5.5.1\lib\Net40\ICSharpCode.NRefactory.Xml.dll</HintPath>
-    </Reference>
-    <Reference Include="ICSharpCode.Decompiler">
-      <HintPath>..\packages\ICSharpCode.Decompiler.2.3.1\lib\Net40\ICSharpCode.Decompiler.dll</HintPath>
+    <Reference Include="BulletSharp, Version=2.83.7.1, Culture=neutral, processorArchitecture=AMD64">
+      <HintPath>..\Libs\Win64\BulletSharp.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="Mono.Cecil">
-      <HintPath>..\packages\Mono.Cecil.0.9.6.4\lib\net40\Mono.Cecil.dll</HintPath>
-    </Reference>
-    <Reference Include="Mono.Cecil.Mdb">
-      <HintPath>..\packages\Mono.Cecil.0.9.6.4\lib\net40\Mono.Cecil.Mdb.dll</HintPath>
-    </Reference>
-    <Reference Include="Mono.Cecil.Pdb">
-      <HintPath>..\packages\Mono.Cecil.0.9.6.4\lib\net40\Mono.Cecil.Pdb.dll</HintPath>
-    </Reference>
-    <Reference Include="Mono.Cecil.Rocks">
-      <HintPath>..\packages\Mono.Cecil.0.9.6.4\lib\net40\Mono.Cecil.Rocks.dll</HintPath>
-    </Reference>
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
+    <Reference Include="ICSharpCode.Decompiler, Version=2.3.1.1855, Culture=neutral, PublicKeyToken=d4bfe873e7598c49">
+      <HintPath>..\packages\ICSharpCode.Decompiler.2.3.1\lib\Net40\ICSharpCode.Decompiler.dll</HintPath>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="ICSharpCode.NRefactory, Version=5.0.0.0, Culture=neutral, PublicKeyToken=d4bfe873e7598c49">
+      <HintPath>..\packages\ICSharpCode.NRefactory.5.5.1\lib\Net40\ICSharpCode.NRefactory.dll</HintPath>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="ICSharpCode.NRefactory.Cecil, Version=5.0.0.0, Culture=neutral, PublicKeyToken=d4bfe873e7598c49">
+      <HintPath>..\packages\ICSharpCode.NRefactory.5.5.1\lib\Net40\ICSharpCode.NRefactory.Cecil.dll</HintPath>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="ICSharpCode.NRefactory.CSharp, Version=5.0.0.0, Culture=neutral, PublicKeyToken=d4bfe873e7598c49">
+      <HintPath>..\packages\ICSharpCode.NRefactory.5.5.1\lib\Net40\ICSharpCode.NRefactory.CSharp.dll</HintPath>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="ICSharpCode.NRefactory.Xml, Version=5.0.0.0, Culture=neutral, PublicKeyToken=d4bfe873e7598c49">
+      <HintPath>..\packages\ICSharpCode.NRefactory.5.5.1\lib\Net40\ICSharpCode.NRefactory.Xml.dll</HintPath>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Mono.Cecil, Version=0.9.6.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756">
+      <HintPath>..\packages\Mono.Cecil.0.9.6.4\lib\net45\Mono.Cecil.dll</HintPath>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Mono.Cecil.Mdb, Version=0.9.6.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756">
+      <HintPath>..\packages\Mono.Cecil.0.9.6.4\lib\net45\Mono.Cecil.Mdb.dll</HintPath>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Mono.Cecil.Pdb, Version=0.9.6.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756">
+      <HintPath>..\packages\Mono.Cecil.0.9.6.4\lib\net45\Mono.Cecil.Pdb.dll</HintPath>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Mono.Cecil.Rocks, Version=0.9.6.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756">
+      <HintPath>..\packages\Mono.Cecil.0.9.6.4\lib\net45\Mono.Cecil.Rocks.dll</HintPath>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="NVorbis, Version=0.8.5.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\packages\NVorbis.0.8.5.0\lib\NVorbis.dll</HintPath>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="AssimpNet, Version=3.3.2.0, Culture=neutral, PublicKeyToken=3edc10cb77b1bca2">
+      <HintPath>..\packages\AssimpNet.3.3.2\lib\net45\AssimpNet.dll</HintPath>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Application.cs" />
+    <Compile Include="Audio\AudioCapture.cs" />
+    <Compile Include="Audio\AudioContext.cs" />
+    <Compile Include="Audio\AudioContextException.cs" />
+    <Compile Include="Audio\AudioDeviceEnumerator.cs" />
+    <Compile Include="Audio\AudioDeviceErrorChecker.cs" />
+    <Compile Include="Audio\AudioDeviceException.cs" />
+    <Compile Include="Audio\AudioException.cs" />
+    <Compile Include="Audio\AudioValueException.cs" />
+    <Compile Include="Audio\OpenAL\Alc\Alc.cs" />
+    <Compile Include="Audio\OpenAL\Alc\AlcEnums.cs" />
+    <Compile Include="Audio\OpenAL\ALUtils.cs" />
+    <Compile Include="Audio\OpenAL\AL\AL.cs" />
+    <Compile Include="Audio\OpenAL\AL\ALEnums.cs" />
+    <Compile Include="Audio\OpenAL\AL\EffectsExtension.cs" />
+    <Compile Include="Audio\OpenAL\AL\EffectsExtensionEnums.cs" />
+    <Compile Include="Audio\OpenAL\AL\EffectsExtensionPresets.cs" />
+    <Compile Include="Audio\OpenAL\AL\XRamExtension.cs" />
+    <Compile Include="ContextHandle.cs" />
+    <Compile Include="Engine.cs" />
+    <Compile Include="Audio\AudioSourceState.cs" />
+    <Compile Include="Game\Components\AudioClip.cs" />
+    <Compile Include="Game\Components\AudioReverbZone.cs" />
+    <Compile Include="Game\Components\BoxCollider.cs" />
+    <Compile Include="Game\Components\CapsuleCollider.cs" />
+    <Compile Include="Physics\Collider.cs" />
+    <Compile Include="Game\Components\Light.cs" />
+    <Compile Include="Game\Components\MeshCollider.cs" />
+    <Compile Include="Game\Components\PlaneCollider.cs" />
+    <Compile Include="Game\Components\RigidBody.cs" />
+    <Compile Include="Game\Components\SphereCollider.cs" />
+    <Compile Include="Game\Components\Terrain.cs" />
+    <Compile Include="Game\GameElementCollection.cs" />
+    <Compile Include="Game\GameSettings.cs" />
+    <Compile Include="Game\IComponent.cs" />
+    <Compile Include="Rendering\IRenderable.cs" />
+    <Compile Include="Game\LightType.cs" />
+    <Compile Include="Game\PostEffectMode.cs" />
+    <Compile Include="Rendering\Renderer.cs" />
+    <Compile Include="Game\Scene.cs" />
+    <Compile Include="Game\Shaders\BumpedDiffuseShaderProgram.cs" />
+    <Compile Include="Game\Shaders\RenderTextureShaderProgram.cs" />
+    <Compile Include="Game\ShadowMap.cs" />
+    <Compile Include="Graphics\Color3.cs" />
+    <Compile Include="Graphics\Cursor.cs" />
+    <Compile Include="BlittableValueType.cs" />
+    <Compile Include="Game\Component.cs" />
+    <Compile Include="Game\Components\AudioListener.cs" />
+    <Compile Include="Game\Components\AudioSource.cs" />
+    <Compile Include="Game\Components\Camera.cs" />
+    <Compile Include="Game\Components\MeshRenderer.cs" />
+    <Compile Include="Game\Transform.cs" />
+    <Compile Include="Game\Game.cs" />
+    <Compile Include="Game\GameElement.cs" />
+    <Compile Include="Graphics\Color4.cs" />
+    <Compile Include="Imaging\Cubemap.cs" />
+    <Compile Include="Graphics\DevIL\Collections.cs" />
+    <Compile Include="Graphics\DevIL\Enums.cs" />
+    <Compile Include="Graphics\DevIL\FilterEngine.cs" />
+    <Compile Include="Graphics\DevIL\Image.cs" />
+    <Compile Include="Graphics\DevIL\ImageData.cs" />
+    <Compile Include="Graphics\DevIL\ImageExporter.cs" />
+    <Compile Include="Graphics\DevIL\ImageImporter.cs" />
+    <Compile Include="Graphics\DevIL\ImageStates.cs" />
+    <Compile Include="Graphics\DevIL\ManagedImage.cs" />
+    <Compile Include="Graphics\DevIL\MemoryHelper.cs" />
+    <Compile Include="Graphics\DevIL\TransformEngine.cs" />
+    <Compile Include="Graphics\DevIL\Unmanaged\Enums.cs" />
+    <Compile Include="Graphics\DevIL\Unmanaged\IL.cs" />
+    <Compile Include="Graphics\DevIL\Unmanaged\ILDefines.cs" />
+    <Compile Include="Graphics\DevIL\Unmanaged\ILU.cs" />
+    <Compile Include="Graphics\DevIL\Unmanaged\ILUDefines.cs" />
+    <Compile Include="Graphics\DevIL\Unmanaged\Structures.cs" />
+    <Compile Include="Graphics\FBO.cs" />
+    <Compile Include="Graphics\GameWindow.cs" />
+    <Compile Include="Graphics\Geometry.cs" />
+    <Compile Include="Game\Components\Material.cs" />
+    <Compile Include="Graphics\MeshEntry.cs" />
+    <Compile Include="Graphics\MeshFactory.cs" />
+    <Compile Include="Graphics\MeshImporter.cs" />
+    <Compile Include="Graphics\MeshTransformation.cs" />
+    <Compile Include="Game\Shaders\CubemapShaderProgram.cs" />
+    <Compile Include="Graphics\Monitor.cs" />
+    <Compile Include="Graphics\Shaders\Samples\Fragment Shaders\CubemapFragmentShader.cs" />
+    <Compile Include="Graphics\Shaders\Samples\Fragment Shaders\GrassFragmentShader.cs" />
+    <Compile Include="Graphics\Shaders\Samples\Fragment Shaders\RenderTextureFragmentShader.cs" />
+    <Compile Include="Graphics\Shaders\Samples\Fragment Shaders\BumpedDiffuseFragmentShader.cs" />
+    <Compile Include="Graphics\Shaders\Samples\Vertex Shaders\CubemapVertexShader.cs" />
+    <Compile Include="Graphics\Shaders\Samples\Vertex Shaders\GrassVertexShader.cs" />
+    <Compile Include="Graphics\Shaders\Samples\Vertex Shaders\RenderTextureVertexShader.cs" />
+    <Compile Include="Imaging\Texture.cs" />
+    <Compile Include="Graphics\UBO.cs" />
+    <Compile Include="Graphics\UBOData.cs" />
+    <Compile Include="Inputs\CursorState.cs" />
+    <Compile Include="Inputs\InputState.cs" />
+    <Compile Include="Inputs\Joysticks.cs" />
+    <Compile Include="Inputs\KeyCode.cs" />
+    <Compile Include="Inputs\KeyMods.cs" />
+    <Compile Include="Inputs\MouseButton.cs" />
+    <Compile Include="Physics\ColliderShapes.cs" />
+    <Compile Include="Physics\Dummy.cs" />
+    <Compile Include="Utils\ConvertX.cs" />
+    <Compile Include="Utils\CPUInfo.cs" />
+    <Compile Include="Utils\GetProcAddress.cs" />
+    <Compile Include="Graphics\GLFW\GLFW.cs" />
+    <Compile Include="Graphics\GLFW\GLFW.Delegate.cs" />
+    <Compile Include="Graphics\GLFW\GLFW.Enum.cs" />
+    <Compile Include="Graphics\GLFW\GLFW.Func.cs" />
+    <Compile Include="Graphics\GLFW\GLFW.Struct.cs" />
+    <Compile Include="Graphics\OpenGL\GL.10.cs" />
+    <Compile Include="Graphics\OpenGL\GL.11.cs" />
+    <Compile Include="Graphics\OpenGL\GL.12.cs" />
+    <Compile Include="Graphics\OpenGL\GL.13.cs" />
+    <Compile Include="Graphics\OpenGL\GL.14.cs" />
+    <Compile Include="Graphics\OpenGL\GL.15.cs" />
+    <Compile Include="Graphics\OpenGL\GL.20.cs" />
+    <Compile Include="Graphics\OpenGL\GL.21.cs" />
+    <Compile Include="Graphics\OpenGL\GL.30.cs" />
+    <Compile Include="Graphics\OpenGL\GL.31.cs" />
+    <Compile Include="Graphics\OpenGL\GL.32.cs" />
+    <Compile Include="Graphics\OpenGL\GL.33.cs" />
+    <Compile Include="Graphics\OpenGL\GL.40.cs" />
+    <Compile Include="Graphics\OpenGL\GL.41.cs" />
+    <Compile Include="Graphics\OpenGL\GL.42.cs" />
+    <Compile Include="Graphics\OpenGL\GL.43.cs" />
+    <Compile Include="Graphics\OpenGL\GL.44.cs" />
+    <Compile Include="Graphics\OpenGL\GL.45.cs" />
+    <Compile Include="Graphics\OpenGL\GL.cs" />
+    <Compile Include="Graphics\OpenGL\GL.Defines.cs" />
+    <Compile Include="Graphics\OpenGL\GL.Enum.cs" />
+    <Compile Include="Graphics\OpenGL\GL.Methods.cs" />
+    <Compile Include="Graphics\OpenGL\PixelFormatAdapter.cs" />
+    <Compile Include="Graphics\OpenGL\Structs\DrawArraysIndirectCommand.cs" />
+    <Compile Include="Graphics\OpenGL\Structs\DrawElementsIndirectCommand.cs" />
+    <Compile Include="Graphics\OpenGL\Structs\Float16.cs" />
+    <Compile Include="Graphics\OpenGL\Structs\SingleUInt32Union.cs" />
+    <Compile Include="Graphics\OpenGL\Structs\UFloat10.cs" />
+    <Compile Include="Graphics\OpenGL\Structs\UFloat11.cs" />
+    <Compile Include="Game\Shaders\DiffuseShaderProgram.cs" />
+    <Compile Include="Graphics\Shaders\Samples\UI\FontFragmentShader.cs" />
+    <Compile Include="Graphics\Shaders\Samples\UI\FontShaderProgram.cs" />
+    <Compile Include="Graphics\Shaders\Samples\UI\TexturedUIShaderProgram.cs" />
+    <Compile Include="Graphics\Shaders\Samples\UI\UITexturedFragmentShader.cs" />
+    <Compile Include="Graphics\Shaders\Samples\UI\FontVertexShader.cs" />
+    <Compile Include="Graphics\Shaders\Samples\UI\UITexturedVertexShader.cs" />
+    <Compile Include="Graphics\Mesh.cs" />
+    <Compile Include="Graphics\Shaders\Samples\Fragment Shaders\DiffuseFragmentShader.cs" />
+    <Compile Include="Graphics\Shaders\Samples\Vertex Shaders\DiffuseVertexShader.cs" />
+    <Compile Include="Graphics\Shaders\Samples\Fragment Shaders\DualDiffuseBlendFragmentShader.cs" />
+    <Compile Include="Graphics\Shaders\ShaderProgram.cs" />
+    <Compile Include="Graphics\VAO.cs" />
+    <Compile Include="Graphics\VBO.cs" />
+    <Compile Include="Graphics\Vertex.cs" />
+    <Compile Include="Inputs\Input.cs" />
+    <Compile Include="Inputs\Joystick.cs" />
+    <Compile Include="Inputs\Keyboard.cs" />
+    <Compile Include="Inputs\Mouse.cs" />
+    <Compile Include="Math\Half.cs" />
+    <Compile Include="Platform\Platform.cs" />
     <Compile Include="StructTypeConverter.cs" />
-    <Compile Include="Time.cs" />
-    <None Include="packages.config" />
-    <Compile Include="Class1.cs" />
+    <Compile Include="Game\Time.cs" />
+    <Compile Include="Resources\ResourcesManager.cs" />
+    <Compile Include="Utils\IniParser.cs" />
+    <None Include="AlienEngine.pfx" />
+    <None Include="app.config" />
     <Compile Include="Graphics\Shaders\ASL\ASLException.cs" />
     <Compile Include="Graphics\Shaders\ASL\ASLShader.Attributes.cs" />
     <Compile Include="Graphics\Shaders\ASL\ASLShader.cs" />
@@ -83,7 +353,6 @@
     <Compile Include="Graphics\Shaders\ASL\ASLShaderCompiler.cs" />
     <Compile Include="Graphics\Shaders\ASL\ASLShaderStruct.cs" />
     <Compile Include="Graphics\Shaders\ASL\ASLShaderVariable.cs" />
-    <Compile Include="Graphics\Shaders\ASL\ConstAttribute.cs" />
     <Compile Include="Graphics\Shaders\ASL\FragmentShader.cs" />
     <Compile Include="Graphics\Shaders\ASL\FragmentShader.InputLayoutQualifiers.cs" />
     <Compile Include="Graphics\Shaders\ASL\FragmentShader.LayoutAttribute.cs" />
@@ -138,9 +407,32 @@
     <Compile Include="Math\Vector4ui.cs" />
     <Compile Include="Math\VectorHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <None Include="packages.config" />
+    <Compile Include="Inputs\MouseEventsArgs.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Compute\OpenCL\" />
+    <Folder Include="Graphics\DirectX\" />
+    <Folder Include="Graphics\Shaders\Samples\Geometry Shaders\" />
+    <Folder Include="Graphics\Vulkan\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AlienEngine.AssetsManager\AlienEngine.AssetsManager.csproj">
+      <Project>{9b642f0b-425e-4696-9ce7-767f11d10e91}</Project>
+      <Name>AlienEngine.AssetsManager</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="..\packages\AssimpNet.3.3.2\build\AssimpNet.targets" Condition="Exists('..\packages\AssimpNet.3.3.2\build\AssimpNet.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\AssimpNet.3.3.2\build\AssimpNet.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\AssimpNet.3.3.2\build\AssimpNet.targets'))" />
+  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
