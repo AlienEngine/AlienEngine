@@ -1,9 +1,4 @@
-﻿using AlienEngine.Core.Graphics.GLFW;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using GLFWMonitor = AlienEngine.Core.Graphics.GLFW.GLFW.Monitor;
 
 namespace AlienEngine.Core.Graphics
 {
@@ -15,7 +10,7 @@ namespace AlienEngine.Core.Graphics
         /// </summary>
         public static Monitor None
         {
-            get { return new Monitor(GLFW.GLFW.Monitor.None); }
+            get { return new Monitor(GLFWMonitor.None); }
         }
 
         /// <summary>
@@ -31,11 +26,16 @@ namespace AlienEngine.Core.Graphics
         /// <summary>
         /// The internal monitor's pointer.
         /// </summary>
-        internal readonly GLFW.GLFW.Monitor Handle;
+        internal readonly GLFWMonitor Handle;
         #endregion
 
         #region Private members
-        private Monitor(GLFW.GLFW.Monitor handle)
+        /// <summary>
+        /// Initialize a new <see cref="Monitor"/> instance with the given
+        /// <see cref="Handle"/>.
+        /// </summary>
+        /// <param name="handle">The GLFW monitor.</param>
+        private Monitor(GLFWMonitor handle)
         {
             Handle = handle;
         }
