@@ -147,6 +147,17 @@ namespace AlienEngine
         }
 
         /// <summary>
+        /// Scales a size.
+        /// </summary>
+        /// <param name="left">The <see cref="Sizef"/> to scale.</param>
+        /// <param name="right">The scale factor.</param>
+        /// <returns></returns>
+        public static Sizef operator *(Sizef left, float right)
+        {
+            return new Sizef(left.Width * right, left.Height * right);
+        }
+
+        /// <summary>
         /// Compares two instances for equality.
         /// </summary>
         /// <param name="left">The first instance.</param>

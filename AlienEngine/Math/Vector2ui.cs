@@ -667,7 +667,11 @@ namespace AlienEngine
                 Y == other.Y;
         }
 
-        void ILoadFromString.Load(string value)
+        /// <summary>
+        /// Load this instance from the <see cref="System.String"/> representation.
+        /// </summary>
+        /// <param name="value">The <see cref="System.String"/> value to convert.</param>
+        void ILoadFromString.FromString(string value)
         {
             var parts = value.Trim('(', ')').Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
             uint.TryParse(parts[0].Trim(), out X);

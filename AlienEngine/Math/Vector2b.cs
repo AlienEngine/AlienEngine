@@ -185,7 +185,11 @@ namespace AlienEngine
             return ToString().GetHashCode();
         }
 
-        void ILoadFromString.Load(string value)
+        /// <summary>
+        /// Load this instance from the <see cref="System.String"/> representation.
+        /// </summary>
+        /// <param name="value">The <see cref="System.String"/> value to convert.</param>
+        void ILoadFromString.FromString(string value)
         {
             string[] parts = value.Trim('(', ')').Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
             bool.TryParse(parts[0], out X);

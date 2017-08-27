@@ -436,7 +436,7 @@ namespace AlienEngine
         /// Load this instance from the <see cref="System.String"/> representation.
         /// </summary>
         /// <param name="value">The <see cref="System.String"/> value to convert.</param>
-        void ILoadFromString.Load(string value)
+        void ILoadFromString.FromString(string value)
         {
             string[] parts = value.Trim('[', ']').Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
             Row0 = Vector2f.Parse(parts[0]);

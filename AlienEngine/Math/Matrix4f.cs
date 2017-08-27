@@ -1586,6 +1586,61 @@ namespace AlienEngine
             return !left.Equals(right);
         }
 
+        /// <summary>
+        /// Explicitly cast a <see cref="Matrix4f"/> into a <see cref="BulletSharp.Matrix"/>.
+        /// </summary>
+        /// <param name="mat">The matrix to cast.</param>
+        public static explicit operator BulletSharp.Matrix(Matrix4f mat)
+        {
+            BulletSharp.Matrix ret = new BulletSharp.Matrix();
+
+            ret.set_Rows(0, (BulletSharp.Vector4)mat.Row0);
+            ret.set_Rows(1, (BulletSharp.Vector4)mat.Row1);
+            ret.set_Rows(2, (BulletSharp.Vector4)mat.Row2);
+            ret.set_Rows(3, (BulletSharp.Vector4)mat.Row3);
+
+            return ret;
+        }
+
+        /// <summary>
+        /// Explicitly cast a <see cref="BulletSharp.Matrix"/> into a <see cref="Matrix4f"/>.
+        /// </summary>
+        /// <param name="mat">The matrix to cast.</param>
+        public static explicit operator Matrix4f(BulletSharp.Matrix mat)
+        {
+            return new Matrix4f(mat.ToArray());
+        }
+
+        /// <summary>
+        /// Explicitly cast a <see cref="Matrix4f"/> into a <see cref="Assimp.Matrix4x4"/>.
+        /// </summary>
+        /// <param name="mat">The matrix to cast.</param>
+        public static explicit operator Assimp.Matrix4x4(Matrix4f mat)
+        {
+            return new Assimp.Matrix4x4
+            (
+                mat.M11, mat.M12, mat.M13, mat.M14,
+                mat.M21, mat.M22, mat.M23, mat.M24,
+                mat.M31, mat.M32, mat.M33, mat.M34,
+                mat.M41, mat.M42, mat.M43, mat.M44
+            );
+        }
+
+        /// <summary>
+        /// Explicitly cast a <see cref="Assimp.Matrix4x4"/> into a <see cref="Matrix4f"/>.
+        /// </summary>
+        /// <param name="mat">The matrix to cast.</param>
+        public static explicit operator Matrix4f(Assimp.Matrix4x4 mat)
+        {
+            return new Matrix4f
+            (
+                mat.A1, mat.A2, mat.A3, mat.A4,
+                mat.B1, mat.B2, mat.B3, mat.B4,
+                mat.C1, mat.C2, mat.C3, mat.C4,
+                mat.D1, mat.D2, mat.D3, mat.D4
+            );
+        }
+
         #endregion
 
         #region Overrides
@@ -1627,7 +1682,7 @@ namespace AlienEngine
         /// Load this instance from the <see cref="System.String"/> representation.
         /// </summary>
         /// <param name="value">The <see cref="System.String"/> value to convert.</param>
-        void ILoadFromString.Load(string value)
+        void ILoadFromString.FromString(string value)
         {
             string[] parts = value.Trim('[', ']').Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
             Row0 = Vector4f.Parse(parts[0]);

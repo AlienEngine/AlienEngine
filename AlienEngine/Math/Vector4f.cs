@@ -2004,6 +2004,15 @@ namespace AlienEngine
         }
 
         /// <summary>
+        /// Explicitly cast this <see cref="Vector3f"/> into a <see cref="BulletSharp.Vector3"/>.
+        /// </summary>
+        /// <param name="vec">The vector to cast.</param>
+        public static explicit operator BulletSharp.Vector4(Vector4f vec)
+        {
+            return new BulletSharp.Vector4(vec.X, vec.Y, vec.Z, vec.W);
+        }
+
+        /// <summary>
         /// Returns the hashcode for this instance.
         /// </summary>
         /// <returns>A System.Int32 containing the unique hashcode for this instance.</returns>
@@ -2037,7 +2046,11 @@ namespace AlienEngine
                 W == other.W;
         }
 
-        void ILoadFromString.Load(string value)
+        /// <summary>
+        /// Load this instance from the <see cref="System.String"/> representation.
+        /// </summary>
+        /// <param name="value">The <see cref="System.String"/> value to convert.</param>
+        void ILoadFromString.FromString(string value)
         {
             var parts = value.Trim('(', ')').Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
             float.TryParse(parts[0].Trim(), out X);
@@ -2054,7 +2067,7 @@ namespace AlienEngine
         public static Vector4f Parse(string s)
         {
             var result = Zero as ILoadFromString;
-            result.Load(s);
+            result.FromString(s);
             return (Vector4f)result;
         }
 

@@ -1356,6 +1356,38 @@ namespace AlienEngine
         }
 
         /// <summary>
+        /// Returns a pointer to the first element of the specified instance.
+        /// </summary>
+        /// <param name="v">The instance.</param>
+        /// <returns>A pointer to the first element of v.</returns>
+        unsafe public static explicit operator float* (Vector3f v)
+        {
+            return &v.X;
+        }
+
+        /// <summary>
+        /// Returns a pointer to the first element of the specified instance.
+        /// </summary>
+        /// <param name="v">The instance.</param>
+        /// <returns>A pointer to the first element of v.</returns>
+        public static explicit operator IntPtr(Vector3f v)
+        {
+            unsafe
+            {
+                return (IntPtr)(&v.X);
+            }
+        }
+
+        /// <summary>
+        /// Explicitly cast this <see cref="Vector3f"/> into a <see cref="BulletSharp.Vector3"/>.
+        /// </summary>
+        /// <param name="vec">The vector to cast.</param>
+        public static explicit operator BulletSharp.Vector3(Vector3f vec)
+        {
+            return new BulletSharp.Vector3(vec.X, vec.Y, vec.Z);
+        }
+
+        /// <summary>
         /// Returns the hashcode for this instance.
         /// </summary>
         /// <returns>A System.Int32 containing the unique hashcode for this instance.</returns>
@@ -1388,7 +1420,11 @@ namespace AlienEngine
                 Z == other.Z;
         }
 
-        void ILoadFromString.Load(string value)
+        /// <summary>
+        /// Load this instance from the <see cref="System.String"/> representation.
+        /// </summary>
+        /// <param name="value">The <see cref="System.String"/> value to convert.</param>
+        void ILoadFromString.FromString(string value)
         {
             var parts = value.Trim('(', ')').Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
             float.TryParse(parts[0].Trim(), out X);
@@ -1404,7 +1440,7 @@ namespace AlienEngine
         public static Vector3f Parse(string s)
         {
             var result = Zero as ILoadFromString;
-            result.Load(s);
+            result.FromString(s);
             return (Vector3f)result;
         }
 

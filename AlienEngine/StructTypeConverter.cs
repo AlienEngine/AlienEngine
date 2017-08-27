@@ -24,7 +24,7 @@ namespace AlienEngine
             CultureInfo culture, object value)
         {
             var result = default(T);
-            result.Load(value as string);
+            result.FromString(value as string);
 
             return result;
         }

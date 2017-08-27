@@ -9,6 +9,6 @@
         /// Load values for this instance from a <see cref="System.String"/>.
         /// </summary>
         /// <param name="value">The <see cref="System.String"/> to convert into this instance.</param>
-        void Load(string value);
+        void FromString(string value);
     }
 }

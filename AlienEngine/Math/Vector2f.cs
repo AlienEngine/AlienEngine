@@ -880,7 +880,11 @@ namespace AlienEngine
             return new float[] { X, Y };
         }
 
-        void ILoadFromString.Load(string value)
+        /// <summary>
+        /// Load this instance from the <see cref="System.String"/> representation.
+        /// </summary>
+        /// <param name="value">The <see cref="System.String"/> value to convert.</param>
+        void ILoadFromString.FromString(string value)
         {
             var parts = value.Trim('(', ')').Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
             float.TryParse(parts[0].Trim(), out X);
@@ -895,7 +899,7 @@ namespace AlienEngine
         public static Vector2f Parse(string s)
         {
             var result = Zero as ILoadFromString;
-            result.Load(s);
+            result.FromString(s);
             return (Vector2f)result;
         }
 
