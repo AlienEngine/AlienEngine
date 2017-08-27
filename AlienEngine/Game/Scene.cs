@@ -13,6 +13,8 @@ namespace AlienEngine.Core.Game
         private GameElementCollection _gameElements;
         private GameElementCollection _lights;
         private GameElementCollection _cameras;
+        private GameElementCollection _audioSources;
+        private GameElementCollection _audioReverbZones;
 
         // Unique game elements
         private GameElement _audioListener;
@@ -55,6 +57,26 @@ namespace AlienEngine.Core.Game
         }
 
         /// <summary>
+        /// Gets a collection of all <see cref="GameElement"/>s
+        /// in the current <see cref="Scene"/> which have a
+        /// <see cref="AudioSource"/> component.
+        /// </summary>
+        public GameElementCollection AudioSources
+        {
+            get { return _audioSources; }
+        }
+
+        /// <summary>
+        /// Gets a collection of all <see cref="GameElement"/>s
+        /// in the current <see cref="Scene"/> which have a
+        /// <see cref="AudioReverbZone"/> component.
+        /// </summary>
+        public GameElementCollection AudioReverbZones
+        {
+            get { return _audioReverbZones; }
+        }
+
+        /// <summary>
         /// Gets the unique <see cref="GameElement"/> in the
         /// current <see cref="Scene"/> which has a enable
         /// <see cref="AlienEngine.AudioListener"/> component.
@@ -86,6 +108,8 @@ namespace AlienEngine.Core.Game
             _gameElements = new GameElementCollection();
             _lights = new GameElementCollection();
             _cameras = new GameElementCollection();
+            _audioSources = new GameElementCollection();
+            _audioReverbZones = new GameElementCollection();
             _audioListener = null;
             _primaryCamera = _dummyCamera;
 
@@ -115,6 +139,16 @@ namespace AlienEngine.Core.Game
 
                 if (cm.IsPrimary)
                     _primaryCamera = gameElement;
+            }
+
+            if (gameElement.HasComponent<AudioSource>())
+            {
+                _audioSources.Add(gameElement);
+            }
+
+            if (gameElement.HasComponent<AudioReverbZone>())
+            {
+                _audioReverbZones.Add(gameElement);
             }
 
             if (gameElement.HasComponent<AudioListener>())
