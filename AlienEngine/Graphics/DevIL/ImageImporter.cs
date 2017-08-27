@@ -29,7 +29,6 @@ namespace AlienEngine.Core.Graphics.DevIL
     public sealed class ImageImporter : IDisposable
     {
         private FilterEngine m_filterEngine;
-        private TransformEngine m_transformEngine;
         private bool m_isDisposed;
 
         public FilterEngine Filter
@@ -40,18 +39,10 @@ namespace AlienEngine.Core.Graphics.DevIL
             }
         }
 
-        public TransformEngine Transform
-        {
-            get
-            {
-                return m_transformEngine;
-            }
-        }
 
         public ImageImporter()
         {
             m_filterEngine = new FilterEngine();
-            m_transformEngine = new TransformEngine();
             m_isDisposed = false;
         }
 
