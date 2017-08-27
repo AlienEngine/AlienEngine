@@ -202,6 +202,7 @@
     <Compile Include="Game\Components\AudioReverbZone.cs" />
     <Compile Include="Game\Components\BoxCollider.cs" />
     <Compile Include="Game\Components\CapsuleCollider.cs" />
+    <Compile Include="Imaging\Image.cs" />
     <Compile Include="Physics\Collider.cs" />
     <Compile Include="Game\Components\Light.cs" />
     <Compile Include="Game\Components\MeshCollider.cs" />
