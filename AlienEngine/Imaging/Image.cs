@@ -39,6 +39,18 @@ namespace AlienEngine.Imaging
             get { return _p; }
         }
 
+        /// <summary>
+        /// Load and create a new image.
+        /// </summary>
+        /// <param name="file">The image file.</param>
+        /// <param name="offsetX">The X offset from which pixels will be read.</param>
+        /// <param name="offsetY">The Y offset from which pixels will be read.</param>
+        /// <param name="offsetZ">The Z offset from which pixels will be read.</param>
+        /// <param name="width">The width of the loaded.</param>
+        /// <param name="height">The height of the loaded.</param>
+        /// <param name="depth">The depth.</param>
+        /// <param name="format">The format in which pixels will be read.</param>
+        /// <param name="type">The type of data in which pixels will be read.</param>
         public Image(string file, int offsetX = 0, int offsetY = 0, int offsetZ = 0, int width = 0, int height = 0, int depth = 1, DataFormat format = DataFormat.BGRA, DataType type = DataType.UnsignedByte)
         {
             ImageImporter importer = new ImageImporter();
@@ -57,6 +69,20 @@ namespace AlienEngine.Imaging
             // Register this resource as a disposable resource
             ResourcesManager.AddDisposableResource(this);
         }
+
+        #region Static members
+
+        /// <summary>
+        /// Loads an image from a file.
+        /// </summary>
+        /// <param name="file">The file path of the image to load.</param>
+        /// <returns>A new <see cref="Image"/> instance.</returns>
+        public static Image FromFile(string file)
+        {
+            return new Image(file);
+        }
+
+        #endregion
 
         #region IDisposable Support
         private bool disposedValue = false; // To detect redundant calls
