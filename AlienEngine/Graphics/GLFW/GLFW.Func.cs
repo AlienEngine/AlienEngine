@@ -1389,7 +1389,7 @@ namespace AlienEngine.Core.Graphics.GLFW
         /// <returns>A new cursor ready to use.</returns>
         [DllImport(Library, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwCreateStandardCursor"), SuppressUnmanagedCodeSecurity]
         [return: MarshalAs(UnmanagedType.Struct)]
-        public static extern GLFW.Cursor CreateStandardCursor(AlienEngine.Cursor.CursorType cursor);
+        public static extern GLFW.Cursor CreateStandardCursor(AlienEngine.Core.Graphics.Cursor.CursorType cursor);
 
         /// <summary>
         /// This function destroys a cursor previously created with
