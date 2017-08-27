@@ -24,10 +24,10 @@ using AlienEngine.Core.Graphics.DevIL.Unmanaged;
 
 namespace AlienEngine.Core.Graphics.DevIL
 {
-    public class TransformEngine
+    public static class TransformEngine
     {
 
-        public Placement ImagePlacement
+        public static Placement ImagePlacement
         {
             get
             {
@@ -39,7 +39,7 @@ namespace AlienEngine.Core.Graphics.DevIL
             }
         }
 
-        public bool Crop(Image image, int offsetX, int offsetY, int offsetZ, int width, int height, int depth)
+        public static bool Crop(Image image, int offsetX, int offsetY, int offsetZ, int width, int height, int depth)
         {
             if (image == null || !image.IsValid)
             {
@@ -50,7 +50,7 @@ namespace AlienEngine.Core.Graphics.DevIL
             return ILU.Crop(offsetX, offsetY, offsetZ, width, height, depth);
         }
 
-        public bool EnlargeCanvas(Image image, int width, int height, int depth)
+        public static bool EnlargeCanvas(Image image, int width, int height, int depth)
         {
             if (image == null || !image.IsValid)
             {
@@ -61,7 +61,7 @@ namespace AlienEngine.Core.Graphics.DevIL
             return ILU.EnlargeCanvas(width, height, depth);
         }
 
-        public bool EnlargeImage(Image image, int xDim, int yDim, int zDim)
+        public static bool EnlargeImage(Image image, int xDim, int yDim, int zDim)
         {
             if (image == null || !image.IsValid)
             {
@@ -72,7 +72,7 @@ namespace AlienEngine.Core.Graphics.DevIL
             return ILU.EnlargeImage(xDim, yDim, zDim);
         }
 
-        public bool Scale(Image image, int width, int height, int depth)
+        public static bool Scale(Image image, int width, int height, int depth)
         {
             if (image == null || !image.IsValid)
             {
@@ -83,7 +83,7 @@ namespace AlienEngine.Core.Graphics.DevIL
             return ILU.Scale(width, height, depth);
         }
 
-        public bool ScaleAlpha(Image image, float scale)
+        public static bool ScaleAlpha(Image image, float scale)
         {
             if (image == null || !image.IsValid)
             {
@@ -94,7 +94,7 @@ namespace AlienEngine.Core.Graphics.DevIL
             return ILU.ScaleAlpha(scale);
         }
 
-        public bool ScaleColors(Image image, float red, float green, float blue)
+        public static bool ScaleColors(Image image, float red, float green, float blue)
         {
             if (image == null || !image.IsValid)
             {
@@ -105,7 +105,7 @@ namespace AlienEngine.Core.Graphics.DevIL
             return ILU.ScaleColors(red, green, blue);
         }
 
-        public bool ReplaceColor(Image image, byte red, byte green, byte blue, float tolerance)
+        public static bool ReplaceColor(Image image, byte red, byte green, byte blue, float tolerance)
         {
             if (image == null || !image.IsValid)
             {
@@ -116,7 +116,7 @@ namespace AlienEngine.Core.Graphics.DevIL
             return ILU.ReplaceColor(red, green, blue, tolerance);
         }
 
-        public bool SwapColors(Image image)
+        public static bool SwapColors(Image image)
         {
             if (image == null || !image.IsValid)
             {
@@ -127,7 +127,7 @@ namespace AlienEngine.Core.Graphics.DevIL
             return ILU.SwapColors();
         }
 
-        public bool FlipImage(Image image)
+        public static bool FlipImage(Image image)
         {
             if (image == null || !image.IsValid)
             {
@@ -138,7 +138,7 @@ namespace AlienEngine.Core.Graphics.DevIL
             return ILU.FlipImage();
         }
 
-        public bool Mirror(Image image)
+        public static bool Mirror(Image image)
         {
             if (image == null || !image.IsValid)
             {
@@ -149,7 +149,7 @@ namespace AlienEngine.Core.Graphics.DevIL
             return ILU.Mirror();
         }
 
-        public bool Rotate(Image image, float angle)
+        public static bool Rotate(Image image, float angle)
         {
             if (image == null || !image.IsValid)
             {
@@ -160,7 +160,7 @@ namespace AlienEngine.Core.Graphics.DevIL
             return ILU.Rotate(angle);
         }
 
-        public bool Rotate3D(Image image, float x, float y, float z, float angle)
+        public static bool Rotate3D(Image image, float x, float y, float z, float angle)
         {
             if (image == null || !image.IsValid)
             {
@@ -170,7 +170,6 @@ namespace AlienEngine.Core.Graphics.DevIL
             IL.BindImage(image.ImageID);
             return ILU.Rotate3D(x, y, z, angle);
         }
-
 
     }
 }
