@@ -14,7 +14,7 @@ namespace AlienEngine.Imaging
     {
         #region Fields
 
-        private Core.Graphics.DevIL.Image _image;
+        private Image _image;
 
         #endregion
 
@@ -59,14 +59,7 @@ namespace AlienEngine.Imaging
             try
             {
                 // Import the image
-                ImageImporter _importer = new ImageImporter();
-                _image = _importer.LoadImage(filename);
-
-                // Dispose the importer
-                _importer.Dispose();
-
-                // Bind the imported Image
-                _image.Bind();
+                _image = Image.FromFile(filename);
 
                 // TODO: Apply image filters here
                 _applyFilters();
@@ -74,13 +67,7 @@ namespace AlienEngine.Imaging
                 // Generate OpenGL texture
                 TextureID = GL.GenTexture();
 
-                // Generate bitmap from image
-                Bitmap BitmapImage = _image.ToBitmap();
-
-                if (FlipY) BitmapImage.RotateFlip(RotateFlipType.RotateNoneFlipY); // Bitmaps read from bottom up, so flip it
-
-                // Must be Format32bppArgb file format, so convert it if it isn't in that format
-                System.Drawing.Imaging.BitmapData bitmapData = BitmapImage.LockBits(new System.Drawing.Rectangle(0, 0, BitmapImage.Width, BitmapImage.Height), System.Drawing.Imaging.ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+                if (FlipY) _image.Flip();
 
                 // Set pixel alignment
                 GL.PixelStorei(PixelStoreParameter.UnpackAlignment, 1);
@@ -88,21 +75,14 @@ namespace AlienEngine.Imaging
                 GL.BindTexture(TextureTarget, TextureID);
 
                 // Set texture data
-                GL.TexImage2D(TextureTarget, 0, PixelInternalFormat.Rgba8, _image.Width, _image.Height, 0, PixelFormat.Bgra, PixelType.UnsignedByte, bitmapData.Scan0);
+                GL.TexImage2D(TextureTarget, 0, PixelInternalFormat.Rgba8, _image.Width, _image.Height, 0, PixelFormat.Bgra, PixelType.UnsignedByte, _image.Pixels);
 
                 // Set texture filters
                 GL.TexParameteri(TextureTarget, TextureParameterName.TextureMinFilter, TextureParameter.Linear);
                 GL.TexParameteri(TextureTarget, TextureParameterName.TextureMagFilter, TextureParameter.Linear);
 
-                // Dispose bitmap (it will not longer be used)
-                BitmapImage.UnlockBits(bitmapData);
-                BitmapImage.Dispose();
-
                 // Make sure the texture will not be modified from the outside
                 GL.BindTexture(TextureTarget, 0);
-
-                // Make sure the Image will not be modified from the outside
-                _image.Unbind();
 
                 ret = true;
             }
