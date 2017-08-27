@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using AlienEngine.Graphics.Shaders;
+using AlienEngine.Core.Graphics.Shaders;
 using AlienEngine.Core.Graphics.OpenGL;
 using System.Threading;
 using System.Globalization;
+using AlienEngine.Core.Graphics;
 
-namespace AlienEngine.Graphics
+namespace AlienEngine.Core.Graphics
 {
     /// <summary>
     /// Helper class that performs simple math on some types of Geometry as
