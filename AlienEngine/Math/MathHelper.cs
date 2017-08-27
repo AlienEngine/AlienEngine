@@ -512,7 +512,7 @@ namespace AlienEngine
         }
 
         /// <summary>
-        /// Check if a number is between a minimum and a maximum.
+        /// Checks if a number is between a minimum and a maximum.
         /// </summary>
         /// <param name="n">The number to check.</param>
         /// <param name="min">The minimum allowed value.</param>
@@ -520,11 +520,12 @@ namespace AlienEngine
         /// <returns>true, if n is between min and max.</returns>
         public static bool Between(int n, int min, int max)
         {
+            if (min > max) Swap(ref min, ref max);
             return n >= min && n <= max;
         }
 
         /// <summary>
-        /// Check if a number is between a minimum and a maximum.
+        /// Checks if a number is between a minimum and a maximum.
         /// </summary>
         /// <param name="n">The number to check.</param>
         /// <param name="min">The minimum allowed value.</param>
@@ -532,11 +533,12 @@ namespace AlienEngine
         /// <returns>true, if n is between min and max.</returns>
         public static bool Between(float n, float min, float max)
         {
+            if (min > max) Swap(ref min, ref max);
             return n >= min && n <= max;
         }
 
         /// <summary>
-        /// Check if a number is between a minimum and a maximum.
+        /// Checks if a number is between a minimum and a maximum.
         /// </summary>
         /// <param name="n">The number to check.</param>
         /// <param name="min">The minimum allowed value.</param>
@@ -544,7 +546,944 @@ namespace AlienEngine
         /// <returns>true, if n is between min and max.</returns>
         public static bool Between(double n, double min, double max)
         {
+            if (min > max) Swap(ref min, ref max);
             return n >= min && n <= max;
+        }
+
+        /// <summary>
+        /// Checks if a number is between a minimum and a maximum.
+        /// </summary>
+        /// <param name="n">The number to check.</param>
+        /// <param name="min">The minimum allowed value.</param>
+        /// <param name="max">The maximum allowed value.</param>
+        /// <returns>true, if n is between min and max.</returns>
+        public static bool Between(byte n, byte min, byte max)
+        {
+            if (min > max) Swap(ref min, ref max);
+            return n >= min && n <= max;
+        }
+
+        /// <summary>
+        /// Checks if a number is between a minimum and a maximum.
+        /// </summary>
+        /// <param name="n">The number to check.</param>
+        /// <param name="min">The minimum allowed value.</param>
+        /// <param name="max">The maximum allowed value.</param>
+        /// <returns>true, if n is between min and max.</returns>
+        [CLSCompliant(false)]
+        public static bool Between(sbyte n, sbyte min, sbyte max)
+        {
+            if (min > max) Swap(ref min, ref max);
+            return n >= min && n <= max;
+        }
+
+        /// <summary>
+        /// Checks if a number is between a minimum and a maximum.
+        /// </summary>
+        /// <param name="n">The number to check.</param>
+        /// <param name="min">The minimum allowed value.</param>
+        /// <param name="max">The maximum allowed value.</param>
+        /// <returns>true, if n is between min and max.</returns>
+        [CLSCompliant(false)]
+        public static bool Between(uint n, uint min, uint max)
+        {
+            if (min > max) Swap(ref min, ref max);
+            return n >= min && n <= max;
+        }
+
+        /// <summary>
+        /// Checks if a number is between a minimum and a maximum.
+        /// </summary>
+        /// <param name="n">The number to check.</param>
+        /// <param name="min">The minimum allowed value.</param>
+        /// <param name="max">The maximum allowed value.</param>
+        /// <returns>true, if n is between min and max.</returns>
+        public static bool Between(short n, short min, short max)
+        {
+            if (min > max) Swap(ref min, ref max);
+            return n >= min && n <= max;
+        }
+
+        /// <summary>
+        /// Checks if a number is between a minimum and a maximum.
+        /// </summary>
+        /// <param name="n">The number to check.</param>
+        /// <param name="min">The minimum allowed value.</param>
+        /// <param name="max">The maximum allowed value.</param>
+        /// <returns>true, if n is between min and max.</returns>
+        [CLSCompliant(false)]
+        public static bool Between(ushort n, ushort min, ushort max)
+        {
+            if (min > max) Swap(ref min, ref max);
+            return n >= min && n <= max;
+        }
+
+        /// <summary>
+        /// Checks if a number is between a minimum and a maximum.
+        /// </summary>
+        /// <param name="n">The number to check.</param>
+        /// <param name="min">The minimum allowed value.</param>
+        /// <param name="max">The maximum allowed value.</param>
+        /// <returns>true, if n is between min and max.</returns>
+        public static bool Between(long n, long min, long max)
+        {
+            if (min > max) Swap(ref min, ref max);
+            return n >= min && n <= max;
+        }
+
+        /// <summary>
+        /// Checks if a number is between a minimum and a maximum.
+        /// </summary>
+        /// <param name="n">The number to check.</param>
+        /// <param name="min">The minimum allowed value.</param>
+        /// <param name="max">The maximum allowed value.</param>
+        /// <returns>true, if n is between min and max.</returns>
+        [CLSCompliant(false)]
+        public static bool Between(ulong n, ulong min, ulong max)
+        {
+            if (min > max) Swap(ref min, ref max);
+            return n >= min && n <= max;
+        }
+
+        /// <summary>
+        /// Checks if a number is between a minimum and a maximum.
+        /// </summary>
+        /// <param name="n">The number to check.</param>
+        /// <param name="min">The minimum allowed value.</param>
+        /// <param name="max">The maximum allowed value.</param>
+        /// <returns>true, if n is between min and max.</returns>
+        public static bool Between(decimal n, decimal min, decimal max)
+        {
+            if (min > max) Swap(ref min, ref max);
+            return n >= min && n <= max;
+        }
+
+        /// <summary>
+        /// Returns the minimal value of an array.
+        /// </summary>
+        /// <param name="array">The array of values</param>
+        public static byte Min(byte[] array)
+        {
+            byte Minimum;
+
+            if (array.Length == 0)
+            {
+                throw new ArgumentException("The given array is empty", "array");
+            }
+            else
+            {
+                Minimum = array[0];
+
+                for (int counter = 1; counter < array.Length; counter++)
+                {
+                    if (array[counter] < Minimum)
+                    {
+                        Minimum = array[counter];
+                    }
+                }
+
+                return Minimum;
+            }
+        }
+
+        /// <summary>
+        /// Returns the minimal value of an array.
+        /// </summary>
+        /// <param name="array">The array of values</param>
+        [CLSCompliant(false)]
+        public static sbyte Min(sbyte[] array)
+        {
+            sbyte Minimum;
+
+            if (array.Length == 0)
+            {
+                throw new ArgumentException("The given array is empty", "array");
+            }
+            else
+            {
+                Minimum = array[0];
+
+                for (int counter = 1; counter < array.Length; counter++)
+                {
+                    if (array[counter] < Minimum)
+                    {
+                        Minimum = array[counter];
+                    }
+                }
+
+                return Minimum;
+            }
+        }
+
+        /// <summary>
+        /// Returns the minimal value of an array.
+        /// </summary>
+        /// <param name="array">The array of values</param>
+        public static int Min(int[] array)
+        {
+            int Minimum;
+
+            if (array.Length == 0)
+            {
+                throw new ArgumentException("The given array is empty", "array");
+            }
+            else
+            {
+                Minimum = array[0];
+
+                for (int counter = 1; counter < array.Length; counter++)
+                {
+                    if (array[counter] < Minimum)
+                    {
+                        Minimum = array[counter];
+                    }
+                }
+
+                return Minimum;
+            }
+        }
+
+        /// <summary>
+        /// Returns the minimal value of an array.
+        /// </summary>
+        /// <param name="array">The array of values</param>
+        [CLSCompliant(false)]
+        public static uint Min(uint[] array)
+        {
+            uint Minimum;
+
+            if (array.Length == 0)
+            {
+                throw new ArgumentException("The given array is empty", "array");
+            }
+            else
+            {
+                Minimum = array[0];
+
+                for (int counter = 1; counter < array.Length; counter++)
+                {
+                    if (array[counter] < Minimum)
+                    {
+                        Minimum = array[counter];
+                    }
+                }
+
+                return Minimum;
+            }
+        }
+
+        /// <summary>
+        /// Returns the minimal value of an array.
+        /// </summary>
+        /// <param name="array">The array of values</param>
+        public static long Min(long[] array)
+        {
+            long Minimum;
+
+            if (array.Length == 0)
+            {
+                throw new ArgumentException("The given array is empty", "array");
+            }
+            else
+            {
+                Minimum = array[0];
+
+                for (int counter = 1; counter < array.Length; counter++)
+                {
+                    if (array[counter] < Minimum)
+                    {
+                        Minimum = array[counter];
+                    }
+                }
+
+                return Minimum;
+            }
+        }
+
+        /// <summary>
+        /// Returns the minimal value of an array.
+        /// </summary>
+        /// <param name="array">The array of values</param>
+        [CLSCompliant(false)]
+        public static ulong Min(ulong[] array)
+        {
+            ulong Minimum;
+
+            if (array.Length == 0)
+            {
+                throw new ArgumentException("The given array is empty", "array");
+            }
+            else
+            {
+                Minimum = array[0];
+
+                for (int counter = 1; counter < array.Length; counter++)
+                {
+                    if (array[counter] < Minimum)
+                    {
+                        Minimum = array[counter];
+                    }
+                }
+
+                return Minimum;
+            }
+        }
+
+        /// <summary>
+        /// Returns the minimal value of an array.
+        /// </summary>
+        /// <param name="array">The array of values</param>
+        public static short Min(short[] array)
+        {
+            short Minimum;
+
+            if (array.Length == 0)
+            {
+                throw new ArgumentException("The given array is empty", "array");
+            }
+            else
+            {
+                Minimum = array[0];
+
+                for (int counter = 1; counter < array.Length; counter++)
+                {
+                    if (array[counter] < Minimum)
+                    {
+                        Minimum = array[counter];
+                    }
+                }
+
+                return Minimum;
+            }
+        }
+
+        /// <summary>
+        /// Returns the minimal value of an array.
+        /// </summary>
+        /// <param name="array">The array of values</param>
+        [CLSCompliant(false)]
+        public static ushort Min(ushort[] array)
+        {
+            ushort Minimum;
+
+            if (array.Length == 0)
+            {
+                throw new ArgumentException("The given array is empty", "array");
+            }
+            else
+            {
+                Minimum = array[0];
+
+                for (int counter = 1; counter < array.Length; counter++)
+                {
+                    if (array[counter] < Minimum)
+                    {
+                        Minimum = array[counter];
+                    }
+                }
+
+                return Minimum;
+            }
+        }
+
+        /// <summary>
+        /// Returns the minimal value of an array.
+        /// </summary>
+        /// <param name="array">The array of values</param>
+        public static decimal Min(decimal[] array)
+        {
+            decimal Minimum;
+
+            if (array.Length == 0)
+            {
+                throw new ArgumentException("The given array is empty", "array");
+            }
+            else
+            {
+                Minimum = array[0];
+
+                for (int counter = 1; counter < array.Length; counter++)
+                {
+                    if (array[counter] < Minimum)
+                    {
+                        Minimum = array[counter];
+                    }
+                }
+
+                return Minimum;
+            }
+        }
+
+        /// <summary>
+        /// Returns the minimal value of an array.
+        /// </summary>
+        /// <param name="array">The array of values</param>
+        public static float Min(float[] array)
+        {
+            float Minimum;
+
+            if (array.Length == 0)
+            {
+                throw new ArgumentException("The given array is empty", "array");
+            }
+            else
+            {
+                Minimum = array[0];
+
+                for (int counter = 1; counter < array.Length; counter++)
+                {
+                    if (array[counter] < Minimum)
+                    {
+                        Minimum = array[counter];
+                    }
+                }
+
+                return Minimum;
+            }
+        }
+
+        /// <summary>
+        /// Returns the minimal value of an array.
+        /// </summary>
+        /// <param name="array">The array of values</param>
+        public static double Min(double[] array)
+        {
+            double Minimum;
+
+            if (array.Length == 0)
+            {
+                throw new ArgumentException("The given array is empty", "array");
+            }
+            else
+            {
+                Minimum = array[0];
+
+                for (int counter = 1; counter < array.Length; counter++)
+                {
+                    if (array[counter] < Minimum)
+                    {
+                        Minimum = array[counter];
+                    }
+                }
+
+                return Minimum;
+            }
+        }
+
+        /// <summary>
+        /// Returns the maximal value of an array.
+        /// </summary>
+        /// <param name="array">The array of values</param>
+        public static byte Max(byte[] array)
+        {
+            byte Maximum;
+
+            if (array.Length == 0)
+            {
+                throw new ArgumentException("The given array is empty", "array");
+            }
+            else
+            {
+                Maximum = array[0];
+
+                for (int counter = 1; counter < array.Length; counter++)
+                {
+                    if (array[counter] > Maximum)
+                    {
+                        Maximum = array[counter];
+                    }
+                }
+
+                return Maximum;
+            }
+        }
+
+        /// <summary>
+        /// Returns the maximal value of an array.
+        /// </summary>
+        /// <param name="array">The array of values</param>
+        [CLSCompliant(false)]
+        public static sbyte Max(sbyte[] array)
+        {
+            sbyte Maximum;
+
+            if (array.Length == 0)
+            {
+                throw new ArgumentException("The given array is empty", "array");
+            }
+            else
+            {
+                Maximum = array[0];
+
+                for (int counter = 1; counter < array.Length; counter++)
+                {
+                    if (array[counter] > Maximum)
+                    {
+                        Maximum = array[counter];
+                    }
+                }
+
+                return Maximum;
+            }
+        }
+
+        /// <summary>
+        /// Returns the maximal value of an array.
+        /// </summary>
+        /// <param name="array">The array of values</param>
+        public static int Max(int[] array)
+        {
+            int Maximum;
+
+            if (array.Length == 0)
+            {
+                throw new ArgumentException("The given array is empty", "array");
+            }
+            else
+            {
+                Maximum = array[0];
+
+                for (int counter = 1; counter < array.Length; counter++)
+                {
+                    if (array[counter] > Maximum)
+                    {
+                        Maximum = array[counter];
+                    }
+                }
+
+                return Maximum;
+            }
+        }
+
+        /// <summary>
+        /// Returns the maximal value of an array.
+        /// </summary>
+        /// <param name="array">The array of values</param>
+        [CLSCompliant(false)]
+        public static uint Max(uint[] array)
+        {
+            uint Maximum;
+
+            if (array.Length == 0)
+            {
+                throw new ArgumentException("The given array is empty", "array");
+            }
+            else
+            {
+                Maximum = array[0];
+
+                for (int counter = 1; counter < array.Length; counter++)
+                {
+                    if (array[counter] > Maximum)
+                    {
+                        Maximum = array[counter];
+                    }
+                }
+
+                return Maximum;
+            }
+        }
+
+        /// <summary>
+        /// Returns the maximal value of an array.
+        /// </summary>
+        /// <param name="array">The array of values</param>
+        public static long Max(long[] array)
+        {
+            long Maximum;
+
+            if (array.Length == 0)
+            {
+                throw new ArgumentException("The given array is empty", "array");
+            }
+            else
+            {
+                Maximum = array[0];
+
+                for (int counter = 1; counter < array.Length; counter++)
+                {
+                    if (array[counter] > Maximum)
+                    {
+                        Maximum = array[counter];
+                    }
+                }
+
+                return Maximum;
+            }
+        }
+
+        /// <summary>
+        /// Returns the maximal value of an array.
+        /// </summary>
+        /// <param name="array">The array of values</param>
+        [CLSCompliant(false)]
+        public static ulong Max(ulong[] array)
+        {
+            ulong Maximum;
+
+            if (array.Length == 0)
+            {
+                throw new ArgumentException("The given array is empty", "array");
+            }
+            else
+            {
+                Maximum = array[0];
+
+                for (int counter = 1; counter < array.Length; counter++)
+                {
+                    if (array[counter] > Maximum)
+                    {
+                        Maximum = array[counter];
+                    }
+                }
+
+                return Maximum;
+            }
+        }
+
+        /// <summary>
+        /// Returns the maximal value of an array.
+        /// </summary>
+        /// <param name="array">The array of values</param>
+        public static short Max(short[] array)
+        {
+            short Maximum;
+
+            if (array.Length == 0)
+            {
+                throw new ArgumentException("The given array is empty", "array");
+            }
+            else
+            {
+                Maximum = array[0];
+
+                for (int counter = 1; counter < array.Length; counter++)
+                {
+                    if (array[counter] > Maximum)
+                    {
+                        Maximum = array[counter];
+                    }
+                }
+
+                return Maximum;
+            }
+        }
+
+        /// <summary>
+        /// Returns the maximal value of an array.
+        /// </summary>
+        /// <param name="array">The array of values</param>
+        [CLSCompliant(false)]
+        public static ushort Max(ushort[] array)
+        {
+            ushort Maximum;
+
+            if (array.Length == 0)
+            {
+                throw new ArgumentException("The given array is empty", "array");
+            }
+            else
+            {
+                Maximum = array[0];
+
+                for (int counter = 1; counter < array.Length; counter++)
+                {
+                    if (array[counter] > Maximum)
+                    {
+                        Maximum = array[counter];
+                    }
+                }
+
+                return Maximum;
+            }
+        }
+
+        /// <summary>
+        /// Returns the maximal value of an array.
+        /// </summary>
+        /// <param name="array">The array of values</param>
+        public static float Max(float[] array)
+        {
+            float Maximum;
+
+            if (array.Length == 0)
+            {
+                throw new ArgumentException("The given array is empty", "array");
+            }
+            else
+            {
+                Maximum = array[0];
+
+                for (int counter = 1; counter < array.Length; counter++)
+                {
+                    if (array[counter] > Maximum)
+                    {
+                        Maximum = array[counter];
+                    }
+                }
+
+                return Maximum;
+            }
+        }
+
+        /// <summary>
+        /// Returns the maximal value of an array.
+        /// </summary>
+        /// <param name="array">The array of values</param>
+        public static double Max(double[] array)
+        {
+            double Maximum;
+
+            if (array.Length == 0)
+            {
+                throw new ArgumentException("The given array is empty", "array");
+            }
+            else
+            {
+                Maximum = array[0];
+
+                for (int counter = 1; counter < array.Length; counter++)
+                {
+                    if (array[counter] > Maximum)
+                    {
+                        Maximum = array[counter];
+                    }
+                }
+
+                return Maximum;
+            }
+        }
+
+        /// <summary>
+        /// Returns the maximal value of an array.
+        /// </summary>
+        /// <param name="array">The array of values</param>
+        public static decimal Max(decimal[] array)
+        {
+            decimal Maximum;
+
+            if (array.Length == 0)
+            {
+                throw new ArgumentException("The given array is empty", "array");
+            }
+            else
+            {
+                Maximum = array[0];
+
+                for (int counter = 1; counter < array.Length; counter++)
+                {
+                    if (array[counter] > Maximum)
+                    {
+                        Maximum = array[counter];
+                    }
+                }
+
+                return Maximum;
+            }
+        }
+
+        /// <summary>
+        /// Swaps values of two <see cref="System.Byte"/> variables.
+        /// </summary>
+        /// <param name="val1">The first value.</param>
+        /// <param name="val2">The second value.</param>
+        public static void Swap(ref byte val1, ref byte val2)
+        {
+            byte dummy;
+
+            dummy = val1;
+            val1 = val2;
+            val2 = dummy;
+        }
+
+        /// <summary>
+        /// Swaps values of two <see cref="System.SByte"/> variables.
+        /// </summary>
+        /// <param name="val1">The first value.</param>
+        /// <param name="val2">The second value.</param>
+        [CLSCompliant(false)]
+        public static void Swap(ref sbyte val1, ref sbyte val2)
+        {
+            sbyte dummy;
+
+            dummy = val1;
+            val1 = val2;
+            val2 = dummy;
+        }
+
+        /// <summary>
+        /// Swaps values of two <see cref="System.Int16"/> variables.
+        /// </summary>
+        /// <param name="val1">The first value.</param>
+        /// <param name="val2">The second value.</param>
+        public static void Swap(ref short val1, ref short val2)
+        {
+            short dummy;
+
+            dummy = val1;
+            val1 = val2;
+            val2 = dummy;
+        }
+
+        /// <summary>
+        /// Swaps values of two <see cref="System.UInt16"/> variables.
+        /// </summary>
+        /// <param name="val1">The first value.</param>
+        /// <param name="val2">The second value.</param>
+        [CLSCompliant(false)]
+        public static void Swap(ref ushort val1, ref ushort val2)
+        {
+            ushort dummy;
+
+            dummy = val1;
+            val1 = val2;
+            val2 = dummy;
+        }
+
+        /// <summary>
+        /// Swaps values of two <see cref="System.Int32"/> variables.
+        /// </summary>
+        /// <param name="val1">The first value.</param>
+        /// <param name="val2">The second value.</param>
+        public static void Swap(ref int val1, ref int val2)
+        {
+            int dummy;
+
+            dummy = val1;
+            val1 = val2;
+            val2 = dummy;
+        }
+
+        /// <summary>
+        /// Swaps values of two <see cref="System.UInt32"/> variables.
+        /// </summary>
+        /// <param name="val1">The first value.</param>
+        /// <param name="val2">The second value.</param>
+        [CLSCompliant(false)]
+        public static void Swap(ref uint val1, ref uint val2)
+        {
+            uint dummy;
+
+            dummy = val1;
+            val1 = val2;
+            val2 = dummy;
+        }
+
+        /// <summary>
+        /// Swaps values of two <see cref="System.Int64"/> variables.
+        /// </summary>
+        /// <param name="val1">The first value.</param>
+        /// <param name="val2">The second value.</param>
+        public static void Swap(ref long val1, ref long val2)
+        {
+            long dummy;
+
+            dummy = val1;
+            val1 = val2;
+            val2 = dummy;
+        }
+
+        /// <summary>
+        /// Swaps values of two <see cref="System.UInt64"/> variables.
+        /// </summary>
+        /// <param name="val1">The first value.</param>
+        /// <param name="val2">The second value.</param>
+        [CLSCompliant(false)]
+        public static void Swap(ref ulong val1, ref ulong val2)
+        {
+            ulong dummy;
+
+            dummy = val1;
+            val1 = val2;
+            val2 = dummy;
+        }
+
+        /// <summary>
+        /// Swaps values of two <see cref="System.Single"/> variables.
+        /// </summary>
+        /// <param name="val1">The first value.</param>
+        /// <param name="val2">The second value.</param>
+        public static void Swap(ref float val1, ref float val2)
+        {
+            float dummy;
+
+            dummy = val1;
+            val1 = val2;
+            val2 = dummy;
+        }
+
+        /// <summary>
+        /// Swaps values of two <see cref="System.Double"/> variables.
+        /// </summary>
+        /// <param name="val1">The first value.</param>
+        /// <param name="val2">The second value.</param>
+        public static void Swap(ref double val1, ref double val2)
+        {
+            double dummy;
+
+            dummy = val1;
+            val1 = val2;
+            val2 = dummy;
+        }
+
+        /// <summary>
+        /// Swaps values of two <see cref="System.Decimal"/> variables.
+        /// </summary>
+        /// <param name="val1">The first value.</param>
+        /// <param name="val2">The second value.</param>
+        public static void Swap(ref decimal val1, ref decimal val2)
+        {
+            decimal dummy;
+
+            dummy = val1;
+            val1 = val2;
+            val2 = dummy;
+        }
+
+        public static byte HighNibble(byte value)
+        {
+            return (byte)(value >> 4);
+        }
+
+        public static byte LowNibble(byte value)
+        {
+            return (byte)(value & 0x0F);
+        }
+
+        [CLSCompliant(false)]
+        public static byte HighNibble(ushort value)
+        {
+            return (byte)(value >> 8);
+        }
+
+        [CLSCompliant(false)]
+        public static byte LowNibble(ushort value)
+        {
+            return (byte)(value & 0xFF);
+        }
+
+        [CLSCompliant(false)]
+        public static ushort HighNibble(uint value)
+        {
+            return (ushort)(value >> 16);
+        }
+
+        [CLSCompliant(false)]
+        public static ushort LowNibble(uint value)
+        {
+            return (ushort)(value & 0xFFFF);
+        }
+
+        [CLSCompliant(false)]
+        public static uint HighNibble(ulong value)
+        {
+            return (uint)(value >> 32);
+        }
+
+        [CLSCompliant(false)]
+        public static uint LowNibble(ulong value)
+        {
+            return (uint)(value & 0xFFFFFFFF);
         }
     }
 }

@@ -1,16 +1,3 @@
-// ----------------------------------------------------------------------------
-// FILE		: cpuinfo.cs
-// VERSION	: 1.1.1
-// COMMENT	: Defines functionality for displaying detailed information about the
-//            computer CPU. Makes use of "assembler.dll", which is written in "C"
-//            and "Assembler commands" (source code included).
-// WEB      : http://www.taylaninan.com/opengl-dotnet
-// AUTHOR   : TAYLAN INAN
-// E-MAIL   : info@taylaninan.com
-// DATE     : 2014-2017
-// LICENSE  : FREE FOR EDUCATIONAL, PERSONAL AND COMMERCIAL USAGE
-// ----------------------------------------------------------------------------
-
 using System;
 using System.Runtime.InteropServices;
 using System.Collections.Generic;
@@ -18,6 +5,11 @@ using Microsoft.Win32;
 
 namespace AlienEngine.Core.Utils
 {
+    /// <summary>
+    /// Defines functionality for displaying detailed information about the
+    /// computer CPU. Makes use of "assembler.dll", which is written in "C"
+    /// and "Assembler commands".
+    /// </summary>
     internal static class CPUInfo
     {
         private const string Library = "Assembler.dll";
@@ -72,137 +64,173 @@ namespace AlienEngine.Core.Utils
             Vortex = 12
         }
 
+        public enum Bits : uint
+        {
+            Bit00 = 0x00000001U,
+            Bit01 = 0x00000002U,
+            Bit02 = 0x00000004U,
+            Bit03 = 0x00000008U,
+            Bit04 = 0x00000010U,
+            Bit05 = 0x00000020U,
+            Bit06 = 0x00000040U,
+            Bit07 = 0x00000080U,
+            Bit08 = 0x00000100U,
+            Bit09 = 0x00000200U,
+            Bit10 = 0x00000400U,
+            Bit11 = 0x00000800U,
+            Bit12 = 0x00001000U,
+            Bit13 = 0x00002000U,
+            Bit14 = 0x00004000U,
+            Bit15 = 0x00008000U,
+            Bit16 = 0x00010000U,
+            Bit17 = 0x00020000U,
+            Bit18 = 0x00040000U,
+            Bit19 = 0x00080000U,
+            Bit20 = 0x00100000U,
+            Bit21 = 0x00200000U,
+            Bit22 = 0x00400000U,
+            Bit23 = 0x00800000U,
+            Bit24 = 0x01000000U,
+            Bit25 = 0x02000000U,
+            Bit26 = 0x04000000U,
+            Bit27 = 0x08000000U,
+            Bit28 = 0x10000000U,
+            Bit29 = 0x20000000U,
+            Bit30 = 0x40000000U,
+            Bit31 = 0x80000000U
+        }
+
         // Returned in CPUID(1).EDX
         private enum StandardFlags1_EDX : uint
         {
-            FPU = ValueX.Bits.Bit00,			        // Bit 00 = Floating point on chip
-            VME = ValueX.Bits.Bit01,			        // Bit 01 = Virtual Mode Extension
-            DE = ValueX.Bits.Bit02,		                // Bit 02 = Debugging Extension
-            PSE = ValueX.Bits.Bit03,			        // Bit 03 = Page Size Extension
-            TSC = ValueX.Bits.Bit04,			        // Bit 04 = Time Stamp Counter
-            MSR = ValueX.Bits.Bit05,			        // Bit 05 = Model Specific Registers
-            PAE = ValueX.Bits.Bit06,			        // Bit 06 = Physical Address Extension
-            MCE = ValueX.Bits.Bit07,			        // Bit 07 = Machine Check Exception
-            CX8 = ValueX.Bits.Bit08,			        // Bit 08 = CMPXCHG8 Instruction Support
-            APIC = ValueX.Bits.Bit09,		            // Bit 09 = APIC Support
+            FPU = Bits.Bit00,			        // Bit 00 = Floating point on chip
+            VME = Bits.Bit01,			        // Bit 01 = Virtual Mode Extension
+            DE = Bits.Bit02,		                // Bit 02 = Debugging Extension
+            PSE = Bits.Bit03,			        // Bit 03 = Page Size Extension
+            TSC = Bits.Bit04,			        // Bit 04 = Time Stamp Counter
+            MSR = Bits.Bit05,			        // Bit 05 = Model Specific Registers
+            PAE = Bits.Bit06,			        // Bit 06 = Physical Address Extension
+            MCE = Bits.Bit07,			        // Bit 07 = Machine Check Exception
+            CX8 = Bits.Bit08,			        // Bit 08 = CMPXCHG8 Instruction Support
+            APIC = Bits.Bit09,		            // Bit 09 = APIC Support
             // Bit 10 = Reserved
-            FSC = ValueX.Bits.Bit11,			        // Bit 11 = Fast System Call
-            MTRR = ValueX.Bits.Bit12,		            // Bit 12 = Memory Type Range Registers
-            PGE = ValueX.Bits.Bit13,			        // Bit 13 = Page Global Enable
-            MCA = ValueX.Bits.Bit14,			        // Bit 14 = Machine Check Architecture
-            CMOV = ValueX.Bits.Bit15,		            // Bit 15 = Conditional Move Instruction Support
-            PAT = ValueX.Bits.Bit16,			        // Bit 16 = Page Attribute Table
-            PSE36 = ValueX.Bits.Bit17,		            // Bit 17 = 36bit Page Size Extension
-            SERIAL = ValueX.Bits.Bit18,		            // Bit 18 = Processor Serial Number
-            CLFSH = ValueX.Bits.Bit19,                  // Bit 19 = CLFLUSH Instruction Support
+            FSC = Bits.Bit11,			        // Bit 11 = Fast System Call
+            MTRR = Bits.Bit12,		            // Bit 12 = Memory Type Range Registers
+            PGE = Bits.Bit13,			        // Bit 13 = Page Global Enable
+            MCA = Bits.Bit14,			        // Bit 14 = Machine Check Architecture
+            CMOV = Bits.Bit15,		            // Bit 15 = Conditional Move Instruction Support
+            PAT = Bits.Bit16,			        // Bit 16 = Page Attribute Table
+            PSE36 = Bits.Bit17,		            // Bit 17 = 36bit Page Size Extension
+            SERIAL = Bits.Bit18,		            // Bit 18 = Processor Serial Number
+            CLFSH = Bits.Bit19,                  // Bit 19 = CLFLUSH Instruction Support
             // Bit 20 = Reserved
-            DS = ValueX.Bits.Bit21,			            // Bit 21 = Debug Store
-            ACPI = ValueX.Bits.Bit22,		            // Bit 22 = CPU Thermal and Speed Control
-            MMX = ValueX.Bits.Bit23,			        // Bit 23 = MMX Support
-            FXSR = ValueX.Bits.Bit24,		            // Bit 24 = Fast Floating Point Save and Restore
-            SSE = ValueX.Bits.Bit25,			        // Bit 25 = Streaming SIMD Support
-            SSE2 = ValueX.Bits.Bit26,		            // Bit 26 = Streaming SIMD 2 Support
-            SS = ValueX.Bits.Bit27,			            // Bit 27 = Self-Snoop
-            HTT = ValueX.Bits.Bit28,			        // Bit 28 = Hyper-Threading Technology
-            TM = ValueX.Bits.Bit29,			            // Bit 29 = Thermal Monitor
-            IA64 = ValueX.Bits.Bit30,                   // Bit 30 = IA64 Processor Emulating x86
-            SBF = ValueX.Bits.Bit31		                // Bit 31 = Signal Break on FERR
+            DS = Bits.Bit21,			            // Bit 21 = Debug Store
+            ACPI = Bits.Bit22,		            // Bit 22 = CPU Thermal and Speed Control
+            MMX = Bits.Bit23,			        // Bit 23 = MMX Support
+            FXSR = Bits.Bit24,		            // Bit 24 = Fast Floating Point Save and Restore
+            SSE = Bits.Bit25,			        // Bit 25 = Streaming SIMD Support
+            SSE2 = Bits.Bit26,		            // Bit 26 = Streaming SIMD 2 Support
+            SS = Bits.Bit27,			            // Bit 27 = Self-Snoop
+            HTT = Bits.Bit28,			        // Bit 28 = Hyper-Threading Technology
+            TM = Bits.Bit29,			            // Bit 29 = Thermal Monitor
+            IA64 = Bits.Bit30,                   // Bit 30 = IA64 Processor Emulating x86
+            SBF = Bits.Bit31		                // Bit 31 = Signal Break on FERR
         }
 
         // Returned by CPUID(1).ECX
         private enum StandardFlags1_ECX : uint
         {
-            SSE3 = ValueX.Bits.Bit00,                   // Bit 00 = SSE3
-            PCLMULQDQ = ValueX.Bits.Bit01,              // Bit 01 = PCLMULQDQ Support
-            DS64 = ValueX.Bits.Bit02,                   // Bit 02 = Debug Store 64bit
-            MONITOR = ValueX.Bits.Bit03,                // Bit 03 = MONITOR and MWAIT instructions
-            DSCPL = ValueX.Bits.Bit04,                  // Bit 04 = Debug Store CPL Qualified
-            VMX = ValueX.Bits.Bit05,                    // Bit 05 = Virtual Machine eXtensions
-            SMX = ValueX.Bits.Bit06,                    // Bit 06 = Safer Mode Extensions
-            ESS = ValueX.Bits.Bit07,                    // Bit 07 = Enhanced SpeedStep
-            TM2 = ValueX.Bits.Bit08,                    // Bit 08 = Thermal Monitor 2
-            SSSE3 = ValueX.Bits.Bit09,                  // Bit 09 = Supplemental SSE3
-            CNXTID = ValueX.Bits.Bit10,                 // Bit 10 = L1 Context ID
+            SSE3 = Bits.Bit00,                   // Bit 00 = SSE3
+            PCLMULQDQ = Bits.Bit01,              // Bit 01 = PCLMULQDQ Support
+            DS64 = Bits.Bit02,                   // Bit 02 = Debug Store 64bit
+            MONITOR = Bits.Bit03,                // Bit 03 = MONITOR and MWAIT instructions
+            DSCPL = Bits.Bit04,                  // Bit 04 = Debug Store CPL Qualified
+            VMX = Bits.Bit05,                    // Bit 05 = Virtual Machine eXtensions
+            SMX = Bits.Bit06,                    // Bit 06 = Safer Mode Extensions
+            ESS = Bits.Bit07,                    // Bit 07 = Enhanced SpeedStep
+            TM2 = Bits.Bit08,                    // Bit 08 = Thermal Monitor 2
+            SSSE3 = Bits.Bit09,                  // Bit 09 = Supplemental SSE3
+            CNXTID = Bits.Bit10,                 // Bit 10 = L1 Context ID
             // Bit 11 = Reserved
-            FMA = ValueX.Bits.Bit12,                    // Bit 12 = Fused Multiply Add
-            CX16 = ValueX.Bits.Bit13,                   // Bit 13 = CMPXCHG16B
-            XTPR = ValueX.Bits.Bit14,                   // Bit 14 = XTPR Update Control
-            PDCM = ValueX.Bits.Bit15,                   // Bit 15 = Perfmon and Debug Capability
+            FMA = Bits.Bit12,                    // Bit 12 = Fused Multiply Add
+            CX16 = Bits.Bit13,                   // Bit 13 = CMPXCHG16B
+            XTPR = Bits.Bit14,                   // Bit 14 = XTPR Update Control
+            PDCM = Bits.Bit15,                   // Bit 15 = Perfmon and Debug Capability
             // Bit 16 = Reserved
-            PCID = ValueX.Bits.Bit17,                   // Bit 17 = Process Context Identifiers
-            DCA = ValueX.Bits.Bit18,                    // Bit 18 = Direct Cache Access
-            SSE4_1 = ValueX.Bits.Bit19,                 // Bit 19 = SSE4.1
-            SSE4_2 = ValueX.Bits.Bit20,                 // Bit 20 = SSE4.2
-            X2APIC = ValueX.Bits.Bit21,                 // Bit 21 = Extended xAPIC Support
-            MOVBE = ValueX.Bits.Bit22,                  // Bit 22 = MOVBE Instruction
-            POPCNT = ValueX.Bits.Bit23,                 // Bit 23 = POPCNT Instruction
-            TSCDEADLINE = ValueX.Bits.Bit24,            // Bit 24 = Time Stamp Counter Deadline
-            AES = ValueX.Bits.Bit25,                    // Bit 25 = AES Instruction Extensions
-            XSAVE = ValueX.Bits.Bit26,                  // Bit 26 = XSAVE/XSTOR States
-            OSXSAVE = ValueX.Bits.Bit27,                // Bit 27 = OS-Enabled Extended State Management
-            AVX = ValueX.Bits.Bit28,                    // Bit 28 = Advanced Vector Extensions
-            F16C = ValueX.Bits.Bit29,                   // Bit 29 = Half-Precision Convert
-            RDRAND = ValueX.Bits.Bit30,					// Bit 30 = Read Random Number
-            HV = ValueX.Bits.Bit31						// Bit 31 = HyperVisor Present (and intercepting this bit, to advertise its presence)
+            PCID = Bits.Bit17,                   // Bit 17 = Process Context Identifiers
+            DCA = Bits.Bit18,                    // Bit 18 = Direct Cache Access
+            SSE4_1 = Bits.Bit19,                 // Bit 19 = SSE4.1
+            SSE4_2 = Bits.Bit20,                 // Bit 20 = SSE4.2
+            X2APIC = Bits.Bit21,                 // Bit 21 = Extended xAPIC Support
+            MOVBE = Bits.Bit22,                  // Bit 22 = MOVBE Instruction
+            POPCNT = Bits.Bit23,                 // Bit 23 = POPCNT Instruction
+            TSCDEADLINE = Bits.Bit24,            // Bit 24 = Time Stamp Counter Deadline
+            AES = Bits.Bit25,                    // Bit 25 = AES Instruction Extensions
+            XSAVE = Bits.Bit26,                  // Bit 26 = XSAVE/XSTOR States
+            OSXSAVE = Bits.Bit27,                // Bit 27 = OS-Enabled Extended State Management
+            AVX = Bits.Bit28,                    // Bit 28 = Advanced Vector Extensions
+            F16C = Bits.Bit29,                   // Bit 29 = Half-Precision Convert
+            RDRAND = Bits.Bit30,					// Bit 30 = Read Random Number
+            HV = Bits.Bit31						// Bit 31 = HyperVisor Present (and intercepting this bit, to advertise its presence)
         }
 
         // Returned by CPUID(7).EBX; Information taken from http://sandpile.org/x86/cpuid.htm
         private enum StandardFlags7_EBX : uint
         {
-            FSGSBASE = ValueX.Bits.Bit00,               // Bit 00 = CR4.FSGSBASE and [RD|WR][FS|GS]BASE
-            TSC_ADJUST = ValueX.Bits.Bit01,             // Bit 01 = TSC_ADJUST
-            SGX = ValueX.Bits.Bit02,                // Bit 02 = CR4.SEE, PRMRR, ENCLS and ENCLU, standard level 0000_0012h
-            BMI1 = ValueX.Bits.Bit03,               // Bit 03 = BMI1 and TZCNT
-            HLE = ValueX.Bits.Bit04,                // Bit 04 = XAQUIRE:, XRELEASE:, XTEST
-            AVX2 = ValueX.Bits.Bit05,               // Bit 05 = AVX2 (including VSIB)
-            FPDP = ValueX.Bits.Bit06,               // Bit 06 = FP_DP for non-control instructions only if unmasked exception(s)
-            SMEP = ValueX.Bits.Bit07,               // Bit 07 = CR4.SMEP
-            BMI2 = ValueX.Bits.Bit08,               // Bit 08 = BMI2
-            ERMS = ValueX.Bits.Bit09,               // Bit 09 = enhanced REP MOVSB/STOSB (while MISC_ENABLE.FSE=1)
-            INVPCID = ValueX.Bits.Bit10,                // Bit 10 = INVPCID
-            RTM = ValueX.Bits.Bit11,                // Bit 11 = XBEGIN, XABORT, XEND, XTEST, DR7.RTM, DR6.RTM
-            PQM = ValueX.Bits.Bit12,                // Bit 12 = platform quality of service monitoring
-            FPCSDS = ValueX.Bits.Bit13,             // Bit 13 = FP_CS and FP_DS always saved as 0000h
-            MPX = ValueX.Bits.Bit14,                // Bit 14 = XCR0.Breg, XCR0.BNDCSR, BNDCFGS/BNDCFGU/BNDSTATUS and BND0...BND3, BND:, MPX
-            PQE = ValueX.Bits.Bit15,                // Bit 15 = platform quality of service enforcement
-            AVX512F = ValueX.Bits.Bit16,                // Bit 16 = AVX512F, EVEX, ZMM0...31, K0...7, modifiers, VSIB512, disp8*N
-            AVX512DQ = ValueX.Bits.Bit17,               // Bit 17 = AVX512DQ
-            RDSEED = ValueX.Bits.Bit18,             // Bit 18 = RDSEED
-            ADX = ValueX.Bits.Bit19,                // Bit 19 = ADCX and ADOX
-            SMAP = ValueX.Bits.Bit20,               // Bit 20 = CR4.SMAP, CLAC and STAC
-            AVX512IFMA = ValueX.Bits.Bit21,             // Bit 21 = AVX512IFMA
-            PCOMMIT = ValueX.Bits.Bit22,                // Bit 22 = PCOMMIT
-            CLFLUSHOPT = ValueX.Bits.Bit23,             // Bit 23 = CLFLUSHOPT
-            CLWB = ValueX.Bits.Bit24,               // Bit 24 = CLWB
-            PT = ValueX.Bits.Bit25,             // Bit 25 = processor trace, standard level 0000_0014h
-            AVX512PF = ValueX.Bits.Bit26,               // Bit 26 = AVX512PF
-            AVX512ER = ValueX.Bits.Bit27,               // Bit 27 = AVX512ER
-            AVX512CD = ValueX.Bits.Bit28,               // Bit 28 = AVX512CD
-            SHA = ValueX.Bits.Bit29,                // Bit 29 = SHA
-            AVX512BW = ValueX.Bits.Bit30,               // Bit 30 = AVX512BW
-            AVX512VL = ValueX.Bits.Bit31                // Bit 31 = AVX512VL
+            FSGSBASE = Bits.Bit00,               // Bit 00 = CR4.FSGSBASE and [RD|WR][FS|GS]BASE
+            TSC_ADJUST = Bits.Bit01,             // Bit 01 = TSC_ADJUST
+            SGX = Bits.Bit02,                // Bit 02 = CR4.SEE, PRMRR, ENCLS and ENCLU, standard level 0000_0012h
+            BMI1 = Bits.Bit03,               // Bit 03 = BMI1 and TZCNT
+            HLE = Bits.Bit04,                // Bit 04 = XAQUIRE:, XRELEASE:, XTEST
+            AVX2 = Bits.Bit05,               // Bit 05 = AVX2 (including VSIB)
+            FPDP = Bits.Bit06,               // Bit 06 = FP_DP for non-control instructions only if unmasked exception(s)
+            SMEP = Bits.Bit07,               // Bit 07 = CR4.SMEP
+            BMI2 = Bits.Bit08,               // Bit 08 = BMI2
+            ERMS = Bits.Bit09,               // Bit 09 = enhanced REP MOVSB/STOSB (while MISC_ENABLE.FSE=1)
+            INVPCID = Bits.Bit10,                // Bit 10 = INVPCID
+            RTM = Bits.Bit11,                // Bit 11 = XBEGIN, XABORT, XEND, XTEST, DR7.RTM, DR6.RTM
+            PQM = Bits.Bit12,                // Bit 12 = platform quality of service monitoring
+            FPCSDS = Bits.Bit13,             // Bit 13 = FP_CS and FP_DS always saved as 0000h
+            MPX = Bits.Bit14,                // Bit 14 = XCR0.Breg, XCR0.BNDCSR, BNDCFGS/BNDCFGU/BNDSTATUS and BND0...BND3, BND:, MPX
+            PQE = Bits.Bit15,                // Bit 15 = platform quality of service enforcement
+            AVX512F = Bits.Bit16,                // Bit 16 = AVX512F, EVEX, ZMM0...31, K0...7, modifiers, VSIB512, disp8*N
+            AVX512DQ = Bits.Bit17,               // Bit 17 = AVX512DQ
+            RDSEED = Bits.Bit18,             // Bit 18 = RDSEED
+            ADX = Bits.Bit19,                // Bit 19 = ADCX and ADOX
+            SMAP = Bits.Bit20,               // Bit 20 = CR4.SMAP, CLAC and STAC
+            AVX512IFMA = Bits.Bit21,             // Bit 21 = AVX512IFMA
+            PCOMMIT = Bits.Bit22,                // Bit 22 = PCOMMIT
+            CLFLUSHOPT = Bits.Bit23,             // Bit 23 = CLFLUSHOPT
+            CLWB = Bits.Bit24,               // Bit 24 = CLWB
+            PT = Bits.Bit25,             // Bit 25 = processor trace, standard level 0000_0014h
+            AVX512PF = Bits.Bit26,               // Bit 26 = AVX512PF
+            AVX512ER = Bits.Bit27,               // Bit 27 = AVX512ER
+            AVX512CD = Bits.Bit28,               // Bit 28 = AVX512CD
+            SHA = Bits.Bit29,                // Bit 29 = SHA
+            AVX512BW = Bits.Bit30,               // Bit 30 = AVX512BW
+            AVX512VL = Bits.Bit31                // Bit 31 = AVX512VL
         }
 
         // Returned by CPUID(7).ECX
         private enum StandardFlags7_ECX : uint
         {
-            PREFETCHWT1 = ValueX.Bits.Bit00,            // Bit 00 = PREFETCHWT1
-            AVX512VBMI = ValueX.Bits.Bit01,         // Bit 01 = AVX512VBMI
-            UMIP = ValueX.Bits.Bit02,           // Bit 02 = CR4.UMIP for #GP on SGDT, SIDT, SLDT, STR, and SMSW if CPL>0
-            PKU = ValueX.Bits.Bit03,            // Bit 03 = XCR0.PKRU, CR4.PKE, PKRU, RDPKRU/WRPKRU, PxE.PK, #PF.PK
-            OSPKE = ValueX.Bits.Bit04,          // Bit 04 = non-privileged read-only copy of current CR4.PKE value
+            PREFETCHWT1 = Bits.Bit00,            // Bit 00 = PREFETCHWT1
+            AVX512VBMI = Bits.Bit01,         // Bit 01 = AVX512VBMI
+            UMIP = Bits.Bit02,           // Bit 02 = CR4.UMIP for #GP on SGDT, SIDT, SLDT, STR, and SMSW if CPL>0
+            PKU = Bits.Bit03,            // Bit 03 = XCR0.PKRU, CR4.PKE, PKRU, RDPKRU/WRPKRU, PxE.PK, #PF.PK
+            OSPKE = Bits.Bit04,          // Bit 04 = non-privileged read-only copy of current CR4.PKE value
                                                 // Bits 05-06 = Reserved			
-            CET = ValueX.Bits.Bit07,            // Bit 07 = CR4.CET, XSS.CET_{U,S}, {U,S}_CET MSRs, PL{0,1,2,3}_SSP MSRs, 
+            CET = Bits.Bit07,            // Bit 07 = CR4.CET, XSS.CET_{U,S}, {U,S}_CET MSRs, PL{0,1,2,3}_SSP MSRs, 
                                                 // IST_SSP MSR and 8-entry interrupt SSP table, #CP, SSP, TSS32.SSP,INCSSP,
                                                 // RDSSP, SAVESSP, RSTORSSP, SETSSBSY, CLRSSBSY, WRSS, WRUSS, ENDBR32, ENDBR64, CALL/JMP Rv + no track (3Eh)
                                                 // Bits 08-13 = Reserved
-            AVX512VPDQ = ValueX.Bits.Bit14,         // Bit 14 = VPOPCNT{D,Q}
+            AVX512VPDQ = Bits.Bit14,         // Bit 14 = VPOPCNT{D,Q}
                                                     // Bit 15 = Reserved
-            VA57 = ValueX.Bits.Bit16,           // Bit 16 = 5-level paging, CR4.VA57
+            VA57 = Bits.Bit16,           // Bit 16 = 5-level paging, CR4.VA57
                                                 // Bits 17-21 = Reserved
-            RDPID = ValueX.Bits.Bit22,          // Bit 22 = RDPID, TSC_AUX
+            RDPID = Bits.Bit22,          // Bit 22 = RDPID, TSC_AUX
                                                 // Bits 23-29 = Reserved
-            SGX_LC = ValueX.Bits.Bit30              // Bit 30 = SGX launch configuration
+            SGX_LC = Bits.Bit30              // Bit 30 = SGX launch configuration
                                                     // Bit 31 = Reserved
         }
 
@@ -210,8 +238,8 @@ namespace AlienEngine.Core.Utils
         private enum StandardFlags7_EDX : uint
         {
             // Bits 00-01 = Reserved
-            AVX512QVNNIW = ValueX.Bits.Bit02,           // Bit 02 = VP4DPWSSD[S]
-            AVX512QFMA = ValueX.Bits.Bit03          // Bit 03 = V4F[N]MADD{PS,SS}
+            AVX512QVNNIW = Bits.Bit02,           // Bit 02 = VP4DPWSSD[S]
+            AVX512QFMA = Bits.Bit03          // Bit 03 = V4F[N]MADD{PS,SS}
                                                     // Bits 04-31 = Reserved
         }
 
@@ -219,14 +247,14 @@ namespace AlienEngine.Core.Utils
         private enum IntelExtendedFlags1_EDX : uint
         {
             // Bits 00-10 = Reserved
-            SYSCALLSYSRET = ValueX.Bits.Bit11,          // Bit 11 = The processor supports the SYSCALL and SYSRET instructions
+            SYSCALLSYSRET = Bits.Bit11,          // Bit 11 = The processor supports the SYSCALL and SYSRET instructions
             // Bits 12-19 = Reserved
-            NX = ValueX.Bits.Bit20,                     // Bit 20 = Execution Disable Bit
+            NX = Bits.Bit20,                     // Bit 20 = Execution Disable Bit
             // Bits 21-25 = Reserved
-            PAGE1GB = ValueX.Bits.Bit26,                // Bit 26 = The processor supports 1-GB pages
-            RDTSCP = ValueX.Bits.Bit27,                 // Bit 27 = The processor supports RDTSCP and IA32_TSC_AUX
+            PAGE1GB = Bits.Bit26,                // Bit 26 = The processor supports 1-GB pages
+            RDTSCP = Bits.Bit27,                 // Bit 27 = The processor supports RDTSCP and IA32_TSC_AUX
             // Bit 28 = Reserved
-            INTEL64 = ValueX.Bits.Bit29,                // Bit 29 = The processor supports Intel® 64 Architecture extensions to the IA-32 Architecture
+            INTEL64 = Bits.Bit29,                // Bit 29 = The processor supports Intel® 64 Architecture extensions to the IA-32 Architecture
             // Bit 30 = Reserved
             // Bit 31 = Reserved
         }
@@ -234,7 +262,7 @@ namespace AlienEngine.Core.Utils
         // Returned in CPUID(0x80000001).ECX (Intel)
         private enum IntelExtendedFlags1_ECX : uint
         {
-            LAHFSAHF = ValueX.Bits.Bit00,               // Bit 00 = LAHF and SAHF instruction support
+            LAHFSAHF = Bits.Bit00,               // Bit 00 = LAHF and SAHF instruction support
             // Bits 01-31 = Reserved
         }
 
@@ -252,7 +280,7 @@ namespace AlienEngine.Core.Utils
             // Bit 08 = CMPXCHG8B, same as CPUID(1).EDX
             // Bit 09 = APIC, same as CPUID(1).EDX
             // Bit 10 = Reserved
-            SYSCALLSYSRET = ValueX.Bits.Bit11,          // Bit 11 = SYSCALL and SYSRET instructions
+            SYSCALLSYSRET = Bits.Bit11,          // Bit 11 = SYSCALL and SYSRET instructions
             // Bit 12 = MTRR, same as CPUID(1).EDX
             // Bit 13 = PGE, same as CPUID(1).EDX
             // Bit 14 = MCA, same as CPUID(1).EDX
@@ -261,52 +289,52 @@ namespace AlienEngine.Core.Utils
             // Bit 17 = PSE36, same as CPUID(1).EDX
             // Bit 18 = Reserved
             // Bit 19 = Reserved
-            NX = ValueX.Bits.Bit20,                     // Bit 20 = No Execute page protection
+            NX = Bits.Bit20,                     // Bit 20 = No Execute page protection
             // Bit 21 = Reserved
-            MMXEXT = ValueX.Bits.Bit22,                 // Bit 22 = AMD MMX Extensions
+            MMXEXT = Bits.Bit22,                 // Bit 22 = AMD MMX Extensions
             // Bit 23 = MMX, same as CPUID(1).EDX
             // Bit 24 = FXSR, same as CPUID(1).EDX
-            FFXSR = ValueX.Bits.Bit25,                  // Bit 25 = Fast FXSR
-            PAGE1GB = ValueX.Bits.Bit26,                // Bit 26 = 1 GB large page support
-            RDTSCP = ValueX.Bits.Bit27,                 // Bit 27 = RDTSCP instruction support
+            FFXSR = Bits.Bit25,                  // Bit 25 = Fast FXSR
+            PAGE1GB = Bits.Bit26,                // Bit 26 = 1 GB large page support
+            RDTSCP = Bits.Bit27,                 // Bit 27 = RDTSCP instruction support
             // Bit 28 = Reserved
-            LM = ValueX.Bits.Bit29,                     // Bit 29 = Long Mode
-            THREEDNOWEXT = ValueX.Bits.Bit30,           // Bit 30 = 3DNOW! Extension Instructions
-            THREEDNOW = ValueX.Bits.Bit31               // Bit 31 = 3DNOW! Instructions
+            LM = Bits.Bit29,                     // Bit 29 = Long Mode
+            THREEDNOWEXT = Bits.Bit30,           // Bit 30 = 3DNOW! Extension Instructions
+            THREEDNOW = Bits.Bit31               // Bit 31 = 3DNOW! Instructions
         }
 
         // Returned in CPUID(0x80000001).ECX (AMD)
         private enum AMDExtendedFlags1_ECX : uint
         {
-            LAHFSAHF = ValueX.Bits.Bit00,               // Bit 00 = LAHF and SAHF instruction support in 64-bit mode
-            CMPLEGACY = ValueX.Bits.Bit01,              // Bit 01 = Core multi-processing legacy mode
-            SVM = ValueX.Bits.Bit02,                    // Bit 02 = Secure Virtual Machine
-            EXTAPICSPACE = ValueX.Bits.Bit03,           // Bit 03 = extended APIC space
-            ALTMOVCR8 = ValueX.Bits.Bit04,              // Bit 04 = LOCK MOV CR0 means MOV CR8
-            ABM = ValueX.Bits.Bit05,                    // Bit 05 = advanced bit manipulation. LZCNT instruction support
-            SSE4A = ValueX.Bits.Bit06,                  // Bit 06 = EXTRQ, INSERTQ, MOVNTSS, and MOVNTSD instruction support
-            MISALIGNSSE = ValueX.Bits.Bit07,            // Bit 07 = misaligned SSE mode
-            THREEDNOWPREFETCH = ValueX.Bits.Bit08,      // Bit 08 = 3DNowPrefetch
-            OSVW = ValueX.Bits.Bit09,                   // Bit 09 = OS visible workaround
-            IBS = ValueX.Bits.Bit10,                    // Bit 10 = instruction based sampling
-            XOP = ValueX.Bits.Bit11,                    // Bit 11 = extended operation support
-            SKINIT = ValueX.Bits.Bit12,                 // Bit 12 = SKINIT and STGI are supported
-            WDT = ValueX.Bits.Bit13,                    // Bit 13 = watchdog timer support
+            LAHFSAHF = Bits.Bit00,               // Bit 00 = LAHF and SAHF instruction support in 64-bit mode
+            CMPLEGACY = Bits.Bit01,              // Bit 01 = Core multi-processing legacy mode
+            SVM = Bits.Bit02,                    // Bit 02 = Secure Virtual Machine
+            EXTAPICSPACE = Bits.Bit03,           // Bit 03 = extended APIC space
+            ALTMOVCR8 = Bits.Bit04,              // Bit 04 = LOCK MOV CR0 means MOV CR8
+            ABM = Bits.Bit05,                    // Bit 05 = advanced bit manipulation. LZCNT instruction support
+            SSE4A = Bits.Bit06,                  // Bit 06 = EXTRQ, INSERTQ, MOVNTSS, and MOVNTSD instruction support
+            MISALIGNSSE = Bits.Bit07,            // Bit 07 = misaligned SSE mode
+            THREEDNOWPREFETCH = Bits.Bit08,      // Bit 08 = 3DNowPrefetch
+            OSVW = Bits.Bit09,                   // Bit 09 = OS visible workaround
+            IBS = Bits.Bit10,                    // Bit 10 = instruction based sampling
+            XOP = Bits.Bit11,                    // Bit 11 = extended operation support
+            SKINIT = Bits.Bit12,                 // Bit 12 = SKINIT and STGI are supported
+            WDT = Bits.Bit13,                    // Bit 13 = watchdog timer support
             // Bit 14 = Reserved
-            LWP = ValueX.Bits.Bit15,                    // Bit 15 = lightweight profiling support
-            FMA4 = ValueX.Bits.Bit16,                   // Bit 16 = 4-operand FMA instruction support
-            TCE = ValueX.Bits.Bit17,					// Bit 17 = translation cache extension***
+            LWP = Bits.Bit15,                    // Bit 15 = lightweight profiling support
+            FMA4 = Bits.Bit16,                   // Bit 16 = 4-operand FMA instruction support
+            TCE = Bits.Bit17,					// Bit 17 = translation cache extension***
             // Bit 18 = Reserved
-            NODEID = ValueX.Bits.Bit19,                 // Bit 19 = Indicates support for MSRC001_100C[NodeId, NodesPerProcessor]
+            NODEID = Bits.Bit19,                 // Bit 19 = Indicates support for MSRC001_100C[NodeId, NodesPerProcessor]
             // Bit 20 = Reserved
-            TBM = ValueX.Bits.Bit21,                    // Bit 21 = trailing bit manipulation instruction
-            TOPOLOGYEXT = ValueX.Bits.Bit22,            // Bit 22 = topology extensions support
-            PERFCTREXTCORE = ValueX.Bits.Bit23,         // Bit 23 = core performance counter extensions support***
-            PERFCTREXTNB = ValueX.Bits.Bit24,			// Bit 24 = NB performance counter extensions support***
+            TBM = Bits.Bit21,                    // Bit 21 = trailing bit manipulation instruction
+            TOPOLOGYEXT = Bits.Bit22,            // Bit 22 = topology extensions support
+            PERFCTREXTCORE = Bits.Bit23,         // Bit 23 = core performance counter extensions support***
+            PERFCTREXTNB = Bits.Bit24,			// Bit 24 = NB performance counter extensions support***
             // Bit 25 = Reserved
-            DATABREAKPOINTEXT = ValueX.Bits.Bit26,		// Bit 26 = data breakpoint support***
-            PERFTSC = ValueX.Bits.Bit27,				// Bit 27 = performance time-stamp counter supported***
-            PERFCTREXTL2I = ValueX.Bits.Bit28			// Bit 28 = L2I performance counter extensions support***
+            DATABREAKPOINTEXT = Bits.Bit26,		// Bit 26 = data breakpoint support***
+            PERFTSC = Bits.Bit27,				// Bit 27 = performance time-stamp counter supported***
+            PERFCTREXTL2I = Bits.Bit28			// Bit 28 = L2I performance counter extensions support***
             // Bit 29-31 = Reserved
         }
 
@@ -489,9 +517,9 @@ namespace AlienEngine.Core.Utils
                 _ecx = __reg_ecx();
                 _edx = __reg_edx();
 
-                return ToolsX.Value2String(_ebx, true) +
-                       ToolsX.Value2String(_edx, true) +
-                       ToolsX.Value2String(_ecx, true);
+                return Value2String(_ebx, true) +
+                       Value2String(_edx, true) +
+                       Value2String(_ecx, true);
             }
         }
 
@@ -553,30 +581,30 @@ namespace AlienEngine.Core.Utils
                     _ebx = __reg_ebx();
                     _ecx = __reg_ecx();
                     _edx = __reg_edx();
-                    _cpuname = ToolsX.Value2String(_eax, true) +
-                               ToolsX.Value2String(_ebx, true) +
-                               ToolsX.Value2String(_ecx, true) +
-                               ToolsX.Value2String(_edx, true);
+                    _cpuname = Value2String(_eax, true) +
+                               Value2String(_ebx, true) +
+                               Value2String(_ecx, true) +
+                               Value2String(_edx, true);
 
                     __cpuid(0x80000003, 0);
                     _eax = __reg_eax();
                     _ebx = __reg_ebx();
                     _ecx = __reg_ecx();
                     _edx = __reg_edx();
-                    _cpuname += ToolsX.Value2String(_eax, true) +
-                                ToolsX.Value2String(_ebx, true) +
-                                ToolsX.Value2String(_ecx, true) +
-                                ToolsX.Value2String(_edx, true);
+                    _cpuname += Value2String(_eax, true) +
+                                Value2String(_ebx, true) +
+                                Value2String(_ecx, true) +
+                                Value2String(_edx, true);
 
                     __cpuid(0x80000004, 0);
                     _eax = __reg_eax();
                     _ebx = __reg_ebx();
                     _ecx = __reg_ecx();
                     _edx = __reg_edx();
-                    _cpuname += ToolsX.Value2String(_eax, true) +
-                                ToolsX.Value2String(_ebx, true) +
-                                ToolsX.Value2String(_ecx, true) +
-                                ToolsX.Value2String(_edx, true);
+                    _cpuname += Value2String(_eax, true) +
+                                Value2String(_ebx, true) +
+                                Value2String(_ecx, true) +
+                                Value2String(_edx, true);
 
                     return _cpuname;
                 }
@@ -1007,6 +1035,47 @@ namespace AlienEngine.Core.Utils
                 {
                     IntelCacheDescriptors.Add(String.Format("0x{0:X2} : Unknown Cache Descriptor", CacheDescriptor));
                 }
+            }
+        }
+
+        private static string Value2String(byte value)
+        {
+            return Convert.ToString((char)value);
+        }
+
+        private static string Value2String(ushort value, bool LowNibbleFirst = false)
+        {
+            if (LowNibbleFirst == false)
+            {
+                return Value2String(MathHelper.HighNibble(value)) + Value2String(MathHelper.LowNibble(value));
+            }
+            else
+            {
+                return Value2String(MathHelper.LowNibble(value)) + Value2String(MathHelper.HighNibble(value));
+            }
+        }
+
+        private static string Value2String(uint value, bool LowNibbleFirst = false)
+        {
+            if (LowNibbleFirst == false)
+            {
+                return Value2String(MathHelper.HighNibble(value), LowNibbleFirst) + Value2String(MathHelper.LowNibble(value), LowNibbleFirst);
+            }
+            else
+            {
+                return Value2String(MathHelper.LowNibble(value), LowNibbleFirst) + Value2String(MathHelper.HighNibble(value), LowNibbleFirst);
+            }
+        }
+
+        private static string Value2String(ulong value, bool LowNibbleFirst = false)
+        {
+            if (LowNibbleFirst == false)
+            {
+                return Value2String(MathHelper.HighNibble(value), LowNibbleFirst) + Value2String(MathHelper.LowNibble(value), LowNibbleFirst);
+            }
+            else
+            {
+                return Value2String(MathHelper.LowNibble(value), LowNibbleFirst) + Value2String(MathHelper.HighNibble(value), LowNibbleFirst);
             }
         }
     }
