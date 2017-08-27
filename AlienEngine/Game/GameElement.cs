@@ -89,7 +89,7 @@ namespace AlienEngine
         public static void StopAll()
         {
             foreach (var gameElement in _gameElements)
-                gameElement.Value.Start();
+                gameElement.Value.Stop();
         }
         #endregion Methods
 
