@@ -1,4 +1,4 @@
-﻿using AlienEngine.Core.Game;
+using AlienEngine.Core.Game;
 using AlienEngine.Core.Graphics;
 using System;
 
@@ -481,8 +481,19 @@ namespace AlienEngine
             Matrix4f transformation = Matrix4f.CreateTranslation(Translation);
             Matrix4f ret = (lookAtMatrix * transformation);
 
-            Rotation = ret.GetEulerAngles();
-            //LookAt(Point3f.CreateVector(Position, targetPosition));
+            Vector3f direction = Point3f.CreateVector(targetPosition, Position);
+
+            Vector3f rotation = ret.GetEulerAngles();
+
+            if (direction.Z <= 0)
+                rotation.Y *= -1;
+            if (direction.Z == 0 && direction.Y == 0 && direction.X != 0)
+                rotation.Y = MathHelper.PiOver2 * (direction.X < 0 ? 1 : (direction.X > 0 ? -1 : 0));
+            if (direction.Z == 0 && direction.X == 0 && direction.Y != 0)
+                rotation.X = MathHelper.PiOver2 * (direction.Y < 0 ? 1 : (direction.Y > 0 ? -1 : 0));
+
+            Rotation = rotation;
+            //LookAt(Point3f.CreateVector(targetPosition, Position));
         }
 
         /// <summary>
@@ -492,10 +503,19 @@ namespace AlienEngine
         public void LookAt(Vector3f direction)
         {
             Matrix4f lookAtMatrix = Matrix4f.LookAt(-direction, UpVector);
-            Matrix4f transformation = Matrix4f.CreateTranslation(-Translation);
+            Matrix4f transformation = Matrix4f.CreateTranslation(Translation);
             Matrix4f ret = (lookAtMatrix * transformation);
 
-            Rotation = ret.GetEulerAngles();
+            Vector3f rotation = ret.GetEulerAngles();
+
+            if (direction.Z <= 0)
+                rotation.Y *= -1;
+            if (direction.Z == 0 && direction.Y == 0 && direction.X != 0)
+                rotation.Y = MathHelper.PiOver2 * (direction.X < 0 ? 1 : (direction.X > 0 ? -1 : 0));
+            if (direction.Z == 0 && direction.X == 0 && direction.Y != 0)
+                rotation.X = MathHelper.PiOver2 * (direction.Y < 0 ? 1 : (direction.Y > 0 ? -1 : 0));
+
+            Rotation = rotation;
         }
 
         #endregion
