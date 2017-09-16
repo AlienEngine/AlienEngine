@@ -12,12 +12,45 @@ namespace AlienEngine
         [CLSCompliant(false)]
         protected uint SourceHandle;
 
+        protected EffectsExtension Effects;
+
         private float _lengthSeconds;
 
+        private Vector3f _lastPos;
+        private AudioListener _sceneAudioListener;
+        private float _volume;
+
+        /// <summary>
+        /// Define if this <see cref="AudioSource"/> will be played
+        /// automatically when the game is launched.
+        /// </summary>
         public bool AutoPlay = false;
+
+        /// <summary>
+        /// Define if this <see cref="AudioSource"/> a background
+        /// sound.
+        /// </summary>
         public bool IsBackgroundSound = false;
 
+        /// <summary>
+        /// The <see cref="AudioClip"/> played by this
+        /// <see cref="AudioSource"/>.
+        /// </summary>
         public AudioClip Clip;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public AudioRolloffAlgorithm RollofAlgorithm;
+
+        /// <summary>
+        /// The volume of this <see cref="AudioSource"/>.
+        /// </summary>
+        public float Volume
+        {
+            get { return _volume; }
+            set { _volume = MathHelper.Clamp(value, 0.0f, 1.0f); }
+        }
 
         public AudioSource(string file)
         {
@@ -112,8 +145,8 @@ namespace AlienEngine
             AL.GenSources(1, out SourceHandle);
             AL.Source(SourceHandle, ALSourcei.Buffer, (int)BufferHandle);
             AL.Source(SourceHandle, ALSourceb.Looping, false);
-            AL.Source(SourceHandle, ALSourcef.MinGain, 0.0f);
             AL.Source(SourceHandle, ALSourcef.MaxGain, 1.0f);
+            AL.Source(SourceHandle, ALSourcef.MinGain, 0.0f);
         }
 
         public void PlaySound()
@@ -133,23 +166,93 @@ namespace AlienEngine
 
         public override void Start()
         {
+            _sceneAudioListener = gameElement.ParentScene.AudioListener.GetComponent<AudioListener>();
+
             EfxAuxiliarySendFilterGainAuto = !IsBackgroundSound;
             EfxAuxiliarySendFilterGainHighFrequencyAuto = !IsBackgroundSound;
             EfxDirectFilterGainHighFrequencyAuto = !IsBackgroundSound;
+            SourceRelative = false;
+
+            Effects = new EffectsExtension();
+
+            Transform defT = gameElement.WorldTransform;
+            Vector3f defPos = defT.Translation, defAt = defT.ForwardVector, defUp = defT.UpVector;
+
+            AL.Source(SourceHandle, ALSource3f.Position, ref defPos);
+            AL.Source(SourceHandle, ALSource3f.Direction, ref defAt);
 
             if (AutoPlay)
                 PlaySound();
 
             gameElement.LocalTransform.OnPositionChange += ((_old, _new) =>
             {
-                AL.Source(SourceHandle, ALSource3f.Position, _new.X, _new.Y, _new.Z);
+                Vector3f pos = gameElement.WorldTransform.Translation;
+                AL.Source(SourceHandle, ALSource3f.Position, ref pos);
             });
 
             gameElement.LocalTransform.OnRotationChange += ((_old, _new) =>
             {
-                Vector3f _forward = gameElement.LocalTransform.ForwardVector;
+                Vector3f _forward = gameElement.WorldTransform.ForwardVector;
                 AL.Source(SourceHandle, ALSource3f.Direction, ref _forward);
             });
+
+            _lastPos = defPos;
+        }
+
+        public override void Update()
+        {
+            // Source to listener vector
+            Vector3f SL = (gameElement.ParentScene.AudioListener.WorldTransform.Translation - gameElement.WorldTransform.Translation);
+
+            // Distance between this AudioSource and the AudioListener of the Scene
+            float distance = SL.Length;
+
+            // Source velocity
+            Vector3f _newPos = gameElement.WorldTransform.Translation;
+            Vector3f vel = (_newPos - _lastPos);
+            AL.Source(SourceHandle, ALSource3f.Velocity, ref vel);
+            _lastPos = _newPos;
+
+            // Gain attenuation algorithms
+            switch (RollofAlgorithm)
+            {
+                default:
+                case AudioRolloffAlgorithm.None:
+                    Gain = Volume;
+                    break;
+                case AudioRolloffAlgorithm.InverseDistance:
+                    Gain = Volume * (ReferenceDistance / (ReferenceDistance + RolloffFactor * (distance - ReferenceDistance)));
+                    break;
+                case AudioRolloffAlgorithm.InverseDistanceClamped:
+                    distance = MathHelper.Clamp(distance, ReferenceDistance, MaxDistance);
+                    Gain = Volume * (ReferenceDistance / (ReferenceDistance + RolloffFactor * (distance - ReferenceDistance)));
+                    break;
+                case AudioRolloffAlgorithm.LinearDistance:
+                    distance = Math.Min(distance, MaxDistance);
+                    Gain = Volume * ((1 - RolloffFactor * (distance - ReferenceDistance) / (MaxDistance - ReferenceDistance)));
+                    break;
+                case AudioRolloffAlgorithm.LinearDistanceClamped:
+                    distance = MathHelper.Clamp(distance, ReferenceDistance, MaxDistance);
+                    Gain = Volume * ((1 - RolloffFactor * (distance - ReferenceDistance) / (MaxDistance - ReferenceDistance)));
+                    break;
+                case AudioRolloffAlgorithm.ExponentDistance:
+                    Gain = Volume * ((float)Math.Pow((distance / ReferenceDistance), (-RolloffFactor)));
+                    break;
+                case AudioRolloffAlgorithm.ExponentDistanceClamped:
+                    distance = MathHelper.Clamp(distance, ReferenceDistance, MaxDistance);
+                    Gain = Volume * ((float)Math.Pow((distance / ReferenceDistance), (-RolloffFactor)));
+                    break;
+            }
+
+            // Doppler calculation
+            float vss = Vector3f.Dot(SL, Velocity) / SL.Length;
+            float vls = Vector3f.Dot(SL, _sceneAudioListener.Velocity) / SL.Length;
+            float DF = AL.Get(ALGetFloat.DopplerFactor);
+            float SS = AL.Get(ALGetFloat.SpeedOfSound);
+
+            vss = Math.Min(vss, SS / DF);
+            vls = Math.Min(vls, SS / DF);
+            Pitch = (SS - DF * vls) / (SS - DF * vss);
         }
 
         public override void Stop()
@@ -233,7 +336,7 @@ namespace AlienEngine
         {
             get
             {
-                Vector3i result = new Vector3i();
+                Vector3i result = Vector3i.Zero;
                 AL.GetSource(SourceHandle, ALSource3i.EfxAuxiliarySendFilter, out result.X, out result.Y, out result.Z);
                 return result;
             }
@@ -383,7 +486,7 @@ namespace AlienEngine
             }
         }
 
-        public float Volume
+        private float Gain
         {
             get
             {
@@ -411,7 +514,7 @@ namespace AlienEngine
             }
         }
 
-        public float MaxVolume
+        public float MaxGain
         {
             get
             {
@@ -421,7 +524,7 @@ namespace AlienEngine
             }
         }
 
-        public float MinVolume
+        public float MinGain
         {
             get
             {
