@@ -1,4 +1,5 @@
-﻿using BulletSharp;
+﻿using BEPUphysics;
+using BEPUutilities.Threading;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,11 +22,8 @@ namespace AlienEngine.Core.Game
         private GameElement _primaryCamera;
 
         // Physics
-        private DynamicsWorld _world;
-        private BroadphaseInterface _broadPhase;
-        private CollisionConfiguration _collisionConfig;
-        private Dispatcher _collisionDispatcher;
-        private ConstraintSolver _solver;
+        private Space _space;
+        private ParallelLooper _parallelLooper;
 
         /// <summary>
         /// Gets a collection of all <see cref="GameElement"/>s
@@ -123,7 +121,7 @@ namespace AlienEngine.Core.Game
         /// <param name="gameElement">The <see cref="GameElement"/> to add.</param>
         public void AddGameElement(GameElement gameElement)
         {
-            gameElement.ParentScene = this;
+            gameElement.SetParentScene(this);
 
             _gameElements.Add(gameElement);
 
@@ -154,6 +152,11 @@ namespace AlienEngine.Core.Game
             if (gameElement.HasComponent<AudioListener>())
             {
                 _audioListener = gameElement;
+            }
+
+            foreach (GameElement child in gameElement.Childs)
+            {
+                AddGameElement(child);
             }
         }
 
@@ -190,7 +193,15 @@ namespace AlienEngine.Core.Game
         /// </summary>
         public void SimulatePhysics()
         {
-            _world.StepSimulation((float)Time.DeltaTime);
+            _space.Update((float)Time.DeltaTime);
+        }
+
+        /// <summary>
+        /// Process physics simulation for one frame.
+        /// </summary>
+        public void SimulatePhysics(float dt)
+        {
+            _space.Update(dt);
         }
 
         /// <summary>
@@ -202,7 +213,7 @@ namespace AlienEngine.Core.Game
             if (r.HasComponent<RigidBody>())
             {
                 RigidBody rb = r.GetComponent<RigidBody>();
-                _world.AddRigidBody(rb.InnerRigidBody);
+                _space.Add(rb.InnerRigidBody);
             }
         }
 
@@ -215,7 +226,7 @@ namespace AlienEngine.Core.Game
             if (r.HasComponent<RigidBody>())
             {
                 RigidBody rb = r.GetComponent<RigidBody>();
-                _world.RemoveCollisionObject(rb.InnerRigidBody);
+                _space.Remove(rb.InnerRigidBody);
             }
         }
 
@@ -224,13 +235,19 @@ namespace AlienEngine.Core.Game
         /// </summary>
         private void _setupPhysics()
         {
-            _broadPhase = new DbvtBroadphase();
-            _collisionConfig = new DefaultCollisionConfiguration();
-            _collisionDispatcher = new CollisionDispatcher(_collisionConfig);
-            _solver = new SequentialImpulseConstraintSolver();
+            _parallelLooper = new ParallelLooper();
+            //This section lets the engine know that it can make use of multithreaded systems
+            //by adding threads to its thread pool.
+            if (Environment.ProcessorCount > 1)
+            {
+                for (int i = 0; i < Environment.ProcessorCount; i++)
+                {
+                    _parallelLooper.AddThread();
+                }
+            }
 
-            _world = new DiscreteDynamicsWorld(_collisionDispatcher, _broadPhase, _solver, _collisionConfig);
-            _world.Gravity = Vector3.UnitY * -10;
+            _space = new Space(_parallelLooper);
+            _space.ForceUpdater.Gravity = BEPUutilities.Vector3.UnitY * -9.81f;
         }
 
         #region IDisposable Support
@@ -242,14 +259,8 @@ namespace AlienEngine.Core.Game
             {
                 if (disposing)
                 {
-                    if (_world != null)
-                    {
-                        _collisionDispatcher.Dispose();
-                        _collisionConfig.Dispose();
-                        _solver.Dispose();
-                        _broadPhase.Dispose();
-                        _world.Dispose();
-                    }
+                    if (_parallelLooper != null)
+                        _parallelLooper.Dispose();
                 }
 
                 disposedValue = true;
