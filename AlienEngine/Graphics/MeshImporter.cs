@@ -14,13 +14,6 @@ namespace AlienEngine.Core.Graphics
 {
     public class MeshImporter : IDisposable
     {
-        private const uint INDEX_BUFFER = 0;
-        private const uint POS_VB = 1;
-        private const uint NORMAL_VB = 2;
-        private const uint TEXCOORD_VB = 3;
-        private const uint WVP_MAT_VB = 4;
-        private const uint WORLD_MAT_VB = 5;
-
         public GameElement GameElement { get { return _gameMesh; } }
 
         private Material[] _materials;
@@ -38,7 +31,6 @@ namespace AlienEngine.Core.Graphics
         private GameElement _gameMesh;
 
         private uint _vao;
-        private uint[] _buffers;
 
         public MeshImporter(string file)
         {
@@ -53,38 +45,30 @@ namespace AlienEngine.Core.Graphics
                 _meshes = new Mesh[_entries.Length];
 
                 _vao = 0;
-                _buffers = new uint[6];
 
                 // Create the VAO
                 _vao = GL.GenVertexArray();
                 GL.BindVertexArray(_vao);
 
-                // Create the buffers for the vertices attributes
-                GL.GenBuffers(_buffers.Length, _buffers);
-
-                var posArray = positions.ToArray();
-                var uvArray = uvs.ToArray();
-                var normArray = normals.ToArray();
-                var indArray = indices.ToArray();
-
                 // Generate and populate the buffers with vertex attributes and the indices
-                GL.BindBuffer(BufferTarget.ArrayBuffer, _buffers[POS_VB]);
-                GL.BufferData(BufferTarget.ArrayBuffer, Marshal.SizeOf(posArray[0]) * posArray.Length, posArray, BufferUsageHint.StaticDraw);
+                VBO<Vector3f> vertex = new VBO<Vector3f>(positions.ToArray());
+                VBO<Vector2f> texture = new VBO<Vector2f>(uvs.ToArray());
+                VBO<Vector3f> normal = new VBO<Vector3f>(normals.ToArray());
+                VBO<int> index = new VBO<int>(indices.ToArray(), BufferTarget.ElementArrayBuffer, BufferUsageHint.StaticRead);
+
+                GL.BindBuffer(vertex.BufferTarget, vertex.ID);
                 GL.EnableVertexAttribArray(GL.VERTEX_POSITION_LOCATION);
-                GL.VertexAttribPointer(GL.VERTEX_POSITION_LOCATION, 3, VertexAttribPointerType.Float, false, 0, 0);
+                GL.VertexAttribPointer(GL.VERTEX_POSITION_LOCATION, vertex.Size, vertex.PointerType, false, 0, 0);
 
-                GL.BindBuffer(BufferTarget.ArrayBuffer, _buffers[TEXCOORD_VB]);
-                GL.BufferData(BufferTarget.ArrayBuffer, Marshal.SizeOf(uvArray[0]) * uvArray.Length, uvArray, BufferUsageHint.StaticDraw);
+                GL.BindBuffer(texture.BufferTarget, texture.ID);
                 GL.EnableVertexAttribArray(GL.VERTEX_TEXTURE_COORD_LOCATION);
-                GL.VertexAttribPointer(GL.VERTEX_TEXTURE_COORD_LOCATION, 2, VertexAttribPointerType.Float, false, 0, 0);
+                GL.VertexAttribPointer(GL.VERTEX_TEXTURE_COORD_LOCATION, texture.Size, texture.PointerType, false, 0, 0);
 
-                GL.BindBuffer(BufferTarget.ArrayBuffer, _buffers[NORMAL_VB]);
-                GL.BufferData(BufferTarget.ArrayBuffer, Marshal.SizeOf(normArray[0]) * normArray.Length, normArray, BufferUsageHint.StaticDraw);
+                GL.BindBuffer(normal.BufferTarget, normal.ID);
                 GL.EnableVertexAttribArray(GL.VERTEX_NORMAL_LOCATION);
-                GL.VertexAttribPointer(GL.VERTEX_NORMAL_LOCATION, 3, VertexAttribPointerType.Float, false, 0, 0);
+                GL.VertexAttribPointer(GL.VERTEX_NORMAL_LOCATION, normal.Size, normal.PointerType, false, 0, 0);
 
-                GL.BindBuffer(BufferTarget.ElementArrayBuffer, _buffers[INDEX_BUFFER]);
-                GL.BufferData(BufferTarget.ElementArrayBuffer, Marshal.SizeOf(indArray[0]) * indArray.Length, indArray, BufferUsageHint.StaticRead);
+                GL.BindBuffer(index.BufferTarget, index.ID);
 
                 // Make sure the VAO is not changed from the outside
                 GL.BindVertexArray(0);
@@ -98,9 +82,6 @@ namespace AlienEngine.Core.Graphics
                 {
                     if (_vao != 0)
                         GL.DeleteVertexArrays(1, new uint[] { _vao });
-
-                    if (_buffers != null)
-                        GL.DeleteBuffers(_buffers.Length, _buffers);
                 });
             }
             catch (Exception e)
