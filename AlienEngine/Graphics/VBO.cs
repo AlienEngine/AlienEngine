@@ -48,13 +48,15 @@ namespace AlienEngine.Core.Graphics
         /// <param name="Hint">Specifies the expected usage of the data store.</param>
         public VBO(T[] Data, int Length, BufferTarget Target = BufferTarget.ArrayBuffer, BufferUsageHint Hint = BufferUsageHint.StaticDraw)
         {
-            Length = System.Math.Max(0, System.Math.Min(Length, Data.Length));
+            Length = MathHelper.Clamp(Length, 0, Data.Length);
 
             ID = GL.CreateVBO<T>(BufferTarget = Target, Data, Hint, Length);
 
             this.Size = (Data is int[] ? 1 : (Data is Vector2f[] ? 2 : (Data is Vector3f[] ? 3 : (Data is Vector4f[] ? 4 : 0))));
             this.PointerType = (Data is int[] ? VertexAttribPointerType.Int : VertexAttribPointerType.Float);
             this.Count = Length;
+
+            ResourcesManager.AddDisposableResource(this);
         }
 
         /// <summary>
@@ -69,7 +71,7 @@ namespace AlienEngine.Core.Graphics
         /// <param name="Hint">Specifies the expected usage of the data store.</param>
         public VBO(T[] Data, int Position, int Length, BufferTarget Target = BufferTarget.ArrayBuffer, BufferUsageHint Hint = BufferUsageHint.StaticDraw)
         {
-            Length = System.Math.Max(0, System.Math.Min(Length, Data.Length));
+            Length = MathHelper.Clamp(Length, 0, Data.Length);
 
             ID = GL.CreateVBO<T>(BufferTarget = Target, Data, Hint, Position, Length);
 
