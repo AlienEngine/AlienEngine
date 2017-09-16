@@ -571,10 +571,10 @@ namespace AlienEngine
         {
             Quaternion q = new Quaternion();
 
-            float t0 = MathHelper.Cos(roll * 0.5f);
-            float t1 = MathHelper.Sin(roll * 0.5f);
-            float t2 = MathHelper.Cos(yaw * 0.5f);
-            float t3 = MathHelper.Sin(yaw * 0.5f);
+            float t0 = MathHelper.Cos(yaw * 0.5f);
+            float t1 = MathHelper.Sin(yaw * 0.5f);
+            float t2 = MathHelper.Cos(roll * 0.5f);
+            float t3 = MathHelper.Sin(roll * 0.5f);
             float t4 = MathHelper.Cos(pitch * 0.5f);
             float t5 = MathHelper.Sin(pitch * 0.5f);
 

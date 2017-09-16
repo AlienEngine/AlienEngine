@@ -528,9 +528,11 @@ namespace AlienEngine
         {
             var ret = Identity;
 
-            ret.Row0 = new Vector4f(Row0.XYZ, 0) / Row0.Length;
-            ret.Row1 = new Vector4f(Row1.XYZ, 0) / Row1.Length;
-            ret.Row2 = new Vector4f(Row2.XYZ, 0) / Row2.Length;
+            float l0 = Row0.Length, l1 = Row1.Length, l2 = Row2.Length;
+
+            ret.Row0 = new Vector4f(Row0.XYZ, 0) / ((l0 > 0) ? l0 : 1);
+            ret.Row1 = new Vector4f(Row1.XYZ, 0) / ((l1 > 0) ? l1 : 1);
+            ret.Row2 = new Vector4f(Row2.XYZ, 0) / ((l2 > 0) ? l2 : 1);
 
             return ret;
         }
@@ -1357,28 +1359,31 @@ namespace AlienEngine
         /// <returns>A Matrix4f that transforms world space to camera space</returns>
         public static Matrix4f LookAt(Point3f eye, Point3f target, Vector3f up)
         {
-            Vector3f z = Vector3f.Normalize(Point3f.CreateVector(target, eye));
-            Vector3f x = Vector3f.Normalize(Vector3f.Cross(up, z));
-            Vector3f y = Vector3f.Normalize(Vector3f.Cross(z, x));
+            Matrix4f result = Identity;
 
-            Matrix4f result = Zero;
+            if (eye != target)
+            {
+                Vector3f z = Vector3f.Normalize(Point3f.CreateVector(eye, target));
+                Vector3f x = Vector3f.Normalize(Vector3f.Cross(up, z));
+                Vector3f y = Vector3f.Normalize(Vector3f.Cross(z, x));
 
-            result.Row0.X = x.X;
-            result.Row0.Y = y.X;
-            result.Row0.Z = z.X;
-            result.Row0.W = 0;
-            result.Row1.X = x.Y;
-            result.Row1.Y = y.Y;
-            result.Row1.Z = z.Y;
-            result.Row1.W = 0;
-            result.Row2.X = x.Z;
-            result.Row2.Y = y.Z;
-            result.Row2.Z = z.Z;
-            result.Row2.W = 0;
-            result.Row3.X = -((x.X * eye.X) + (x.Y * eye.Y) + (x.Z * eye.Z));
-            result.Row3.Y = -((y.X * eye.X) + (y.Y * eye.Y) + (y.Z * eye.Z));
-            result.Row3.Z = -((z.X * eye.X) + (z.Y * eye.Y) + (z.Z * eye.Z));
-            result.Row3.W = 1;
+                result.Row0.X = x.X;
+                result.Row0.Y = y.X;
+                result.Row0.Z = z.X;
+                result.Row0.W = 0;
+                result.Row1.X = x.Y;
+                result.Row1.Y = y.Y;
+                result.Row1.Z = z.Y;
+                result.Row1.W = 0;
+                result.Row2.X = x.Z;
+                result.Row2.Y = y.Z;
+                result.Row2.Z = z.Z;
+                result.Row2.W = 0;
+                result.Row3.X = -((x.X * eye.X) + (x.Y * eye.Y) + (x.Z * eye.Z));
+                result.Row3.Y = -((y.X * eye.X) + (y.Y * eye.Y) + (y.Z * eye.Z));
+                result.Row3.Z = -((z.X * eye.X) + (z.Y * eye.Y) + (z.Z * eye.Z));
+                result.Row3.W = 1;
+            }
 
             return result;
         }
@@ -1411,19 +1416,22 @@ namespace AlienEngine
         {
             Matrix4f result = Identity;
 
-            Vector3f f = forward;
-            f.Normalize();
+            if (forward != Vector3f.Zero)
+            {
+                Vector3f f = forward;
+                f.Normalize();
 
-            Vector3f r = up;
-            r = Vector3f.Cross(r, f);
-            r.Normalize();
+                Vector3f r = up;
+                r = Vector3f.Cross(r, f);
+                r.Normalize();
 
-            Vector3f u = Vector3f.Cross(f, r);
+                Vector3f u = Vector3f.Cross(f, r);
 
-            result.Column0 = new Vector4f(r, 0.0f);
-            result.Column1 = new Vector4f(u, 0.0f);
-            result.Column2 = new Vector4f(f, 0.0f);
-            result.Column3 = Vector4f.UnitW;
+                result.Column0 = new Vector4f(r, 0.0f);
+                result.Column1 = new Vector4f(u, 0.0f);
+                result.Column2 = new Vector4f(f, 0.0f);
+                result.Column3 = Vector4f.UnitW;
+            }
 
             return result;
         }
@@ -1587,28 +1595,37 @@ namespace AlienEngine
         }
 
         /// <summary>
-        /// Explicitly cast a <see cref="Matrix4f"/> into a <see cref="BulletSharp.Matrix"/>.
+        /// Explicitly cast a <see cref="Matrix4f"/> into a <see cref="BEPUutilities.Matrix"/>.
         /// </summary>
         /// <param name="mat">The matrix to cast.</param>
-        public static explicit operator BulletSharp.Matrix(Matrix4f mat)
+        public static explicit operator BEPUutilities.Matrix(Matrix4f mat)
         {
-            BulletSharp.Matrix ret = new BulletSharp.Matrix();
-
-            ret.set_Rows(0, (BulletSharp.Vector4)mat.Row0);
-            ret.set_Rows(1, (BulletSharp.Vector4)mat.Row1);
-            ret.set_Rows(2, (BulletSharp.Vector4)mat.Row2);
-            ret.set_Rows(3, (BulletSharp.Vector4)mat.Row3);
+            BEPUutilities.Matrix ret = new BEPUutilities.Matrix
+            (
+                mat.M11, mat.M12, mat.M13, mat.M14,
+                mat.M21, mat.M22, mat.M23, mat.M24,
+                mat.M31, mat.M32, mat.M33, mat.M34,
+                mat.M41, mat.M42, mat.M43, mat.M44
+            );
 
             return ret;
         }
 
         /// <summary>
-        /// Explicitly cast a <see cref="BulletSharp.Matrix"/> into a <see cref="Matrix4f"/>.
+        /// Explicitly cast a <see cref="BEPUutilities.Matrix"/> into a <see cref="Matrix4f"/>.
         /// </summary>
         /// <param name="mat">The matrix to cast.</param>
-        public static explicit operator Matrix4f(BulletSharp.Matrix mat)
+        public static explicit operator Matrix4f(BEPUutilities.Matrix mat)
         {
-            return new Matrix4f(mat.ToArray());
+            Matrix4f ret = new Matrix4f
+            (
+                mat.M11, mat.M12, mat.M13, mat.M14,
+                mat.M21, mat.M22, mat.M23, mat.M24,
+                mat.M31, mat.M32, mat.M33, mat.M34,
+                mat.M41, mat.M42, mat.M43, mat.M44
+            );
+
+            return ret;
         }
 
         /// <summary>
@@ -1692,7 +1709,7 @@ namespace AlienEngine
         }
 
         /// <summary>
-        /// Returns the <see cref="Matrix3f"/> portion of this matrix.
+        /// Returns the <see cref="Matrix3f"/> upper-left portion of this matrix.
         /// </summary>
         /// <returns>The <see cref="Matrix3f"/> portion of this matrix.</returns>
         public Matrix3f ToMatrix3f()

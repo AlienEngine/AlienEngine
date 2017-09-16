@@ -310,10 +310,13 @@ namespace AlienEngine
         /// </summary>
         public void Normalize()
         {
-            float scale = 1.0f / this.Length;
-            X *= scale;
-            Y *= scale;
-            Z *= scale;
+            if (this != Vector3f.Zero)
+            {
+                float scale = 1.0f / this.Length;
+                X *= scale;
+                Y *= scale;
+                Z *= scale;
+            }
         }
 
         /// <summary>
@@ -621,10 +624,14 @@ namespace AlienEngine
         /// <returns>The normalized vector</returns>
         public static Vector3f Normalize(Vector3f vec)
         {
-            float scale = 1.0f / vec.Length;
-            vec.X *= scale;
-            vec.Y *= scale;
-            vec.Z *= scale;
+            if (vec != Vector3f.Zero)
+            {
+                float scale = 1.0f / vec.Length;
+                vec.X *= scale;
+                vec.Y *= scale;
+                vec.Z *= scale;
+            }
+
             return vec;
         }
 
@@ -1360,6 +1367,7 @@ namespace AlienEngine
         /// </summary>
         /// <param name="v">The instance.</param>
         /// <returns>A pointer to the first element of v.</returns>
+        [CLSCompliant(false)]
         unsafe public static explicit operator float* (Vector3f v)
         {
             return &v.X;
@@ -1379,12 +1387,43 @@ namespace AlienEngine
         }
 
         /// <summary>
-        /// Explicitly cast this <see cref="Vector3f"/> into a <see cref="BulletSharp.Vector3"/>.
+        /// Explicitly cast this <see cref="Vector3f"/> into a <see cref="BEPUutilities.Vector3"/>.
         /// </summary>
         /// <param name="vec">The vector to cast.</param>
-        public static explicit operator BulletSharp.Vector3(Vector3f vec)
+        [CLSCompliant(false)]
+        public static explicit operator BEPUutilities.Vector3(Vector3f vec)
         {
-            return new BulletSharp.Vector3(vec.X, vec.Y, vec.Z);
+            return new BEPUutilities.Vector3(vec.X, vec.Y, vec.Z);
+        }
+
+        /// <summary>
+        /// Explicitly cast this <see cref="Vector3f"/> into a <see cref="BEPUutilities.Vector3"/>.
+        /// </summary>
+        /// <param name="vec">The vector to cast.</param>
+        [CLSCompliant(false)]
+        public static explicit operator Vector3f(BEPUutilities.Vector3 vec)
+        {
+            return new Vector3f(vec.X, vec.Y, vec.Z);
+        }
+
+        /// <summary>
+        /// Explicitly cast this <see cref="Vector3f"/> into a <see cref="Assimp.Vector3D"/>.
+        /// </summary>
+        /// <param name="vec">The vector to cast.</param>
+        [CLSCompliant(false)]
+        public static explicit operator Assimp.Vector3D(Vector3f vec)
+        {
+            return new Assimp.Vector3D(vec.X, vec.Y, vec.Z);
+        }
+
+        /// <summary>
+        /// Explicitly cast this <see cref="Vector3f"/> into a <see cref="Assimp.Vector3D"/>.
+        /// </summary>
+        /// <param name="vec">The vector to cast.</param>
+        [CLSCompliant(false)]
+        public static explicit operator Vector3f(Assimp.Vector3D vec)
+        {
+            return new Vector3f(vec.X, vec.Y, vec.Z);
         }
 
         /// <summary>

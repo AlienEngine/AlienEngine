@@ -2004,12 +2004,12 @@ namespace AlienEngine
         }
 
         /// <summary>
-        /// Explicitly cast this <see cref="Vector3f"/> into a <see cref="BulletSharp.Vector3"/>.
+        /// Explicitly cast this <see cref="Vector4f"/> into a <see cref="BEPUutilities.Vector4"/>.
         /// </summary>
         /// <param name="vec">The vector to cast.</param>
-        public static explicit operator BulletSharp.Vector4(Vector4f vec)
+        public static explicit operator BEPUutilities.Vector4(Vector4f vec)
         {
-            return new BulletSharp.Vector4(vec.X, vec.Y, vec.Z, vec.W);
+            return new BEPUutilities.Vector4(vec.X, vec.Y, vec.Z, vec.W);
         }
 
         /// <summary>
