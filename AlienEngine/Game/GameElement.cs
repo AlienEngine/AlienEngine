@@ -6,31 +6,48 @@ using System.Text;
 
 namespace AlienEngine
 {
+    /// <summary>
+    /// <see cref="GameElement"/>s are objects in <see cref="Scene"/>.
+    /// They can interact with the user and have defined behaviour
+    /// through <see cref="Component"/>s.
+    /// </summary>
     public class GameElement
     {
-        private Scene _parentScene;
-
         #region Static Members
 
         #region Properties
-        internal Scene ParentScene
-        {
-            get { return _parentScene; }
-            set { _parentScene = value; }
-        }
-
+        /// <summary>
+        /// Create a new empty <see cref="GameElement"/>.
+        /// </summary>
         public static GameElement Empty { get { return new GameElement("GameElement"); } }
 
+        /// <summary>
+        /// An internal counter used to automaticaly rename
+        /// <see cref="GameElement"/>s with the same name.
+        /// </summary>
         private static Dictionary<string, int> _namesCounter;
+
+        /// <summary>
+        /// The list of registered <see cref="GameElement"/>s.
+        /// </summary>
+        private static Dictionary<string, GameElement> _gameElements;
         #endregion Properties
 
         #region Methods
+        /// <summary>
+        /// Initialize static data.
+        /// </summary>
         static GameElement()
         {
             _gameElements = new Dictionary<string, GameElement>();
             _namesCounter = new Dictionary<string, int>();
         }
 
+        /// <summary>
+        /// Returns a <see cref="GameElement"/> with the provided name.
+        /// </summary>
+        /// <param name="name">The name of the <see cref="GameElement"/> to return.</param>
+        /// <returns><see cref="GameElement"/></returns>
         public static GameElement Get(string name)
         {
             if (_gameElements.ContainsKey(name))
@@ -39,11 +56,22 @@ namespace AlienEngine
                 return null;
         }
 
+        /// <summary>
+        /// Checks if the <see cref="GameElement"/> with the provided name
+        /// exist.
+        /// </summary>
+        /// <param name="name">The name of the <see cref="GameElement"/>.</param>
+        /// <returns>true if the <see cref="GameElement"/> exist, false otherwise.</returns>
         public static bool Is(string name)
         {
             return _gameElements.ContainsKey(name);
         }
 
+        /// <summary>
+        /// Register a new <see cref="GameElement"/> with the given name.
+        /// </summary>
+        /// <param name="name">The name of the <see cref="GameElement"/> to add.</param>
+        /// <param name="gameElement">The instance</param>
         public static void Add(string name, GameElement gameElement)
         {
             if (_namesCounter.ContainsKey(gameElement.Name))
@@ -57,35 +85,59 @@ namespace AlienEngine
                 _gameElements.Add(name + "___" + _namesCounter[gameElement.Name], gameElement);
         }
 
+        /// <summary>
+        /// Unregister a <see cref="GameElement"/>.
+        /// </summary>
+        /// <param name="name">The name of the <see cref="GameElement"/> to remove.</param>
         public static void Remove(string name)
         {
             _gameElements.Remove(name);
         }
 
+        /// <summary>
+        /// Executes <see cref="Component.Start"/> in all components of all
+        /// registered <see cref="GameElement"/>s.
+        /// </summary>
         public static void StartAll()
         {
             foreach (var gameElement in _gameElements)
                 gameElement.Value.Start();
         }
 
+        /// <summary>
+        /// Executes <see cref="Component.BeforeUpdate"/> in all components of all
+        /// registered <see cref="GameElement"/>s.
+        /// </summary>
         public static void BeforeUpdateAll()
         {
             foreach (var gameElement in _gameElements)
                 gameElement.Value.BeforeUpdate();
         }
 
+        /// <summary>
+        /// Executes <see cref="Component.Update"/> in all components of all
+        /// registered <see cref="GameElement"/>s.
+        /// </summary>
         public static void UpdateAll()
         {
             foreach (var gameElement in _gameElements)
                 gameElement.Value.Update();
         }
 
+        /// <summary>
+        /// Executes <see cref="Component.Update"/> in all components of all
+        /// registered <see cref="GameElement"/>s.
+        /// </summary>
         public static void AfterUpdateAll()
         {
             foreach (var gameElement in _gameElements)
                 gameElement.Value.AfterUpdate();
         }
 
+        /// <summary>
+        /// Executes <see cref="Component.Stop"/> in all components of all
+        /// registered <see cref="GameElement"/>s.
+        /// </summary>
         public static void StopAll()
         {
             foreach (var gameElement in _gameElements)
@@ -98,18 +150,79 @@ namespace AlienEngine
         #region Private Members
 
         #region Fields
+        /// <summary>
+        /// The scene in which this game element is.
+        /// </summary>
+        private Scene _parentScene;
+
+        /// <summary>
+        /// The list of attached components in the current
+        /// <see cref="GameElement"/>.
+        /// </summary>
         private List<IComponent> _attachedComponents;
+
+        /// <summary>
+        /// The list of childs in the current <see cref="GameElement"/>.
+        /// </summary>
         private GameElementCollection _childs;
+    
+        /// <summary>
+        /// The name of the current <see cref="GameElement"/>.
+        /// </summary>
         private string _name;
+
+        /// <summary>
+        /// The tag group of the current <see cref="GameElement"/>.
+        /// </summary>
+        private string _tag;
+
+        /// <summary>
+        /// The parent of this <see cref="GameElement"/>.
+        /// </summary>
+        /// <remarks>
+        /// If this <see cref="GameElement"/> has no parents, <see cref="null"/> is returned.
+        /// </remarks>
         private GameElement _parent;
-        private static Dictionary<string, GameElement> _gameElements;
+
+        /// <summary>
+        /// The world transformation of this <see cref="GameElement"/>.
+        /// </summary>
         private Transform _worldTransform;
         #endregion Fields
 
         #region Properties
-        private Vector3f _realScale { get { return (Parent != null) ? Parent._realScale * LocalTransform.Scale : LocalTransform.Scale; } }
-        private Vector3f _realRotation { get { return (Parent != null) ? Parent._realRotation + LocalTransform.Rotation : LocalTransform.Rotation; } }
-        private Vector3f _realPosition { get { return (Parent != null) ? Parent._realPosition + (LocalTransform.Translation * _realScale) : LocalTransform.Translation; } }
+        /// <summary>
+        /// The real scale of this element.
+        /// </summary>
+        private Vector3f _realScale
+        {
+            get
+            {
+                return (Parent != null) ? Parent._realScale * LocalTransform.Scale : LocalTransform.Scale;
+            }
+        }
+
+        /// <summary>
+        /// The real rotation of this element.
+        /// </summary>
+        private Vector3f _realRotation
+        {
+            get
+            {
+                return (Parent != null) ? Parent._realRotation + LocalTransform.Rotation : LocalTransform.Rotation;
+            }
+        }
+
+        /// <summary>
+        /// The real translation of this element.
+        /// </summary>
+        private Vector3f _realTranslation
+        {
+            get
+            {
+                return (Parent != null) ? Parent._realTranslation + (LocalTransform.Translation * _realScale) : LocalTransform.Translation;
+            }
+        }
         #endregion Properties
 
         #endregion Private Members
@@ -117,10 +230,33 @@ namespace AlienEngine
         #region Public Members
 
         #region Properties
+        /// <summary>
+        /// The scene in which this <see cref="GameElement"/> is.
+        /// </summary>
+        public Scene ParentScene { get { return _parentScene; } }
+
+        public GameElementCollection Childs { get { return _childs; } }
+
+        /// <summary>
+        /// The name of this <see cref="GameElement"/>.
+        /// </summary>
         public string Name { get { return _name; } }
 
+        /// <summary>
+        /// The tag group of this <see cref="GameElement"/>.
+        /// </summary>
+        public string Tag { get { return _tag; } }
+
+        /// <summary>
+        /// The parent <see cref="GameElement"/> of this one. If this
+        /// <see cref="GameElement"/> is in the top of the hierarchy (the world)
+        /// <see cref="Parent"/> = <see cref="null"/>.
+        /// </summary>
         public GameElement Parent { get { return _parent; } }
 
+        /// <summary>
+        /// Checks if this <see cref="GameElement"/> has childs.
+        /// </summary>
         public bool HasChilds { get { return _childs.Length > 0; } }
 
         /// <summary>
@@ -146,13 +282,17 @@ namespace AlienEngine
             {
                 _worldTransform.SetScale(_realScale);
                 _worldTransform.SetRotation(_realRotation);
-                _worldTransform.SetTranslation(_realPosition);
+                _worldTransform.SetTranslation(_realTranslation);
                 return _worldTransform;
             }
         }
         #endregion Properties
 
         #region Constructor
+        /// <summary>
+        /// Create a new <see cref="GameElement"/> with a name.
+        /// </summary>
+        /// <param name="name">The name of the new element.</param>
         public GameElement(string name)
         {
             _attachedComponents = new List<IComponent>();
@@ -166,6 +306,10 @@ namespace AlienEngine
         #endregion
 
         #region Methods
+        /// <summary>
+        /// Add a child in this <see cref="GameElement"/>.
+        /// </summary>
+        /// <param name="child">The child.</param>
         public void AddChild(GameElement child)
         {
             if (!HasChild(child))
@@ -175,6 +319,11 @@ namespace AlienEngine
             }
         }
 
+        /// <summary>
+        /// Checks if the given <paramref name="child"/> is a child of
+        /// this <see cref="GameElement"/>.
+        /// </summary>
+        /// <param name="child">The child to find.</param>
         public bool HasChild(GameElement child)
         {
             foreach (GameElement c in _childs)
@@ -183,6 +332,10 @@ namespace AlienEngine
             return false;
         }
 
+        /// <summary>
+        /// Checks if this <see cref="GameElement"/> has a child with the given <paramref name="name"/>.
+        /// </summary>
+        /// <param name="name">The name of the child to find.</param>
         public bool HasChild(string name)
         {
             foreach (GameElement c in _childs)
@@ -191,6 +344,10 @@ namespace AlienEngine
             return false;
         }
 
+        /// <summary>
+        /// Returns the child with the given <paramref name="name"/>.
+        /// </summary>
+        /// <param name="name">The name of the child to find.</param>
         public GameElement FindChild(string name)
         {
             foreach (GameElement c in _childs)
@@ -206,6 +363,10 @@ namespace AlienEngine
             return null;
         }
 
+        /// <summary>
+        /// Returns the list of childs with the given <paramref name="name"/>.
+        /// </summary>
+        /// <param name="name"></param>
         public GameElement[] FindChilds(string name)
         {
             List<GameElement> collection = new List<GameElement>();
@@ -326,6 +487,11 @@ namespace AlienEngine
         {
             foreach (IComponent component in _attachedComponents)
                 component.Stop();
+        }
+
+        internal void SetParentScene(Scene parent)
+        {
+            _parentScene = parent;
         }
 
         public override string ToString()
