@@ -100,9 +100,6 @@ namespace AlienEngine.Core.Graphics
                 Environment.Exit(-1);
             }
 
-            // Make the window's context current
-            GLFW.GLFW.MakeContextCurrent(Handle);
-
             // Enable V-Sync
             if (GameSettings.VSyncEnabled)
                 GLFW.GLFW.SwapInterval(GameSettings.VSyncInterval);
@@ -135,9 +132,6 @@ namespace AlienEngine.Core.Graphics
                 GLFW.GLFW.Shutdown();
                 Environment.Exit(-1);
             }
-
-            // Make the window's context current
-            GLFW.GLFW.MakeContextCurrent(Handle);
 
             // Enable V-Sync
             if (GameSettings.VSyncEnabled)
@@ -183,9 +177,6 @@ namespace AlienEngine.Core.Graphics
                 Environment.Exit(-1);
             }
 
-            // Make the window's context current
-            GLFW.GLFW.MakeContextCurrent(Handle);
-
             // Enable V-Sync
             if (GameSettings.VSyncEnabled)
                 GLFW.GLFW.SwapInterval(GameSettings.VSyncInterval);
@@ -221,9 +212,6 @@ namespace AlienEngine.Core.Graphics
                 Environment.Exit(-1);
             }
 
-            // Make the window's context current
-            GLFW.GLFW.MakeContextCurrent(Handle);
-
             // Enable V-Sync
             if (GameSettings.VSyncEnabled)
                 GLFW.GLFW.SwapInterval(GameSettings.VSyncInterval);
@@ -258,9 +246,6 @@ namespace AlienEngine.Core.Graphics
                 GLFW.GLFW.Shutdown();
                 Environment.Exit(-1);
             }
-
-            // Make the window's context current
-            GLFW.GLFW.MakeContextCurrent(Handle);
 
             // Enable V-Sync
             if (GameSettings.VSyncEnabled)
@@ -401,6 +386,15 @@ namespace AlienEngine.Core.Graphics
         }
 
         /// <summary>
+        /// Make the context of this <see cref="GameWindow"/>
+        /// current in the calling thread.
+        /// </summary>
+        public void MakeContextCurrent()
+        {
+            GLFW.GLFW.MakeContextCurrent(Handle);
+        }
+
+        /// <summary>
         /// Gets framebuffer size.
         /// </summary>
         /// <param name="width">The framebuffer's width.</param>
@@ -487,6 +481,15 @@ namespace AlienEngine.Core.Graphics
         #endregion
 
         #region Static members
+        /// <summary>
+        /// Makes current the given window's context.
+        /// </summary>
+        /// <param name="window">The window.</param>
+        public static void MakeContextCurrent(GameWindow window)
+        {
+            GLFW.GLFW.MakeContextCurrent(window.Handle);
+        }
+
         /// <summary>
         /// Call all events in the queue.
         /// </summary>
