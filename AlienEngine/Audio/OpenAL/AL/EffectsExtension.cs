@@ -1224,7 +1224,7 @@ namespace AlienEngine.Core.Audio.OpenAL
                 Debug.Print("EFX Extension (ALC_EXT_EFX) is not supported(AudioContext: {0}).", AudioContext.CurrentContext.ToString());
                 return;
             }
-            // Console.WriteLine("ALC_EXT_EFX found. Efx can be used.");
+            Console.WriteLine("ALC_EXT_EFX found. Efx can be used.");
 
             try
             {
@@ -1243,7 +1243,7 @@ namespace AlienEngine.Core.Audio.OpenAL
                 Debug.WriteLine("Failed to marshal Effect functions. " + e.ToString());
                 return;
             }
-            // Console.WriteLine("Effect functions appear to be ok.");
+            Console.WriteLine("Effect functions appear to be ok.");
 
             try
             {
@@ -1260,7 +1260,7 @@ namespace AlienEngine.Core.Audio.OpenAL
                 Debug.WriteLine("Failed to marshal Filter functions. " + e.ToString());
                 return;
             }
-            // Console.WriteLine("Filter functions appear to be ok.");
+            Console.WriteLine("Filter functions appear to be ok.");
 
             try
             {
@@ -1277,7 +1277,7 @@ namespace AlienEngine.Core.Audio.OpenAL
                 Debug.WriteLine("Failed to marshal AuxiliaryEffectSlot functions. " + e.ToString());
                 return;
             }
-            // Console.WriteLine("Auxiliary Effect Slot functions appear to be ok.");
+            Console.WriteLine("Auxiliary Effect Slot functions appear to be ok.");
 
             // didn't return so far, everything went fine.
             _valid = true;
