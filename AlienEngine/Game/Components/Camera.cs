@@ -282,6 +282,14 @@ namespace AlienEngine
 
             _up.Normalize();
             _forward.Normalize();
+
+            if (gameElement != null)
+            {
+                gameElement.LocalTransform.OnAllChange += (_old, _new) =>
+                {
+                    _shouldUpdate = true;
+                };
+            }
         }
         #endregion
 
