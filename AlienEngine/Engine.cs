@@ -1,4 +1,5 @@
 ﻿using AlienEngine.Core.Audio;
+using AlienEngine.Core.Audio.OpenAL;
 using AlienEngine.Core.Graphics.DevIL.Unmanaged;
 using AlienEngine.Core.Graphics.OpenGL;
 using AlienEngine.Core.Resources;
@@ -59,6 +60,9 @@ namespace AlienEngine.Core
                 _audioContext = new AudioContext();
                 if (!_audioContext.IsCurrent)
                     _audioContext.MakeCurrent();
+                // --------------------
+                // Disable OpenAL rolloff algorithms
+                AL.DistanceModel(ALDistanceModel.None);
                 // --------------------
 
                 _started = true;
