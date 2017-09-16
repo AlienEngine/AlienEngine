@@ -2,6 +2,7 @@
 {
     public enum ColliderShapes
     {
+        Unknow = 0,
         Plane,
         Box,
         Sphere,

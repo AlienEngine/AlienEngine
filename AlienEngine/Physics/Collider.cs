@@ -1,5 +1,5 @@
 ﻿using AlienEngine.Core.Physics;
-using BulletSharp;
+using BEPUphysics.CollisionShapes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,19 +8,19 @@ using System.Threading.Tasks;
 
 namespace AlienEngine
 {
-    public class Collider : Component
+    public abstract class Collider : Component
     {
-        protected CollisionShape _shape;
-        protected ColliderShapes _shapeType;
+        [CLSCompliant(false)]
+        protected EntityShape _shape;
 
-        internal CollisionShape Shape
+        internal EntityShape Shape
         {
             get { return _shape; }
         }
 
-        internal ColliderShapes ShapeType
+        public abstract ColliderShapes ShapeType
         {
-            get { return _shapeType; }
+            get;
         }
     }
 }
