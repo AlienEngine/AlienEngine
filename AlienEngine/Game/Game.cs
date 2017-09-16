@@ -1,4 +1,4 @@
-using AlienEngine.AssetsManager;
+using AlienEngine.Core.Audio.OpenAL;
 using AlienEngine.Core.Graphics;
 
 namespace AlienEngine.Core.Game
@@ -62,11 +62,6 @@ namespace AlienEngine.Core.Game
         public static void LoadScene(Scene scene)
         {
             _currentScene = scene;
-        }
-
-        public static void LoadScene(SceneAsset scene)
-        {
-
         }
     }
 }
