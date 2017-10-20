@@ -39,7 +39,8 @@ namespace AlienEngine
                     collection[i] = (Vector3)positions[i];
                 }
 
-                _shape = new MobileMeshShape(collection, mergedMesh.Indices, new AffineTransform((Vector3)t.Scale, BEPUutilities.Quaternion.CreateFromYawPitchRoll(t.Rotation.Z, t.Rotation.Y, t.Rotation.X), (Vector3)t.Translation), MobileMeshSolidity.DoubleSided, out Vector3 center);
+                Vector3 center;
+                _shape = new MobileMeshShape(collection, mergedMesh.Indices, new AffineTransform((Vector3)t.Scale, BEPUutilities.Quaternion.CreateFromYawPitchRoll(t.Rotation.Z, t.Rotation.Y, t.Rotation.X), (Vector3)t.Translation), MobileMeshSolidity.DoubleSided, out center);
                 _centerOffset = (Vector3f)center;
 
             }
