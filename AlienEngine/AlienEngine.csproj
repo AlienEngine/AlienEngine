@@ -221,11 +221,16 @@
     <Compile Include="Game\Components\BoxCollider.cs" />
     <Compile Include="Game\Components\CapsuleCollider.cs" />
     <Compile Include="Imaging\Image.cs" />
+    <Compile Include="Math\AffineTransform.cs" />
     <Compile Include="Math\BoundingBox.cs" />
     <Compile Include="Math\BoundingSphere.cs" />
     <Compile Include="Math\ContainmentType.cs" />
+    <Compile Include="Math\MathChecker.cs" />
     <Compile Include="Math\Matrix2x3f.cs" />
     <Compile Include="Math\Matrix3x2f.cs" />
+    <Compile Include="Math\Plane.cs" />
+    <Compile Include="Math\Ray.cs" />
+    <Compile Include="Math\RigidTransform.cs" />
     <Compile Include="Physics\Collider.cs" />
     <Compile Include="Game\Components\Light.cs" />
     <Compile Include="Game\Components\MeshCollider.cs" />
