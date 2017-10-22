@@ -224,6 +224,8 @@
     <Compile Include="Math\BoundingBox.cs" />
     <Compile Include="Math\BoundingSphere.cs" />
     <Compile Include="Math\ContainmentType.cs" />
+    <Compile Include="Math\Matrix2x3f.cs" />
+    <Compile Include="Math\Matrix3x2f.cs" />
     <Compile Include="Physics\Collider.cs" />
     <Compile Include="Game\Components\Light.cs" />
     <Compile Include="Game\Components\MeshCollider.cs" />
@@ -440,7 +442,6 @@
     <Folder Include="Graphics\DirectX\" />
     <Folder Include="Graphics\Shaders\Samples\Geometry Shaders\" />
     <Folder Include="Graphics\Vulkan\" />
-    <Folder Include="Physics\BEPU\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\AssimpNet.3.3.2\build\AssimpNet.targets" Condition="Exists('..\packages\AssimpNet.3.3.2\build\AssimpNet.targets')" />
