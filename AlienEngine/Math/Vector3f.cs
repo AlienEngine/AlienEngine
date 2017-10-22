@@ -382,8 +382,9 @@ namespace AlienEngine
         /// <returns>Result of operation.</returns>
         public static Vector3f Add(Vector3f a, Vector3f b)
         {
-            Add(ref a, ref b, out a);
-            return a;
+            Vector3f res;
+            Add(ref a, ref b, out res);
+            return res;
         }
 
         /// <summary>
@@ -405,8 +406,9 @@ namespace AlienEngine
         /// <returns>Result of subtraction</returns>
         public static Vector3f Subtract(Vector3f a, Vector3f b)
         {
-            Subtract(ref a, ref b, out a);
-            return a;
+            Vector3f res;
+            Subtract(ref a, ref b, out res);
+            return res;
         }
 
         /// <summary>
@@ -428,8 +430,9 @@ namespace AlienEngine
         /// <returns>Result of the operation.</returns>
         public static Vector3f Multiply(Vector3f vector, float scale)
         {
-            Multiply(ref vector, scale, out vector);
-            return vector;
+            Vector3f res;
+            Multiply(ref vector, scale, out res);
+            return res;
         }
 
         /// <summary>
@@ -451,8 +454,9 @@ namespace AlienEngine
         /// <returns>Result of the operation.</returns>
         public static Vector3f Multiply(Vector3f vector, Vector3f scale)
         {
-            Multiply(ref vector, ref scale, out vector);
-            return vector;
+            Vector3f res;
+            Multiply(ref vector, ref scale, out res);
+            return res;
         }
 
         /// <summary>
@@ -474,8 +478,9 @@ namespace AlienEngine
         /// <returns>Result of the operation.</returns>
         public static Vector3f Divide(Vector3f vector, float scale)
         {
-            Divide(ref vector, scale, out vector);
-            return vector;
+            Vector3f res;
+            Divide(ref vector, scale, out res);
+            return res;
         }
 
         /// <summary>
@@ -497,8 +502,9 @@ namespace AlienEngine
         /// <returns>Result of the operation.</returns>
         public static Vector3f Divide(Vector3f vector, Vector3f scale)
         {
-            Divide(ref vector, ref scale, out vector);
-            return vector;
+            Vector3f res;
+            Divide(ref vector, ref scale, out res);
+            return res;
         }
 
         /// <summary>
@@ -513,17 +519,94 @@ namespace AlienEngine
         }
 
         /// <summary>
-        /// Calculate the component-wise minimum of two vectors
+        /// Computes the squared distance between two vectors.
         /// </summary>
-        /// <param name="a">First operand</param>
-        /// <param name="b">Second operand</param>
-        /// <returns>The component-wise minimum</returns>
+        /// <param name="a">First vector.</param>
+        /// <param name="b">Second vector.</param>
+        /// <returns>Squared distance between the two vectors.</returns>
+        public static float DistanceSquared(Vector3f a, Vector3f b)
+        {
+            float res;
+            DistanceSquared(ref a, ref b, out res);
+            return res;
+        }
+
+        /// <summary>
+        /// Computes the squared distance between two vectors.
+        /// </summary>
+        /// <param name="a">First vector.</param>
+        /// <param name="b">Second vector.</param>
+        /// <param name="distanceSquared">Squared distance between the two vectors.</param>
+        public static void DistanceSquared(ref Vector3f a, ref Vector3f b, out float distanceSquared)
+        {
+            float x = a.X - b.X;
+            float y = a.Y - b.Y;
+            float z = a.Z - b.Z;
+            distanceSquared = x * x + y * y + z * z;
+        }
+
+        /// <summary>
+        /// Computes the distance between two two vectors.
+        /// </summary>
+        /// <param name="a">First vector.</param>
+        /// <param name="b">Second vector.</param>
+        /// <returns>Distance between the two vectors.</returns>
+        public static float Distance(Vector3f a, Vector3f b)
+        {
+            float toReturn;
+            Distance(ref a, ref b, out toReturn);
+            return toReturn;
+        }
+
+        /// <summary>
+        /// Computes the distance between two two vectors.
+        /// </summary>
+        /// <param name="a">First vector.</param>
+        /// <param name="b">Second vector.</param>
+        /// <param name="distance">Distance between the two vectors.</param>
+        public static void Distance(ref Vector3f a, ref Vector3f b, out float distance)
+        {
+            float x = a.X - b.X;
+            float y = a.Y - b.Y;
+            float z = a.Z - b.Z;
+            distance = MathHelper.Sqrt(x * x + y * y + z * z);
+        }
+
+        /// <summary>
+        /// Negates a vector.
+        /// </summary>
+        /// <param name="v">Vector to negate.</param>
+        /// <param name="negated">Negated vector.</param>
+        public static Vector3f Negate(Vector3f v)
+        {
+            Vector3f res;
+            Negate(ref v, out res);
+            return res;
+        }
+
+        /// <summary>
+        /// Negates a vector.
+        /// </summary>
+        /// <param name="v">Vector to negate.</param>
+        /// <param name="negated">Negated vector.</param>
+        public static void Negate(ref Vector3f v, out Vector3f negated)
+        {
+            negated.X = -v.X;
+            negated.Y = -v.Y;
+            negated.Z = -v.Z;
+        }
+
+        /// <summary>
+        /// Creates a vector from the lesser values in each vector.
+        /// </summary>
+        /// <param name="a">First input vector to compare values from.</param>
+        /// <param name="b">Second input vector to compare values from.</param>
+        /// <returns>Vector containing the lesser values of each vector.</returns>
         public static Vector3f ComponentMin(Vector3f a, Vector3f b)
         {
-            a.X = a.X < b.X ? a.X : b.X;
-            a.Y = a.Y < b.Y ? a.Y : b.Y;
-            a.Z = a.Z < b.Z ? a.Z : b.Z;
-            return a;
+            Vector3f result;
+            ComponentMin(ref a, ref b, out result);
+            return result;
         }
 
         /// <summary>
@@ -540,17 +623,16 @@ namespace AlienEngine
         }
 
         /// <summary>
-        /// Calculate the component-wise maximum of two vectors
+        /// Creates a vector from the greater values in each vector.
         /// </summary>
-        /// <param name="a">First operand</param>
-        /// <param name="b">Second operand</param>
-        /// <returns>The component-wise maximum</returns>
+        /// <param name="a">First input vector to compare values from.</param>
+        /// <param name="b">Second input vector to compare values from.</param>
+        /// <returns>Vector containing the greater values of each vector.</returns>
         public static Vector3f ComponentMax(Vector3f a, Vector3f b)
         {
-            a.X = a.X > b.X ? a.X : b.X;
-            a.Y = a.Y > b.Y ? a.Y : b.Y;
-            a.Z = a.Z > b.Z ? a.Z : b.Z;
-            return a;
+            Vector3f result;
+            ComponentMax(ref a, ref b, out result);
+            return result;
         }
 
         /// <summary>
@@ -683,7 +765,9 @@ namespace AlienEngine
         /// <returns>The dot product of the two inputs</returns>
         public static float Dot(Vector3f left, Vector3f right)
         {
-            return left.X * right.X + left.Y * right.Y + left.Z * right.Z;
+            float res;
+            Dot(ref left, ref right, out res);
+            return res;
         }
 
         /// <summary>
@@ -735,10 +819,9 @@ namespace AlienEngine
         /// <returns>a when blend=0, b when blend=1, and a linear combination otherwise</returns>
         public static Vector3f Lerp(Vector3f a, Vector3f b, float blend)
         {
-            a.X = blend * (b.X - a.X) + a.X;
-            a.Y = blend * (b.Y - a.Y) + a.Y;
-            a.Z = blend * (b.Z - a.Z) + a.Z;
-            return a;
+            Vector3f toReturn;
+            Lerp(ref a, ref b, blend, out toReturn);
+            return toReturn;
         }
 
         /// <summary>
@@ -753,6 +836,44 @@ namespace AlienEngine
             result.X = blend * (b.X - a.X) + a.X;
             result.Y = blend * (b.Y - a.Y) + a.Y;
             result.Z = blend * (b.Z - a.Z) + a.Z;
+        }
+
+        /// <summary>
+        /// Computes an intermediate location using hermite interpolation.
+        /// </summary>
+        /// <param name="value1">First position.</param>
+        /// <param name="tangent1">Tangent associated with the first position.</param>
+        /// <param name="value2">Second position.</param>
+        /// <param name="tangent2">Tangent associated with the second position.</param>
+        /// <param name="interpolationAmount">Amount of the second point to use.</param>
+        /// <returns>Interpolated intermediate state.</returns>
+        public static Vector3f Hermite(Vector3f value1, Vector3f tangent1, Vector3f value2, Vector3f tangent2, float interpolationAmount)
+        {
+            Vector3f toReturn;
+            Hermite(ref value1, ref tangent1, ref value2, ref tangent2, interpolationAmount, out toReturn);
+            return toReturn;
+        }
+
+        /// <summary>
+        /// Computes an intermediate location using hermite interpolation.
+        /// </summary>
+        /// <param name="value1">First position.</param>
+        /// <param name="tangent1">Tangent associated with the first position.</param>
+        /// <param name="value2">Second position.</param>
+        /// <param name="tangent2">Tangent associated with the second position.</param>
+        /// <param name="interpolationAmount">Amount of the second point to use.</param>
+        /// <param name="result">Interpolated intermediate state.</param>
+        public static void Hermite(ref Vector3f value1, ref Vector3f tangent1, ref Vector3f value2, ref Vector3f tangent2, float interpolationAmount, out Vector3f result)
+        {
+            float weightSquared = interpolationAmount * interpolationAmount;
+            float weightCubed = interpolationAmount * weightSquared;
+            float value1Blend = 2 * weightCubed - 3 * weightSquared + 1;
+            float tangent1Blend = weightCubed - 2 * weightSquared + interpolationAmount;
+            float value2Blend = -2 * weightCubed + 3 * weightSquared;
+            float tangent2Blend = weightCubed - weightSquared;
+            result.X = value1.X * value1Blend + value2.X * value2Blend + tangent1.X * tangent1Blend + tangent2.X * tangent2Blend;
+            result.Y = value1.Y * value1Blend + value2.Y * value2Blend + tangent1.Y * tangent1Blend + tangent2.Y * tangent2Blend;
+            result.Z = value1.Z * value1Blend + value2.Z * value2Blend + tangent1.Z * tangent1Blend + tangent2.Z * tangent2Blend;
         }
 
         /// <summary>
@@ -791,6 +912,192 @@ namespace AlienEngine
             Add(ref result, ref temp, out result);
         }
 
+        /// <summary>
+        /// Transforms the vector by the matrix.
+        /// </summary>
+        /// <param name="v">Vector2 to transform.  Considered to be a row vector for purposes of multiplication.</param>
+        /// <param name="matrix">Matrix to use as the transformation.</param>
+        /// <param name="result">Row vector product of the transformation.</param>
+        public static void Transform(ref Vector2f v, ref Matrix2x3f matrix, out Vector3f result)
+        {
+#if !WINDOWS
+            result = new Vector3f();
+#endif
+            result.X = v.X * matrix.M11 + v.Y * matrix.M21;
+            result.Y = v.X * matrix.M12 + v.Y * matrix.M22;
+            result.Z = v.X * matrix.M13 + v.Y * matrix.M23;
+        }
+
+        /// <summary>
+        /// Transforms the vector by the matrix.
+        /// </summary>
+        /// <param name="v">Vector2 to transform.  Considered to be a column vector for purposes of multiplication.</param>
+        /// <param name="matrix">Matrix to use as the transformation.</param>
+        /// <param name="result">Column vector product of the transformation.</param>
+        public static void Transform(ref Vector2f v, ref Matrix3x2f matrix, out Vector3f result)
+        {
+#if !WINDOWS
+            result = new Vector3f();
+#endif
+            result.X = matrix.M11 * v.X + matrix.M12 * v.Y;
+            result.Y = matrix.M21 * v.X + matrix.M22 * v.Y;
+            result.Z = matrix.M31 * v.X + matrix.M32 * v.Y;
+        }
+
+        /// <summary>
+        /// Transforms the vector by the matrix.
+        /// </summary>
+        /// <param name="v">Vector3 to transform.</param>
+        /// <param name="matrix">Matrix to use as the transformation.</param>
+        /// <returns>Product of the transformation.</returns>
+        public static Vector3f Transform(Vector3f v, Matrix3f matrix)
+        {
+            Vector3f result;
+            Transform(ref v, ref matrix, out result);
+            return result;
+        }
+
+        /// <summary>
+        /// Transforms the vector by the matrix.
+        /// </summary>
+        /// <param name="v">Vector3 to transform.</param>
+        /// <param name="matrix">Matrix to use as the transformation.</param>
+        /// <param name="result">Product of the transformation.</param>
+        public static void Transform(ref Vector3f v, ref Matrix3f matrix, out Vector3f result)
+        {
+            float vX = v.X;
+            float vY = v.Y;
+            float vZ = v.Z;
+#if !WINDOWS
+            result = new Vector3f();
+#endif
+            result.X = vX * matrix.M11 + vY * matrix.M21 + vZ * matrix.M31;
+            result.Y = vX * matrix.M12 + vY * matrix.M22 + vZ * matrix.M32;
+            result.Z = vX * matrix.M13 + vY * matrix.M23 + vZ * matrix.M33;
+        }
+
+        /// <summary>
+        /// Transforms the vector by the matrix's transpose.
+        /// </summary>
+        /// <param name="v">Vector3 to transform.</param>
+        /// <param name="matrix">Matrix to use as the transformation transpose.</param>
+        /// <returns>Product of the transformation.</returns>
+        public static Vector3f TransformTranspose(Vector3f v, Matrix3f matrix)
+        {
+            Vector3f result;
+            TransformTranspose(ref v, ref matrix, out result);
+            return result;
+        }
+
+        /// <summary>
+        /// Transforms the vector by the matrix's transpose.
+        /// </summary>
+        /// <param name="v">Vector3 to transform.</param>
+        /// <param name="matrix">Matrix to use as the transformation transpose.</param>
+        /// <param name="result">Product of the transformation.</param>
+        public static void TransformTranspose(ref Vector3f v, ref Matrix3f matrix, out Vector3f result)
+        {
+            float vX = v.X;
+            float vY = v.Y;
+            float vZ = v.Z;
+#if !WINDOWS
+            result = new Vector3f();
+#endif
+            result.X = vX * matrix.M11 + vY * matrix.M12 + vZ * matrix.M13;
+            result.Y = vX * matrix.M21 + vY * matrix.M22 + vZ * matrix.M23;
+            result.Z = vX * matrix.M31 + vY * matrix.M32 + vZ * matrix.M33;
+        }
+
+        /// <summary>
+        /// Transforms a vector using a matrix.
+        /// </summary>
+        /// <param name="v">Vector to transform.</param>
+        /// <param name="matrix">Transform to apply to the vector.</param>
+        /// <param name="result">Transformed vector.</param>
+        public static void Transform(ref Vector3f v, ref Matrix4f matrix, out Vector3f result)
+        {
+            float vX = v.X;
+            float vY = v.Y;
+            float vZ = v.Z;
+            result.X = vX * matrix.M11 + vY * matrix.M21 + vZ * matrix.M31 + matrix.M41;
+            result.Y = vX * matrix.M12 + vY * matrix.M22 + vZ * matrix.M32 + matrix.M42;
+            result.Z = vX * matrix.M13 + vY * matrix.M23 + vZ * matrix.M33 + matrix.M43;
+        }
+
+        /// <summary>
+        /// Transforms a vector using the transpose of a matrix.
+        /// </summary>
+        /// <param name="v">Vector to transform.</param>
+        /// <param name="matrix">Transform to tranpose and apply to the vector.</param>
+        /// <param name="result">Transformed vector.</param>
+        public static void TransformTranspose(ref Vector3f v, ref Matrix4f matrix, out Vector3f result)
+        {
+            float vX = v.X;
+            float vY = v.Y;
+            float vZ = v.Z;
+            result.X = vX * matrix.M11 + vY * matrix.M12 + vZ * matrix.M13 + matrix.M14;
+            result.Y = vX * matrix.M21 + vY * matrix.M22 + vZ * matrix.M23 + matrix.M24;
+            result.Z = vX * matrix.M31 + vY * matrix.M32 + vZ * matrix.M33 + matrix.M34;
+        }
+
+        /// <summary>
+        /// Transforms a vector using a matrix.
+        /// </summary>
+        /// <param name="v">Vector to transform.</param>
+        /// <param name="matrix">Transform to apply to the vector.</param>
+        /// <returns>Transformed vector.</returns>
+        public static Vector3f TransformNormal(Vector3f v, Matrix4f matrix)
+        {
+            Vector3f toReturn;
+            TransformNormal(ref v, ref matrix, out toReturn);
+            return toReturn;
+        }
+
+        /// <summary>
+        /// Transforms a vector using a matrix.
+        /// </summary>
+        /// <param name="v">Vector to transform.</param>
+        /// <param name="matrix">Transform to apply to the vector.</param>
+        /// <param name="result">Transformed vector.</param>
+        public static void TransformNormal(ref Vector3f v, ref Matrix4f matrix, out Vector3f result)
+        {
+            float vX = v.X;
+            float vY = v.Y;
+            float vZ = v.Z;
+            result.X = vX * matrix.M11 + vY * matrix.M21 + vZ * matrix.M31;
+            result.Y = vX * matrix.M12 + vY * matrix.M22 + vZ * matrix.M32;
+            result.Z = vX * matrix.M13 + vY * matrix.M23 + vZ * matrix.M33;
+        }
+
+        /// <summary>
+        /// Transforms a vector using the transpose of a matrix.
+        /// </summary>
+        /// <param name="v">Vector to transform.</param>
+        /// <param name="matrix">Transform to tranpose and apply to the vector.</param>
+        /// <returns>Transformed vector.</returns>
+        public static Vector3f TransformNormalTranspose(Vector3f v, Matrix4f matrix)
+        {
+            Vector3f toReturn;
+            TransformNormalTranspose(ref v, ref matrix, out toReturn);
+            return toReturn;
+        }
+
+        /// <summary>
+        /// Transforms a vector using the transpose of a matrix.
+        /// </summary>
+        /// <param name="v">Vector to transform.</param>
+        /// <param name="matrix">Transform to tranpose and apply to the vector.</param>
+        /// <param name="result">Transformed vector.</param>
+        public static void TransformNormalTranspose(ref Vector3f v, ref Matrix4f matrix, out Vector3f result)
+        {
+            float vX = v.X;
+            float vY = v.Y;
+            float vZ = v.Z;
+            result.X = vX * matrix.M11 + vY * matrix.M12 + vZ * matrix.M13;
+            result.Y = vX * matrix.M21 + vY * matrix.M22 + vZ * matrix.M23;
+            result.Z = vX * matrix.M31 + vY * matrix.M32 + vZ * matrix.M33;
+        }
+
         /// <summary>Transform a direction vector by the given Matrix
         /// Assumes the matrix has a bottom row of (0,0,0,1), that is the translation part is ignored.
         /// </summary>
@@ -814,84 +1121,17 @@ namespace AlienEngine
         /// <param name="result">The transformed vector</param>
         public static void TransformVector(ref Vector3f vec, ref Matrix4f mat, out Vector3f result)
         {
-            result.X = vec.X * mat.Row0.X +
-                vec.Y * mat.Row1.X +
-                vec.Z * mat.Row2.X;
+            result.X = vec.X * mat.M11 +
+                vec.Y * mat.M21 +
+                vec.Z * mat.M31;
 
-            result.Y = vec.X * mat.Row0.Y +
-                vec.Y * mat.Row1.Y +
-                vec.Z * mat.Row2.Y;
+            result.Y = vec.X * mat.M12 +
+                vec.Y * mat.M22 +
+                vec.Z * mat.M32;
 
-            result.Z = vec.X * mat.Row0.Z +
-                vec.Y * mat.Row1.Z +
-                vec.Z * mat.Row2.Z;
-        }
-
-        /// <summary>Transform a Normal by the given Matrix</summary>
-        /// <remarks>
-        /// This calculates the inverse of the given matrix, use TransformNormalInverse if you
-        /// already have the inverse to avoid this extra calculation
-        /// </remarks>
-        /// <param name="norm">The normal to transform</param>
-        /// <param name="mat">The desired transformation</param>
-        /// <returns>The transformed normal</returns>
-        public static Vector3f TransformNormal(Vector3f norm, Matrix4f mat)
-        {
-            return TransformNormalInverse(norm, mat.Inversed);
-        }
-
-        /// <summary>Transform a Normal by the given Matrix</summary>
-        /// <remarks>
-        /// This calculates the inverse of the given matrix, use TransformNormalInverse if you
-        /// already have the inverse to avoid this extra calculation
-        /// </remarks>
-        /// <param name="norm">The normal to transform</param>
-        /// <param name="mat">The desired transformation</param>
-        /// <param name="result">The transformed normal</param>
-        public static void TransformNormal(ref Vector3f norm, ref Matrix4f mat, out Vector3f result)
-        {
-            Matrix4f Inverse = Matrix4f.Inverse(mat);
-            Vector3f.TransformNormalInverse(ref norm, ref Inverse, out result);
-        }
-
-        /// <summary>Transform a Normal by the (transpose of the) given Matrix</summary>
-        /// <remarks>
-        /// This version doesn't calculate the inverse matrix.
-        /// Use this version if you already have the inverse of the desired transform to hand
-        /// </remarks>
-        /// <param name="norm">The normal to transform</param>
-        /// <param name="invMat">The inverse of the desired transformation</param>
-        /// <returns>The transformed normal</returns>
-        public static Vector3f TransformNormalInverse(Vector3f norm, Matrix4f invMat)
-        {
-            Vector3f n;
-            n.X = Vector3f.Dot(norm, new Vector3f(invMat.Row0));
-            n.Y = Vector3f.Dot(norm, new Vector3f(invMat.Row1));
-            n.Z = Vector3f.Dot(norm, new Vector3f(invMat.Row2));
-            return n;
-        }
-
-        /// <summary>Transform a Normal by the (transpose of the) given Matrix</summary>
-        /// <remarks>
-        /// This version doesn't calculate the inverse matrix.
-        /// Use this version if you already have the inverse of the desired transform to hand
-        /// </remarks>
-        /// <param name="norm">The normal to transform</param>
-        /// <param name="invMat">The inverse of the desired transformation</param>
-        /// <param name="result">The transformed normal</param>
-        public static void TransformNormalInverse(ref Vector3f norm, ref Matrix4f invMat, out Vector3f result)
-        {
-            result.X = norm.X * invMat.Row0.X +
-                norm.Y * invMat.Row0.Y +
-                norm.Z * invMat.Row0.Z;
-
-            result.Y = norm.X * invMat.Row1.X +
-                norm.Y * invMat.Row1.Y +
-                norm.Z * invMat.Row1.Z;
-
-            result.Z = norm.X * invMat.Row2.X +
-                norm.Y * invMat.Row2.Y +
-                norm.Z * invMat.Row2.Z;
+            result.Z = vec.X * mat.M13 +
+                vec.Y * mat.M23 +
+                vec.Z * mat.M33;
         }
 
         /// <summary>Transform a Position by the given Matrix</summary>
@@ -901,9 +1141,9 @@ namespace AlienEngine
         public static Vector3f TransformPosition(Vector3f pos, Matrix4f mat)
         {
             Vector3f p;
-            p.X = Vector3f.Dot(pos, new Vector3f(mat.Column0)) + mat.Row3.X;
-            p.Y = Vector3f.Dot(pos, new Vector3f(mat.Column1)) + mat.Row3.Y;
-            p.Z = Vector3f.Dot(pos, new Vector3f(mat.Column2)) + mat.Row3.Z;
+            p.X = Vector3f.Dot(pos, new Vector3f(mat.Column0)) + mat.M41;
+            p.Y = Vector3f.Dot(pos, new Vector3f(mat.Column1)) + mat.M42;
+            p.Z = Vector3f.Dot(pos, new Vector3f(mat.Column2)) + mat.M43;
             return p;
         }
 
@@ -913,42 +1153,20 @@ namespace AlienEngine
         /// <param name="result">The transformed position</param>
         public static void TransformPosition(ref Vector3f pos, ref Matrix4f mat, out Vector3f result)
         {
-            result.X = pos.X * mat.Row0.X +
-                pos.Y * mat.Row1.X +
-                pos.Z * mat.Row2.X +
-                mat.Row3.X;
+            result.X = pos.X * mat.M11 +
+                pos.Y * mat.M21 +
+                pos.Z * mat.M31 +
+                mat.M41;
 
-            result.Y = pos.X * mat.Row0.Y +
-                pos.Y * mat.Row1.Y +
-                pos.Z * mat.Row2.Y +
-                mat.Row3.Y;
+            result.Y = pos.X * mat.M12 +
+                pos.Y * mat.M22 +
+                pos.Z * mat.M32 +
+                mat.M42;
 
-            result.Z = pos.X * mat.Row0.Z +
-                pos.Y * mat.Row1.Z +
-                pos.Z * mat.Row2.Z +
-                mat.Row3.Z;
-        }
-
-        /// <summary>Transform a Vector by the given Matrix</summary>
-        /// <param name="vec">The vector to transform</param>
-        /// <param name="mat">The desired transformation</param>
-        /// <returns>The transformed vector</returns>
-        public static Vector3f Transform(Vector3f vec, Matrix4f mat)
-        {
-            Vector3f result;
-            Transform(ref vec, ref mat, out result);
-            return result;
-        }
-
-        /// <summary>Transform a Vector by the given Matrix</summary>
-        /// <param name="vec">The vector to transform</param>
-        /// <param name="mat">The desired transformation</param>
-        /// <param name="result">The transformed vector</param>
-        public static void Transform(ref Vector3f vec, ref Matrix4f mat, out Vector3f result)
-        {
-            Vector4f v4 = new Vector4f(vec.X, vec.Y, vec.Z, 1.0f);
-            Vector4f.Transform(ref v4, ref mat, out v4);
-            result = v4.XYZ;
+            result.Z = pos.X * mat.M13 +
+                pos.Y * mat.M23 +
+                pos.Z * mat.M33 +
+                mat.M43;
         }
 
         /// <summary>
@@ -983,6 +1201,95 @@ namespace AlienEngine
             Add(ref vec, ref temp, out result);
             result.Truncate();
             //result = ((quat * vec) * Quaternion.Conjugate(quat)).XYZ;
+        }
+
+        /// <summary>
+        /// Transforms a vector using a quaternion. Specialized for x,0,0 vectors.
+        /// </summary>
+        /// <param name="x">X component of the vector to transform.</param>
+        /// <param name="rotation">Rotation to apply to the vector.</param>
+        /// <param name="result">Transformed vector.</param>
+        public static void TransformX(float x, ref Quaternion rotation, out Vector3f result)
+        {
+            //This operation is an optimized-down version of v' = q * v * q^-1.
+            //The expanded form would be to treat v as an 'axis only' quaternion
+            //and perform standard quaternion multiplication.  Assuming q is normalized,
+            //q^-1 can be replaced by a conjugation.
+            float y2 = rotation.Y + rotation.Y;
+            float z2 = rotation.Z + rotation.Z;
+            float xy2 = rotation.X * y2;
+            float xz2 = rotation.X * z2;
+            float yy2 = rotation.Y * y2;
+            float zz2 = rotation.Z * z2;
+            float wy2 = rotation.W * y2;
+            float wz2 = rotation.W * z2;
+            //Defer the component setting since they're used in computation.
+            float transformedX = x * (1f - yy2 - zz2);
+            float transformedY = x * (xy2 + wz2);
+            float transformedZ = x * (xz2 - wy2);
+            result.X = transformedX;
+            result.Y = transformedY;
+            result.Z = transformedZ;
+        }
+
+        /// <summary>
+        /// Transforms a vector using a quaternion. Specialized for 0,y,0 vectors.
+        /// </summary>
+        /// <param name="y">Y component of the vector to transform.</param>
+        /// <param name="rotation">Rotation to apply to the vector.</param>
+        /// <param name="result">Transformed vector.</param>
+        public static void TransformY(float y, ref Quaternion rotation, out Vector3f result)
+        {
+            //This operation is an optimized-down version of v' = q * v * q^-1.
+            //The expanded form would be to treat v as an 'axis only' quaternion
+            //and perform standard quaternion multiplication.  Assuming q is normalized,
+            //q^-1 can be replaced by a conjugation.
+            float x2 = rotation.X + rotation.X;
+            float y2 = rotation.Y + rotation.Y;
+            float z2 = rotation.Z + rotation.Z;
+            float xx2 = rotation.X * x2;
+            float xy2 = rotation.X * y2;
+            float yz2 = rotation.Y * z2;
+            float zz2 = rotation.Z * z2;
+            float wx2 = rotation.W * x2;
+            float wz2 = rotation.W * z2;
+            //Defer the component setting since they're used in computation.
+            float transformedX = y * (xy2 - wz2);
+            float transformedY = y * (1f - xx2 - zz2);
+            float transformedZ = y * (yz2 + wx2);
+            result.X = transformedX;
+            result.Y = transformedY;
+            result.Z = transformedZ;
+        }
+
+        /// <summary>
+        /// Transforms a vector using a quaternion. Specialized for 0,0,z vectors.
+        /// </summary>
+        /// <param name="z">Z component of the vector to transform.</param>
+        /// <param name="rotation">Rotation to apply to the vector.</param>
+        /// <param name="result">Transformed vector.</param>
+        public static void TransformZ(float z, ref Quaternion rotation, out Vector3f result)
+        {
+            //This operation is an optimized-down version of v' = q * v * q^-1.
+            //The expanded form would be to treat v as an 'axis only' quaternion
+            //and perform standard quaternion multiplication.  Assuming q is normalized,
+            //q^-1 can be replaced by a conjugation.
+            float x2 = rotation.X + rotation.X;
+            float y2 = rotation.Y + rotation.Y;
+            float z2 = rotation.Z + rotation.Z;
+            float xx2 = rotation.X * x2;
+            float xz2 = rotation.X * z2;
+            float yy2 = rotation.Y * y2;
+            float yz2 = rotation.Y * z2;
+            float wx2 = rotation.W * x2;
+            float wy2 = rotation.W * y2;
+            //Defer the component setting since they're used in computation.
+            float transformedX = z * (xz2 + wy2);
+            float transformedY = z * (yz2 - wx2);
+            float transformedZ = z * (1f - xx2 - yy2);
+            result.X = transformedX;
+            result.Y = transformedY;
+            result.Z = transformedZ;
         }
 
         /// <summary>
@@ -1029,7 +1336,9 @@ namespace AlienEngine
         /// <param name="v">The vector.</param>
         public static Vector3f Abs(Vector3f v)
         {
-            return new Vector3f(System.Math.Abs(v.X), System.Math.Abs(v.Y), System.Math.Abs(v.Z));
+            Vector3f res;
+            Abs(ref v, out res);
+            return res;
         }
 
         /// <summary>
@@ -1384,26 +1693,6 @@ namespace AlienEngine
             {
                 return (IntPtr)(&v.X);
             }
-        }
-
-        /// <summary>
-        /// Explicitly cast this <see cref="Vector3f"/> into a <see cref="BEPUutilities.Vector3"/>.
-        /// </summary>
-        /// <param name="vec">The vector to cast.</param>
-        [CLSCompliant(false)]
-        public static explicit operator BEPUutilities.Vector3(Vector3f vec)
-        {
-            return new BEPUutilities.Vector3(vec.X, vec.Y, vec.Z);
-        }
-
-        /// <summary>
-        /// Explicitly cast this <see cref="Vector3f"/> into a <see cref="BEPUutilities.Vector3"/>.
-        /// </summary>
-        /// <param name="vec">The vector to cast.</param>
-        [CLSCompliant(false)]
-        public static explicit operator Vector3f(BEPUutilities.Vector3 vec)
-        {
-            return new Vector3f(vec.X, vec.Y, vec.Z);
         }
 
         /// <summary>

@@ -1,7 +1,7 @@
-﻿using BEPUphysics.CollisionShapes;
-using BEPUphysics.Entities;
-using BEPUphysics.EntityStateManagement;
-using BEPUutilities;
+﻿using AlienEngine.Core.Physics.PositionUpdating;
+using AlienEngine.Core.Physics.CollisionShapes;
+using AlienEngine.Core.Physics.Entities;
+using AlienEngine.Core.Physics.EntityStateManagement;
 
 namespace AlienEngine
 {
@@ -62,8 +62,8 @@ namespace AlienEngine
 
                 _motionState = new MotionState
                 {
-                    Position = (Vector3)t.Translation,
-                    Orientation = BEPUutilities.Quaternion.CreateFromYawPitchRoll(t.Rotation.Z, t.Rotation.Y, t.Rotation.X)
+                    Position = t.Translation,
+                    Orientation = Quaternion.FromEulerAngles(t.Rotation.Z, t.Rotation.Y, t.Rotation.X)
                 };
 
                 _innerRigidBody = new Entity(_collisionShape, _mass)
@@ -71,7 +71,7 @@ namespace AlienEngine
                     MotionState = _motionState
                 };
 
-                _innerRigidBody.PositionUpdateMode = BEPUphysics.PositionUpdating.PositionUpdateMode.Discrete;
+                _innerRigidBody.PositionUpdateMode = PositionUpdateMode.Discrete;
 
                 _innerRigidBody.PositionUpdated += _positionUpdated;
 
@@ -83,9 +83,9 @@ namespace AlienEngine
                     if (!_shouldUpdate)
                     {
                         Transform _t = gameElement.WorldTransform;
-                        _innerRigidBody.Position += (Vector3)(t.Translation - _lastTranslate);
+                        _innerRigidBody.Position += (_t.Translation - _lastTranslate);
 
-                        _lastTranslate = t.Translation;
+                        _lastTranslate = _t.Translation;
                     }
                     // Keep the rigidbody active while moving
                     //if (!_innerRigidBody.IsActive)
@@ -101,10 +101,10 @@ namespace AlienEngine
                     {
                         Transform _t = gameElement.WorldTransform;
                         Quaternion _q = Quaternion.FromEulerAngles(t.Rotation.X, t.Rotation.Y, t.Rotation.Z);
-                        _innerRigidBody.Orientation = new BEPUutilities.Quaternion(_q.X, _q.Y, _q.Z, _q.W);
-                        _innerRigidBody.AngularVelocity += (Vector3)(t.Rotation - _lastRotate);
+                        _innerRigidBody.Orientation = _q;
+                        _innerRigidBody.AngularVelocity += (_t.Rotation - _lastRotate);
 
-                        _lastRotate = t.Rotation;
+                        _lastRotate = _t.Rotation;
                     }
                 });
 
@@ -157,8 +157,8 @@ namespace AlienEngine
         {
             _motionState = new MotionState
             {
-                Position = (Vector3)t.Translation,
-                Orientation = BEPUutilities.Quaternion.CreateFromYawPitchRoll(t.Rotation.Z, t.Rotation.Y, t.Rotation.X)
+                Position = t.Translation,
+                Orientation = Quaternion.FromEulerAngles(t.Rotation.Z, t.Rotation.Y, t.Rotation.X)
             };
         }
     }

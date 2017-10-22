@@ -34,24 +34,84 @@ namespace AlienEngine
         #region Fields
 
         /// <summary>
-        /// Top row of the matrix.
+        /// Value at row 1, column 1 of the matrix.
         /// </summary>
-        public Vector4f Row0;
+        public float M11;
 
         /// <summary>
-        /// Second row of the matrix.
+        /// Value at row 1, column 2 of the matrix.
         /// </summary>
-        public Vector4f Row1;
+        public float M12;
 
         /// <summary>
-        /// Thirth row of the matrix.
+        /// Value at row 1, column 3 of the matrix.
         /// </summary>
-        public Vector4f Row2;
+        public float M13;
 
         /// <summary>
-        /// Bottom row of the matrix.
+        /// Value at row 1, column 4 of the matrix.
         /// </summary>
-        public Vector4f Row3;
+        public float M14;
+
+        /// <summary>
+        /// Value at row 2, column 1 of the matrix.
+        /// </summary>
+        public float M21;
+
+        /// <summary>
+        /// Value at row 2, column 2 of the matrix.
+        /// </summary>
+        public float M22;
+
+        /// <summary>
+        /// Value at row 2, column 3 of the matrix.
+        /// </summary>
+        public float M23;
+
+        /// <summary>
+        /// Value at row 2, column 4 of the matrix.
+        /// </summary>
+        public float M24;
+
+        /// <summary>
+        /// Value at row 3, column 1 of the matrix.
+        /// </summary>
+        public float M31;
+
+        /// <summary>
+        /// Value at row 3, column 2 of the matrix.
+        /// </summary>
+        public float M32;
+
+        /// <summary>
+        /// Value at row 3, column 3 of the matrix.
+        /// </summary>
+        public float M33;
+
+        /// <summary>
+        /// Value at row 3, column 4 of the matrix.
+        /// </summary>
+        public float M34;
+
+        /// <summary>
+        /// Value at row 4, column 1 of the matrix.
+        /// </summary>
+        public float M41;
+
+        /// <summary>
+        /// Value at row 4, column 2 of the matrix.
+        /// </summary>
+        public float M42;
+
+        /// <summary>
+        /// Value at row 4, column 3 of the matrix.
+        /// </summary>
+        public float M43;
+
+        /// <summary>
+        /// Value at row 4, column 4 of the matrix.
+        /// </summary>
+        public float M44;
 
         /// <summary>
         /// The identity matrix.
@@ -92,10 +152,22 @@ namespace AlienEngine
             if (rows.Length < 4)
                 throw new ArgumentException();
 
-            Row0 = rows[0];
-            Row1 = rows[1];
-            Row2 = rows[2];
-            Row3 = rows[3];
+            M11 = rows[0].X;
+            M12 = rows[0].Y;
+            M13 = rows[0].Z;
+            M14 = rows[0].W;
+            M21 = rows[1].X;
+            M22 = rows[1].Y;
+            M23 = rows[1].Z;
+            M24 = rows[1].W;
+            M31 = rows[2].X;
+            M32 = rows[2].Y;
+            M33 = rows[2].Z;
+            M34 = rows[2].W;
+            M41 = rows[3].X;
+            M42 = rows[3].Y;
+            M43 = rows[3].Z;
+            M44 = rows[3].W;
         }
 
         /// <summary>
@@ -105,10 +177,22 @@ namespace AlienEngine
         /// <param name="row1">The second row of the matrix.</param>
         public Matrix4f(Vector4f row0, Vector4f row1, Vector4f row2, Vector4f row3)
         {
-            Row0 = row0;
-            Row1 = row1;
-            Row2 = row2;
-            Row3 = row3;
+            M11 = row0.X;
+            M12 = row0.Y;
+            M13 = row0.Z;
+            M14 = row0.W;
+            M21 = row1.X;
+            M22 = row1.Y;
+            M23 = row1.Z;
+            M24 = row1.W;
+            M31 = row2.X;
+            M32 = row2.Y;
+            M33 = row2.Z;
+            M34 = row2.W;
+            M41 = row3.X;
+            M42 = row3.Y;
+            M43 = row3.Z;
+            M44 = row3.W;
         }
 
         /// <summary>
@@ -136,10 +220,22 @@ namespace AlienEngine
             float i, float j, float k, float l,
             float m, float n, float o, float p)
         {
-            Row0 = new Vector4f(a, b, c, d);
-            Row1 = new Vector4f(e, f, g, h);
-            Row2 = new Vector4f(i, j, k, l);
-            Row3 = new Vector4f(m, n, o, p);
+            M11 = a;
+            M12 = b;
+            M13 = c;
+            M14 = d;
+            M21 = e;
+            M22 = f;
+            M23 = g;
+            M24 = h;
+            M31 = i;
+            M32 = j;
+            M33 = k;
+            M34 = l;
+            M41 = m;
+            M42 = n;
+            M43 = o;
+            M44 = p;
         }
 
         /// <summary>
@@ -148,10 +244,22 @@ namespace AlienEngine
         /// <param name="row">The value used to populate the matrix</param>
         public Matrix4f(Vector4f row)
         {
-            Row0 = row;
-            Row1 = row;
-            Row2 = row;
-            Row3 = row;
+            M11 = row.X;
+            M12 = row.Y;
+            M13 = row.Z;
+            M14 = row.W;
+            M21 = row.X;
+            M22 = row.Y;
+            M23 = row.Z;
+            M24 = row.W;
+            M31 = row.X;
+            M32 = row.Y;
+            M33 = row.Z;
+            M34 = row.W;
+            M41 = row.X;
+            M42 = row.Y;
+            M43 = row.Z;
+            M44 = row.W;
         }
 
         /// <summary>
@@ -160,10 +268,22 @@ namespace AlienEngine
         /// <param name="a">The value used to populate the matrix</param>
         public Matrix4f(Matrix4f matrix)
         {
-            Row0 = matrix.Row0;
-            Row1 = matrix.Row1;
-            Row2 = matrix.Row2;
-            Row3 = matrix.Row3;
+            M11 = matrix.M11;
+            M12 = matrix.M12;
+            M13 = matrix.M13;
+            M14 = matrix.M14;
+            M21 = matrix.M21;
+            M22 = matrix.M22;
+            M23 = matrix.M23;
+            M24 = matrix.M24;
+            M31 = matrix.M31;
+            M32 = matrix.M32;
+            M33 = matrix.M33;
+            M34 = matrix.M34;
+            M41 = matrix.M41;
+            M42 = matrix.M42;
+            M43 = matrix.M43;
+            M44 = matrix.M44;
         }
 
         /// <summary>
@@ -172,10 +292,22 @@ namespace AlienEngine
         /// <param name="values">An array of values used to populate the matrix.</param>
         public Matrix4f(float[] values)
         {
-            Row0 = new Vector4f(values[0],  values[1],  values[2],  values[3]);
-            Row1 = new Vector4f(values[4],  values[5],  values[6],  values[7]);
-            Row2 = new Vector4f(values[8],  values[9],  values[10], values[11]);
-            Row3 = new Vector4f(values[12], values[13], values[14], values[15]);
+            M11 = values[0];
+            M12 = values[1];
+            M13 = values[2];
+            M14 = values[3];
+            M21 = values[4];
+            M22 = values[5];
+            M23 = values[6];
+            M24 = values[7];
+            M31 = values[8];
+            M32 = values[9];
+            M33 = values[10];
+            M34 = values[11];
+            M41 = values[12];
+            M42 = values[13];
+            M43 = values[14];
+            M44 = values[15];
         }
 
         #endregion
@@ -185,6 +317,156 @@ namespace AlienEngine
         #region Properties
 
         /// <summary>
+        /// Gets or sets the backward vector of the matrix.
+        /// </summary>
+        public Vector3f Backward
+        {
+            get
+            {
+#if !WINDOWS
+                Vector3f vector = new Vector3f();
+#else
+                Vector3f vector;
+#endif
+                vector.X = M31;
+                vector.Y = M32;
+                vector.Z = M33;
+                return vector;
+            }
+            set
+            {
+                M31 = value.X;
+                M32 = value.Y;
+                M33 = value.Z;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the down vector of the matrix.
+        /// </summary>
+        public Vector3f Down
+        {
+            get
+            {
+#if !WINDOWS
+                Vector3f vector = new Vector3f();
+#else
+                Vector3f vector;
+#endif
+                vector.X = -M21;
+                vector.Y = -M22;
+                vector.Z = -M23;
+                return vector;
+            }
+            set
+            {
+                M21 = -value.X;
+                M22 = -value.Y;
+                M23 = -value.Z;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the forward vector of the matrix.
+        /// </summary>
+        public Vector3f Forward
+        {
+            get
+            {
+#if !WINDOWS
+                Vector3f vector = new Vector3f();
+#else
+                Vector3f vector;
+#endif
+                vector.X = -M31;
+                vector.Y = -M32;
+                vector.Z = -M33;
+                return vector;
+            }
+            set
+            {
+                M31 = -value.X;
+                M32 = -value.Y;
+                M33 = -value.Z;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the left vector of the matrix.
+        /// </summary>
+        public Vector3f Left
+        {
+            get
+            {
+#if !WINDOWS
+                Vector3f vector = new Vector3f();
+#else
+                Vector3f vector;
+#endif
+                vector.X = -M11;
+                vector.Y = -M12;
+                vector.Z = -M13;
+                return vector;
+            }
+            set
+            {
+                M11 = -value.X;
+                M12 = -value.Y;
+                M13 = -value.Z;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the right vector of the matrix.
+        /// </summary>
+        public Vector3f Right
+        {
+            get
+            {
+#if !WINDOWS
+                Vector3f vector = new Vector3f();
+#else
+                Vector3f vector;
+#endif
+                vector.X = M11;
+                vector.Y = M12;
+                vector.Z = M13;
+                return vector;
+            }
+            set
+            {
+                M11 = value.X;
+                M12 = value.Y;
+                M13 = value.Z;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the up vector of the matrix.
+        /// </summary>
+        public Vector3f Up
+        {
+            get
+            {
+#if !WINDOWS
+                Vector3f vector = new Vector3f();
+#else
+                Vector3f vector;
+#endif
+                vector.X = M21;
+                vector.Y = M22;
+                vector.Z = M23;
+                return vector;
+            }
+            set
+            {
+                M21 = value.X;
+                M22 = value.Y;
+                M23 = value.Z;
+            }
+        }
+
+        /// <summary>
         /// Gets the transposed matrix of this instance.
         /// </summary>
         public Matrix4f Transposed
@@ -192,10 +474,10 @@ namespace AlienEngine
             get
             {
                 return new Matrix4f(
-                    new Vector4f(Row0.X, Row1.X, Row2.X, Row3.X),
-                    new Vector4f(Row0.Y, Row1.Y, Row2.Y, Row3.Y),
-                    new Vector4f(Row0.Z, Row1.Z, Row2.Z, Row3.Z),
-                    new Vector4f(Row0.W, Row1.W, Row2.W, Row3.W)
+                    new Vector4f(M11, M21, M31, M41),
+                    new Vector4f(M12, M22, M32, M42),
+                    new Vector4f(M13, M23, M33, M43),
+                    new Vector4f(M14, M24, M34, M44)
                 );
             }
         }
@@ -284,13 +566,13 @@ namespace AlienEngine
         /// </summary>
         public Vector4f Column0
         {
-            get { return new Vector4f(Row0.X, Row1.X, Row2.X, Row3.X); }
+            get { return new Vector4f(M11, M21, M31, M41); }
             set
             {
-                Row0.X = value.X;
-                Row1.X = value.Y;
-                Row2.X = value.Z;
-                Row3.X = value.W;
+                M11 = value.X;
+                M21 = value.Y;
+                M31 = value.Z;
+                M41 = value.W;
             }
         }
 
@@ -299,13 +581,13 @@ namespace AlienEngine
         /// </summary>
         public Vector4f Column1
         {
-            get { return new Vector4f(Row0.Y, Row1.Y, Row2.Y, Row3.Y); }
+            get { return new Vector4f(M12, M22, M32, M42); }
             set
             {
-                Row0.Y = value.X;
-                Row1.Y = value.Y;
-                Row2.Y = value.Z;
-                Row3.Y = value.W;
+                M12 = value.X;
+                M22 = value.Y;
+                M32 = value.Z;
+                M42 = value.W;
             }
         }
 
@@ -314,13 +596,13 @@ namespace AlienEngine
         /// </summary>
         public Vector4f Column2
         {
-            get { return new Vector4f(Row0.Z, Row1.Z, Row2.Z, Row3.Z); }
+            get { return new Vector4f(M13, M23, M33, M43); }
             set
             {
-                Row0.Z = value.X;
-                Row1.Z = value.Y;
-                Row2.Z = value.Z;
-                Row3.Z = value.W;
+                M13 = value.X;
+                M23 = value.Y;
+                M33 = value.Z;
+                M43 = value.W;
             }
         }
 
@@ -329,95 +611,97 @@ namespace AlienEngine
         /// </summary>
         public Vector4f Column3
         {
-            get { return new Vector4f(Row0.W, Row1.W, Row2.W, Row3.W); }
+            get { return new Vector4f(M14, M24, M34, M44); }
             set
             {
-                Row0.W = value.X;
-                Row1.W = value.Y;
-                Row2.W = value.Z;
-                Row3.W = value.W;
+                M14 = value.X;
+                M24 = value.Y;
+                M34 = value.Z;
+                M44 = value.W;
             }
         }
 
         /// <summary>
-        /// Gets or sets the value at row 1, column 1 of this instance.
+        /// Top row of the matrix.
         /// </summary>
-        public float M11 { get { return Row0.X; } set { Row0.X = value; } }
+        public Vector4f Row0
+        {
+            get { return new Vector4f(M11, M12, M13, M14); }
+            set
+            {
+                M11 = value.X;
+                M12 = value.Y;
+                M13 = value.Z;
+                M14 = value.W;
+            }
+        }
 
         /// <summary>
-        /// Gets or sets the value at row 1, column 2 of this instance.
+        /// Second row of the matrix.
         /// </summary>
-        public float M12 { get { return Row0.Y; } set { Row0.Y = value; } }
+        public Vector4f Row1
+        {
+            get { return new Vector4f(M21, M22, M23, M24); }
+            set
+            {
+                M21 = value.X;
+                M22 = value.Y;
+                M23 = value.Z;
+                M24 = value.W;
+            }
+        }
 
         /// <summary>
-        /// Gets or sets the value at row 1, column 3 of this instance.
+        /// Thirth row of the matrix.
         /// </summary>
-        public float M13 { get { return Row0.Z; } set { Row0.Z = value; } }
+        public Vector4f Row2
+        {
+            get { return new Vector4f(M31, M32, M33, M34); }
+            set
+            {
+                M31 = value.X;
+                M32 = value.Y;
+                M33 = value.Z;
+                M34 = value.W;
+            }
+        }
 
         /// <summary>
-        /// Gets or sets the value at row 1, column 4 of this instance.
+        /// Bottom row of the matrix.
         /// </summary>
-        public float M14 { get { return Row0.W; } set { Row0.W = value; } }
+        public Vector4f Row3
+        {
+            get { return new Vector4f(M41, M42, M43, M44); }
+            set
+            {
+                M41 = value.X;
+                M42 = value.Y;
+                M43 = value.Z;
+                M44 = value.W;
+            }
+        }
 
         /// <summary>
-        /// Gets or sets the value at row 2, column 1 of this instance.
+        /// Gets or sets the translation component of the transform.
         /// </summary>
-        public float M21 { get { return Row1.X; } set { Row1.X = value; } }
-
-        /// <summary>
-        /// Gets or sets the value at row 2, column 2 of this instance.
-        /// </summary>
-        public float M22 { get { return Row1.Y; } set { Row1.Y = value; } }
-
-        /// <summary>
-        /// Gets or sets the value at row 2, column 3 of this instance.
-        /// </summary>
-        public float M23 { get { return Row1.Z; } set { Row1.Z = value; } }
-
-        /// <summary>
-        /// Gets or sets the value at row 2, column 4 of this instance.
-        /// </summary>
-        public float M24 { get { return Row1.W; } set { Row1.W = value; } }
-
-        /// <summary>
-        /// Gets or sets the value at row 3, column 1 of this instance.
-        /// </summary>
-        public float M31 { get { return Row2.X; } set { Row2.X = value; } }
-
-        /// <summary>
-        /// Gets or sets the value at row 3, column 2 of this instance.
-        /// </summary>
-        public float M32 { get { return Row2.Y; } set { Row2.Y = value; } }
-
-        /// <summary>
-        /// Gets or sets the value at row 3, column 3 of this instance.
-        /// </summary>
-        public float M33 { get { return Row2.Z; } set { Row2.Z = value; } }
-
-        /// <summary>
-        /// Gets or sets the value at row 3, column 4 of this instance.
-        /// </summary>
-        public float M34 { get { return Row2.W; } set { Row2.W = value; } }
-
-        /// <summary>
-        /// Gets or sets the value at row 4, column 1 of this instance.
-        /// </summary>
-        public float M41 { get { return Row3.X; } set { Row3.X = value; } }
-
-        /// <summary>
-        /// Gets or sets the value at row 4, column 2 of this instance.
-        /// </summary>
-        public float M42 { get { return Row3.Y; } set { Row3.Y = value; } }
-
-        /// <summary>
-        /// Gets or sets the value at row 4, column 3 of this instance.
-        /// </summary>
-        public float M43 { get { return Row3.Z; } set { Row3.Z = value; } }
-
-        /// <summary>
-        /// Gets or sets the value at row 4, column 4 of this instance.
-        /// </summary>
-        public float M44 { get { return Row3.W; } set { Row3.W = value; } }
+        public Vector3f Translation
+        {
+            get
+            {
+                return new Vector3f()
+                {
+                    X = M41,
+                    Y = M42,
+                    Z = M43
+                };
+            }
+            set
+            {
+                M41 = value.X;
+                M42 = value.Y;
+                M43 = value.Z;
+            }
+        }
 
         #endregion
 
@@ -474,10 +758,34 @@ namespace AlienEngine
             }
             set
             {
-                if (row == 0) { Row0[column] = value; }
-                else if (row == 1) { Row1[column] = value; }
-                else if (row == 2) { Row2[column] = value; }
-                else if (row == 3) { Row3[column] = value; }
+                if (row == 0)
+                {
+                    if (column == 0) M11 = value;
+                    if (column == 1) M12 = value;
+                    if (column == 2) M13 = value;
+                    if (column == 3) M14 = value;
+                }
+                else if (row == 1)
+                {
+                    if (column == 0) M21 = value;
+                    if (column == 1) M22 = value;
+                    if (column == 2) M23 = value;
+                    if (column == 3) M24 = value;
+                }
+                else if (row == 2)
+                {
+                    if (column == 0) M31 = value;
+                    if (column == 1) M32 = value;
+                    if (column == 2) M33 = value;
+                    if (column == 3) M34 = value;
+                }
+                else if (row == 3)
+                {
+                    if (column == 0) M41 = value;
+                    if (column == 1) M42 = value;
+                    if (column == 2) M43 = value;
+                    if (column == 3) M44 = value;
+                }
                 else throw new ArgumentOutOfRangeException();
             }
         }
@@ -493,7 +801,7 @@ namespace AlienEngine
 
         public void Inverse()
         {
-            this = Inverse(this);
+            this = Invert(this);
         }
 
         #endregion
@@ -505,7 +813,7 @@ namespace AlienEngine
         /// </summary>
         public Vector3f GetTranslate()
         {
-            return new Vector3f(Row3.X, Row3.Y, Row3.Z);
+            return new Vector3f(M41, M42, M43);
         }
 
         #endregion
@@ -659,7 +967,7 @@ namespace AlienEngine
         public static Matrix4f CreateFromAxisAngle(Vector3f axis, float angle)
         {
             Matrix4f result;
-            CreateFromAxisAngle(axis, angle, out result);
+            CreateFromAxisAngle(ref axis, angle, out result);
             return result;
         }
 
@@ -669,7 +977,7 @@ namespace AlienEngine
         /// <param name="axis">The axis to rotate about.</param>
         /// <param name="angle">Angle in radians to rotate counter-clockwise (looking in the direction of the given axis).</param>
         /// <param name="result">A <see cref="Matrix4f"/> instance.</param>
-        public static void CreateFromAxisAngle(Vector3f axis, float angle, out Matrix4f result)
+        public static void CreateFromAxisAngle(ref Vector3f axis, float angle, out Matrix4f result)
         {
             // normalize and create a local copy of the vector.
             axis.Normalize();
@@ -692,22 +1000,25 @@ namespace AlienEngine
                   sinY = sin * axisY,
                   sinZ = sin * axisZ;
 
-            result.Row0.X = tXX + cos;
-            result.Row0.Y = tXY - sinZ;
-            result.Row0.Z = tXZ + sinY;
-            result.Row0.W = 0;
+            result.M11 = tXX + cos;
+            result.M12 = tXY - sinZ;
+            result.M13 = tXZ + sinY;
+            result.M14 = 0;
 
-            result.Row1.X = tXY + sinZ;
-            result.Row1.Y = tYY + cos;
-            result.Row1.Z = tYZ - sinX;
-            result.Row1.W = 0;
+            result.M21 = tXY + sinZ;
+            result.M22 = tYY + cos;
+            result.M23 = tYZ - sinX;
+            result.M24 = 0;
 
-            result.Row2.X = tXZ - sinY;
-            result.Row2.Y = tYZ + sinX;
-            result.Row2.Z = tZZ + cos;
-            result.Row2.W = 0;
+            result.M31 = tXZ - sinY;
+            result.M32 = tYZ + sinX;
+            result.M33 = tZZ + cos;
+            result.M34 = 0;
 
-            result.Row3 = Vector4f.UnitW;
+            result.M41 = 0;
+            result.M42 = 0;
+            result.M43 = 0;
+            result.M44 = 1;
         }
 
         #endregion
@@ -724,7 +1035,7 @@ namespace AlienEngine
             Vector3f axis;
             float angle;
             q.ToAxisAngle(out axis, out angle);
-            CreateFromAxisAngle(axis, angle, out result);
+            CreateFromAxisAngle(ref axis, angle, out result);
         }
 
         /// <summary>
@@ -792,10 +1103,10 @@ namespace AlienEngine
             float sin = MathHelper.Sin(angle);
 
             result = Identity;
-            result.Row1.Y = +cos;
-            result.Row1.Z = +sin;
-            result.Row2.Y = -sin;
-            result.Row2.Z = +cos;
+            result.M22 = +cos;
+            result.M23 = +sin;
+            result.M32 = -sin;
+            result.M33 = +cos;
         }
 
         /// <summary>
@@ -821,10 +1132,10 @@ namespace AlienEngine
             float sin = MathHelper.Sin(angle);
 
             result = Identity;
-            result.Row0.X = +cos;
-            result.Row0.Z = -sin;
-            result.Row2.X = +sin;
-            result.Row2.Z = +cos;
+            result.M11 = +cos;
+            result.M13 = -sin;
+            result.M31 = +sin;
+            result.M33 = +cos;
         }
 
         /// <summary>
@@ -850,10 +1161,10 @@ namespace AlienEngine
             float sin = MathHelper.Sin(angle);
 
             result = Identity;
-            result.Row0.X = +cos;
-            result.Row0.Y = +sin;
-            result.Row1.X = -sin;
-            result.Row1.Y = +cos;
+            result.M11 = +cos;
+            result.M12 = +sin;
+            result.M21 = -sin;
+            result.M22 = +cos;
         }
 
         /// <summary>
@@ -971,9 +1282,9 @@ namespace AlienEngine
         public static void CreateScale(float scale, out Matrix4f result)
         {
             result = Identity;
-            result.Row0.X = scale;
-            result.Row1.Y = scale;
-            result.Row2.Z = scale;
+            result.M11 = scale;
+            result.M22 = scale;
+            result.M33 = scale;
         }
 
         /// <summary>
@@ -984,9 +1295,9 @@ namespace AlienEngine
         public static void CreateScale(ref Vector3f scale, out Matrix4f result)
         {
             result = Identity;
-            result.Row0.X = scale.X;
-            result.Row1.Y = scale.Y;
-            result.Row2.Z = scale.Z;
+            result.M11 = scale.X;
+            result.M22 = scale.Y;
+            result.M33 = scale.Z;
         }
 
         /// <summary>
@@ -999,9 +1310,9 @@ namespace AlienEngine
         public static void CreateScale(float x, float y, float z, out Matrix4f result)
         {
             result = Identity;
-            result.Row0.X = x;
-            result.Row1.Y = y;
-            result.Row2.Z = z;
+            result.M11 = x;
+            result.M22 = y;
+            result.M33 = z;
         }
 
         #endregion
@@ -1058,13 +1369,13 @@ namespace AlienEngine
             float invTB = 1.0f / (top - bottom);
             float invFN = 1.0f / (zFar - zNear);
 
-            result.Row0.X = 2 * invRL;
-            result.Row1.Y = 2 * invTB;
-            result.Row2.Z = -2 * invFN;
+            result.M11 = 2 * invRL;
+            result.M22 = 2 * invTB;
+            result.M33 = -invFN;
 
-            result.Row3.X = -(right + left) * invRL;
-            result.Row3.Y = -(top + bottom) * invTB;
-            result.Row3.Z = -(zFar + zNear) * invFN;
+            result.M41 = -(right + left) * invRL;
+            result.M42 = -(top + bottom) * invTB;
+            result.M43 = -zNear * invFN;
         }
 
         /// <summary>
@@ -1367,22 +1678,22 @@ namespace AlienEngine
                 Vector3f x = Vector3f.Normalize(Vector3f.Cross(up, z));
                 Vector3f y = Vector3f.Normalize(Vector3f.Cross(z, x));
 
-                result.Row0.X = x.X;
-                result.Row0.Y = y.X;
-                result.Row0.Z = z.X;
-                result.Row0.W = 0;
-                result.Row1.X = x.Y;
-                result.Row1.Y = y.Y;
-                result.Row1.Z = z.Y;
-                result.Row1.W = 0;
-                result.Row2.X = x.Z;
-                result.Row2.Y = y.Z;
-                result.Row2.Z = z.Z;
-                result.Row2.W = 0;
-                result.Row3.X = -((x.X * eye.X) + (x.Y * eye.Y) + (x.Z * eye.Z));
-                result.Row3.Y = -((y.X * eye.X) + (y.Y * eye.Y) + (y.Z * eye.Z));
-                result.Row3.Z = -((z.X * eye.X) + (z.Y * eye.Y) + (z.Z * eye.Z));
-                result.Row3.W = 1;
+                result.M11 = x.X;
+                result.M12 = y.X;
+                result.M13 = z.X;
+                result.M14 = 0;
+                result.M21 = x.Y;
+                result.M22 = y.Y;
+                result.M23 = z.Y;
+                result.M24 = 0;
+                result.M31 = x.Z;
+                result.M32 = y.Z;
+                result.M33 = z.Z;
+                result.M34 = 0;
+                result.M41 = -((x.X * eye.X) + (x.Y * eye.Y) + (x.Z * eye.Z));
+                result.M42 = -((y.X * eye.X) + (y.Y * eye.Y) + (y.Z * eye.Z));
+                result.M43 = -((z.X * eye.X) + (z.Y * eye.Y) + (z.Z * eye.Z));
+                result.M44 = 1;
             }
 
             return result;
@@ -1476,25 +1787,45 @@ namespace AlienEngine
         /// <param name="result">A new instance that is the result of the multiplication.</param>
         public static void Multiply(ref Matrix4f left, ref Matrix4f right, out Matrix4f result)
         {
-            result.Row0.X = Vector4f.Dot(left.Row0, right.Column0);
-            result.Row0.Y = Vector4f.Dot(left.Row0, right.Column1);
-            result.Row0.Z = Vector4f.Dot(left.Row0, right.Column2);
-            result.Row0.W = Vector4f.Dot(left.Row0, right.Column3);
+            float resultM11 = left.M11 * right.M11 + left.M12 * right.M21 + left.M13 * right.M31 + left.M14 * right.M41;
+            float resultM12 = left.M11 * right.M12 + left.M12 * right.M22 + left.M13 * right.M32 + left.M14 * right.M42;
+            float resultM13 = left.M11 * right.M13 + left.M12 * right.M23 + left.M13 * right.M33 + left.M14 * right.M43;
+            float resultM14 = left.M11 * right.M14 + left.M12 * right.M24 + left.M13 * right.M34 + left.M14 * right.M44;
 
-            result.Row1.X = Vector4f.Dot(left.Row1, right.Column0);
-            result.Row1.Y = Vector4f.Dot(left.Row1, right.Column1);
-            result.Row1.Z = Vector4f.Dot(left.Row1, right.Column2);
-            result.Row1.W = Vector4f.Dot(left.Row1, right.Column3);
+            float resultM21 = left.M21 * right.M11 + left.M22 * right.M21 + left.M23 * right.M31 + left.M24 * right.M41;
+            float resultM22 = left.M21 * right.M12 + left.M22 * right.M22 + left.M23 * right.M32 + left.M24 * right.M42;
+            float resultM23 = left.M21 * right.M13 + left.M22 * right.M23 + left.M23 * right.M33 + left.M24 * right.M43;
+            float resultM24 = left.M21 * right.M14 + left.M22 * right.M24 + left.M23 * right.M34 + left.M24 * right.M44;
 
-            result.Row2.X = Vector4f.Dot(left.Row2, right.Column0);
-            result.Row2.Y = Vector4f.Dot(left.Row2, right.Column1);
-            result.Row2.Z = Vector4f.Dot(left.Row2, right.Column2);
-            result.Row2.W = Vector4f.Dot(left.Row2, right.Column3);
+            float resultM31 = left.M31 * right.M11 + left.M32 * right.M21 + left.M33 * right.M31 + left.M34 * right.M41;
+            float resultM32 = left.M31 * right.M12 + left.M32 * right.M22 + left.M33 * right.M32 + left.M34 * right.M42;
+            float resultM33 = left.M31 * right.M13 + left.M32 * right.M23 + left.M33 * right.M33 + left.M34 * right.M43;
+            float resultM34 = left.M31 * right.M14 + left.M32 * right.M24 + left.M33 * right.M34 + left.M34 * right.M44;
 
-            result.Row3.X = Vector4f.Dot(left.Row3, right.Column0);
-            result.Row3.Y = Vector4f.Dot(left.Row3, right.Column1);
-            result.Row3.Z = Vector4f.Dot(left.Row3, right.Column2);
-            result.Row3.W = Vector4f.Dot(left.Row3, right.Column3);
+            float resultM41 = left.M41 * right.M11 + left.M42 * right.M21 + left.M43 * right.M31 + left.M44 * right.M41;
+            float resultM42 = left.M41 * right.M12 + left.M42 * right.M22 + left.M43 * right.M32 + left.M44 * right.M42;
+            float resultM43 = left.M41 * right.M13 + left.M42 * right.M23 + left.M43 * right.M33 + left.M44 * right.M43;
+            float resultM44 = left.M41 * right.M14 + left.M42 * right.M24 + left.M43 * right.M34 + left.M44 * right.M44;
+
+            result.M11 = resultM11;
+            result.M12 = resultM12;
+            result.M13 = resultM13;
+            result.M14 = resultM14;
+
+            result.M21 = resultM21;
+            result.M22 = resultM22;
+            result.M23 = resultM23;
+            result.M24 = resultM24;
+
+            result.M31 = resultM31;
+            result.M32 = resultM32;
+            result.M33 = resultM33;
+            result.M34 = resultM34;
+
+            result.M41 = resultM41;
+            result.M42 = resultM42;
+            result.M43 = resultM43;
+            result.M44 = resultM44;
         }
 
         /// <summary>
@@ -1505,26 +1836,91 @@ namespace AlienEngine
         /// <param name='right'>Right.</param>
         public static Vector4f Multiply(Vector4f left, Matrix4f right)
         {
-            return new Vector4f(left.X * right.M11 + left.Y * right.M21 + left.Z * right.M31 + left.W * right.M41,
-                                left.X * right.M12 + left.Y * right.M22 + left.Z * right.M32 + left.W * right.M42,
-                                left.X * right.M13 + left.Y * right.M23 + left.Z * right.M33 + left.W * right.M43,
-                                left.X * right.M14 + left.Y * right.M24 + left.Z * right.M34 + left.W * right.M44);
-        }
-
-        public static Vector4f operator *(Vector4f left, Matrix4f right)
-        {
-            return Multiply(left, right);
+            Vector4f res;
+            Multiply(ref left, ref right, out res);
+            return res;
         }
 
         /// <summary>
-        /// Multiply a <see cref="Matrix4f"/> with a <see cref="float"/>.
+        /// Multiply the specified left and right where left is a Vector4f should only be used for debuging
+        /// and seeing if the point you are tryng to draw is in screen space
         /// </summary>
-        /// <param name="matrix"></param>
-        /// <param name="scale"></param>
-        /// <returns></returns>
+        /// <param name='left'>Left.</param>
+        /// <param name='right'>Right.</param>
+        public static void Multiply(ref Vector4f left, ref Matrix4f right, out Vector4f result)
+        {
+            result = new Vector4f(left.X * right.M11 + left.Y * right.M21 + left.Z * right.M31 + left.W * right.M41,
+                                  left.X * right.M12 + left.Y * right.M22 + left.Z * right.M32 + left.W * right.M42,
+                                  left.X * right.M13 + left.Y * right.M23 + left.Z * right.M33 + left.W * right.M43,
+                                  left.X * right.M14 + left.Y * right.M24 + left.Z * right.M34 + left.W * right.M44);
+        }
+
+        /// <summary>
+        /// Scales all components of the matrix.
+        /// </summary>
+        /// <param name="matrix">Matrix to scale.</param>
+        /// <param name="scale">Amount to scale.</param>
+        /// <param name="result">Scaled matrix.</param>
+        public static void Multiply(ref Matrix4f matrix, float scale, out Matrix4f result)
+        {
+            result.M11 = matrix.M11 * scale;
+            result.M12 = matrix.M12 * scale;
+            result.M13 = matrix.M13 * scale;
+            result.M14 = matrix.M14 * scale;
+
+            result.M21 = matrix.M21 * scale;
+            result.M22 = matrix.M22 * scale;
+            result.M23 = matrix.M23 * scale;
+            result.M24 = matrix.M24 * scale;
+
+            result.M31 = matrix.M31 * scale;
+            result.M32 = matrix.M32 * scale;
+            result.M33 = matrix.M33 * scale;
+            result.M34 = matrix.M34 * scale;
+
+            result.M41 = matrix.M41 * scale;
+            result.M42 = matrix.M42 * scale;
+            result.M43 = matrix.M43 * scale;
+            result.M44 = matrix.M44 * scale;
+        }
+
+        /// <summary>
+        /// Multiply the specified left and right where left is a Vector4f should only be used for debuging
+        /// and seeing if the point you are tryng to draw is in screen space
+        /// </summary>
+        /// <param name='left'>Left.</param>
+        /// <param name='right'>Right.</param>
+        public static Vector4f operator *(Vector4f left, Matrix4f right)
+        {
+            Vector4f toReturn;
+            Multiply(ref left, ref right, out toReturn);
+            return toReturn;
+        }
+
+        /// <summary>
+        /// Scales all components of the matrix by the given value.
+        /// </summary>
+        /// <param name="matrix">First matrix to multiply.</param>
+        /// <param name="scale">Scaling value to apply to all components of the matrix.</param>
+        /// <returns>Product of the multiplication.</returns>
         public static Matrix4f operator *(Matrix4f matrix, float scale)
         {
-            return new Matrix4f(matrix[0] * scale, matrix[1] * scale, matrix[2] * scale, matrix[3] * scale);
+            Matrix4f result;
+            Multiply(ref matrix, scale, out result);
+            return result;
+        }
+
+        /// <summary>
+        /// Scales all components of the matrix by the given value.
+        /// </summary>
+        /// <param name="matrix">First matrix to multiply.</param>
+        /// <param name="scale">Scaling value to apply to all components of the matrix.</param>
+        /// <returns>Product of the multiplication.</returns>
+        public static Matrix4f operator *(float scale, Matrix4f matrix)
+        {
+            Matrix4f result;
+            Multiply(ref matrix, scale, out result);
+            return result;
         }
 
         #endregion
@@ -1541,6 +1937,16 @@ namespace AlienEngine
             return m.Transposed;
         }
 
+        /// <summary>
+        /// Gets the transposed matrix.
+        /// </summary>
+        /// <param name="m">The matrix to transpose.</param>
+        /// <param name="transpose">The transposed matrix.</param>
+        public static void Transpose(ref Matrix4f m, out Matrix4f transpose)
+        {
+            transpose = m.Transposed;
+        }
+
         #endregion
 
         #region Inverse
@@ -1550,9 +1956,139 @@ namespace AlienEngine
         /// </summary>
         /// <param name="m">The matrix to inverse.</param>
         /// <returns>The inversed matrix.</returns>
-        public static Matrix4f Inverse(Matrix4f m)
+        public static Matrix4f Invert(Matrix4f m)
         {
-            return m.Inversed;
+            Matrix4f res;
+            Invert(ref m, out res);
+            return res;
+        }
+
+        /// <summary>
+        /// Gets the inversed matrix.
+        /// </summary>
+        /// <param name="m">The matrix to inverse.</param>
+        /// <returns>The inversed matrix.</returns>
+        public static void Invert(ref Matrix4f m, out Matrix4f inverse)
+        {
+            inverse = m.Inversed;
+        }
+
+        /// <summary>
+        /// Inverts the matrix using a process that only works for affine transforms (3x3 linear transform and translation).
+        /// Ignores the M14, M24, M34, and M44 elements of the input matrix.
+        /// </summary>
+        /// <param name="m">Matrix to invert.</param>
+        /// <param name="inverted">Inverted version of the matrix.</param>
+        public static void InvertAffine(ref Matrix4f m, out Matrix4f inverted)
+        {
+            //Invert the upper left 3x3 linear transform.
+
+            //Compute the upper left 3x3 determinant. Some potential for microoptimization here.
+            float determinantInverse = 1 /
+                (m.M11 * m.M22 * m.M33 + m.M12 * m.M23 * m.M31 + m.M13 * m.M21 * m.M32 -
+                 m.M31 * m.M22 * m.M13 - m.M32 * m.M23 * m.M11 - m.M33 * m.M21 * m.M12);
+
+            float m11 = (m.M22 * m.M33 - m.M23 * m.M32) * determinantInverse;
+            float m12 = (m.M13 * m.M32 - m.M33 * m.M12) * determinantInverse;
+            float m13 = (m.M12 * m.M23 - m.M22 * m.M13) * determinantInverse;
+
+            float m21 = (m.M23 * m.M31 - m.M21 * m.M33) * determinantInverse;
+            float m22 = (m.M11 * m.M33 - m.M13 * m.M31) * determinantInverse;
+            float m23 = (m.M13 * m.M21 - m.M11 * m.M23) * determinantInverse;
+
+            float m31 = (m.M21 * m.M32 - m.M22 * m.M31) * determinantInverse;
+            float m32 = (m.M12 * m.M31 - m.M11 * m.M32) * determinantInverse;
+            float m33 = (m.M11 * m.M22 - m.M12 * m.M21) * determinantInverse;
+
+            inverted.M11 = m11;
+            inverted.M12 = m12;
+            inverted.M13 = m13;
+
+            inverted.M21 = m21;
+            inverted.M22 = m22;
+            inverted.M23 = m23;
+
+            inverted.M31 = m31;
+            inverted.M32 = m32;
+            inverted.M33 = m33;
+
+            //Translation component
+            var vX = m.M41;
+            var vY = m.M42;
+            var vZ = m.M43;
+            inverted.M41 = -(vX * inverted.M11 + vY * inverted.M21 + vZ * inverted.M31);
+            inverted.M42 = -(vX * inverted.M12 + vY * inverted.M22 + vZ * inverted.M32);
+            inverted.M43 = -(vX * inverted.M13 + vY * inverted.M23 + vZ * inverted.M33);
+
+            //Last chunk.
+            inverted.M14 = 0;
+            inverted.M24 = 0;
+            inverted.M34 = 0;
+            inverted.M44 = 1;
+        }
+
+        /// <summary>
+        /// Inverts the matrix using a process that only works for affine transforms (3x3 linear transform and translation).
+        /// Ignores the M14, M24, M34, and M44 elements of the input matrix.
+        /// </summary>
+        /// <param name="m">Matrix to invert.</param>
+        /// <returns>Inverted version of the matrix.</returns>
+        public static Matrix4f InvertAffine(Matrix4f m)
+        {
+            Matrix4f inverted;
+            InvertAffine(ref m, out inverted);
+            return inverted;
+        }
+
+        /// <summary>
+        /// Inverts the matrix using a process that only works for rigid transforms.
+        /// </summary>
+        /// <param name="m">Matrix to invert.</param>
+        /// <param name="inverted">Inverted version of the matrix.</param>
+        public static void InvertRigid(ref Matrix4f m, out Matrix4f inverted)
+        {
+            //Invert (transpose) the upper left 3x3 rotation.
+            float intermediate = m.M12;
+            inverted.M12 = m.M21;
+            inverted.M21 = intermediate;
+
+            intermediate = m.M13;
+            inverted.M13 = m.M31;
+            inverted.M31 = intermediate;
+
+            intermediate = m.M23;
+            inverted.M23 = m.M32;
+            inverted.M32 = intermediate;
+
+            inverted.M11 = m.M11;
+            inverted.M22 = m.M22;
+            inverted.M33 = m.M33;
+
+            //Translation component
+            var vX = m.M41;
+            var vY = m.M42;
+            var vZ = m.M43;
+            inverted.M41 = -(vX * inverted.M11 + vY * inverted.M21 + vZ * inverted.M31);
+            inverted.M42 = -(vX * inverted.M12 + vY * inverted.M22 + vZ * inverted.M32);
+            inverted.M43 = -(vX * inverted.M13 + vY * inverted.M23 + vZ * inverted.M33);
+
+            //Last chunk.
+            inverted.M14 = 0;
+            inverted.M24 = 0;
+            inverted.M34 = 0;
+            inverted.M44 = 1;
+        }
+
+        /// <summary>
+        /// Inverts the matrix using a process that only works for rigid transforms.
+        /// </summary>
+        /// <param name="m">Matrix to invert.</param>
+        /// <returns>Inverted version of the matrix.</returns>
+        public static Matrix4f InvertRigid(Matrix4f m)
+        {
+            Matrix4f inverse;
+            InvertRigid(ref m, out inverse);
+            return inverse;
         }
 
         #endregion
@@ -1569,7 +2105,9 @@ namespace AlienEngine
         /// <returns>A new Matrix4f which holds the result of the multiplication</returns>
         public static Matrix4f operator *(Matrix4f left, Matrix4f right)
         {
-            return Matrix4f.Multiply(left, right);
+            Matrix4f result;
+            Multiply(ref left, ref right, out result);
+            return result;
         }
 
         /// <summary>
@@ -1592,40 +2130,6 @@ namespace AlienEngine
         public static bool operator !=(Matrix4f left, Matrix4f right)
         {
             return !left.Equals(right);
-        }
-
-        /// <summary>
-        /// Explicitly cast a <see cref="Matrix4f"/> into a <see cref="BEPUutilities.Matrix"/>.
-        /// </summary>
-        /// <param name="mat">The matrix to cast.</param>
-        public static explicit operator BEPUutilities.Matrix(Matrix4f mat)
-        {
-            BEPUutilities.Matrix ret = new BEPUutilities.Matrix
-            (
-                mat.M11, mat.M12, mat.M13, mat.M14,
-                mat.M21, mat.M22, mat.M23, mat.M24,
-                mat.M31, mat.M32, mat.M33, mat.M34,
-                mat.M41, mat.M42, mat.M43, mat.M44
-            );
-
-            return ret;
-        }
-
-        /// <summary>
-        /// Explicitly cast a <see cref="BEPUutilities.Matrix"/> into a <see cref="Matrix4f"/>.
-        /// </summary>
-        /// <param name="mat">The matrix to cast.</param>
-        public static explicit operator Matrix4f(BEPUutilities.Matrix mat)
-        {
-            Matrix4f ret = new Matrix4f
-            (
-                mat.M11, mat.M12, mat.M13, mat.M14,
-                mat.M21, mat.M22, mat.M23, mat.M24,
-                mat.M31, mat.M32, mat.M33, mat.M34,
-                mat.M41, mat.M42, mat.M43, mat.M44
-            );
-
-            return ret;
         }
 
         /// <summary>
