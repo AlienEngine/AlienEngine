@@ -789,7 +789,7 @@ namespace AlienEngine
         /// <param name="result">The transformed normal</param>
         public static void TransformNormal(ref Vector3d norm, ref Matrix4f mat, out Vector3d result)
         {
-            Matrix4f Inverse = Matrix4f.Inverse(mat);
+            Matrix4f Inverse = Matrix4f.Invert(mat);
             Vector3d.TransformNormalInverse(ref norm, ref Inverse, out result);
         }
 
