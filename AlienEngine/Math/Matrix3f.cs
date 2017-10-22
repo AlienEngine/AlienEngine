@@ -34,19 +34,49 @@ namespace AlienEngine
         #region Fields
 
         /// <summary>
-        /// Top row of the matrix.
+        /// Value at row 1, column 1 of the matrix.
         /// </summary>
-        public Vector3f Row0;
+        public float M11;
 
         /// <summary>
-        /// Second row of the matrix.
+        /// Value at row 1, column 2 of the matrix.
         /// </summary>
-        public Vector3f Row1;
+        public float M12;
 
         /// <summary>
-        /// Bottom row of the matrix.
+        /// Value at row 1, column 3 of the matrix.
         /// </summary>
-        public Vector3f Row2;
+        public float M13;
+
+        /// <summary>
+        /// Value at row 2, column 1 of the matrix.
+        /// </summary>
+        public float M21;
+
+        /// <summary>
+        /// Value at row 2, column 2 of the matrix.
+        /// </summary>
+        public float M22;
+
+        /// <summary>
+        /// Value at row 2, column 3 of the matrix.
+        /// </summary>
+        public float M23;
+
+        /// <summary>
+        /// Value at row 3, column 1 of the matrix.
+        /// </summary>
+        public float M31;
+
+        /// <summary>
+        /// Value at row 3, column 2 of the matrix.
+        /// </summary>
+        public float M32;
+
+        /// <summary>
+        /// Value at row 3, column 3 of the matrix.
+        /// </summary>
+        public float M33;
 
         /// <summary>
         /// The identity matrix.
@@ -87,9 +117,15 @@ namespace AlienEngine
             if (rows.Length < 3)
                 throw new ArgumentException();
 
-            Row0 = rows[0];
-            Row1 = rows[1];
-            Row2 = rows[2];
+            M11 = rows[0].X;
+            M12 = rows[0].Y;
+            M13 = rows[0].Z;
+            M21 = rows[1].X;
+            M22 = rows[1].Y;
+            M23 = rows[1].Z;
+            M31 = rows[2].X;
+            M32 = rows[2].Y;
+            M33 = rows[2].Z;
         }
 
         /// <summary>
@@ -99,9 +135,15 @@ namespace AlienEngine
         /// <param name="row1">The second row of the matrix.</param>
         public Matrix3f(Vector3f row0, Vector3f row1, Vector3f row2)
         {
-            Row0 = row0;
-            Row1 = row1;
-            Row2 = row2;
+            M11 = row0.X;
+            M12 = row0.Y;
+            M13 = row0.Z;
+            M21 = row1.X;
+            M22 = row1.Y;
+            M23 = row1.Z;
+            M31 = row2.X;
+            M32 = row2.Y;
+            M33 = row2.Z;
         }
 
         /// <summary>
@@ -118,9 +160,15 @@ namespace AlienEngine
         /// <param name="i">The third row, third column value.</param>
         public Matrix3f(float a, float b, float c, float d, float e, float f, float g, float h, float i)
         {
-            Row0 = new Vector3f(a, b, c);
-            Row1 = new Vector3f(d, e, f);
-            Row2 = new Vector3f(g, h, i);
+            M11 = a;
+            M12 = b;
+            M13 = c;
+            M21 = d;
+            M22 = e;
+            M23 = f;
+            M31 = g;
+            M32 = h;
+            M33 = i;
         }
 
 
@@ -130,9 +178,15 @@ namespace AlienEngine
         /// <param name="a">The value used to populate the matrix</param>
         public Matrix3f(Vector3f row)
         {
-            Row0 = row;
-            Row1 = row;
-            Row2 = row;
+            M11 = row.X;
+            M12 = row.Y;
+            M13 = row.Z;
+            M21 = row.X;
+            M22 = row.Y;
+            M23 = row.Z;
+            M31 = row.X;
+            M32 = row.Y;
+            M33 = row.Z;
         }
 
         /// <summary>
@@ -141,9 +195,15 @@ namespace AlienEngine
         /// <param name="a">The value used to populate the matrix</param>
         public Matrix3f(Matrix3f matrix)
         {
-            Row0 = matrix.Row0;
-            Row1 = matrix.Row1;
-            Row2 = matrix.Row2;
+            M11 = matrix.M11;
+            M12 = matrix.M12;
+            M13 = matrix.M13;
+            M21 = matrix.M21;
+            M22 = matrix.M22;
+            M23 = matrix.M23;
+            M31 = matrix.M31;
+            M32 = matrix.M32;
+            M33 = matrix.M33;
         }
 
         /// <summary>
@@ -152,9 +212,18 @@ namespace AlienEngine
         /// <param name="values">An array of values used to populate the matrix.</param>
         public Matrix3f(float[] values)
         {
-            Row0 = new Vector3f(values[0], values[1], values[2]);
-            Row1 = new Vector3f(values[3], values[4], values[5]);
-            Row2 = new Vector3f(values[6], values[7], values[8]);
+            if (values.Length < 9)
+                throw new ArgumentOutOfRangeException();
+
+            M11 = values[0];
+            M12 = values[1];
+            M13 = values[2];
+            M21 = values[3];
+            M22 = values[4];
+            M23 = values[5];
+            M31 = values[6];
+            M32 = values[7];
+            M33 = values[8];
         }
 
         #endregion
@@ -168,8 +237,8 @@ namespace AlienEngine
         public static Matrix3f CreateTranslation(Vector2f translation)
         {
             Matrix3f result = Identity;
-            result.Row1.Z = translation.X;
-            result.Row2.Z = translation.Y;
+            result.M23 = translation.X;
+            result.M33 = translation.Y;
             return result;
         }
 
@@ -202,6 +271,67 @@ namespace AlienEngine
                 Vector3f.UnitZ
             );
         }
+
+        /// <summary>
+        /// Calculates the determinant of largest nonsingular submatrix, excluding 2x2's that involve M13 or M31, and excluding all 1x1's that involve nondiagonal elements.
+        /// </summary>
+        /// <param name="subMatrixCode">Represents the submatrix that was used to compute the determinant.
+        /// 0 is the full 3x3.  1 is the upper left 2x2.  2 is the lower right 2x2.  3 is the four corners.
+        /// 4 is M11.  5 is M22.  6 is M33.</param>
+        /// <returns>The matrix's determinant.</returns>
+        internal float AdaptiveDeterminant(out int subMatrixCode)
+        {
+            //Try the full matrix first.
+            float determinant = M11 * M22 * M33 + M12 * M23 * M31 + M13 * M21 * M32 -
+                                M31 * M22 * M13 - M32 * M23 * M11 - M33 * M21 * M12;
+            if (determinant != 0) //This could be a little numerically flimsy.  Fortunately, the way this method is used, that doesn't matter!
+            {
+                subMatrixCode = 0;
+                return determinant;
+            }
+            //Try m11, m12, m21, m22.
+            determinant = M11 * M22 - M12 * M21;
+            if (determinant != 0)
+            {
+                subMatrixCode = 1;
+                return determinant;
+            }
+            //Try m22, m23, m32, m33.
+            determinant = M22 * M33 - M23 * M32;
+            if (determinant != 0)
+            {
+                subMatrixCode = 2;
+                return determinant;
+            }
+            //Try m11, m13, m31, m33.
+            determinant = M11 * M33 - M13 * M12;
+            if (determinant != 0)
+            {
+                subMatrixCode = 3;
+                return determinant;
+            }
+            //Try m11.
+            if (M11 != 0)
+            {
+                subMatrixCode = 4;
+                return M11;
+            }
+            //Try m22.
+            if (M22 != 0)
+            {
+                subMatrixCode = 5;
+                return M22;
+            }
+            //Try m33.
+            if (M33 != 0)
+            {
+                subMatrixCode = 6;
+                return M33;
+            }
+            //It's completely singular!
+            subMatrixCode = -1;
+            return 0;
+        }
         #endregion
 
         #region Public Members
@@ -209,11 +339,65 @@ namespace AlienEngine
         #region Properties
 
         /// <summary>
+        /// Gets or sets the backward vector of the matrix.
+        /// </summary>
+        public Vector3f Backward
+        {
+            get { return Row2; }
+            set { Row2 = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the down vector of the matrix.
+        /// </summary>
+        public Vector3f Down
+        {
+            get { return -Row1; }
+            set { Row1 = -value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the forward vector of the matrix.
+        /// </summary>
+        public Vector3f Forward
+        {
+            get { return -Row2; }
+            set { Row2 = -value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the left vector of the matrix.
+        /// </summary>
+        public Vector3f Left
+        {
+            get { return -Row0; }
+            set { Row0 = -value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the right vector of the matrix.
+        /// </summary>
+        public Vector3f Right
+        {
+            get { return Row0; }
+            set { Row0 = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the up vector of the matrix.
+        /// </summary>
+        public Vector3f Up
+        {
+            get { return Row1; }
+            set { Row1 = value; }
+        }
+
+        /// <summary>
         /// Gets the transposed matrix of this instance.
         /// </summary>
         public Matrix3f Transposed
         {
-            get { return new Matrix3f(new Vector3f(Row0.X, Row1.X, Row2.X), new Vector3f(Row0.Y, Row1.Y, Row2.Y), new Vector3f(Row0.Z, Row1.Z, Row2.Z)); }
+            get { return new Matrix3f(new Vector3f(M11, M21, M31), new Vector3f(M12, M22, M32), new Vector3f(M13, M23, M33)); }
         }
 
         /// <summary>
@@ -254,16 +438,17 @@ namespace AlienEngine
         {
             get
             {
+                float oneOverDeterminant = OneOverDeterminant;
                 return new Matrix3f(
-                    +(Row1.Y * Row2.Z - Row1.Z * Row2.Y) * OneOverDeterminant,
-                    -(Row1.X * Row2.Z - Row1.Z * Row2.X) * OneOverDeterminant,
-                    +(Row1.X * Row2.Y - Row1.Y * Row2.X) * OneOverDeterminant,
-                    -(Row0.Y * Row2.Z - Row0.Z * Row2.Y) * OneOverDeterminant,
-                    +(Row0.X * Row2.Z - Row0.Z * Row2.X) * OneOverDeterminant,
-                    -(Row0.X * Row2.Y - Row0.Y * Row2.X) * OneOverDeterminant,
-                    +(Row0.Y * Row1.Z - Row0.Z * Row1.Y) * OneOverDeterminant,
-                    -(Row0.X * Row1.Z - Row0.Z * Row1.X) * OneOverDeterminant,
-                    +(Row0.X * Row1.Y - Row0.Y * Row1.X) * OneOverDeterminant
+                    +(M22 * M33 - M23 * M32) * oneOverDeterminant,
+                    -(M21 * M33 - M23 * M31) * oneOverDeterminant,
+                    +(M21 * M32 - M22 * M31) * oneOverDeterminant,
+                    -(M12 * M33 - M13 * M32) * oneOverDeterminant,
+                    +(M11 * M33 - M13 * M31) * oneOverDeterminant,
+                    -(M11 * M32 - M12 * M31) * oneOverDeterminant,
+                    +(M12 * M23 - M13 * M22) * oneOverDeterminant,
+                    -(M11 * M23 - M13 * M21) * oneOverDeterminant,
+                    +(M11 * M22 - M12 * M21) * oneOverDeterminant
                 ).Transposed;
             }
         }
@@ -273,12 +458,12 @@ namespace AlienEngine
         /// </summary>
         public Vector3f Column0
         {
-            get { return new Vector3f(Row0.X, Row1.X, Row2.X); }
+            get { return new Vector3f(M11, M21, M31); }
             set
             {
-                Row0.X = value.X;
-                Row1.X = value.Y;
-                Row2.X = value.Z;
+                M11 = value.X;
+                M21 = value.Y;
+                M31 = value.Z;
             }
         }
 
@@ -287,12 +472,12 @@ namespace AlienEngine
         /// </summary>
         public Vector3f Column1
         {
-            get { return new Vector3f(Row0.Y, Row1.Y, Row2.Y); }
+            get { return new Vector3f(M12, M22, M32); }
             set
             {
-                Row0.Y = value.X;
-                Row1.Y = value.Y;
-                Row2.Y = value.Z;
+                M12 = value.X;
+                M22 = value.Y;
+                M32 = value.Z;
             }
         }
 
@@ -301,59 +486,56 @@ namespace AlienEngine
         /// </summary>
         public Vector3f Column2
         {
-            get { return new Vector3f(Row0.Z, Row1.Z, Row2.Z); }
+            get { return new Vector3f(M13, M23, M33); }
             set
             {
-                Row0.Z = value.X;
-                Row1.Z = value.Y;
-                Row2.Z = value.Z;
+                M13 = value.X;
+                M23 = value.Y;
+                M33 = value.Z;
             }
         }
 
         /// <summary>
-        /// Gets or sets the value at row 1, column 1 of this instance.
+        /// Top row of the matrix.
         /// </summary>
-        public float M11 { get { return Row0.X; } set { Row0.X = value; } }
+        public Vector3f Row0
+        {
+            get { return new Vector3f(M11, M12, M13); }
+            set
+            {
+                M11 = value.X;
+                M12 = value.Y;
+                M13 = value.Z;
+            }
+        }
 
         /// <summary>
-        /// Gets or sets the value at row 1, column 2 of this instance.
+        /// Second row of the matrix.
         /// </summary>
-        public float M12 { get { return Row0.Y; } set { Row0.Y = value; } }
+        public Vector3f Row1
+        {
+            get { return new Vector3f(M21, M22, M23); }
+            set
+            {
+                M21 = value.X;
+                M22 = value.Y;
+                M23 = value.Z;
+            }
+        }
 
         /// <summary>
-        /// Gets or sets the value at row 1, column 2 of this instance.
+        /// Bottom row of the matrix.
         /// </summary>
-        public float M13 { get { return Row0.Z; } set { Row0.Z = value; } }
-
-        /// <summary>
-        /// Gets or sets the value at row 1, column 3 of this instance.
-        /// </summary>
-        public float M21 { get { return Row1.X; } set { Row1.X = value; } }
-
-        /// <summary>
-        /// Gets or sets the value at row 1, column 4 of this instance.
-        /// </summary>
-        public float M22 { get { return Row1.Y; } set { Row1.Y = value; } }
-
-        /// <summary>
-        /// Gets or sets the value at row 1, column 2 of this instance.
-        /// </summary>
-        public float M23 { get { return Row1.Z; } set { Row1.Z = value; } }
-
-        /// <summary>
-        /// Gets or sets the value at row 1, column 3 of this instance.
-        /// </summary>
-        public float M31 { get { return Row2.X; } set { Row2.X = value; } }
-
-        /// <summary>
-        /// Gets or sets the value at row 1, column 4 of this instance.
-        /// </summary>
-        public float M32 { get { return Row2.Y; } set { Row2.Y = value; } }
-
-        /// <summary>
-        /// Gets or sets the value at row 1, column 2 of this instance.
-        /// </summary>
-        public float M33 { get { return Row2.Z; } set { Row2.Z = value; } }
+        public Vector3f Row2
+        {
+            get { return new Vector3f(M31, M32, M33); }
+            set
+            {
+                M31 = value.X;
+                M32 = value.Y;
+                M33 = value.Z;
+            }
+        }
 
         #endregion
 
@@ -407,9 +589,24 @@ namespace AlienEngine
             }
             set
             {
-                if (row == 0) { Row0[column] = value; }
-                else if (row == 1) { Row1[column] = value; }
-                else if (row == 2) { Row2[column] = value; }
+                if (row == 0)
+                {
+                    if (column == 0) M11 = value;
+                    if (column == 1) M12 = value;
+                    if (column == 2) M13 = value;
+                }
+                else if (row == 1)
+                {
+                    if (column == 0) M21 = value;
+                    if (column == 1) M22 = value;
+                    if (column == 2) M23 = value;
+                }
+                else if (row == 2)
+                {
+                    if (column == 0) M31 = value;
+                    if (column == 1) M32 = value;
+                    if (column == 2) M33 = value;
+                }
                 else throw new ArgumentOutOfRangeException();
             }
         }
@@ -418,14 +615,20 @@ namespace AlienEngine
 
         #region Transform
 
+        /// <summary>
+        /// Transpose this instance.
+        /// </summary>
         public void Transpose()
         {
             this = Transpose(this);
         }
 
+        /// <summary>
+        /// Inverse this instance.
+        /// </summary>
         public void Inverse()
         {
-            this = Inverse(this);
+            this = Invert(this);
         }
 
         #endregion
@@ -435,21 +638,1003 @@ namespace AlienEngine
         /// <summary>
         /// Gets the transposed matrix.
         /// </summary>
-        /// <param name="m">The matrix to transpose.</param>
+        /// <param name="matrix">The matrix to transpose.</param>
         /// <returns>The transposed matrix.</returns>
-        public static Matrix3f Transpose(Matrix3f m)
+        public static Matrix3f Transpose(Matrix3f matrix)
         {
-            return m.Transposed;
+            Matrix3f res;
+            Transpose(ref matrix, out res);
+            return res;
+        }
+
+        /// <summary>
+        /// Gets the transposed matrix.
+        /// </summary>
+        /// <param name="matrix">The matrix to transpose.</param>
+        /// <param name="transpose">The transposed matrix.</param>
+        public static void Transpose(ref Matrix3f matrix, out Matrix3f transpose)
+        {
+            transpose = matrix.Transposed;
         }
 
         /// <summary>
         /// Gets the inversed matrix.
         /// </summary>
-        /// <param name="m">The matrix to inverse.</param>
+        /// <param name="matrix">The matrix to inverse.</param>
         /// <returns>The inversed matrix.</returns>
-        public static Matrix3f Inverse(Matrix3f m)
+        public static Matrix3f Invert(Matrix3f matrix)
         {
-            return m.Inversed;
+            Matrix3f res;
+            Invert(ref matrix, out res);
+            return res;
+        }
+
+        /// <summary>
+        /// Gets the inversed matrix.
+        /// </summary>
+        /// <param name="matrix">The matrix to inverse.</param>
+        /// <param name="inverse">The inversed matrix.</param>
+        public static void Invert(ref Matrix3f matrix, out Matrix3f inverse)
+        {
+            inverse = matrix.Inversed;
+        }
+
+        /// <summary>
+        /// Adds the two matrices together on a per-element basis.
+        /// </summary>
+        /// <param name="left">First matrix to add.</param>
+        /// <param name="right">Second matrix to add.</param>
+        /// <returns>Sum of the two matrices.</returns>
+        public static Matrix3f Add(Matrix3f left, Matrix3f right)
+        {
+            Matrix3f res;
+            Add(ref left, ref right, out res);
+            return res;
+        }
+
+        /// <summary>
+        /// Adds the two matrices together on a per-element basis.
+        /// </summary>
+        /// <param name="left">First matrix to add.</param>
+        /// <param name="right">Second matrix to add.</param>
+        /// <param name="result">Sum of the two matrices.</param>
+        public static void Add(ref Matrix3f left, ref Matrix3f right, out Matrix3f result)
+        {
+            float m11 = left.M11 + right.M11;
+            float m12 = left.M12 + right.M12;
+            float m13 = left.M13 + right.M13;
+
+            float m21 = left.M21 + right.M21;
+            float m22 = left.M22 + right.M22;
+            float m23 = left.M23 + right.M23;
+
+            float m31 = left.M31 + right.M31;
+            float m32 = left.M32 + right.M32;
+            float m33 = left.M33 + right.M33;
+
+            result.M11 = m11;
+            result.M12 = m12;
+            result.M13 = m13;
+
+            result.M21 = m21;
+            result.M22 = m22;
+            result.M23 = m23;
+
+            result.M31 = m31;
+            result.M32 = m32;
+            result.M33 = m33;
+        }
+
+        /// <summary>
+        /// Adds the two matrices together on a per-element basis.
+        /// </summary>
+        /// <param name="a">First matrix to add.</param>
+        /// <param name="b">Second matrix to add.</param>
+        /// <returns>Sum of the two matrices.</returns>
+        public static Matrix3f Add(Matrix4f a, Matrix3f b)
+        {
+            Matrix3f res;
+            Add(ref a, ref b, out res);
+            return res;
+        }
+
+        /// <summary>
+        /// Adds the two matrices together on a per-element basis.
+        /// </summary>
+        /// <param name="a">First matrix to add.</param>
+        /// <param name="b">Second matrix to add.</param>
+        /// <param name="result">Sum of the two matrices.</param>
+        public static void Add(ref Matrix4f a, ref Matrix3f b, out Matrix3f result)
+        {
+            float m11 = a.M11 + b.M11;
+            float m12 = a.M12 + b.M12;
+            float m13 = a.M13 + b.M13;
+
+            float m21 = a.M21 + b.M21;
+            float m22 = a.M22 + b.M22;
+            float m23 = a.M23 + b.M23;
+
+            float m31 = a.M31 + b.M31;
+            float m32 = a.M32 + b.M32;
+            float m33 = a.M33 + b.M33;
+
+            result.M11 = m11;
+            result.M12 = m12;
+            result.M13 = m13;
+
+            result.M21 = m21;
+            result.M22 = m22;
+            result.M23 = m23;
+
+            result.M31 = m31;
+            result.M32 = m32;
+            result.M33 = m33;
+        }
+
+        /// <summary>
+        /// Adds the two matrices together on a per-element basis.
+        /// </summary>
+        /// <param name="a">First matrix to add.</param>
+        /// <param name="b">Second matrix to add.</param>
+        /// <returns>Sum of the two matrices.</returns>
+        public static Matrix3f Add(Matrix3f a, Matrix4f b)
+        {
+            Matrix3f res;
+            Add(ref a, ref b, out res);
+            return res;
+        }
+
+        /// <summary>
+        /// Adds the two matrices together on a per-element basis.
+        /// </summary>
+        /// <param name="a">First matrix to add.</param>
+        /// <param name="b">Second matrix to add.</param>
+        /// <param name="result">Sum of the two matrices.</param>
+        public static void Add(ref Matrix3f a, ref Matrix4f b, out Matrix3f result)
+        {
+            Add(ref b, ref a, out result);
+        }
+
+        /// <summary>
+        /// Adds the two matrices together on a per-element basis.
+        /// </summary>
+        /// <param name="a">First matrix to add.</param>
+        /// <param name="b">Second matrix to add.</param>
+        /// <returns>Sum of the two matrices.</returns>
+        public static Matrix3f Add(Matrix4f a, Matrix4f b)
+        {
+            Matrix3f res;
+            Add(ref a, ref b, out res);
+            return res;
+        }
+
+        /// <summary>
+        /// Adds the two matrices together on a per-element basis.
+        /// </summary>
+        /// <param name="a">First matrix to add.</param>
+        /// <param name="b">Second matrix to add.</param>
+        /// <param name="result">Sum of the two matrices.</param>
+        public static void Add(ref Matrix4f a, ref Matrix4f b, out Matrix3f result)
+        {
+            float m11 = a.M11 + b.M11;
+            float m12 = a.M12 + b.M12;
+            float m13 = a.M13 + b.M13;
+
+            float m21 = a.M21 + b.M21;
+            float m22 = a.M22 + b.M22;
+            float m23 = a.M23 + b.M23;
+
+            float m31 = a.M31 + b.M31;
+            float m32 = a.M32 + b.M32;
+            float m33 = a.M33 + b.M33;
+
+            result.M11 = m11;
+            result.M12 = m12;
+            result.M13 = m13;
+
+            result.M21 = m21;
+            result.M22 = m22;
+            result.M23 = m23;
+
+            result.M31 = m31;
+            result.M32 = m32;
+            result.M33 = m33;
+        }
+
+        /// <summary>
+        /// Creates a skew symmetric matrix M from vector A such that M * B for some other vector B is equivalent to the cross product of A and B.
+        /// </summary>
+        /// <param name="v">Vector to base the matrix on.</param>
+        /// <returns>Skew-symmetric matrix result.</returns>
+        public static Matrix3f CreateCrossProduct(Vector3f v)
+        {
+            Matrix3f res;
+            CreateCrossProduct(ref v, out res);
+            return res;
+        }
+
+        /// <summary>
+        /// Creates a skew symmetric matrix M from vector A such that M * B for some other vector B is equivalent to the cross product of A and B.
+        /// </summary>
+        /// <param name="v">Vector to base the matrix on.</param>
+        /// <param name="result">Skew-symmetric matrix result.</param>
+        public static void CreateCrossProduct(ref Vector3f v, out Matrix3f result)
+        {
+            result.M11 = 0;
+            result.M12 = -v.Z;
+            result.M13 = v.Y;
+            result.M21 = v.Z;
+            result.M22 = 0;
+            result.M23 = -v.X;
+            result.M31 = -v.Y;
+            result.M32 = v.X;
+            result.M33 = 0;
+        }
+
+        /// <summary>
+        /// Creates a 3x3 matrix from an XNA 4x4 matrix.
+        /// </summary>
+        /// <param name="matrix4">Matrix to extract a 3x3 matrix from.</param>
+        /// <returns>Upper 3x3 matrix extracted from the XNA matrix.</returns>
+        public static Matrix3f FromMatrix4f(Matrix4f matrix4)
+        {
+            Matrix3f matrix3;
+            FromMatrix4f(ref matrix4, out matrix3);
+            return matrix3;
+        }
+
+        /// <summary>
+        /// Creates a 3x3 matrix from an XNA 4x4 matrix.
+        /// </summary>
+        /// <param name="matrix4">Matrix to extract a 3x3 matrix from.</param>
+        /// <param name="matrix3">Upper 3x3 matrix extracted from the XNA matrix.</param>
+        public static void FromMatrix4f(ref Matrix4f matrix4, out Matrix3f matrix3)
+        {
+            matrix3.M11 = matrix4.M11;
+            matrix3.M12 = matrix4.M12;
+            matrix3.M13 = matrix4.M13;
+
+            matrix3.M21 = matrix4.M21;
+            matrix3.M22 = matrix4.M22;
+            matrix3.M23 = matrix4.M23;
+
+            matrix3.M31 = matrix4.M31;
+            matrix3.M32 = matrix4.M32;
+            matrix3.M33 = matrix4.M33;
+        }
+
+        /// <summary>
+        /// Constructs a uniform scaling matrix.
+        /// </summary>
+        /// <param name="scale">Value to use in the diagonal.</param>
+        /// <returns>Scaling matrix.</returns>
+        public static Matrix3f CreateScale(float scale)
+        {
+            Matrix3f matrix;
+            CreateScale(scale, out matrix);
+            return matrix;
+        }
+
+        /// <summary>
+        /// Constructs a uniform scaling matrix.
+        /// </summary>
+        /// <param name="scale">Value to use in the diagonal.</param>
+        /// <param name="matrix">Scaling matrix.</param>
+        public static void CreateScale(float scale, out Matrix3f matrix)
+        {
+            matrix = new Matrix3f { M11 = scale, M22 = scale, M33 = scale };
+        }
+
+        /// <summary>
+        /// Constructs a uniform scaling matrix.
+        /// </summary>
+        /// <param name="scale">Value to use in the diagonal.</param>
+        /// <returns>Scaling matrix.</returns>
+        public static Matrix3f CreateScale(Vector3f scale)
+        {
+            Matrix3f matrix;
+            CreateScale(ref scale, out matrix);
+            return matrix;
+        }
+
+        /// <summary>
+        /// Constructs a non-uniform scaling matrix.
+        /// </summary>
+        /// <param name="scale">Values defining the axis scales.</param>
+        /// <param name="matrix">Scaling matrix.</param>
+        public static void CreateScale(ref Vector3f scale, out Matrix3f matrix)
+        {
+            matrix = new Matrix3f { M11 = scale.X, M22 = scale.Y, M33 = scale.Z };
+        }
+
+        /// <summary>
+        /// Constructs a uniform scaling matrix.
+        /// </summary>
+        /// <param name="scale">Value to use in the diagonal.</param>
+        /// <returns>Scaling matrix.</returns>
+        public static Matrix3f CreateScale(float x, float y, float z)
+        {
+            Matrix3f matrix;
+            CreateScale(x, y, z, out matrix);
+            return matrix;
+        }
+
+        /// <summary>
+        /// Constructs a non-uniform scaling matrix.
+        /// </summary>
+        /// <param name="x">Scaling along the x axis.</param>
+        /// <param name="y">Scaling along the y axis.</param>
+        /// <param name="z">Scaling along the z axis.</param>
+        /// <param name="matrix">Scaling matrix.</param>
+        public static void CreateScale(float x, float y, float z, out Matrix3f matrix)
+        {
+            matrix = new Matrix3f { M11 = x, M22 = y, M33 = z };
+        }
+
+        /// <summary>
+        /// Multiplies the two matrices.
+        /// </summary>
+        /// <param name="left">First matrix to multiply.</param>
+        /// <param name="right">Second matrix to multiply.</param>
+        /// <returns>Product of the multiplication.</returns>
+        public static Matrix3f Multiply(Matrix3f left, Matrix3f right)
+        {
+            Matrix3f res;
+            Multiply(ref left, ref right, out res);
+            return res;
+        }
+
+        /// <summary>
+        /// Multiplies the two matrices.
+        /// </summary>
+        /// <param name="left">First matrix to multiply.</param>
+        /// <param name="right">Second matrix to multiply.</param>
+        /// <param name="result">Product of the multiplication.</param>
+        public static void Multiply(ref Matrix3f left, ref Matrix3f right, out Matrix3f result)
+        {
+            result = new Matrix3f(
+                Vector3f.Dot(left.Row0, right.Column0), Vector3f.Dot(left.Row0, right.Column1), Vector3f.Dot(left.Row0, right.Column2),
+                Vector3f.Dot(left.Row1, right.Column0), Vector3f.Dot(left.Row1, right.Column1), Vector3f.Dot(left.Row1, right.Column2),
+                Vector3f.Dot(left.Row2, right.Column0), Vector3f.Dot(left.Row2, right.Column1), Vector3f.Dot(left.Row2, right.Column2)
+            );
+        }
+
+        /// <summary>
+        /// Multiplies the two matrices.
+        /// </summary>
+        /// <param name="left">First matrix to multiply.</param>
+        /// <param name="right">Second matrix to multiply.</param>
+        /// <returns>Product of the multiplication.</returns>
+        public static Matrix3f Multiply(Matrix3f left, Matrix4f right)
+        {
+            Matrix3f res;
+            Multiply(ref left, ref right, out res);
+            return res;
+        }
+
+        /// <summary>
+        /// Multiplies the two matrices.
+        /// </summary>
+        /// <param name="a">First matrix to multiply.</param>
+        /// <param name="b">Second matrix to multiply.</param>
+        /// <param name="result">Product of the multiplication.</param>
+        public static void Multiply(ref Matrix3f a, ref Matrix4f b, out Matrix3f result)
+        {
+            float resultM11 = a.M11 * b.M11 + a.M12 * b.M21 + a.M13 * b.M31;
+            float resultM12 = a.M11 * b.M12 + a.M12 * b.M22 + a.M13 * b.M32;
+            float resultM13 = a.M11 * b.M13 + a.M12 * b.M23 + a.M13 * b.M33;
+
+            float resultM21 = a.M21 * b.M11 + a.M22 * b.M21 + a.M23 * b.M31;
+            float resultM22 = a.M21 * b.M12 + a.M22 * b.M22 + a.M23 * b.M32;
+            float resultM23 = a.M21 * b.M13 + a.M22 * b.M23 + a.M23 * b.M33;
+
+            float resultM31 = a.M31 * b.M11 + a.M32 * b.M21 + a.M33 * b.M31;
+            float resultM32 = a.M31 * b.M12 + a.M32 * b.M22 + a.M33 * b.M32;
+            float resultM33 = a.M31 * b.M13 + a.M32 * b.M23 + a.M33 * b.M33;
+
+            result.M11 = resultM11;
+            result.M12 = resultM12;
+            result.M13 = resultM13;
+
+            result.M21 = resultM21;
+            result.M22 = resultM22;
+            result.M23 = resultM23;
+
+            result.M31 = resultM31;
+            result.M32 = resultM32;
+            result.M33 = resultM33;
+        }
+
+        /// <summary>
+        /// Multiplies the two matrices.
+        /// </summary>
+        /// <param name="left">First matrix to multiply.</param>
+        /// <param name="right">Second matrix to multiply.</param>
+        /// <returns>Product of the multiplication.</returns>
+        public static Matrix3f Multiply(Matrix4f left, Matrix3f right)
+        {
+            Matrix3f res;
+            Multiply(ref left, ref right, out res);
+            return res;
+        }
+
+        /// <summary>
+        /// Multiplies the two matrices.
+        /// </summary>
+        /// <param name="a">First matrix to multiply.</param>
+        /// <param name="b">Second matrix to multiply.</param>
+        /// <param name="result">Product of the multiplication.</param>
+        public static void Multiply(ref Matrix4f a, ref Matrix3f b, out Matrix3f result)
+        {
+            float resultM11 = a.M11 * b.M11 + a.M12 * b.M21 + a.M13 * b.M31;
+            float resultM12 = a.M11 * b.M12 + a.M12 * b.M22 + a.M13 * b.M32;
+            float resultM13 = a.M11 * b.M13 + a.M12 * b.M23 + a.M13 * b.M33;
+
+            float resultM21 = a.M21 * b.M11 + a.M22 * b.M21 + a.M23 * b.M31;
+            float resultM22 = a.M21 * b.M12 + a.M22 * b.M22 + a.M23 * b.M32;
+            float resultM23 = a.M21 * b.M13 + a.M22 * b.M23 + a.M23 * b.M33;
+
+            float resultM31 = a.M31 * b.M11 + a.M32 * b.M21 + a.M33 * b.M31;
+            float resultM32 = a.M31 * b.M12 + a.M32 * b.M22 + a.M33 * b.M32;
+            float resultM33 = a.M31 * b.M13 + a.M32 * b.M23 + a.M33 * b.M33;
+
+            result.M11 = resultM11;
+            result.M12 = resultM12;
+            result.M13 = resultM13;
+
+            result.M21 = resultM21;
+            result.M22 = resultM22;
+            result.M23 = resultM23;
+
+            result.M31 = resultM31;
+            result.M32 = resultM32;
+            result.M33 = resultM33;
+        }
+
+        /// <summary>
+        /// Multiplies a transposed matrix with another matrix.
+        /// </summary>
+        /// <param name="transpose">First matrix to multiply.</param>
+        /// <param name="matrix">Second matrix to multiply.</param>
+        /// <returns>Product of the multiplication.</returns>
+        public static Matrix3f MultiplyTransposed(Matrix3f transpose, Matrix3f matrix)
+        {
+            Matrix3f res;
+            MultiplyTransposed(ref transpose, ref matrix, out res);
+            return res;
+        }
+
+        /// <summary>
+        /// Multiplies a transposed matrix with another matrix.
+        /// </summary>
+        /// <param name="matrix">Matrix to be multiplied.</param>
+        /// <param name="transpose">Matrix to be transposed and multiplied.</param>
+        /// <param name="result">Product of the multiplication.</param>
+        public static void MultiplyTransposed(ref Matrix3f transpose, ref Matrix3f matrix, out Matrix3f result)
+        {
+            float resultM11 = transpose.M11 * matrix.M11 + transpose.M21 * matrix.M21 + transpose.M31 * matrix.M31;
+            float resultM12 = transpose.M11 * matrix.M12 + transpose.M21 * matrix.M22 + transpose.M31 * matrix.M32;
+            float resultM13 = transpose.M11 * matrix.M13 + transpose.M21 * matrix.M23 + transpose.M31 * matrix.M33;
+
+            float resultM21 = transpose.M12 * matrix.M11 + transpose.M22 * matrix.M21 + transpose.M32 * matrix.M31;
+            float resultM22 = transpose.M12 * matrix.M12 + transpose.M22 * matrix.M22 + transpose.M32 * matrix.M32;
+            float resultM23 = transpose.M12 * matrix.M13 + transpose.M22 * matrix.M23 + transpose.M32 * matrix.M33;
+
+            float resultM31 = transpose.M13 * matrix.M11 + transpose.M23 * matrix.M21 + transpose.M33 * matrix.M31;
+            float resultM32 = transpose.M13 * matrix.M12 + transpose.M23 * matrix.M22 + transpose.M33 * matrix.M32;
+            float resultM33 = transpose.M13 * matrix.M13 + transpose.M23 * matrix.M23 + transpose.M33 * matrix.M33;
+
+            result.M11 = resultM11;
+            result.M12 = resultM12;
+            result.M13 = resultM13;
+
+            result.M21 = resultM21;
+            result.M22 = resultM22;
+            result.M23 = resultM23;
+
+            result.M31 = resultM31;
+            result.M32 = resultM32;
+            result.M33 = resultM33;
+        }
+
+        /// <summary>
+        /// Multiplies a transposed matrix with another matrix.
+        /// </summary>
+        /// <param name="matrix">Second matrix to multiply.</param>
+        /// <param name="transpose">First matrix to multiply.</param>
+        /// <returns>Product of the multiplication.</returns>
+        public static Matrix3f MultiplyByTransposed(Matrix3f matrix, Matrix3f transpose)
+        {
+            Matrix3f res;
+            MultiplyByTransposed(ref matrix, ref transpose, out res);
+            return res;
+        }
+
+        /// <summary>
+        /// Multiplies a matrix with a transposed matrix.
+        /// </summary>
+        /// <param name="matrix">Matrix to be multiplied.</param>
+        /// <param name="transpose">Matrix to be transposed and multiplied.</param>
+        /// <param name="result">Product of the multiplication.</param>
+        public static void MultiplyByTransposed(ref Matrix3f matrix, ref Matrix3f transpose, out Matrix3f result)
+        {
+            float resultM11 = matrix.M11 * transpose.M11 + matrix.M12 * transpose.M12 + matrix.M13 * transpose.M13;
+            float resultM12 = matrix.M11 * transpose.M21 + matrix.M12 * transpose.M22 + matrix.M13 * transpose.M23;
+            float resultM13 = matrix.M11 * transpose.M31 + matrix.M12 * transpose.M32 + matrix.M13 * transpose.M33;
+
+            float resultM21 = matrix.M21 * transpose.M11 + matrix.M22 * transpose.M12 + matrix.M23 * transpose.M13;
+            float resultM22 = matrix.M21 * transpose.M21 + matrix.M22 * transpose.M22 + matrix.M23 * transpose.M23;
+            float resultM23 = matrix.M21 * transpose.M31 + matrix.M22 * transpose.M32 + matrix.M23 * transpose.M33;
+
+            float resultM31 = matrix.M31 * transpose.M11 + matrix.M32 * transpose.M12 + matrix.M33 * transpose.M13;
+            float resultM32 = matrix.M31 * transpose.M21 + matrix.M32 * transpose.M22 + matrix.M33 * transpose.M23;
+            float resultM33 = matrix.M31 * transpose.M31 + matrix.M32 * transpose.M32 + matrix.M33 * transpose.M33;
+
+            result.M11 = resultM11;
+            result.M12 = resultM12;
+            result.M13 = resultM13;
+
+            result.M21 = resultM21;
+            result.M22 = resultM22;
+            result.M23 = resultM23;
+
+            result.M31 = resultM31;
+            result.M32 = resultM32;
+            result.M33 = resultM33;
+        }
+
+        /// <summary>
+        /// Multiplies a transposed matrix with another matrix.
+        /// </summary>
+        /// <param name="matrix">Second matrix to multiply.</param>
+        /// <param name="scale">Amount to scale.</param>
+        /// <returns>Product of the multiplication.</returns>
+        public static Matrix3f Multiply(Matrix3f matrix, float scale)
+        {
+            Matrix3f res;
+            Multiply(ref matrix, scale, out res);
+            return res;
+        }
+
+        /// <summary>
+        /// Scales all components of the matrix.
+        /// </summary>
+        /// <param name="matrix">Matrix to scale.</param>
+        /// <param name="scale">Amount to scale.</param>
+        /// <param name="result">Scaled matrix.</param>
+        public static void Multiply(ref Matrix3f matrix, float scale, out Matrix3f result)
+        {
+            result.M11 = matrix.M11 * scale;
+            result.M12 = matrix.M12 * scale;
+            result.M13 = matrix.M13 * scale;
+
+            result.M21 = matrix.M21 * scale;
+            result.M22 = matrix.M22 * scale;
+            result.M23 = matrix.M23 * scale;
+
+            result.M31 = matrix.M31 * scale;
+            result.M32 = matrix.M32 * scale;
+            result.M33 = matrix.M33 * scale;
+        }
+
+        /// <summary>
+        /// Negates every element in the matrix.
+        /// </summary>
+        /// <param name="matrix">Matrix to negate.</param>
+        /// <returns>Negated matrix.</returns>
+        public static Matrix3f Negate(Matrix3f matrix)
+        {
+            Matrix3f res;
+            Negate(ref matrix, out res);
+            return res;
+        }
+
+        /// <summary>
+        /// Negates every element in the matrix.
+        /// </summary>
+        /// <param name="matrix">Matrix to negate.</param>
+        /// <param name="result">Negated matrix.</param>
+        public static void Negate(ref Matrix3f matrix, out Matrix3f result)
+        {
+            result.M11 = -matrix.M11;
+            result.M12 = -matrix.M12;
+            result.M13 = -matrix.M13;
+
+            result.M21 = -matrix.M21;
+            result.M22 = -matrix.M22;
+            result.M23 = -matrix.M23;
+
+            result.M31 = -matrix.M31;
+            result.M32 = -matrix.M32;
+            result.M33 = -matrix.M33;
+        }
+
+        /// <summary>
+        /// Subtracts the two matrices from each other on a per-element basis.
+        /// </summary>
+        /// <param name="a">First matrix to subtract.</param>
+        /// <param name="b">Second matrix to subtract.</param>
+        /// <returns>Difference of the two matrices.</returns>
+        public static Matrix3f Subtract(Matrix3f a, Matrix3f b)
+        {
+            Matrix3f res;
+            Subtract(ref a, ref b, out res);
+            return res;
+        }
+
+        /// <summary>
+        /// Subtracts the two matrices from each other on a per-element basis.
+        /// </summary>
+        /// <param name="a">First matrix to subtract.</param>
+        /// <param name="b">Second matrix to subtract.</param>
+        /// <param name="result">Difference of the two matrices.</param>
+        public static void Subtract(ref Matrix3f a, ref Matrix3f b, out Matrix3f result)
+        {
+            float m11 = a.M11 - b.M11;
+            float m12 = a.M12 - b.M12;
+            float m13 = a.M13 - b.M13;
+
+            float m21 = a.M21 - b.M21;
+            float m22 = a.M22 - b.M22;
+            float m23 = a.M23 - b.M23;
+
+            float m31 = a.M31 - b.M31;
+            float m32 = a.M32 - b.M32;
+            float m33 = a.M33 - b.M33;
+
+            result.M11 = m11;
+            result.M12 = m12;
+            result.M13 = m13;
+
+            result.M21 = m21;
+            result.M22 = m22;
+            result.M23 = m23;
+
+            result.M31 = m31;
+            result.M32 = m32;
+            result.M33 = m33;
+        }
+
+        /// <summary>
+        /// Creates a 4x4 matrix from a 3x3 matrix.
+        /// </summary>
+        /// <param name="a">3x3 matrix.</param>
+        /// <returns>Created 4x4 matrix.</returns>
+        public static Matrix4f ToMatrix4f(Matrix3f a)
+        {
+            Matrix4f res;
+            ToMatrix4f(ref a, out res);
+            return res;
+        }
+
+        /// <summary>
+        /// Creates a 4x4 matrix from a 3x3 matrix.
+        /// </summary>
+        /// <param name="a">3x3 matrix.</param>
+        /// <param name="b">Created 4x4 matrix.</param>
+        public static void ToMatrix4f(ref Matrix3f a, out Matrix4f b)
+        {
+#if !WINDOWS
+            b = new Matrix4f();
+#endif
+            b.M11 = a.M11;
+            b.M12 = a.M12;
+            b.M13 = a.M13;
+
+            b.M21 = a.M21;
+            b.M22 = a.M22;
+            b.M23 = a.M23;
+
+            b.M31 = a.M31;
+            b.M32 = a.M32;
+            b.M33 = a.M33;
+
+            b.M44 = 1;
+            b.M14 = 0;
+            b.M24 = 0;
+            b.M34 = 0;
+            b.M41 = 0;
+            b.M42 = 0;
+            b.M43 = 0;
+        }
+
+        /// <summary>
+        /// Inverts the largest nonsingular submatrix in the matrix, excluding 2x2's that involve M13 or M31, and excluding 1x1's that include nondiagonal elements.
+        /// </summary>
+        /// <param name="matrix">Matrix to be inverted.</param>
+        /// <param name="result">Inverted matrix.</param>
+        public static void AdaptiveInvert(ref Matrix3f matrix, out Matrix3f result)
+        {
+            int submatrix;
+            float determinantInverse = 1 / matrix.AdaptiveDeterminant(out submatrix);
+            float m11, m12, m13, m21, m22, m23, m31, m32, m33;
+            switch (submatrix)
+            {
+                case 0: //Full matrix.
+                    m11 = (matrix.M22 * matrix.M33 - matrix.M23 * matrix.M32) * determinantInverse;
+                    m12 = (matrix.M13 * matrix.M32 - matrix.M33 * matrix.M12) * determinantInverse;
+                    m13 = (matrix.M12 * matrix.M23 - matrix.M22 * matrix.M13) * determinantInverse;
+
+                    m21 = (matrix.M23 * matrix.M31 - matrix.M21 * matrix.M33) * determinantInverse;
+                    m22 = (matrix.M11 * matrix.M33 - matrix.M13 * matrix.M31) * determinantInverse;
+                    m23 = (matrix.M13 * matrix.M21 - matrix.M11 * matrix.M23) * determinantInverse;
+
+                    m31 = (matrix.M21 * matrix.M32 - matrix.M22 * matrix.M31) * determinantInverse;
+                    m32 = (matrix.M12 * matrix.M31 - matrix.M11 * matrix.M32) * determinantInverse;
+                    m33 = (matrix.M11 * matrix.M22 - matrix.M12 * matrix.M21) * determinantInverse;
+                    break;
+                case 1: //Upper left matrix, m11, m12, m21, m22.
+                    m11 = matrix.M22 * determinantInverse;
+                    m12 = -matrix.M12 * determinantInverse;
+                    m13 = 0;
+
+                    m21 = -matrix.M21 * determinantInverse;
+                    m22 = matrix.M11 * determinantInverse;
+                    m23 = 0;
+
+                    m31 = 0;
+                    m32 = 0;
+                    m33 = 0;
+                    break;
+                case 2: //Lower right matrix, m22, m23, m32, m33.
+                    m11 = 0;
+                    m12 = 0;
+                    m13 = 0;
+
+                    m21 = 0;
+                    m22 = matrix.M33 * determinantInverse;
+                    m23 = -matrix.M23 * determinantInverse;
+
+                    m31 = 0;
+                    m32 = -matrix.M32 * determinantInverse;
+                    m33 = matrix.M22 * determinantInverse;
+                    break;
+                case 3: //Corners, m11, m31, m13, m33.
+                    m11 = matrix.M33 * determinantInverse;
+                    m12 = 0;
+                    m13 = -matrix.M13 * determinantInverse;
+
+                    m21 = 0;
+                    m22 = 0;
+                    m23 = 0;
+
+                    m31 = -matrix.M31 * determinantInverse;
+                    m32 = 0;
+                    m33 = matrix.M11 * determinantInverse;
+                    break;
+                case 4: //M11
+                    m11 = 1 / matrix.M11;
+                    m12 = 0;
+                    m13 = 0;
+
+                    m21 = 0;
+                    m22 = 0;
+                    m23 = 0;
+
+                    m31 = 0;
+                    m32 = 0;
+                    m33 = 0;
+                    break;
+                case 5: //M22
+                    m11 = 0;
+                    m12 = 0;
+                    m13 = 0;
+
+                    m21 = 0;
+                    m22 = 1 / matrix.M22;
+                    m23 = 0;
+
+                    m31 = 0;
+                    m32 = 0;
+                    m33 = 0;
+                    break;
+                case 6: //M33
+                    m11 = 0;
+                    m12 = 0;
+                    m13 = 0;
+
+                    m21 = 0;
+                    m22 = 0;
+                    m23 = 0;
+
+                    m31 = 0;
+                    m32 = 0;
+                    m33 = 1 / matrix.M33;
+                    break;
+                default: //Completely singular.
+                    m11 = 0; m12 = 0; m13 = 0; m21 = 0; m22 = 0; m23 = 0; m31 = 0; m32 = 0; m33 = 0;
+                    break;
+            }
+
+            result.M11 = m11;
+            result.M12 = m12;
+            result.M13 = m13;
+
+            result.M21 = m21;
+            result.M22 = m22;
+            result.M23 = m23;
+
+            result.M31 = m31;
+            result.M32 = m32;
+            result.M33 = m33;
+        }
+
+        /// <summary>
+        /// <para>Computes the adjugate transpose of a matrix.</para>
+        /// <para>The adjugate transpose A of matrix M is: det(M) * transpose(invert(M))</para>
+        /// <para>This is necessary when transforming normals (bivectors) with general linear transformations.</para>
+        /// </summary>
+        /// <param name="matrix">Matrix to compute the adjugate transpose of.</param>
+        /// <param name="result">Adjugate transpose of the input matrix.</param>
+        public static void AdjugateTranspose(ref Matrix3f matrix, out Matrix3f result)
+        {
+            //Despite the relative obscurity of the operation, this is a fairly straightforward operation which is actually faster than a true invert (by virtue of cancellation).
+            //Conceptually, this is implemented as transpose(det(M) * invert(M)), but that's perfectly acceptable:
+            //1) transpose(invert(M)) == invert(transpose(M)), and
+            //2) det(M) == det(transpose(M))
+            //This organization makes it clearer that the invert's usual division by determinant drops out.
+
+            float m11 = (matrix.M22 * matrix.M33 - matrix.M23 * matrix.M32);
+            float m12 = (matrix.M13 * matrix.M32 - matrix.M33 * matrix.M12);
+            float m13 = (matrix.M12 * matrix.M23 - matrix.M22 * matrix.M13);
+
+            float m21 = (matrix.M23 * matrix.M31 - matrix.M21 * matrix.M33);
+            float m22 = (matrix.M11 * matrix.M33 - matrix.M13 * matrix.M31);
+            float m23 = (matrix.M13 * matrix.M21 - matrix.M11 * matrix.M23);
+
+            float m31 = (matrix.M21 * matrix.M32 - matrix.M22 * matrix.M31);
+            float m32 = (matrix.M12 * matrix.M31 - matrix.M11 * matrix.M32);
+            float m33 = (matrix.M11 * matrix.M22 - matrix.M12 * matrix.M21);
+
+            //Note transposition.
+            result.M11 = m11;
+            result.M12 = m21;
+            result.M13 = m31;
+
+            result.M21 = m12;
+            result.M22 = m22;
+            result.M23 = m32;
+
+            result.M31 = m13;
+            result.M32 = m23;
+            result.M33 = m33;
+        }
+
+        /// <summary>
+        /// <para>Computes the adjugate transpose of a matrix.</para>
+        /// <para>The adjugate transpose A of matrix M is: det(M) * transpose(invert(M))</para>
+        /// <para>This is necessary when transforming normals (bivectors) with general linear transformations.</para>
+        /// </summary>
+        /// <param name="matrix">Matrix to compute the adjugate transpose of.</param>
+        /// <returns>Adjugate transpose of the input matrix.</returns>
+        public static Matrix3f AdjugateTranspose(Matrix3f matrix)
+        {
+            Matrix3f toReturn;
+            AdjugateTranspose(ref matrix, out toReturn);
+            return toReturn;
+        }
+
+        /// <summary>
+        /// Creates a 3x3 matrix representing the orientation stored in the quaternion.
+        /// </summary>
+        /// <param name="quaternion">Quaternion to use to create a matrix.</param>
+        /// <returns>Matrix representing the quaternion's orientation.</returns>
+        public static Matrix3f FromQuaternion(Quaternion quaternion)
+        {
+            Matrix3f result;
+            FromQuaternion(ref quaternion, out result);
+            return result;
+        }
+
+        /// <summary>
+        /// Creates a 3x3 matrix representing the orientation stored in the quaternion.
+        /// </summary>
+        /// <param name="quaternion">Quaternion to use to create a matrix.</param>
+        /// <param name="result">Matrix representing the quaternion's orientation.</param>
+        public static void FromQuaternion(ref Quaternion quaternion, out Matrix3f result)
+        {
+            float qX2 = quaternion.X + quaternion.X;
+            float qY2 = quaternion.Y + quaternion.Y;
+            float qZ2 = quaternion.Z + quaternion.Z;
+            float XX = qX2 * quaternion.X;
+            float YY = qY2 * quaternion.Y;
+            float ZZ = qZ2 * quaternion.Z;
+            float XY = qX2 * quaternion.Y;
+            float XZ = qX2 * quaternion.Z;
+            float XW = qX2 * quaternion.W;
+            float YZ = qY2 * quaternion.Z;
+            float YW = qY2 * quaternion.W;
+            float ZW = qZ2 * quaternion.W;
+
+            result.M11 = 1 - YY - ZZ;
+            result.M21 = XY - ZW;
+            result.M31 = XZ + YW;
+
+            result.M12 = XY + ZW;
+            result.M22 = 1 - XX - ZZ;
+            result.M32 = YZ - XW;
+
+            result.M13 = XZ - YW;
+            result.M23 = YZ + XW;
+            result.M33 = 1 - XX - YY;
+        }
+
+        /// <summary>
+        /// Computes the outer product of the given vectors.
+        /// </summary>
+        /// <param name="a">First vector.</param>
+        /// <param name="b">Second vector.</param>
+        /// <returns>Outer product result.</returns>
+        public static Matrix3f CreateOuterProduct(Vector3f a, Vector3f b)
+        {
+            Matrix3f res;
+            CreateOuterProduct(ref a, ref b, out res);
+            return res;
+        }
+
+        /// <summary>
+        /// Computes the outer product of the given vectors.
+        /// </summary>
+        /// <param name="a">First vector.</param>
+        /// <param name="b">Second vector.</param>
+        /// <param name="result">Outer product result.</param>
+        public static void CreateOuterProduct(ref Vector3f a, ref Vector3f b, out Matrix3f result)
+        {
+            result.M11 = a.X * b.X;
+            result.M12 = a.X * b.Y;
+            result.M13 = a.X * b.Z;
+
+            result.M21 = a.Y * b.X;
+            result.M22 = a.Y * b.Y;
+            result.M23 = a.Y * b.Z;
+
+            result.M31 = a.Z * b.X;
+            result.M32 = a.Z * b.Y;
+            result.M33 = a.Z * b.Z;
+        }
+
+        /// <summary>
+        /// Creates a matrix representing a rotation of a given angle around a given axis.
+        /// </summary>
+        /// <param name="axis">Axis around which to rotate.</param>
+        /// <param name="angle">Amount to rotate.</param>
+        /// <returns>Matrix representing the rotation.</returns>
+        public static Matrix3f FromAxisAngle(Vector3f axis, float angle)
+        {
+            Matrix3f toReturn;
+            FromAxisAngle(ref axis, angle, out toReturn);
+            return toReturn;
+        }
+
+        /// <summary>
+        /// Creates a matrix representing a rotation of a given angle around a given axis.
+        /// </summary>
+        /// <param name="axis">Axis around which to rotate.</param>
+        /// <param name="angle">Amount to rotate.</param>
+        /// <param name="result">Matrix representing the rotation.</param>
+        public static void FromAxisAngle(ref Vector3f axis, float angle, out Matrix3f result)
+        {
+            float xx = axis.X * axis.X;
+            float yy = axis.Y * axis.Y;
+            float zz = axis.Z * axis.Z;
+            float xy = axis.X * axis.Y;
+            float xz = axis.X * axis.Z;
+            float yz = axis.Y * axis.Z;
+
+            float sinAngle = (float)System.Math.Sin(angle);
+            float oneMinusCosAngle = 1 - (float)System.Math.Cos(angle);
+
+            result.M11 = 1 + oneMinusCosAngle * (xx - 1);
+            result.M21 = -axis.Z * sinAngle + oneMinusCosAngle * xy;
+            result.M31 = axis.Y * sinAngle + oneMinusCosAngle * xz;
+
+            result.M12 = axis.Z * sinAngle + oneMinusCosAngle * xy;
+            result.M22 = 1 + oneMinusCosAngle * (yy - 1);
+            result.M32 = -axis.X * sinAngle + oneMinusCosAngle * yz;
+
+            result.M13 = -axis.Y * sinAngle + oneMinusCosAngle * xz;
+            result.M23 = axis.X * sinAngle + oneMinusCosAngle * yz;
+            result.M33 = 1 + oneMinusCosAngle * (zz - 1);
         }
 
         #endregion
@@ -468,11 +1653,9 @@ namespace AlienEngine
 
         public static Matrix3f operator *(Matrix3f m1, Matrix3f m2)
         {
-            return new Matrix3f(
-                Vector3f.Dot(m1.Row0, m2.Column0), Vector3f.Dot(m1.Row0, m2.Column1), Vector3f.Dot(m1.Row0, m2.Column2),
-                Vector3f.Dot(m1.Row1, m2.Column0), Vector3f.Dot(m1.Row1, m2.Column1), Vector3f.Dot(m1.Row1, m2.Column2),
-                Vector3f.Dot(m1.Row2, m2.Column0), Vector3f.Dot(m1.Row2, m2.Column1), Vector3f.Dot(m1.Row2, m2.Column2)
-            );
+            Matrix3f res;
+            Multiply(ref m1, ref m2, out res);
+            return res;
         }
 
         public static Matrix3f operator *(Matrix3f m1, float d)
@@ -593,7 +1776,7 @@ namespace AlienEngine
         /// <returns>The <see cref="Matrix2f"/> portion of this matrix.</returns>
         public Matrix2f ToMatrix2f()
         {
-            return new Matrix2f(new Vector2f(Row0.X, Row0.Y), new Vector2f(Row1.X, Row1.Y));
+            return new Matrix2f(new Vector2f(M11, M12), new Vector2f(M21, M22));
         }
 
         #endregion
