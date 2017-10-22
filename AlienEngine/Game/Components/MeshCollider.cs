@@ -5,9 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AlienEngine.Core.Physics;
-using BEPUphysics.CollisionShapes.ConvexShapes;
-using BEPUutilities;
-using BEPUphysics.CollisionShapes;
+using AlienEngine.Core.Physics.CollisionShapes.ConvexShapes;
+using AlienEngine.Core.Physics.CollisionShapes;
 
 namespace AlienEngine
 {
@@ -31,15 +30,17 @@ namespace AlienEngine
             {
                 MeshAsset mergedMesh = Mesh.Merged;
                 Vector3f[] positions = mergedMesh.VerticesPositions;
-                Vector3[] collection = new Vector3[positions.Length];
+                Vector3f[] collection = new Vector3f[positions.Length];
                 Transform t = gameElement.WorldTransform;
 
                 for (int i = 0, l = positions.Length; i < l; i++)
                 {
-                    collection[i] = (Vector3)positions[i];
+                    // TODO: Transform positions here !!
+                    collection[i] = positions[i];
                 }
 
-                _shape = new MobileMeshShape(collection, mergedMesh.Indices, new AffineTransform((Vector3)t.Scale, BEPUutilities.Quaternion.CreateFromYawPitchRoll(t.Rotation.Z, t.Rotation.Y, t.Rotation.X), (Vector3)t.Translation), MobileMeshSolidity.DoubleSided, out Vector3 center);
+                Vector3f center;
+                _shape = new MobileMeshShape(collection, mergedMesh.Indices, new AffineTransform(t.Scale, Quaternion.FromEulerAngles(t.Rotation.Z, t.Rotation.Y, t.Rotation.X), t.Translation), MobileMeshSolidity.DoubleSided, out center);
                 _centerOffset = (Vector3f)center;
 
             }

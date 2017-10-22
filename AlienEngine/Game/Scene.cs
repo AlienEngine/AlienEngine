@@ -1,5 +1,5 @@
-﻿using BEPUphysics;
-using BEPUutilities.Threading;
+﻿using AlienEngine.Core.Physics;
+using AlienEngine.Core.Threading;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -247,7 +247,7 @@ namespace AlienEngine.Core.Game
             }
 
             _space = new Space(_parallelLooper);
-            _space.ForceUpdater.Gravity = BEPUutilities.Vector3.UnitY * -9.81f;
+            _space.ForceUpdater.Gravity = VectorHelper.Down * 9.81f;
         }
 
         #region IDisposable Support
