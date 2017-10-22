@@ -1,5 +1,5 @@
 ﻿using AlienEngine.Core.Graphics.OpenGL;
-using BEPUphysics.CollisionShapes.ConvexShapes;
+using AlienEngine.Core.Physics.CollisionShapes.ConvexShapes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
