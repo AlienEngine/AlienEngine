@@ -2133,40 +2133,6 @@ namespace AlienEngine
         }
 
         /// <summary>
-        /// Explicitly cast a <see cref="Matrix4f"/> into a <see cref="BEPUutilities.Matrix"/>.
-        /// </summary>
-        /// <param name="mat">The matrix to cast.</param>
-        public static explicit operator BEPUutilities.Matrix(Matrix4f mat)
-        {
-            BEPUutilities.Matrix ret = new BEPUutilities.Matrix
-            (
-                mat.M11, mat.M12, mat.M13, mat.M14,
-                mat.M21, mat.M22, mat.M23, mat.M24,
-                mat.M31, mat.M32, mat.M33, mat.M34,
-                mat.M41, mat.M42, mat.M43, mat.M44
-            );
-
-            return ret;
-        }
-
-        /// <summary>
-        /// Explicitly cast a <see cref="BEPUutilities.Matrix"/> into a <see cref="Matrix4f"/>.
-        /// </summary>
-        /// <param name="mat">The matrix to cast.</param>
-        public static explicit operator Matrix4f(BEPUutilities.Matrix mat)
-        {
-            Matrix4f ret = new Matrix4f
-            (
-                mat.M11, mat.M12, mat.M13, mat.M14,
-                mat.M21, mat.M22, mat.M23, mat.M24,
-                mat.M31, mat.M32, mat.M33, mat.M34,
-                mat.M41, mat.M42, mat.M43, mat.M44
-            );
-
-            return ret;
-        }
-
-        /// <summary>
         /// Explicitly cast a <see cref="Matrix4f"/> into a <see cref="Assimp.Matrix4x4"/>.
         /// </summary>
         /// <param name="mat">The matrix to cast.</param>

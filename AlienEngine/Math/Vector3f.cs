@@ -1696,26 +1696,6 @@ namespace AlienEngine
         }
 
         /// <summary>
-        /// Explicitly cast this <see cref="Vector3f"/> into a <see cref="BEPUutilities.Vector3"/>.
-        /// </summary>
-        /// <param name="vec">The vector to cast.</param>
-        [CLSCompliant(false)]
-        public static explicit operator BEPUutilities.Vector3(Vector3f vec)
-        {
-            return new BEPUutilities.Vector3(vec.X, vec.Y, vec.Z);
-        }
-
-        /// <summary>
-        /// Explicitly cast this <see cref="Vector3f"/> into a <see cref="BEPUutilities.Vector3"/>.
-        /// </summary>
-        /// <param name="vec">The vector to cast.</param>
-        [CLSCompliant(false)]
-        public static explicit operator Vector3f(BEPUutilities.Vector3 vec)
-        {
-            return new Vector3f(vec.X, vec.Y, vec.Z);
-        }
-
-        /// <summary>
         /// Explicitly cast this <see cref="Vector3f"/> into a <see cref="Assimp.Vector3D"/>.
         /// </summary>
         /// <param name="vec">The vector to cast.</param>
