@@ -24,7 +24,7 @@ using AlienEngine.Core.Graphics.DevIL.Unmanaged;
 
 namespace AlienEngine.Core.Graphics.DevIL
 {
-    public class ImageData
+    internal class ImageData
     {
         private ImageInfo m_info;
         private byte[] m_data;
@@ -33,221 +33,142 @@ namespace AlienEngine.Core.Graphics.DevIL
 
         public DataFormat Format
         {
-            get
-            {
-                return m_info.Format;
-            }
+            get { return m_info.Format; }
         }
 
         public CompressedDataFormat DxtcFormat
         {
-            get
-            {
-                return m_info.DxtcFormat;
-            }
+            get { return m_info.DxtcFormat; }
         }
 
         public DataType DataType
         {
-            get
-            {
-                return m_info.DataType;
-            }
+            get { return m_info.DataType; }
         }
 
         public PaletteType PaletteType
         {
-            get
-            {
-                return m_info.PaletteType;
-            }
+            get { return m_info.PaletteType; }
         }
 
         public DataFormat PaletteBaseType
         {
-            get
-            {
-                return m_info.PaletteBaseType;
-            }
+            get { return m_info.PaletteBaseType; }
         }
 
         public CubeMapFace CubeFace
         {
-            get
-            {
-                return m_info.CubeFlags;
-            }
+            get { return m_info.CubeFlags; }
         }
 
         public OriginLocation Origin
         {
-            get
-            {
-                return m_info.Origin;
-            }
+            get { return m_info.Origin; }
         }
 
         public int Width
         {
-            get
-            {
-                return m_info.Width;
-            }
+            get { return m_info.Width; }
         }
 
         public int Height
         {
-            get
-            {
-                return m_info.Height;
-            }
+            get { return m_info.Height; }
         }
 
         public int Depth
         {
-            get
-            {
-                return m_info.Depth;
-            }
+            get { return m_info.Depth; }
         }
 
         public int BitsPerPixel
         {
-            get
-            {
-                return m_info.BitsPerPixel;
-            }
+            get { return m_info.BitsPerPixel; }
         }
 
         public int BytesPerPixel
         {
-            get
-            {
-                return m_info.BytesPerPixel;
-            }
+            get { return m_info.BytesPerPixel; }
         }
 
         public int ChannelCount
         {
-            get
-            {
-                return m_info.Channels;
-            }
+            get { return m_info.Channels; }
         }
 
         public int Duration
         {
-            get
-            {
-                return m_info.Duration;
-            }
+            get { return m_info.Duration; }
         }
 
         public int SizeOfData
         {
-            get
-            {
-                return m_info.SizeOfData;
-            }
+            get { return m_info.SizeOfData; }
         }
 
         public int OffsetX
         {
-            get
-            {
-                return m_info.OffsetX;
-            }
+            get { return m_info.OffsetX; }
         }
 
         public int OffsetY
         {
-            get
-            {
-                return m_info.OffsetY;
-            }
+            get { return m_info.OffsetY; }
         }
 
         public int PlaneSize
         {
-            get
-            {
-                return m_info.PlaneSize;
-            }
+            get { return m_info.PlaneSize; }
         }
 
         public int PaletteBytesPerPixel
         {
-            get
-            {
-                return m_info.PaletteBytesPerPixel;
-            }
+            get { return m_info.PaletteBytesPerPixel; }
         }
 
         public int PaletteColumnCount
         {
-            get
-            {
-                return m_info.PaletteColumnCount;
-            }
+            get { return m_info.PaletteColumnCount; }
         }
 
         public bool HasDXTCData
         {
-            get
-            {
-                return m_info.HasDXTC && m_compressedData != null;
-            }
+            get { return m_info.HasDXTC && m_compressedData != null; }
         }
 
         public bool HasPaletteData
         {
-            get
-            {
-                return m_info.HasPalette && m_paletteData != null;
-            }
+            get { return m_info.HasPalette && m_paletteData != null; }
         }
 
         public bool IsCubeMap
         {
-            get
-            {
-                return m_info.IsCubeMap;
-            }
+            get { return m_info.IsCubeMap; }
         }
 
         public bool IsSphereMap
         {
-            get
-            {
-                return m_info.IsSphereMap;
-            }
+            get { return m_info.IsSphereMap; }
         }
 
         public byte[] Data
         {
-            get
-            {
-                return m_data;
-            }
+            get { return m_data; }
         }
 
         public byte[] CompressedData
         {
-            get
-            {
-                return m_compressedData;
-            }
+            get { return m_compressedData; }
         }
 
         public byte[] PaletteData
         {
-            get
-            {
-                return m_paletteData;
-            }
+            get { return m_paletteData; }
         }
 
-        private ImageData() { }
+        private ImageData()
+        {
+        }
 
         internal static ImageData Load(Subimage subimage)
         {

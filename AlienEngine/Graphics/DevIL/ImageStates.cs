@@ -25,13 +25,12 @@ using AlienEngine.Core.Graphics.DevIL.Unmanaged;
 
 namespace AlienEngine.Core.Graphics.DevIL
 {
-
-    public interface IImageState
+    internal interface IImageState
     {
         void Apply();
     }
 
-    public sealed class ImageState : IImageState
+    internal sealed class ImageState : IImageState
     {
         private bool m_useAbsoluteFormat = false;
         private bool m_useAbsoluteDataType = false;
@@ -49,46 +48,25 @@ namespace AlienEngine.Core.Graphics.DevIL
 
         public bool UseAbsoluteFormat
         {
-            get
-            {
-                return m_useAbsoluteFormat;
-            }
-            set
-            {
-                m_useAbsoluteFormat = value;
-            }
+            get { return m_useAbsoluteFormat; }
+            set { m_useAbsoluteFormat = value; }
         }
 
         public bool UseAbsoluteDataType
         {
-            get
-            {
-                return m_useAbsoluteDataType;
-            }
-            set
-            {
-                m_useAbsoluteDataType = value;
-            }
+            get { return m_useAbsoluteDataType; }
+            set { m_useAbsoluteDataType = value; }
         }
 
         public bool UseAbsoluteOrigin
         {
-            get
-            {
-                return m_useAbsoluteOrigin;
-            }
-            set
-            {
-                m_useAbsoluteOrigin = value;
-            }
+            get { return m_useAbsoluteOrigin; }
+            set { m_useAbsoluteOrigin = value; }
         }
 
         public DataFormat AbsoluteFormat
         {
-            get
-            {
-                return m_absoluteFormat;
-            }
+            get { return m_absoluteFormat; }
             set
             {
                 m_absoluteFormat = value;
@@ -98,10 +76,7 @@ namespace AlienEngine.Core.Graphics.DevIL
 
         public DataType AbsoluteDataType
         {
-            get
-            {
-                return m_absoluteDataType;
-            }
+            get { return m_absoluteDataType; }
             set
             {
                 m_absoluteDataType = value;
@@ -111,10 +86,7 @@ namespace AlienEngine.Core.Graphics.DevIL
 
         public OriginLocation AbsoluteOrigin
         {
-            get
-            {
-                return m_absoluteOrigin;
-            }
+            get { return m_absoluteOrigin; }
             set
             {
                 m_absoluteOrigin = value;
@@ -124,46 +96,25 @@ namespace AlienEngine.Core.Graphics.DevIL
 
         public bool ConvertPalette
         {
-            get
-            {
-                return m_convertPalette;
-            }
-            set
-            {
-                m_convertPalette = value;
-            }
+            get { return m_convertPalette; }
+            set { m_convertPalette = value; }
         }
 
         public bool DefaultImageOnFail
         {
-            get
-            {
-                return m_defaultImageOnFail;
-            }
-            set
-            {
-                m_defaultImageOnFail = value;
-            }
+            get { return m_defaultImageOnFail; }
+            set { m_defaultImageOnFail = value; }
         }
 
         public bool UseColorKey
         {
-            get
-            {
-                return m_useColorKey;
-            }
-            set
-            {
-                m_useColorKey = value;
-            }
+            get { return m_useColorKey; }
+            set { m_useColorKey = value; }
         }
 
         public Color4 ColorKey
         {
-            get
-            {
-                return m_keyColor;
-            }
+            get { return m_keyColor; }
             set
             {
                 m_keyColor = value;
@@ -173,14 +124,8 @@ namespace AlienEngine.Core.Graphics.DevIL
 
         public bool BlitBlend
         {
-            get
-            {
-                return m_blitBlend;
-            }
-            set
-            {
-                m_blitBlend = value;
-            }
+            get { return m_blitBlend; }
+            set { m_blitBlend = value; }
         }
 
         public void Apply()
@@ -262,20 +207,14 @@ namespace AlienEngine.Core.Graphics.DevIL
         }
     }
 
-    public sealed class LanguageState : IImageState
+    internal sealed class LanguageState : IImageState
     {
         private Language m_language = Language.English;
 
         public Language Language
         {
-            get
-            {
-                return m_language;
-            }
-            set
-            {
-                m_language = value;
-            }
+            get { return m_language; }
+            set { m_language = value; }
         }
 
         public void Apply()
@@ -289,33 +228,21 @@ namespace AlienEngine.Core.Graphics.DevIL
         }
     }
 
-    public sealed class HintState : IImageState
+    internal sealed class HintState : IImageState
     {
         private CompressionHint m_compressHint = CompressionHint.UseCompression;
         private MemoryHint m_memHint = MemoryHint.Fastest;
 
         public CompressionHint CompressionHint
         {
-            get
-            {
-                return m_compressHint;
-            }
-            set
-            {
-                m_compressHint = value;
-            }
+            get { return m_compressHint; }
+            set { m_compressHint = value; }
         }
 
         public MemoryHint MemoryHint
         {
-            get
-            {
-                return m_memHint;
-            }
-            set
-            {
-                m_memHint = value;
-            }
+            get { return m_memHint; }
+            set { m_memHint = value; }
         }
 
         public void Apply()
@@ -330,7 +257,7 @@ namespace AlienEngine.Core.Graphics.DevIL
         }
     }
 
-    public sealed class QuantizationState : IImageState
+    internal sealed class QuantizationState : IImageState
     {
         private Quantization m_quantMode = Quantization.Wu;
         private int m_maxQuantIndices = 256;
@@ -338,38 +265,20 @@ namespace AlienEngine.Core.Graphics.DevIL
 
         public Quantization QuantizationMode
         {
-            get
-            {
-                return m_quantMode;
-            }
-            set
-            {
-                m_quantMode = value;
-            }
+            get { return m_quantMode; }
+            set { m_quantMode = value; }
         }
 
         public int MaxQuantizationIndices
         {
-            get
-            {
-                return m_maxQuantIndices;
-            }
-            set
-            {
-                m_maxQuantIndices = value;
-            }
+            get { return m_maxQuantIndices; }
+            set { m_maxQuantIndices = value; }
         }
 
         public int NeuQuantizationSamples
         {
-            get
-            {
-                return m_neuQuantSample;
-            }
-            set
-            {
-                m_neuQuantSample = value;
-            }
+            get { return m_neuQuantSample; }
+            set { m_neuQuantSample = value; }
         }
 
         public void Apply()
@@ -385,7 +294,7 @@ namespace AlienEngine.Core.Graphics.DevIL
         }
     }
 
-    public sealed class CompressionState : IImageState
+    internal sealed class CompressionState : IImageState
     {
         private CompressionAlgorithm m_compression = CompressionAlgorithm.ZLib;
         private CompressedDataFormat m_dxtcFormat = CompressedDataFormat.DXT1;
@@ -394,50 +303,26 @@ namespace AlienEngine.Core.Graphics.DevIL
 
         public CompressionAlgorithm Compression
         {
-            get
-            {
-                return m_compression;
-            }
-            set
-            {
-                m_compression = value;
-            }
+            get { return m_compression; }
+            set { m_compression = value; }
         }
 
         public CompressedDataFormat DxtcFormat
         {
-            get
-            {
-                return m_dxtcFormat;
-            }
-            set
-            {
-                m_dxtcFormat = value;
-            }
+            get { return m_dxtcFormat; }
+            set { m_dxtcFormat = value; }
         }
 
         public CompressedDataFormat VtfCompression
         {
-            get
-            {
-                return m_vtfCompression;
-            }
-            set
-            {
-                m_vtfCompression = value;
-            }
+            get { return m_vtfCompression; }
+            set { m_vtfCompression = value; }
         }
 
         public bool KeepDxtcData
         {
-            get
-            {
-                return m_keepDxtcData;
-            }
-            set
-            {
-                m_keepDxtcData = value;
-            }
+            get { return m_keepDxtcData; }
+            set { m_keepDxtcData = value; }
         }
 
         public void Apply()
@@ -449,12 +334,12 @@ namespace AlienEngine.Core.Graphics.DevIL
 
             IL.SetCompressionAlgorithm(m_compression);
             IL.SetDxtcFormat(m_dxtcFormat);
-            IL.SetInteger(ILIntegerMode.VTFCompression, (int)m_vtfCompression);
+            IL.SetInteger(ILIntegerMode.VTFCompression, (int) m_vtfCompression);
             IL.SetBoolean(ILBooleanMode.KeepDxtcData, m_keepDxtcData);
         }
     }
 
-    public class SaveState : IImageState
+    internal class SaveState : IImageState
     {
         private bool m_saveInterlaced = false;
         private bool m_overwriteExistingFile = false;
@@ -462,38 +347,20 @@ namespace AlienEngine.Core.Graphics.DevIL
 
         public bool SaveInterlaced
         {
-            get
-            {
-                return m_saveInterlaced;
-            }
-            set
-            {
-                m_saveInterlaced = value;
-            }
+            get { return m_saveInterlaced; }
+            set { m_saveInterlaced = value; }
         }
 
         public bool OverwriteExistingFile
         {
-            get
-            {
-                return m_overwriteExistingFile;
-            }
-            set
-            {
-                m_overwriteExistingFile = value;
-            }
+            get { return m_overwriteExistingFile; }
+            set { m_overwriteExistingFile = value; }
         }
 
         public CompressionLibrary CompressionLibrary
         {
-            get
-            {
-                return m_compressionLibrary;
-            }
-            set
-            {
-                m_compressionLibrary = value;
-            }
+            get { return m_compressionLibrary; }
+            set { m_compressionLibrary = value; }
         }
 
         public virtual void Apply()
@@ -539,7 +406,7 @@ namespace AlienEngine.Core.Graphics.DevIL
         }
     }
 
-    public sealed class JpgSaveState : SaveState
+    internal sealed class JpgSaveState : SaveState
     {
         private int m_jpgQuality = 99;
         private JpgSaveFormat m_jpgSaveFormat = JpgSaveFormat.Jfif;
@@ -547,38 +414,20 @@ namespace AlienEngine.Core.Graphics.DevIL
 
         public int JpgQuality
         {
-            get
-            {
-                return m_jpgQuality;
-            }
-            set
-            {
-                m_jpgQuality = value;
-            }
+            get { return m_jpgQuality; }
+            set { m_jpgQuality = value; }
         }
 
         public JpgSaveFormat JpgSaveFormat
         {
-            get
-            {
-                return m_jpgSaveFormat;
-            }
-            set
-            {
-                m_jpgSaveFormat = value;
-            }
+            get { return m_jpgSaveFormat; }
+            set { m_jpgSaveFormat = value; }
         }
 
         public bool UseJpgProgressive
         {
-            get
-            {
-                return m_jpgProgressive;
-            }
-            set
-            {
-                m_jpgProgressive = value;
-            }
+            get { return m_jpgProgressive; }
+            set { m_jpgProgressive = value; }
         }
 
         public override void Apply()
@@ -602,7 +451,7 @@ namespace AlienEngine.Core.Graphics.DevIL
         }
     }
 
-    public sealed class TgaSaveState : SaveState
+    internal sealed class TgaSaveState : SaveState
     {
         private String m_tgaId = String.Empty;
         private String m_tgaAuthName = String.Empty;
@@ -612,50 +461,26 @@ namespace AlienEngine.Core.Graphics.DevIL
 
         public String TgaID
         {
-            get
-            {
-                return m_tgaId;
-            }
-            set
-            {
-                m_tgaId = value;
-            }
+            get { return m_tgaId; }
+            set { m_tgaId = value; }
         }
 
         public String TgaAuthorName
         {
-            get
-            {
-                return m_tgaAuthName;
-            }
-            set
-            {
-                m_tgaAuthName = value;
-            }
+            get { return m_tgaAuthName; }
+            set { m_tgaAuthName = value; }
         }
 
         public String TgaAuthorComment
         {
-            get
-            {
-                return m_tgaAuthComment;
-            }
-            set
-            {
-                m_tgaAuthComment = value;
-            }
+            get { return m_tgaAuthComment; }
+            set { m_tgaAuthComment = value; }
         }
 
         public bool UseTgaRle
         {
-            get
-            {
-                return m_useTgaRle;
-            }
-            set
-            {
-                m_useTgaRle = value;
-            }
+            get { return m_useTgaRle; }
+            set { m_useTgaRle = value; }
         }
 
         public override void Apply()
@@ -674,7 +499,7 @@ namespace AlienEngine.Core.Graphics.DevIL
         }
     }
 
-    public sealed class TiffSaveState : SaveState
+    internal sealed class TiffSaveState : SaveState
     {
         private String m_tifAuthName = String.Empty;
         private String m_tifDescription = String.Empty;
@@ -683,50 +508,26 @@ namespace AlienEngine.Core.Graphics.DevIL
 
         public String TifAuthorName
         {
-            get
-            {
-                return m_tifAuthName;
-            }
-            set
-            {
-                m_tifAuthName = value;
-            }
+            get { return m_tifAuthName; }
+            set { m_tifAuthName = value; }
         }
 
         public String TifDescription
         {
-            get
-            {
-                return m_tifDescription;
-            }
-            set
-            {
-                m_tifDescription = value;
-            }
+            get { return m_tifDescription; }
+            set { m_tifDescription = value; }
         }
 
         public String TifDocumentName
         {
-            get
-            {
-                return m_tifDocumentName;
-            }
-            set
-            {
-                m_tifDocumentName = value;
-            }
+            get { return m_tifDocumentName; }
+            set { m_tifDocumentName = value; }
         }
 
         public String TifHostComputer
         {
-            get
-            {
-                return m_tifHostComputer;
-            }
-            set
-            {
-                m_tifHostComputer = value;
-            }
+            get { return m_tifHostComputer; }
+            set { m_tifHostComputer = value; }
         }
 
         public override void Apply()
@@ -744,7 +545,7 @@ namespace AlienEngine.Core.Graphics.DevIL
         }
     }
 
-    public sealed class PngSaveState : SaveState
+    internal sealed class PngSaveState : SaveState
     {
         private int m_pngAlphaIndex = -1;
         private String m_pngAuthName = String.Empty;
@@ -754,62 +555,32 @@ namespace AlienEngine.Core.Graphics.DevIL
 
         public int PngAlphaIndex
         {
-            get
-            {
-                return m_pngAlphaIndex;
-            }
-            set
-            {
-                m_pngAlphaIndex = value;
-            }
+            get { return m_pngAlphaIndex; }
+            set { m_pngAlphaIndex = value; }
         }
 
         public String PngAuthorName
         {
-            get
-            {
-                return m_pngAuthName;
-            }
-            set
-            {
-                m_pngAuthName = value;
-            }
+            get { return m_pngAuthName; }
+            set { m_pngAuthName = value; }
         }
 
         public String PngTitle
         {
-            get
-            {
-                return m_pngTitle;
-            }
-            set
-            {
-                m_pngTitle = value;
-            }
+            get { return m_pngTitle; }
+            set { m_pngTitle = value; }
         }
 
         public String PngDescription
         {
-            get
-            {
-                return m_pngDescription;
-            }
-            set
-            {
-                m_pngDescription = value;
-            }
+            get { return m_pngDescription; }
+            set { m_pngDescription = value; }
         }
 
         public bool UsePngInterlace
         {
-            get
-            {
-                return m_usePngInterlace;
-            }
-            set
-            {
-                m_usePngInterlace = value;
-            }
+            get { return m_usePngInterlace; }
+            set { m_usePngInterlace = value; }
         }
 
         public override void Apply()
@@ -828,33 +599,21 @@ namespace AlienEngine.Core.Graphics.DevIL
         }
     }
 
-    public sealed class BmpSaveState : SaveState
+    internal sealed class BmpSaveState : SaveState
     {
         private bool m_useBmpRle = false;
         private int m_pcdPicNumber = 2;
 
         public bool UseBmpRle
         {
-            get
-            {
-                return m_useBmpRle;
-            }
-            set
-            {
-                m_useBmpRle = value;
-            }
+            get { return m_useBmpRle; }
+            set { m_useBmpRle = value; }
         }
 
         public int PcdPicNumber
         {
-            get
-            {
-                return m_pcdPicNumber;
-            }
-            set
-            {
-                m_pcdPicNumber = value;
-            }
+            get { return m_pcdPicNumber; }
+            set { m_pcdPicNumber = value; }
         }
 
         public override void Apply()
@@ -870,20 +629,14 @@ namespace AlienEngine.Core.Graphics.DevIL
         }
     }
 
-    public sealed class SgiSaveState : SaveState
+    internal sealed class SgiSaveState : SaveState
     {
         private bool m_useSgiRle = false;
 
         public bool UseSgiRle
         {
-            get
-            {
-                return m_useSgiRle;
-            }
-            set
-            {
-                m_useSgiRle = value;
-            }
+            get { return m_useSgiRle; }
+            set { m_useSgiRle = value; }
         }
 
         public override void Apply()

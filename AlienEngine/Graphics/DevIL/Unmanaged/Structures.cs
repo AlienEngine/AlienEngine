@@ -23,49 +23,47 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace AlienEngine.Core.Graphics.DevIL.Unmanaged {
+namespace AlienEngine.Core.Graphics.DevIL.Unmanaged
+{
     /// <summary>
     /// Represents a specific image surface - e.g. a mipmap, another image in the image array, a face in a cubemap, etc. All surface
     /// numbers set to zero with a valid ImageID represents the root image.
     /// </summary>
-    public struct Subimage {
+    internal struct Subimage
+    {
         private ImageID m_rootImage;
         private int m_imageIndex;
         private int m_faceIndex;
         private int m_layerIndex;
         private int m_mipMapIndex;
 
-        public ImageID RootImage {
-            get {
-                return m_rootImage;
-            }
+        public ImageID RootImage
+        {
+            get { return m_rootImage; }
         }
 
-        public int ImageIndex {
-            get {
-                return m_imageIndex;
-            }
+        public int ImageIndex
+        {
+            get { return m_imageIndex; }
         }
 
-        public int FaceIndex {
-            get {
-                return m_faceIndex;
-            }
+        public int FaceIndex
+        {
+            get { return m_faceIndex; }
         }
 
-        public int LayerIndex {
-            get {
-                return m_layerIndex;
-            }
+        public int LayerIndex
+        {
+            get { return m_layerIndex; }
         }
 
-        public int MipMapIndex {
-            get {
-                return m_mipMapIndex;
-            }
+        public int MipMapIndex
+        {
+            get { return m_mipMapIndex; }
         }
 
-        public Subimage(ImageID rootImage) {
+        public Subimage(ImageID rootImage)
+        {
             m_rootImage = rootImage;
             m_imageIndex = 0;
             m_faceIndex = 0;
@@ -73,7 +71,8 @@ namespace AlienEngine.Core.Graphics.DevIL.Unmanaged {
             m_mipMapIndex = 0;
         }
 
-        public Subimage(ImageID rootImage, int imageIndex) {
+        public Subimage(ImageID rootImage, int imageIndex)
+        {
             m_rootImage = rootImage;
             m_imageIndex = imageIndex;
             m_faceIndex = 0;
@@ -81,7 +80,8 @@ namespace AlienEngine.Core.Graphics.DevIL.Unmanaged {
             m_mipMapIndex = 0;
         }
 
-        public Subimage(ImageID rootImage, int imageIndex, int faceIndex) {
+        public Subimage(ImageID rootImage, int imageIndex, int faceIndex)
+        {
             m_rootImage = rootImage;
             m_imageIndex = imageIndex;
             m_faceIndex = faceIndex;
@@ -89,7 +89,8 @@ namespace AlienEngine.Core.Graphics.DevIL.Unmanaged {
             m_mipMapIndex = 0;
         }
 
-        public Subimage(ImageID rootImage, int imageIndex, int faceIndex, int layerIndex) {
+        public Subimage(ImageID rootImage, int imageIndex, int faceIndex, int layerIndex)
+        {
             m_rootImage = rootImage;
             m_imageIndex = imageIndex;
             m_faceIndex = faceIndex;
@@ -97,7 +98,8 @@ namespace AlienEngine.Core.Graphics.DevIL.Unmanaged {
             m_mipMapIndex = 0;
         }
 
-        public Subimage(ImageID rootImage, int imageIndex, int faceIndex, int layerIndex, int mipMapIndex) {
+        public Subimage(ImageID rootImage, int imageIndex, int faceIndex, int layerIndex, int mipMapIndex)
+        {
             m_rootImage = rootImage;
             m_imageIndex = imageIndex;
             m_faceIndex = faceIndex;
@@ -105,24 +107,25 @@ namespace AlienEngine.Core.Graphics.DevIL.Unmanaged {
             m_mipMapIndex = mipMapIndex;
         }
 
-        public bool Activate() {
-            if(m_rootImage <= 0)
+        public bool Activate()
+        {
+            if (m_rootImage <= 0)
                 return false;
 
             IL.BindImage(m_rootImage);
 
             //Don't bother to activate if any subimages are zero, as it corresponds to the root image
 
-            if(m_imageIndex > 0 && !IL.ActiveImage(m_imageIndex))
+            if (m_imageIndex > 0 && !IL.ActiveImage(m_imageIndex))
                 return false;
 
-            if(m_faceIndex > 0 && !IL.ActiveFace(m_faceIndex))
+            if (m_faceIndex > 0 && !IL.ActiveFace(m_faceIndex))
                 return false;
 
-            if(m_layerIndex > 0 && !IL.ActiveLayer(m_layerIndex))
+            if (m_layerIndex > 0 && !IL.ActiveLayer(m_layerIndex))
                 return false;
 
-            if(m_mipMapIndex > 0 && !IL.ActiveMipMap(m_mipMapIndex))
+            if (m_mipMapIndex > 0 && !IL.ActiveMipMap(m_mipMapIndex))
                 return false;
 
             return true;
@@ -130,67 +133,79 @@ namespace AlienEngine.Core.Graphics.DevIL.Unmanaged {
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    public struct ImageID : IEquatable<ImageID> {
+    internal struct ImageID : IEquatable<ImageID>
+    {
         private int m_id;
 
-        public int ID {
-            get {
-                return m_id;
-            }
+        public int ID
+        {
+            get { return m_id; }
         }
 
-        public ImageID(int id) {
+        public ImageID(int id)
+        {
             m_id = id;
         }
 
-        public static implicit operator ImageID(int id) {
+        public static implicit operator ImageID(int id)
+        {
             return new ImageID(id);
         }
 
-        public static implicit operator int(ImageID id) {
+        public static implicit operator int(ImageID id)
+        {
             return id.m_id;
         }
 
-        public static bool operator <(ImageID a, ImageID b) {
+        public static bool operator <(ImageID a, ImageID b)
+        {
             return (a.m_id < b.m_id);
         }
 
-        public static bool operator >(ImageID a, ImageID b) {
+        public static bool operator >(ImageID a, ImageID b)
+        {
             return (a.m_id > b.m_id);
         }
 
-        public static bool operator ==(ImageID a, ImageID b) {
+        public static bool operator ==(ImageID a, ImageID b)
+        {
             return (a.m_id == b.m_id);
         }
 
-        public static bool operator !=(ImageID a, ImageID b) {
+        public static bool operator !=(ImageID a, ImageID b)
+        {
             return (a.m_id != b.m_id);
         }
 
-        public bool Equals(ImageID other) {
+        public bool Equals(ImageID other)
+        {
             return m_id == other.m_id;
         }
 
-        public override bool Equals(object obj) {
-            if(obj is ImageID) {
+        public override bool Equals(object obj)
+        {
+            if (obj is ImageID)
+            {
                 ImageID other = (ImageID) obj;
                 return m_id == other.m_id;
             }
             return false;
         }
 
-        public override int GetHashCode() {
+        public override int GetHashCode()
+        {
             return m_id.GetHashCode();
         }
 
-        public override string ToString() {
+        public override string ToString()
+        {
             return String.Format("ImageID: {0}", m_id.ToString());
         }
-
     }
 
     [StructLayoutAttribute(LayoutKind.Sequential)]
-    public struct ImageInfo {
+    internal struct ImageInfo
+    {
         public DataFormat Format;
         public CompressedDataFormat DxtcFormat;
         public DataType DataType;
@@ -216,48 +231,48 @@ namespace AlienEngine.Core.Graphics.DevIL.Unmanaged {
         public int PaletteBytesPerPixel;
         public int PaletteColumnCount;
 
-        public bool HasDXTC {
-            get {
-                return DxtcFormat != CompressedDataFormat.None;
-            }
+        public bool HasDXTC
+        {
+            get { return DxtcFormat != CompressedDataFormat.None; }
         }
 
-        public bool HasPalette {
-            get {
-                return PaletteType != AlienEngine.Core.Graphics.DevIL.PaletteType.None;
-            }
+        public bool HasPalette
+        {
+            get { return PaletteType != AlienEngine.Core.Graphics.DevIL.PaletteType.None; }
         }
 
-        public bool IsCubeMap {
-            get {
-                return CubeFlags != CubeMapFace.None && CubeFlags != CubeMapFace.SphereMap;
-            }
+        public bool IsCubeMap
+        {
+            get { return CubeFlags != CubeMapFace.None && CubeFlags != CubeMapFace.SphereMap; }
         }
 
-        public bool IsSphereMap {
-            get {
-                return CubeFlags == CubeMapFace.SphereMap;
-            }
+        public bool IsSphereMap
+        {
+            get { return CubeFlags == CubeMapFace.SphereMap; }
         }
     }
 
     [StructLayoutAttribute(LayoutKind.Sequential)]
-    public struct PointF {
+    internal struct PointF
+    {
         float X;
         float Y;
 
-        public PointF(float x, float y) {
+        public PointF(float x, float y)
+        {
             X = x;
             Y = y;
         }
     }
 
     [StructLayoutAttribute(LayoutKind.Sequential)]
-    public struct PointI {
+    internal struct PointI
+    {
         int X;
         int Y;
 
-        public PointI(int x, int y) {
+        public PointI(int x, int y)
+        {
             X = x;
             Y = y;
         }

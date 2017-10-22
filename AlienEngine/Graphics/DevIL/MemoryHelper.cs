@@ -29,9 +29,8 @@ namespace AlienEngine.Core.Graphics.DevIL
     /// <summary>
     /// Helper static class containing functions that aid dealing with unmanaged memory to managed memory conversions.
     /// </summary>
-    public static class MemoryHelper
+    internal static class MemoryHelper
     {
-
         /// <summary>
         /// Reads a byte buffer from unmanaged memory.
         /// </summary>
@@ -94,7 +93,7 @@ namespace AlienEngine.Core.Graphics.DevIL
                     {
                         currPos = Marshal.ReadIntPtr(currPos);
                     }
-                    array[i] = (T)Marshal.PtrToStructure(currPos, type);
+                    array[i] = (T) Marshal.PtrToStructure(currPos, type);
                 }
                 return array;
             }
@@ -116,7 +115,7 @@ namespace AlienEngine.Core.Graphics.DevIL
             {
                 return default(T);
             }
-            return (T)Marshal.PtrToStructure(ptr, typeof(T));
+            return (T) Marshal.PtrToStructure(ptr, typeof(T));
         }
 
         /// <summary>
@@ -348,7 +347,7 @@ namespace AlienEngine.Core.Graphics.DevIL
                     //Not at the end, need to resize the buffer
                     byte[] newBuffer = new byte[buffer.Length * 2];
                     Array.Copy(buffer, newBuffer, buffer.Length);
-                    newBuffer[position] = (byte)nextByte;
+                    newBuffer[position] = (byte) nextByte;
                     buffer = newBuffer;
                     position++;
                 }

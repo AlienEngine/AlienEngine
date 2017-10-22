@@ -24,19 +24,12 @@ using AlienEngine.Core.Graphics.DevIL.Unmanaged;
 
 namespace AlienEngine.Core.Graphics.DevIL
 {
-    public class FilterEngine
+    internal class FilterEngine
     {
-
         public SamplingFilter SamplingFilter
         {
-            get
-            {
-                return ILU.GetSamplingFilter();
-            }
-            set
-            {
-                ILU.SetSamplingFilter(value);
-            }
+            get { return ILU.GetSamplingFilter(); }
+            set { ILU.SetSamplingFilter(value); }
         }
 
         public bool Alienify(Image image)
@@ -258,6 +251,5 @@ namespace AlienEngine.Core.Graphics.DevIL
             IL.BindImage(image.ImageID);
             return ILU.Wave(angle);
         }
-
     }
 }

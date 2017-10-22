@@ -23,22 +23,24 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace AlienEngine.Core.Graphics.DevIL.Unmanaged {
-    public static class ILU {
-
+namespace AlienEngine.Core.Graphics.DevIL.Unmanaged
+{
+    internal static class ILU
+    {
         private const String ILUDLL = "ILU.dll";
         private static bool _init = false;
 
-        public static bool IsInitialized {
-            get {
-                return _init;
-            }
+        public static bool IsInitialized
+        {
+            get { return _init; }
         }
 
         #region ILU Methods
 
-        public static void Initialize() {
-            if(!_init) {
+        public static void Initialize()
+        {
+            if (!_init)
+            {
                 iluInit();
                 _init = true;
             }
@@ -48,19 +50,23 @@ namespace AlienEngine.Core.Graphics.DevIL.Unmanaged {
         [return: MarshalAs(UnmanagedType.U1)]
         public static extern bool Alienify();
 
-        public static bool BlurAverage(int iterations) {
+        public static bool BlurAverage(int iterations)
+        {
             return iluBlurAverage((uint) iterations);
         }
 
-        public static bool BlurGaussian(int iterations) {
+        public static bool BlurGaussian(int iterations)
+        {
             return iluBlurGaussian((uint) iterations);
         }
 
-        public static bool CompareImages(int otherImageID) {
+        public static bool CompareImages(int otherImageID)
+        {
             return iluCompareImages((uint) otherImageID);
         }
 
-        public static bool Crop(int xOffset, int yOffset, int zOffset, int width, int height, int depth) {
+        public static bool Crop(int xOffset, int yOffset, int zOffset, int width, int height, int depth)
+        {
             return iluCrop((uint) xOffset, (uint) yOffset, (uint) zOffset, (uint) width, (uint) height, (uint) depth);
         }
 
@@ -84,11 +90,13 @@ namespace AlienEngine.Core.Graphics.DevIL.Unmanaged {
         [return: MarshalAs(UnmanagedType.U1)]
         public static extern bool Emboss();
 
-        public static bool EnlargeCanvas(int width, int height, int depth) {
+        public static bool EnlargeCanvas(int width, int height, int depth)
+        {
             return iluEnlargeCanvas((uint) width, (uint) height, (uint) depth);
         }
 
-        public static bool EnlargeImage(int xDimension, int yDimension, int zDimension) {
+        public static bool EnlargeImage(int xDimension, int yDimension, int zDimension)
+        {
             return iluEnlargeImage((uint) xDimension, (uint) yDimension, (uint) zDimension);
         }
 
@@ -96,7 +104,8 @@ namespace AlienEngine.Core.Graphics.DevIL.Unmanaged {
         [return: MarshalAs(UnmanagedType.U1)]
         public static extern bool Equalize();
 
-        public static String GetErrorString(ErrorType error) {
+        public static String GetErrorString(ErrorType error)
+        {
             //DevIL re-uses its error strings
             return Marshal.PtrToStringAnsi(iluGetErrorString((uint) error));
         }
@@ -120,11 +129,13 @@ namespace AlienEngine.Core.Graphics.DevIL.Unmanaged {
         [return: MarshalAs(UnmanagedType.U1)]
         public static extern bool BuildMipMaps();
 
-        public static int ColorsUsed() {
+        public static int ColorsUsed()
+        {
             return (int) iluColorsUsed();
         }
 
-        public static bool Scale(int width, int height, int depth) {
+        public static bool Scale(int width, int height, int depth)
+        {
             return iluScale((uint) width, (uint) height, (uint) depth);
         }
 
@@ -148,11 +159,13 @@ namespace AlienEngine.Core.Graphics.DevIL.Unmanaged {
         [return: MarshalAs(UnmanagedType.U1)]
         private static extern bool iluNoisify(float tolerance);
 
-        public static bool Noisify(float tolerance) {
+        public static bool Noisify(float tolerance)
+        {
             return iluNoisify(MathHelper.Clamp(tolerance, 0f, 1f));
         }
 
-        public static bool Pixelize(int pixelSize) {
+        public static bool Pixelize(int pixelSize)
+        {
             return iluPixelize((uint) pixelSize);
         }
 
@@ -188,11 +201,13 @@ namespace AlienEngine.Core.Graphics.DevIL.Unmanaged {
         [return: MarshalAs(UnmanagedType.U1)]
         private static extern bool iluSetLanguage(uint language);
 
-        public static bool SetLanguage(Language lang) {
+        public static bool SetLanguage(Language lang)
+        {
             return iluSetLanguage((uint) lang);
         }
 
-        public static bool Sharpen(float factor, int iterations) {
+        public static bool Sharpen(float factor, int iterations)
+        {
             return iluSharpen(factor, (uint) iterations);
         }
 
@@ -204,39 +219,49 @@ namespace AlienEngine.Core.Graphics.DevIL.Unmanaged {
         [return: MarshalAs(UnmanagedType.U1)]
         public static extern bool Wave(float angle);
 
-        public static String GetVendorName() {
+        public static String GetVendorName()
+        {
             return Marshal.PtrToStringAnsi(iluGetString(ILDefines.IL_VENDOR));
         }
 
-        public static String GetVersionNumber() {
+        public static String GetVersionNumber()
+        {
             return Marshal.PtrToStringAnsi(iluGetString(ILDefines.IL_VERSION_NUM));
         }
 
-        public static void SetImagePlacement(Placement placement) {
+        public static void SetImagePlacement(Placement placement)
+        {
             iluImageParameter(ILUDefines.ILU_PLACEMENT, (uint) placement);
         }
 
-        public static Placement GetImagePlacement() {
+        public static Placement GetImagePlacement()
+        {
             return (Placement) iluGetInteger(ILUDefines.ILU_PLACEMENT);
         }
 
-        public static void SetSamplingFilter(SamplingFilter filter) {
+        public static void SetSamplingFilter(SamplingFilter filter)
+        {
             iluImageParameter(ILUDefines.ILU_FILTER, (uint) filter);
         }
 
-        public static SamplingFilter GetSamplingFilter() {
+        public static SamplingFilter GetSamplingFilter()
+        {
             return (SamplingFilter) iluGetInteger(ILUDefines.ILU_FILTER);
         }
 
-        public static void Region(PointF[] points) {
-            if(points == null || points.Length < 3) {
+        public static void Region(PointF[] points)
+        {
+            if (points == null || points.Length < 3)
+            {
                 return;
             }
             iluRegionf(points, (uint) points.Length);
         }
 
-        public static void Region(PointI[] points) {
-            if(points == null || points.Length < 3) {
+        public static void Region(PointI[] points)
+        {
+            if (points == null || points.Length < 3)
+            {
                 return;
             }
             iluRegioni(points, (uint) points.Length);
@@ -263,7 +288,8 @@ namespace AlienEngine.Core.Graphics.DevIL.Unmanaged {
 
         [DllImport(ILUDLL, EntryPoint = "iluCrop", CallingConvention = CallingConvention.StdCall)]
         [return: MarshalAs(UnmanagedType.U1)]
-        private static extern bool iluCrop(uint offsetX, uint offsetY, uint offsetZ, uint width, uint height, uint depth);
+        private static extern bool iluCrop(uint offsetX, uint offsetY, uint offsetZ, uint width, uint height,
+            uint depth);
 
         [DllImport(ILUDLL, EntryPoint = "iluEnlargeCanvas", CallingConvention = CallingConvention.StdCall)]
         [return: MarshalAs(UnmanagedType.U1)]

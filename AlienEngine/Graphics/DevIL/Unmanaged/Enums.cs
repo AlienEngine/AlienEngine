@@ -22,13 +22,13 @@
 
 using System;
 
-namespace AlienEngine.Core.Graphics.DevIL.Unmanaged {
-
+namespace AlienEngine.Core.Graphics.DevIL.Unmanaged
+{
     /// <summary>
     /// Enumerates error types.
     /// </summary>
-    public enum ErrorType {
-
+    internal enum ErrorType
+    {
         /// <summary>
         /// Everything's A-OK, no error reported.
         /// </summary>
@@ -175,7 +175,8 @@ namespace AlienEngine.Core.Graphics.DevIL.Unmanaged {
     /// Enumerates attribute bit flags.
     /// </summary>
     [Flags]
-    public enum AttributeBits {
+    internal enum AttributeBits
+    {
         Origin = ILDefines.IL_ORIGIN_BIT,
         File = ILDefines.IL_FILE_BIT,
         Palette = ILDefines.IL_PAL_BIT,
@@ -192,7 +193,8 @@ namespace AlienEngine.Core.Graphics.DevIL.Unmanaged {
     /// Enumerates possible enable caps for DevIL's Enable/Disable function to enable/disable
     /// certain behaviors by the library.
     /// </summary>
-    public enum ILEnable {
+    internal enum ILEnable
+    {
         /// <summary>
         /// If enabled, DevIL will convert (if need be) all images to the same data format (BGR, RGB, etc) that is specified by the user.
         /// </summary>
@@ -259,7 +261,8 @@ namespace AlienEngine.Core.Graphics.DevIL.Unmanaged {
         JpgProgressive = ILDefines.IL_JPG_PROGRESSIVE
     }
 
-    public enum ILIntegerMode {
+    internal enum ILIntegerMode
+    {
         CurrentImage = ILDefines.IL_CUR_IMAGE,
         MaxQuantizationIndices = ILDefines.IL_MAX_QUANT_INDICES,
         NeuQuantizationSample = ILDefines.IL_NEU_QUANT_SAMPLE,
@@ -292,7 +295,8 @@ namespace AlienEngine.Core.Graphics.DevIL.Unmanaged {
         ImagePaletteColumnCount = ILDefines.IL_PALETTE_NUM_COLS
     }
 
-    public enum ILBooleanMode {
+    internal enum ILBooleanMode
+    {
         KeepDxtcData = ILDefines.IL_KEEP_DXTC_DATA,
         BmpRLE = ILDefines.IL_BMP_RLE,
         PngInterlace = ILDefines.IL_PNG_INTERLACE,
@@ -301,7 +305,8 @@ namespace AlienEngine.Core.Graphics.DevIL.Unmanaged {
         TgaRLE = ILDefines.IL_TGA_RLE
     }
 
-    public enum ILStringMode {
+    internal enum ILStringMode
+    {
         TgaID = ILDefines.IL_TGA_ID_STRING,
         TgaAuthorName = ILDefines.IL_TGA_AUTHNAME_STRING,
         TgaAuthorComment = ILDefines.IL_TGA_AUTHCOMMENT_STRING,
@@ -318,7 +323,8 @@ namespace AlienEngine.Core.Graphics.DevIL.Unmanaged {
     /// <summary>
     /// Enumerates sub image types.
     /// </summary>
-    public enum SubImageType {
+    internal enum SubImageType
+    {
         /// <summary>
         /// Denotes a "next" image in the chain, e.g. animation or face.
         /// </summary>

@@ -24,19 +24,15 @@ using System.Collections.Generic;
 
 namespace AlienEngine.Core.Graphics.DevIL
 {
-
-    public class MipMapChain : List<ImageData>
+    internal class MipMapChain : List<ImageData>
     {
-
     }
 
-    public class MipMapChainCollection : List<MipMapChain>
+    internal class MipMapChainCollection : List<MipMapChain>
     {
-
     }
 
-    public class AnimationChainCollection : List<ManagedImage>
+    internal class AnimationChainCollection : List<ManagedImage>
     {
-
     }
 }

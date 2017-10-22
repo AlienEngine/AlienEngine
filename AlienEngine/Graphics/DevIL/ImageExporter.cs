@@ -26,16 +26,13 @@ using AlienEngine.Core.Graphics.DevIL.Unmanaged;
 
 namespace AlienEngine.Core.Graphics.DevIL
 {
-    public sealed class ImageExporter : IDisposable
+    internal sealed class ImageExporter : IDisposable
     {
         private bool m_isDisposed;
 
         public bool IsDisposed
         {
-            get
-            {
-                return m_isDisposed;
-            }
+            get { return m_isDisposed; }
         }
 
         public ImageExporter()

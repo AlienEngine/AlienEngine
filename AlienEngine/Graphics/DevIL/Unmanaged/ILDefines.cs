@@ -21,14 +21,15 @@
 */
 
 
-namespace AlienEngine.Core.Graphics.DevIL.Unmanaged {
+namespace AlienEngine.Core.Graphics.DevIL.Unmanaged
+{
     /// <summary>
     /// IL Defines taken directly from the IL header. These are public, but shouldn't be used
     /// since the API will have enum equivalents. This is here as a matter of convienence and to 
     /// keep consistency.
     /// </summary>
-    public static class ILDefines {
-
+    internal static class ILDefines
+    {
         public const int IL_TRUE = 1;
         public const int IL_FALSE = 0;
         public const int IL_VENDOR = 0x1F00;
@@ -37,6 +38,7 @@ namespace AlienEngine.Core.Graphics.DevIL.Unmanaged {
 
         //Data formats
         public const int IL_COLOR_INDEX = 0x1900;
+
         public const int IL_ALPHA = 0x1906;
         public const int IL_RGB = 0x1907;
         public const int IL_RGBA = 0x1908;
@@ -47,6 +49,7 @@ namespace AlienEngine.Core.Graphics.DevIL.Unmanaged {
 
         //Data types
         public const int IL_BYTE = 0x1400;
+
         public const int IL_UNSIGNED_BYTE = 0x1401;
         public const int IL_SHORT = 0x1402;
         public const int IL_UNSIGNED_SHORT = 0x1403;
@@ -58,6 +61,7 @@ namespace AlienEngine.Core.Graphics.DevIL.Unmanaged {
 
         //Attribute bits
         public const int IL_ORIGIN_BIT = 0x00000001;
+
         public const int IL_FILE_BIT = 0x00000002;
         public const int IL_PAL_BIT = 0x00000004;
         public const int IL_FORMAT_BIT = 0x00000008;
@@ -69,6 +73,7 @@ namespace AlienEngine.Core.Graphics.DevIL.Unmanaged {
 
         //Palette types
         public const int IL_PAL_NONE = 0x0400;
+
         public const int IL_PAL_RGB24 = 0x0401;
         public const int IL_PAL_RGB32 = 0x0402;
         public const int IL_PAL_RGBA32 = 0x0403;
@@ -78,6 +83,7 @@ namespace AlienEngine.Core.Graphics.DevIL.Unmanaged {
 
         //Image types
         public const int IL_TYPE_UNKNOWN = 0x0000;
+
         public const int IL_BMP = 0x0420;
         public const int IL_CUT = 0x0421;
         public const int IL_DOOM = 0x0422;
@@ -134,6 +140,7 @@ namespace AlienEngine.Core.Graphics.DevIL.Unmanaged {
 
         //Error types
         public const int IL_NO_ERROR = 0x0000;
+
         public const int IL_INVALID_ENUM = 0x0501;
         public const int IL_OUT_OF_MEMORY = 0x0502;
         public const int IL_FORMAT_NOT_SUPPORTED = 0x0503;
@@ -164,18 +171,21 @@ namespace AlienEngine.Core.Graphics.DevIL.Unmanaged {
 
         //Origin definitions
         public const int IL_ORIGIN_SET = 0x0600;
+
         public const int IL_ORIGIN_LOWER_LEFT = 0x0601;
         public const int IL_ORIGIN_UPPER_LEFT = 0x0602;
         public const int IL_ORIGIN_MODE = 0x0603;
 
         //Format and type mode definitions
         public const int IL_FORMAT_SET = 0x0610;
+
         public const int IL_FORMAT_MODE = 0x0611;
         public const int IL_TYPE_SET = 0x0612;
         public const int IL_TYPE_MODE = 0x0613;
 
         //File definitions
         public const int IL_FILE_OVERWRITE = 0x0620;
+
         public const int IL_FILE_MODE = 0x0621;
 
         //Palette definitions
@@ -186,14 +196,17 @@ namespace AlienEngine.Core.Graphics.DevIL.Unmanaged {
 
         //Key color and alpha definitions
         public const int IL_USE_KEY_COLOR = 0x0635;
+
         public const int IL_BLIT_BLEND = 0x0636;
 
         //Interlace definitions
         public const int IL_SAVE_INTERLACED = 0x0639;
+
         public const int IL_INTERLACE_MODE = 0x063A;
 
         //Quantization definitions
         public const int IL_QUANTIZATION_MODE = 0x0640;
+
         public const int IL_WU_QUANT = 0x0641;
         public const int IL_NEU_QUANT = 0x0642;
         public const int IL_NEU_QUANT_SAMPLE = 0x0643;
@@ -201,6 +214,7 @@ namespace AlienEngine.Core.Graphics.DevIL.Unmanaged {
 
         //Hints
         public const int IL_FASTEST = 0x0660;
+
         public const int IL_LESS_MEM = 0x0661;
         public const int IL_DONT_CARE = 0x0662;
         public const int IL_MEM_SPEED_HINT = 0x0665;
@@ -210,15 +224,18 @@ namespace AlienEngine.Core.Graphics.DevIL.Unmanaged {
 
         //Compression
         public const int IL_NVIDIA_COMPRESS = 0x0670;
+
         public const int IL_SQUISH_COMPRESS = 0x0671;
 
         //Subimage types
         public const int IL_SUB_NEXT = 0x0680;
+
         public const int IL_SUB_MIPMAP = 0x0681;
         public const int IL_SUB_LAYER = 0x0682;
 
         //Compression definitions
         public const int IL_COMPRESS_MODE = 0x0700;
+
         public const int IL_COMPRESS_NONE = 0x0701;
         public const int IL_COMPRESS_RLE = 0x0702;
         public const int IL_COMPRESS_LZO = 0x0703;
@@ -226,6 +243,7 @@ namespace AlienEngine.Core.Graphics.DevIL.Unmanaged {
 
         //File format-specific values
         public const int IL_TGA_CREATE_STAMP = 0x0710;
+
         public const int IL_JPG_QUALITY = 0x0711;
         public const int IL_PNG_INTERLACE = 0x0712;
         public const int IL_TGA_RLE = 0x0713;
@@ -243,14 +261,18 @@ namespace AlienEngine.Core.Graphics.DevIL.Unmanaged {
         public const int IL_TIF_AUTHNAME_STRING = 0x0720;
         public const int IL_JPG_SAVE_FORMAT = 0x0721;
         public const int IL_CHEAD_HEADER_STRING = 0x0722;
+
         public const int IL_PCD_PICNUM = 0x0723;
+
         //The color in the palette at this index value (0-255) is considered transparent, -1 for no trasparent color
         public const int IL_PNG_ALPHA_INDEX = 0x0724;
+
         public const int IL_JPG_PROGRESSIVE = 0x0725;
         public const int IL_VTF_COMP = 0x0726;
 
         //DXTC definitions
         public const int IL_DXTC_FORMAT = 0x0705;
+
         public const int IL_DXT1 = 0x0706;
         public const int IL_DXT2 = 0x0707;
         public const int IL_DXT3 = 0x0708;
@@ -261,12 +283,15 @@ namespace AlienEngine.Core.Graphics.DevIL.Unmanaged {
         public const int IL_DXTC_DATA_FORMAT = 0x070D;
         public const int IL_3DC = 0x070E;
         public const int IL_RXGB = 0x070F;
+
         public const int IL_ATI1N = 0x0710;
+
         //Normally the same as IL_DXT1, except for nVidia Texture Tools.
         public const int IL_DXT1A = 0x0711;
 
         //Environment map definitions
         public const int IL_CUBEMAP_POSITIVEX = 0x00000400;
+
         public const int IL_CUBEMAP_NEGATIVEX = 0x00000800;
         public const int IL_CUBEMAP_POSITIVEY = 0x00001000;
         public const int IL_CUBEMAP_NEGATIVEY = 0x00002000;
@@ -277,6 +302,7 @@ namespace AlienEngine.Core.Graphics.DevIL.Unmanaged {
 
         //Values
         public const int IL_VERSION_NUM = 0x0DE2;
+
         public const int IL_IMAGE_WIDTH = 0x0DE4;
         public const int IL_IMAGE_HEIGHT = 0x0DE5;
         public const int IL_IMAGE_DEPTH = 0x0DE6;

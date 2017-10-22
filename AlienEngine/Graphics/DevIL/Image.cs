@@ -26,13 +26,12 @@ using System.Drawing;
 
 namespace AlienEngine.Core.Graphics.DevIL
 {
-
     /// <summary>
     /// Represents a "root" image that is currently valid in DevIL. The root image may be the first image in an image array (e.g. animation), 
     /// and each image may contain a number of subimages - mipmaps or faces if the image is a cubemap (positiveX, positiveY, etc). Each surface can
     /// be loaded individually, or the entire image chain can be loaded into a ManagedImage.
     /// </summary>
-    public sealed class Image : IDisposable, IEquatable<Image>
+    internal sealed class Image : IDisposable, IEquatable<Image>
     {
         private bool m_isDisposed = false;
         private ImageID m_id;
@@ -41,26 +40,22 @@ namespace AlienEngine.Core.Graphics.DevIL
 
         internal ImageID ImageID
         {
-            get
-            {
-                return m_id;
-            }
+            get { return m_id; }
         }
 
         internal bool IsValid
         {
             get
             {
-                return m_id >= 0 && IL.IsInitialized; //Just in case someone tries to use it after the last importer is disposed
+                return
+                    m_id >= 0 &&
+                    IL.IsInitialized; //Just in case someone tries to use it after the last importer is disposed
             }
         }
 
         public static Image DefaultImage
         {
-            get
-            {
-                return s_default;
-            }
+            get { return s_default; }
         }
 
         #region ImageInfo Properties
@@ -73,7 +68,7 @@ namespace AlienEngine.Core.Graphics.DevIL
                     return DataFormat.RGBA;
 
                 Bind();
-                return (DataFormat)IL.ilGetInteger(ILDefines.IL_IMAGE_FORMAT);
+                return (DataFormat) IL.ilGetInteger(ILDefines.IL_IMAGE_FORMAT);
             }
         }
 
@@ -85,7 +80,7 @@ namespace AlienEngine.Core.Graphics.DevIL
                     return CompressedDataFormat.None;
 
                 Bind();
-                return (CompressedDataFormat)IL.ilGetInteger(ILDefines.IL_DXTC_DATA_FORMAT);
+                return (CompressedDataFormat) IL.ilGetInteger(ILDefines.IL_DXTC_DATA_FORMAT);
             }
         }
 
@@ -97,7 +92,7 @@ namespace AlienEngine.Core.Graphics.DevIL
                     return AlienEngine.Core.Graphics.DevIL.DataType.UnsignedByte;
 
                 Bind();
-                return (AlienEngine.Core.Graphics.DevIL.DataType)IL.ilGetInteger(ILDefines.IL_IMAGE_TYPE);
+                return (AlienEngine.Core.Graphics.DevIL.DataType) IL.ilGetInteger(ILDefines.IL_IMAGE_TYPE);
             }
         }
 
@@ -109,7 +104,7 @@ namespace AlienEngine.Core.Graphics.DevIL
                     return AlienEngine.Core.Graphics.DevIL.PaletteType.None;
 
                 Bind();
-                return (AlienEngine.Core.Graphics.DevIL.PaletteType)IL.ilGetInteger(ILDefines.IL_PALETTE_TYPE);
+                return (AlienEngine.Core.Graphics.DevIL.PaletteType) IL.ilGetInteger(ILDefines.IL_PALETTE_TYPE);
             }
         }
 
@@ -121,7 +116,7 @@ namespace AlienEngine.Core.Graphics.DevIL
                     return DataFormat.RGBA;
 
                 Bind();
-                return (DataFormat)IL.ilGetInteger(ILDefines.IL_PALETTE_BASE_TYPE);
+                return (DataFormat) IL.ilGetInteger(ILDefines.IL_PALETTE_BASE_TYPE);
             }
         }
 
@@ -133,7 +128,7 @@ namespace AlienEngine.Core.Graphics.DevIL
                     return OriginLocation.UpperLeft;
 
                 Bind();
-                return (OriginLocation)IL.ilGetInteger(ILDefines.IL_IMAGE_ORIGIN);
+                return (OriginLocation) IL.ilGetInteger(ILDefines.IL_IMAGE_ORIGIN);
             }
         }
 
@@ -307,7 +302,7 @@ namespace AlienEngine.Core.Graphics.DevIL
             {
                 if (!IsValid)
                     return false;
-                CubeMapFace face = (CubeMapFace)IL.ilGetInteger(ILDefines.IL_IMAGE_CUBEFLAGS);
+                CubeMapFace face = (CubeMapFace) IL.ilGetInteger(ILDefines.IL_IMAGE_CUBEFLAGS);
                 return (face != CubeMapFace.None) && (face != CubeMapFace.SphereMap);
             }
         }
@@ -318,7 +313,7 @@ namespace AlienEngine.Core.Graphics.DevIL
             {
                 if (!IsValid)
                     return false;
-                CubeMapFace face = (CubeMapFace)IL.ilGetInteger(ILDefines.IL_IMAGE_CUBEFLAGS);
+                CubeMapFace face = (CubeMapFace) IL.ilGetInteger(ILDefines.IL_IMAGE_CUBEFLAGS);
                 return face == CubeMapFace.SphereMap;
             }
         }
@@ -383,7 +378,6 @@ namespace AlienEngine.Core.Graphics.DevIL
 
         public void Resize(int width, int height, int depth, SamplingFilter filter, bool regenerateMipMaps)
         {
-
             width = Math.Max(1, width);
             height = Math.Max(1, height);
             depth = Math.Max(1, depth);
@@ -458,7 +452,7 @@ namespace AlienEngine.Core.Graphics.DevIL
             {
                 Bind();
                 IL.ActiveFace(i);
-                CubeMapFace face = (CubeMapFace)IL.ilGetInteger(ILDefines.IL_IMAGE_CUBEFLAGS);
+                CubeMapFace face = (CubeMapFace) IL.ilGetInteger(ILDefines.IL_IMAGE_CUBEFLAGS);
 
                 if (face == cubeMapFace)
                 {
@@ -492,7 +486,9 @@ namespace AlienEngine.Core.Graphics.DevIL
             Bitmap bmp = new Bitmap(Width, Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
 
             // Must be Format32bppArgb file format, so convert it if it isn't in that format
-            System.Drawing.Imaging.BitmapData bitmapData = bmp.LockBits(new System.Drawing.Rectangle(0, 0, Width, Height), System.Drawing.Imaging.ImageLockMode.WriteOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+            System.Drawing.Imaging.BitmapData bitmapData =
+                bmp.LockBits(new System.Drawing.Rectangle(0, 0, Width, Height),
+                    System.Drawing.Imaging.ImageLockMode.WriteOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
 
             Bind();
             IL.ConvertImage(DataFormat.BGRA, DataType.UnsignedByte); // support for non 32bit images..

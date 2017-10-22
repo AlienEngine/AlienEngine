@@ -24,19 +24,12 @@ using AlienEngine.Core.Graphics.DevIL.Unmanaged;
 
 namespace AlienEngine.Core.Graphics.DevIL
 {
-    public static class TransformEngine
+    internal static class TransformEngine
     {
-
         public static Placement ImagePlacement
         {
-            get
-            {
-                return ILU.GetImagePlacement();
-            }
-            set
-            {
-                ILU.SetImagePlacement(value);
-            }
+            get { return ILU.GetImagePlacement(); }
+            set { ILU.SetImagePlacement(value); }
         }
 
         public static bool Crop(Image image, int offsetX, int offsetY, int offsetZ, int width, int height, int depth)
@@ -170,6 +163,5 @@ namespace AlienEngine.Core.Graphics.DevIL
             IL.BindImage(image.ImageID);
             return ILU.Rotate3D(x, y, z, angle);
         }
-
     }
 }

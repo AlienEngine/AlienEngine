@@ -24,7 +24,7 @@ using AlienEngine.Core.Graphics.DevIL.Unmanaged;
 
 namespace AlienEngine.Core.Graphics.DevIL
 {
-    public class ManagedImage
+    internal class ManagedImage
     {
         private MipMapChainCollection m_faces;
         private AnimationChainCollection m_animChain;
@@ -32,18 +32,12 @@ namespace AlienEngine.Core.Graphics.DevIL
         //May hold a single face representing a 2D image or faces of a cubemap
         public MipMapChainCollection Faces
         {
-            get
-            {
-                return m_faces;
-            }
+            get { return m_faces; }
         }
 
         public AnimationChainCollection AnimationChain
         {
-            get
-            {
-                return m_animChain;
-            }
+            get { return m_animChain; }
         }
 
         public ManagedImage(Image image)

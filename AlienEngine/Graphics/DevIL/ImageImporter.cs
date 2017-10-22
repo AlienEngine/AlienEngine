@@ -26,17 +26,14 @@ using AlienEngine.Core.Graphics.DevIL.Unmanaged;
 
 namespace AlienEngine.Core.Graphics.DevIL
 {
-    public sealed class ImageImporter : IDisposable
+    internal sealed class ImageImporter : IDisposable
     {
         private FilterEngine m_filterEngine;
         private bool m_isDisposed;
 
         public FilterEngine Filter
         {
-            get
-            {
-                return m_filterEngine;
-            }
+            get { return m_filterEngine; }
         }
 
 

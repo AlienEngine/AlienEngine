@@ -21,8 +21,10 @@
 */
 
 
-namespace AlienEngine.Core.Graphics.DevIL.Unmanaged {
-    public static class ILUDefines {
+namespace AlienEngine.Core.Graphics.DevIL.Unmanaged
+{
+    internal static class ILUDefines
+    {
         public const int ILU_FILTER = 0x2600;
         public const int ILU_NEAREST = 0x2601;
         public const int ILU_LINEAR = 0x2602;
@@ -48,7 +50,7 @@ namespace AlienEngine.Core.Graphics.DevIL.Unmanaged {
         public const int ILU_UPPER_RIGHT = 0x0704;
         public const int ILU_CENTER = 0x0705;
         public const int ILU_CONVOLUTION_MATRIX = 0x0710;
-  
+
         public const int ILU_ENGLISH = 0x0800;
         public const int ILU_ARABIC = 0x0801;
         public const int ILU_DUTCH = 0x0802;
