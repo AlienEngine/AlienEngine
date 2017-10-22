@@ -46,7 +46,7 @@ namespace AlienEngine
         /// <summary>
         /// Refers to the rigid identity transformation.
         /// </summary>
-        // public static RigidTransform RigidIdentity = RigidTransform.Identity;
+        public static RigidTransform RigidIdentity = RigidTransform.Identity;
 
         /// <summary>
         /// Defines the value of tau divided by two as a <see cref="System.Single"/>.
