@@ -353,7 +353,6 @@
     <Compile Include="Physics\CollisionTests\Manifolds\TriangleConvexContactManifold.cs" />
     <Compile Include="Physics\CollisionTests\Manifolds\TriangleMeshConvexContactManifold.cs" />
     <Compile Include="Physics\CollisionTests\VoronoiRegion.cs" />
-    <Compile Include="Physics\CollisionUpdateMode.cs" />
     <Compile Include="Physics\Constraints\Collision\ContactFrictionConstraint.cs" />
     <Compile Include="Physics\Constraints\Collision\ContactManifoldConstraint.cs" />
     <Compile Include="Physics\Constraints\Collision\ContactManifoldConstraintGroup.cs" />
