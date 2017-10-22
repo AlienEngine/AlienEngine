@@ -55,16 +55,6 @@ namespace AlienEngine.Core.Graphics.Shaders.Samples
             public uint shadingMode;
             public float shininess;
             public float shininessStrength;
-            public sampler2D textureAmbient;
-            public sampler2D textureDiffuse;
-            public sampler2D textureDisplacement;
-            public sampler2D textureEmissive;
-            public sampler2D textureHeight;
-            public sampler2D textureLightMap;
-            public sampler2D textureNormal;
-            public sampler2D textureOpacity;
-            public sampler2D textureReflection;
-            public sampler2D textureSpecular;
         }
 
         // --------------------
@@ -120,6 +110,27 @@ namespace AlienEngine.Core.Graphics.Shaders.Samples
         [Uniform]
         MaterialState materialState;
         #endregion
+
+        [Uniform]
+        sampler2D textureAmbient;
+        [Uniform]
+        sampler2D textureDiffuse;
+        [Uniform]
+        sampler2D textureDisplacement;
+        [Uniform]
+        sampler2D textureEmissive;
+        [Uniform]
+        sampler2D textureHeight;
+        [Uniform]
+        sampler2D textureLightMap;
+        [Uniform]
+        sampler2D textureNormal;
+        [Uniform]
+        sampler2D textureOpacity;
+        [Uniform]
+        sampler2D textureReflection;
+        [Uniform]
+        sampler2D textureSpecular;
 
         #region Camera informations
         //[Uniform]
@@ -179,7 +190,7 @@ namespace AlienEngine.Core.Graphics.Shaders.Samples
 
             vec4 color = (AmbientColor + DiffuseColor + SpecularColor);
 
-            return  new vec4(color.rgb * light.Intensity, color.a);
+            return new vec4(color.rgb * light.Intensity, color.a);
         }
 
         vec4 CalcDirectionalLight(LightState light, vec3 Normal)
@@ -249,7 +260,7 @@ namespace AlienEngine.Core.Graphics.Shaders.Samples
             // Diffuse Texture Light Intensity
             if (materialState.hasTextureDiffuse)
             {
-                gl_FragColor = texture(materialState.textureDiffuse, _uv) * _totalLight;
+                gl_FragColor = clamp(_totalLight * texture(textureDiffuse, _uv), 0, 1);
             }
             else
             {
