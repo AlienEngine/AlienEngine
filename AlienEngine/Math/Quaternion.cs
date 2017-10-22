@@ -31,24 +31,24 @@ namespace AlienEngine
     public struct Quaternion : IEquatable<Quaternion>
     {
         /// <summary>
-        ///
+        /// W component of the quaternion.
         /// </summary>
-        private float _w;
+        public float W;
 
         /// <summary>
-        ///
+        /// X component of the quaternion.
         /// </summary>
-        private float _x;
+        public float X;
 
         /// <summary>
-        ///
+        /// Y component of the quaternion.
         /// </summary>
-        private float _y;
+        public float Y;
 
         /// <summary>
-        ///
+        /// Z component of the quaternion.
         /// </summary>
-        private float _z;
+        public float Z;
 
         /// <summary>
         /// The axis of the quaternion.
@@ -60,33 +60,12 @@ namespace AlienEngine
         }
 
         /// <summary>
-        /// Gets or sets the X component of this instance.
-        /// </summary>
-        public float X { get { return _x; } set { _x = value; } }
-
-        /// <summary>
-        /// Gets or sets the Y component of this instance.
-        /// </summary>
-        public float Y { get { return _y; } set { _y = value; } }
-
-        /// <summary>
-        /// Gets or sets the Z component of this instance.
-        /// </summary>
-        public float Z { get { return _z; } set { _z = value; } }
-
-        /// <summary>
-        /// Gets or sets the W component of this instance.
-        /// </summary>
-        public float W { get { return _w; } set { _w = value; } }
-
-        /// <summary>
         /// Defines the identity quaternion.
         /// </summary>
         public static readonly Quaternion Identity = new Quaternion(1, 0, 0, 0);
 
-
         /// <summary>
-        /// Defines the identity quaternion.
+        /// Defines the zero quaternion.
         /// </summary>
         public static readonly Quaternion Zero = new Quaternion(0, 0, 0, 0);
 
@@ -97,10 +76,10 @@ namespace AlienEngine
         /// <param name="x"></param>
         /// <param name="y"></param>
         /// <param name="z"></param>
-        internal Quaternion(float w, float x, float y, float z)
+        public Quaternion(float w, float x, float y, float z)
         {
-            _w = w;
-            _x = x; _y = y; _z = z;
+            W = w;
+            X = x; Y = y; Z = z;
         }
 
         /// <summary>
@@ -112,11 +91,11 @@ namespace AlienEngine
         {
             Vector3f normalized = Vector3f.Normalize(axis);
             float halfRadian = angle * 0.5f;
-            _w = MathHelper.Cos(halfRadian);
+            W = MathHelper.Cos(halfRadian);
             float sin = MathHelper.Sin(halfRadian);
-            _x = sin * normalized.X;
-            _y = sin * normalized.Y;
-            _z = sin * normalized.Z;
+            X = sin * normalized.X;
+            Y = sin * normalized.Y;
+            Z = sin * normalized.Z;
         }
 
         /// <summary>
@@ -134,10 +113,10 @@ namespace AlienEngine
         /// <param name="vec">The vector to copy</param>
         public Quaternion(Vector4f vec)
         {
-            _x = vec.X;
-            _y = vec.Y;
-            _z = vec.Z;
-            _w = vec.W;
+            X = vec.X;
+            Y = vec.Y;
+            Z = vec.Z;
+            W = vec.W;
         }
 
         /// <summary>
@@ -254,17 +233,18 @@ namespace AlienEngine
 
             Vector4f result = new Vector4f();
 
-            result.W = 2.0f * MathHelper.Acos(q.W); // angle
             float den = MathHelper.Sqrt(1.0 - q.W * q.W);
             if (den > 0.0001f)
             {
                 result.XYZ = q.XYZ / den;
+                result.W = 2.0f * MathHelper.Acos(q.W); // angle
             }
             else
             {
                 // This occurs when the angle is zero. 
                 // Not a problem: just set an arbitrary normalized axis.
-                result.XYZ = Vector3f.UnitX;
+                result.XYZ = Vector3f.UnitY;
+                result.W = 0;
             }
 
             return result;
@@ -316,7 +296,9 @@ namespace AlienEngine
         public void Normalize()
         {
             float scale = 1.0f / this.Length;
-            XYZ *= scale;
+            X *= scale;
+            Y *= scale;
+            Z *= scale;
             W *= scale;
         }
 
@@ -325,7 +307,20 @@ namespace AlienEngine
         /// </summary>
         public void Conjugate()
         {
-            XYZ = -XYZ;
+            X = -X;
+            Y = -Y;
+            Z = -Z;
+        }
+
+        /// <summary>
+        /// Computes the axis angle representation of a normalized quaternion.
+        /// </summary>
+        /// <param name="q">Quaternion to be converted.</param>
+        /// <param name="axis">Axis represented by the quaternion.</param>
+        /// <param name="angle">Angle around the axis represented by the quaternion.</param>
+        public static void ToAxisAngle(ref Quaternion q, out Vector3f axis, out float angle)
+        {
+            q.ToAxisAngle(out axis, out angle);
         }
 
         /// <summary>
@@ -336,7 +331,9 @@ namespace AlienEngine
         /// <returns>The result of the addition</returns>
         public static Quaternion Add(Quaternion left, Quaternion right)
         {
-            return new Quaternion(left.W + right.W, left.X + right.X, left.Y + right.Y, left.Z + right.Z);
+            Quaternion res;
+            Add(ref left, ref right, out res);
+            return res;
         }
 
         /// <summary>
@@ -347,7 +344,10 @@ namespace AlienEngine
         /// <param name="result">The result of the addition</param>
         public static void Add(ref Quaternion left, ref Quaternion right, out Quaternion result)
         {
-            result = Add(left, right);
+            result.X = left.X + right.X;
+            result.Y = left.Y + right.Y;
+            result.Z = left.Z + right.Z;
+            result.W = left.W + right.W;
         }
 
         /// <summary>
@@ -393,12 +393,18 @@ namespace AlienEngine
         /// <param name="result">A new instance containing the result of the calculation.</param>
         public static void Multiply(ref Quaternion left, ref Quaternion right, out Quaternion result)
         {
-            result = new Quaternion(
-                Vector4f.Dot(new Vector4f(left.W, -left.X, -left.Y, -left.Z), new Vector4f(right.W, right.X, right.Y, right.Z)),
-                Vector4f.Dot(new Vector4f(left.X,  left.W,  left.Y, -left.Z), new Vector4f(right.W, right.X, right.Z, right.Y)),
-                Vector4f.Dot(new Vector4f(left.Y,  left.W,  left.Z, -left.X), new Vector4f(right.W, right.Y, right.X, right.Z)),
-                Vector4f.Dot(new Vector4f(left.Z,  left.W,  left.X, -left.Y), new Vector4f(right.W, right.Z, right.Y, right.X))
-            );
+            float x = left.X;
+            float y = left.Y;
+            float z = left.Z;
+            float w = left.W;
+            float bX = right.X;
+            float bY = right.Y;
+            float bZ = right.Z;
+            float bW = right.W;
+            result.X = x * bW + bX * w + y * bZ - z * bY;
+            result.Y = y * bW + bY * w + z * bX - x * bZ;
+            result.Z = z * bW + bZ * w + x * bY - y * bX;
+            result.W = w * bW - x * bX - y * bY - z * bZ;
         }
 
         /// <summary>
@@ -409,7 +415,10 @@ namespace AlienEngine
         /// <param name="result">A new instance containing the result of the calculation.</param>
         public static void Multiply(ref Quaternion quaternion, float scale, out Quaternion result)
         {
-            result = Multiply(quaternion, scale);
+            result.X = quaternion.X * scale;
+            result.Y = quaternion.Y * scale;
+            result.Z = quaternion.Z * scale;
+            result.W = quaternion.W * scale;
         }
 
         /// <summary>
@@ -420,7 +429,47 @@ namespace AlienEngine
         /// <returns>A new instance containing the result of the calculation.</returns>
         public static Quaternion Multiply(Quaternion quaternion, float scale)
         {
-            return new Quaternion(quaternion.X * scale, quaternion.Y * scale, quaternion.Z * scale, quaternion.W * scale);
+            Quaternion result;
+            Multiply(ref quaternion, scale, out result);
+            return result;
+        }
+
+        /// <summary>
+        /// Multiplies two quaternions together in opposite order.
+        /// </summary>
+        /// <param name="a">First quaternion to multiply.</param>
+        /// <param name="b">Second quaternion to multiply.</param>
+        /// <param name="result">Product of the multiplication.</param>
+        public static void Concatenate(ref Quaternion a, ref Quaternion b, out Quaternion result)
+        {
+            float aX = a.X;
+            float aY = a.Y;
+            float aZ = a.Z;
+            float aW = a.W;
+            float bX = b.X;
+            float bY = b.Y;
+            float bZ = b.Z;
+            float bW = b.W;
+
+            result.X = aW * bX + aX * bW + aZ * bY - aY * bZ;
+            result.Y = aW * bY + aY * bW + aX * bZ - aZ * bX;
+            result.Z = aW * bZ + aZ * bW + aY * bX - aX * bY;
+            result.W = aW * bW - aX * bX - aY * bY - aZ * bZ;
+
+
+        }
+
+        /// <summary>
+        /// Multiplies two quaternions together in opposite order.
+        /// </summary>
+        /// <param name="a">First quaternion to multiply.</param>
+        /// <param name="b">Second quaternion to multiply.</param>
+        /// <returns>Product of the multiplication.</returns>
+        public static Quaternion Concatenate(Quaternion a, Quaternion b)
+        {
+            Quaternion result;
+            Concatenate(ref a, ref b, out result);
+            return result;
         }
 
         /// <summary>
@@ -432,9 +481,9 @@ namespace AlienEngine
         public static Quaternion Multiply(Quaternion quaternion, Vector3f vector)
         {
             float _w = -quaternion.X * vector.X - quaternion.Y * vector.Y - quaternion.Z * vector.Z;
-            float _x =  quaternion.W * vector.X + quaternion.Y * vector.Z - quaternion.Z * vector.Y;
-            float _y =  quaternion.W * vector.Y + quaternion.Z * vector.X - quaternion.X * vector.Z;
-            float _z =  quaternion.W * vector.Z + quaternion.X * vector.Y - quaternion.Y * vector.X;
+            float _x = quaternion.W * vector.X + quaternion.Y * vector.Z - quaternion.Z * vector.Y;
+            float _y = quaternion.W * vector.Y + quaternion.Z * vector.X - quaternion.X * vector.Z;
+            float _z = quaternion.W * vector.Z + quaternion.X * vector.Y - quaternion.Y * vector.X;
 
             return new Quaternion(_w, _x, _y, _z);
         }
@@ -446,7 +495,9 @@ namespace AlienEngine
         /// <returns>The conjugate of the given quaternion</returns>
         public static Quaternion Conjugate(Quaternion q)
         {
-            return new Quaternion(q.W, -q.X, -q.Y, -q.Z);
+            Quaternion toReturn;
+            Conjugate(ref q, out toReturn);
+            return toReturn;
         }
 
         /// <summary>
@@ -456,7 +507,7 @@ namespace AlienEngine
         /// <param name="result">The conjugate of the given quaternion</param>
         public static void Conjugate(ref Quaternion q, out Quaternion result)
         {
-            result = Conjugate(q);
+            result = new Quaternion(q.W, -q.X, -q.Y, -q.Z);
         }
 
         /// <summary>
@@ -546,6 +597,32 @@ namespace AlienEngine
         }
 
         /// <summary>
+        /// Creates a quaternion from an axis and angle.
+        /// </summary>
+        /// <param name="axis">Axis of rotation.</param>
+        /// <param name="angle">Angle to rotate around the axis.</param>
+        /// <param name="q">Quaternion representing the axis and angle rotation.</param>
+        public static void FromAxisAngle(ref Vector3f axis, float angle, out Quaternion q)
+        {
+            if (axis.LengthSquared == 0.0f)
+            {
+                q = Identity;
+                return;
+            }
+
+            Quaternion result = Identity;
+
+            angle *= 0.5f;
+            axis.Normalize();
+            result.X = axis.X * MathHelper.Sin(angle);
+            result.Y = axis.Y * MathHelper.Sin(angle);
+            result.Z = axis.Z * MathHelper.Sin(angle);
+            result.W = MathHelper.Cos(angle);
+
+            q = Normalize(result);
+        }
+
+        /// <summary>
         /// Creates an orientation Quaternion given the 3 axis.
         /// </summary>
         /// <param name="Axis">An array of 3 axis.</param>
@@ -553,10 +630,9 @@ namespace AlienEngine
         {
             Matrix4f Rotation = new Matrix4f();
 
-            Rotation.Column0 = new Vector4f(xvec, 0);
-            Rotation.Column1 = new Vector4f(yvec, 0);
-            Rotation.Column2 = new Vector4f(zvec, 0);
-            Rotation.Column3 = Vector4f.UnitW;
+            Rotation.Right = xvec;
+            Rotation.Up = yvec;
+            Rotation.Backward = zvec;
 
             return FromRotationMatrix(Rotation);
         }
@@ -567,7 +643,7 @@ namespace AlienEngine
         /// <param name="roll">The rotation angle on th X axis.</param>
         /// <param name="pitch">The rotation angle on th Y axis.</param>
         /// <param name="yaw">The rotation angle on th Z axis.</param>
-        public static Quaternion FromEulerAngles(float roll, float pitch, float yaw)
+        public static Quaternion FromEulerAngles(float yaw, float pitch, float roll)
         {
             Quaternion q = new Quaternion();
 
@@ -618,16 +694,42 @@ namespace AlienEngine
         private static readonly int[] _rotationLookup = new int[] { 1, 2, 0 };
 
         /// <summary>
-        /// Creates an orientation Quaternion from a target Matrix4 rotational matrix.
+        /// Creates a quaternion from a rotation matrix.
         /// </summary>
-        public static Quaternion FromRotationMatrix(Matrix4f rotation)
+        /// <param name="rotation">Rotation matrix used to create a new quaternion.</param>
+        /// <returns>Quaternion representing the same rotation as the matrix.</returns>
+        public static Quaternion FromRotationMatrix(Matrix3f rotation)
+        {
+            Quaternion toReturn;
+            FromRotationMatrix(ref rotation, out toReturn);
+            return toReturn;
+        }
+
+        /// <summary>
+        /// Constructs a quaternion from a rotation matrix.
+        /// </summary>
+        /// <param name="rotation">Rotation matrix to create the quaternion from.</param>
+        /// <param name="quaternion">Quaternion based on the rotation matrix.</param>
+        public static void FromRotationMatrix(ref Matrix4f rotation, out Quaternion quaternion)
+        {
+            Matrix3f downsizedMatrix;
+            Matrix3f.FromMatrix4f(ref rotation, out downsizedMatrix);
+            FromRotationMatrix(ref downsizedMatrix, out quaternion);
+        }
+
+        /// <summary>
+        /// Constructs a quaternion from a rotation matrix.
+        /// </summary>
+        /// <param name="rotation">Rotation matrix to create the quaternion from.</param>
+        /// <param name="quaternion">Quaternion based on the rotation matrix.</param>
+        public static void FromRotationMatrix(ref Matrix3f rotation, out Quaternion quaternion)
         {
             // Algorithm from Ken Shoemake's article in 1987 SIGGRAPH course notes
             // "Quaternion Calculus and Fast Animation"
 
             float t_trace = rotation[0].X + rotation[1].Y + rotation[2].Z;
             float t_root = 0.0f;
-            Quaternion t_return = Quaternion.Zero;
+            Quaternion t_return = Zero;
 
             if (t_trace > 0.0)
             {   // |w| > 1/2
@@ -655,10 +757,17 @@ namespace AlienEngine
                 t_return[k] = (rotation[k][i] + rotation[i][k]) * t_root;
             }
 
-            if (t_return.X == 0 && t_return.Y == 0 && t_return.Z == 0)
-                return new Quaternion(Vector4f.One);
+            quaternion = Conjugate(t_return);
+        }
 
-            return Quaternion.Conjugate(t_return);
+        /// <summary>
+        /// Creates an orientation Quaternion from a target Matrix4 rotational matrix.
+        /// </summary>
+        public static Quaternion FromRotationMatrix(Matrix4f rotation)
+        {
+            Quaternion toReturn;
+            FromRotationMatrix(ref rotation, out toReturn);
+            return toReturn;
         }
 
         /// <summary>
@@ -670,18 +779,36 @@ namespace AlienEngine
         /// <returns>A smooth blend between the given quaternions</returns>
         public static Quaternion Slerp(Quaternion q1, Quaternion q2, float blend)
         {
+            Quaternion res;
+            Slerp(ref q1, ref q2, blend, out res);
+            return res;
+        }
+
+        /// <summary>
+        /// Do Spherical linear interpolation between two quaternions 
+        /// </summary>
+        /// <param name="q1">The first quaternion</param>
+        /// <param name="q2">The second quaternion</param>
+        /// <param name="blend">The blend factor</param>
+        /// <returns>A smooth blend between the given quaternions</returns>
+        public static void Slerp(ref Quaternion q1, ref Quaternion q2, float blend, out Quaternion result)
+        {
             // if either input is zero, return the other.
             if (q1.LengthSquared == 0.0f)
             {
                 if (q2.LengthSquared == 0.0f)
                 {
-                    return Identity;
+                    result = Identity;
+                    return;
                 }
-                return q2;
+                result = q2;
+                return;
             }
-            else if (q2.LengthSquared == 0.0f)
+
+            if (q2.LengthSquared == 0.0f)
             {
-                return q1;
+                result = q1;
+                return;
             }
 
 
@@ -690,7 +817,8 @@ namespace AlienEngine
             if (cosHalfAngle >= 1.0f || cosHalfAngle <= -1.0f)
             {
                 // angle = 0.0f, so just return one input.
-                return q1;
+                result = q1;
+                return;
             }
             else if (cosHalfAngle < 0.0f)
             {
@@ -717,11 +845,11 @@ namespace AlienEngine
                 blendB = blend;
             }
 
-            Quaternion result = new Quaternion(blendA * q1.W + blendB * q2.W, blendA * q1.XYZ + blendB * q2.XYZ);
+            result = new Quaternion(blendA * q1.W + blendB * q2.W, blendA * q1.X + blendB * q2.X, blendA * q1.Y + blendB * q2.Y, blendA * q1.Z + blendB * q2.Z);
             if (result.LengthSquared > 0.0f)
-                return Normalize(result);
+                result.Normalize();
             else
-                return Identity;
+                result = Identity;
         }
 
         /// <summary>
@@ -740,6 +868,108 @@ namespace AlienEngine
         public static void ToEulerAngles(Quaternion quat, out Vector3f angles)
         {
             quat.ToEulerAngles(out angles);
+        }
+
+        /// <summary>
+        /// Negates the components of a quaternion.
+        /// </summary>
+        /// <param name="a">Quaternion to negate.</param>
+        /// <param name="b">Negated result.</param>
+        public static void Negate(ref Quaternion a, out Quaternion b)
+        {
+            b.X = -a.X;
+            b.Y = -a.Y;
+            b.Z = -a.Z;
+            b.W = -a.W;
+        }
+
+        /// <summary>
+        /// Negates the components of a quaternion.
+        /// </summary>
+        /// <param name="q">Quaternion to negate.</param>
+        /// <returns>Negated result.</returns>
+        public static Quaternion Negate(Quaternion q)
+        {
+            Quaternion result;
+            Negate(ref q, out result);
+            return result;
+        }
+
+        /// <summary>
+        /// Computes the angle change represented by a normalized quaternion.
+        /// </summary>
+        /// <param name="q">Quaternion to be converted.</param>
+        /// <returns>Angle around the axis represented by the quaternion.</returns>
+        public static float GetAngleFromQuaternion(ref Quaternion q)
+        {
+            float qw = Math.Abs(q.W);
+            if (qw > 1)
+                return 0;
+            return 2 * MathHelper.Acos(qw);
+        }
+
+        /// <summary>
+        /// Computes the quaternion rotation between two normalized vectors.
+        /// </summary>
+        /// <param name="v1">First unit-length vector.</param>
+        /// <param name="v2">Second unit-length vector.</param>
+        /// <param name="q">Quaternion representing the rotation from v1 to v2.</param>
+        public static void GetQuaternionBetweenNormalizedVectors(ref Vector3f v1, ref Vector3f v2, out Quaternion q)
+        {
+            float dot;
+            Vector3f.Dot(ref v1, ref v2, out dot);
+            //For non-normal vectors, the multiplying the axes length squared would be necessary:
+            //float w = dot + (float)Math.Sqrt(v1.LengthSquared() * v2.LengthSquared());
+            if (dot < -0.9999f) //parallel, opposing direction
+            {
+                //If this occurs, the rotation required is ~180 degrees.
+                //The problem is that we could choose any perpendicular axis for the rotation. It's not uniquely defined.
+                //The solution is to pick an arbitrary perpendicular axis.
+                //Project onto the plane which has the lowest component magnitude.
+                //On that 2d plane, perform a 90 degree rotation.
+                float absX = Math.Abs(v1.X);
+                float absY = Math.Abs(v1.Y);
+                float absZ = Math.Abs(v1.Z);
+                if (absX < absY && absX < absZ)
+                    q = new Quaternion(0, 0, -v1.Z, v1.Y);
+                else if (absY < absZ)
+                    q = new Quaternion(0, -v1.Z, 0, v1.X);
+                else
+                    q = new Quaternion(0, -v1.Y, v1.X, 0);
+            }
+            else
+            {
+                Vector3f axis;
+                Vector3f.Cross(ref v1, ref v2, out axis);
+                q = new Quaternion(dot + 1, axis.X, axis.Y, axis.Z);
+            }
+            q.Normalize();
+        }
+
+        /// <summary>
+        /// Computes the rotation from the start orientation to the end orientation such that end = Quaternion.Concatenate(start, relative).
+        /// </summary>
+        /// <param name="start">Starting orientation.</param>
+        /// <param name="end">Ending orientation.</param>
+        /// <param name="relative">Relative rotation from the start to the end orientation.</param>
+        public static void GetRelativeRotation(ref Quaternion start, ref Quaternion end, out Quaternion relative)
+        {
+            Quaternion startInverse;
+            Conjugate(ref start, out startInverse);
+            Concatenate(ref startInverse, ref end, out relative);
+        }
+
+        /// <summary>
+        /// Transforms the rotation into the local space of the target basis such that rotation = Quaternion.Concatenate(localRotation, targetBasis)
+        /// </summary>
+        /// <param name="rotation">Rotation in the original frame of reference.</param>
+        /// <param name="targetBasis">Basis in the original frame of reference to transform the rotation into.</param>
+        /// <param name="localRotation">Rotation in the local space of the target basis.</param>
+        public static void GetLocalRotation(ref Quaternion rotation, ref Quaternion targetBasis, out Quaternion localRotation)
+        {
+            Quaternion basisInverse;
+            Conjugate(ref targetBasis, out basisInverse);
+            Concatenate(ref rotation, ref basisInverse, out localRotation);
         }
 
         /// <summary>
