@@ -35,12 +35,12 @@ namespace AlienEngine
         /// <summary>
         /// The location of the rectangle.
         /// </summary>
-        Point2i location;
+        private Point2i _location;
 
         /// <summary>
         /// The size of the rectangle.
         /// </summary>
-        Sizei size;
+        private Sizei _size;
 
         #endregion
 
@@ -57,6 +57,7 @@ namespace AlienEngine
             Size = size;
         }
 
+        /// <inheritdoc />
         /// <summary>
         /// Constructs a new Rectangle instance.
         /// </summary>
@@ -126,8 +127,8 @@ namespace AlienEngine
         /// </summary>
         public Point2i Location
         {
-            get { return location; }
-            set { location = value; }
+            get { return _location; }
+            set { _location = value; }
         }
 
         /// <summary>
@@ -136,29 +137,49 @@ namespace AlienEngine
         /// </summary>
         public Sizei Size
         {
-            get { return size; }
-            set { size = value; }
+            get { return _size; }
+            set { _size = value; }
         }
 
         /// <summary>
         /// Gets the y coordinate of the top edge of this Rectangle.
         /// </summary>
-        public int Top { get { return Y; } }
+        public int Top => Y;
 
         /// <summary>
         /// Gets the x coordinate of the right edge of this Rectangle.
         /// </summary>
-        public int Right { get { return X + Width; } }
+        public int Right => X + Width;
 
         /// <summary>
         /// Gets the y coordinate of the bottom edge of this Rectangle.
         /// </summary>
-        public int Bottom { get { return Y + Height; } }
+        public int Bottom => Y + Height;
 
         /// <summary>
         /// Gets the x coordinate of the left edge of this Rectangle.
         /// </summary>
-        public int Left { get { return X; } }
+        public int Left => X;
+
+        /// <summary>
+        /// Gets the TopLeft corner of this <see cref="Rectangle"/>
+        /// </summary>
+        public Point2i TopLeft => new Point2i(Left, Top);
+
+        /// <summary>
+        /// Gets the TopRight corner of this <see cref="Rectangle"/>
+        /// </summary>
+        public Point2i TopRight => new Point2i(Right, Top);
+
+        /// <summary>
+        /// Gets the BottomLeft corner of this <see cref="Rectangle"/>
+        /// </summary>
+        public Point2i BottomLeft => new Point2i(Left, Bottom);
+
+        /// <summary>
+        /// Gets the BottomRight corner of this <see cref="Rectangle"/>
+        /// </summary>
+        public Point2i BottomRight => new Point2i(Right, Bottom);
 
         /// <summary>
         /// Gets a <see cref="bool"/> that indicates whether this
@@ -202,7 +223,7 @@ namespace AlienEngine
         /// are exclusive.</remarks>
         public bool Contains(int x, int y)
         {
-            return x >= Left && x < Right && y >= Top && y < Bottom;
+            return Contains(new Point2i(x, y));
         }
 
         /// <summary>
@@ -227,6 +248,34 @@ namespace AlienEngine
         public bool Contains(Rectangle rect)
         {
             return Contains(rect.Location) && Contains(rect.Location + rect.Size);
+        }
+
+        /// <summary>
+        /// Tests whether this instance intersects the specified Rectangle.
+        /// </summary>
+        /// <param name="rect">The <see cref="Rectangle"/> to test.</param>
+        /// <returns>True if this instance intersects rect; false otherwise.</returns>
+        public bool IntersectsWith(Rectangle rect)
+        {
+            if (Contains(rect))
+                return true;
+
+            if (Contains(rect.TopLeft) || Contains(rect.TopRight) || Contains(rect.BottomLeft) || Contains(rect.BottomRight))
+                return true;
+
+            if (Bottom > rect.Bottom && Bottom < rect.Top)
+                return true;
+
+            if (Bottom < rect.Bottom && Top > rect.Bottom)
+                return true;
+
+            if (Left > rect.Left && Left < rect.Right)
+                return true;
+
+            if (Left < rect.Left && Right > rect.Left)
+                return true;
+
+            return false;
         }
 
         /// <summary>
@@ -258,10 +307,10 @@ namespace AlienEngine
         /// <param name="b">The blue component.</param>
         public static Rectangle Union(Rectangle a, Rectangle b)
         {
-            int x1 = System.Math.Min(a.X, b.X);
-            int x2 = System.Math.Max(a.X + a.Width, b.X + b.Width);
-            int y1 = System.Math.Min(a.Y, b.Y);
-            int y2 = System.Math.Max(a.Y + a.Height, b.Y + b.Height);
+            var x1 = MathHelper.Min(a.X, b.X);
+            var x2 = MathHelper.Max(a.X + a.Width, b.X + b.Width);
+            var y1 = MathHelper.Min(a.Y, b.Y);
+            var y2 = MathHelper.Max(a.Y + a.Height, b.Y + b.Height);
 
             return new Rectangle(x1, y1, x2 - x1, y2 - y1);
         }
@@ -294,13 +343,14 @@ namespace AlienEngine
         /// <returns>A <see cref="System.String"/> that describes this instance.</returns>
         public override string ToString()
         {
-            return String.Format("{{{0}-{1}}}", Location, Location + Size);
+            return $"{{{Location}-{Location + Size}}}";
         }
 
         #endregion
 
         #region IEquatable<Rectangle> Members
 
+        /// <inheritdoc />
         /// <summary>
         /// Indicates whether this instance is equal to the specified Rectangle.
         /// </summary>
