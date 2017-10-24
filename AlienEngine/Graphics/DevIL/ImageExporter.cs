@@ -23,6 +23,7 @@
 using System;
 using System.IO;
 using AlienEngine.Core.Graphics.DevIL.Unmanaged;
+using AlienEngine.Imaging;
 
 namespace AlienEngine.Core.Graphics.DevIL
 {

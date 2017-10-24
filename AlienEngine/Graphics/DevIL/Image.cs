@@ -23,6 +23,7 @@
 using System;
 using AlienEngine.Core.Graphics.DevIL.Unmanaged;
 using System.Drawing;
+using AlienEngine.Imaging;
 
 namespace AlienEngine.Core.Graphics.DevIL
 {
@@ -89,10 +90,10 @@ namespace AlienEngine.Core.Graphics.DevIL
             get
             {
                 if (!IsValid)
-                    return AlienEngine.Core.Graphics.DevIL.DataType.UnsignedByte;
+                    return DataType.UnsignedByte;
 
                 Bind();
-                return (AlienEngine.Core.Graphics.DevIL.DataType) IL.ilGetInteger(ILDefines.IL_IMAGE_TYPE);
+                return (DataType) IL.ilGetInteger(ILDefines.IL_IMAGE_TYPE);
             }
         }
 
@@ -101,10 +102,10 @@ namespace AlienEngine.Core.Graphics.DevIL
             get
             {
                 if (!IsValid)
-                    return AlienEngine.Core.Graphics.DevIL.PaletteType.None;
+                    return PaletteType.None;
 
                 Bind();
-                return (AlienEngine.Core.Graphics.DevIL.PaletteType) IL.ilGetInteger(ILDefines.IL_PALETTE_TYPE);
+                return (PaletteType) IL.ilGetInteger(ILDefines.IL_PALETTE_TYPE);
             }
         }
 
@@ -292,7 +293,7 @@ namespace AlienEngine.Core.Graphics.DevIL
             {
                 if (!IsValid)
                     return false;
-                return this.PaletteType != AlienEngine.Core.Graphics.DevIL.PaletteType.None;
+                return this.PaletteType != PaletteType.None;
             }
         }
 

@@ -22,6 +22,7 @@
 
 using System;
 using System.Runtime.InteropServices;
+using AlienEngine.Imaging;
 
 namespace AlienEngine.Core.Graphics.DevIL.Unmanaged
 {
@@ -238,7 +239,7 @@ namespace AlienEngine.Core.Graphics.DevIL.Unmanaged
 
         public bool HasPalette
         {
-            get { return PaletteType != AlienEngine.Core.Graphics.DevIL.PaletteType.None; }
+            get { return PaletteType != PaletteType.None; }
         }
 
         public bool IsCubeMap
