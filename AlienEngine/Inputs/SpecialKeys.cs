@@ -4,8 +4,13 @@
     /// Modifier key flags.
     /// </summary>
     [System.Flags]
-    public enum KeyMods : int
+    public enum SpecialKeys
     {
+        /// <summary>
+        /// Specify that no special keys are pressed.
+        /// </summary>
+        None = -1,
+        
         /// <summary>
         /// If this bit is set one or more Shift keys were held down.
         /// </summary>
