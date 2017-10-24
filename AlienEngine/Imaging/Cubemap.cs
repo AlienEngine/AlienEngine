@@ -22,7 +22,8 @@ namespace AlienEngine.Imaging
         private bool _loaded;
         private Camera _camera;
 
-        private static TextureTarget[] _types = new TextureTarget[6] {
+        private static TextureTarget[] _types = new TextureTarget[6]
+        {
             TextureTarget.TextureCubeMapPositiveX,
             TextureTarget.TextureCubeMapNegativeX,
             TextureTarget.TextureCubeMapPositiveY,
@@ -50,7 +51,8 @@ namespace AlienEngine.Imaging
 
         private void _loadCubeSide(uint sideID)
         {
-            switch (new FileInfo(_textures[sideID]).Extension.ToLower())
+            var extension = new FileInfo(_textures[sideID]).Extension.ToLower();
+            switch (extension)
             {
                 //case ".dds":
                 //    _loadDDS(sideID);
@@ -77,14 +79,22 @@ namespace AlienEngine.Imaging
             Bitmap BitmapImage = _images[sideID].ToBitmap();
 
             // Must be Format32bppArgb file format, so convert it if it isn't in that format
-            BitmapData bitmapData = BitmapImage.LockBits(new System.Drawing.Rectangle(0, 0, BitmapImage.Width, BitmapImage.Height), ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+            BitmapData bitmapData =
+                BitmapImage.LockBits(new System.Drawing.Rectangle(0, 0, BitmapImage.Width, BitmapImage.Height),
+                    ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
 
-            GL.TexImage2D(_types[sideID], 0, PixelInternalFormat.Rgba8, BitmapImage.Width, BitmapImage.Height, 0, Core.Graphics.OpenGL.PixelFormat.Bgra, PixelType.UnsignedByte, bitmapData.Scan0);
-            GL.TexParameteri(TextureTarget.TextureCubeMap, TextureParameterName.TextureMagFilter, TextureParameter.Linear);
-            GL.TexParameteri(TextureTarget.TextureCubeMap, TextureParameterName.TextureMinFilter, TextureParameter.Linear);
-            GL.TexParameteri(TextureTarget.TextureCubeMap, TextureParameterName.TextureWrapS, TextureParameter.ClampToEdge);
-            GL.TexParameteri(TextureTarget.TextureCubeMap, TextureParameterName.TextureWrapT, TextureParameter.ClampToEdge);
-            GL.TexParameteri(TextureTarget.TextureCubeMap, TextureParameterName.TextureWrapR, TextureParameter.ClampToEdge);
+            GL.TexImage2D(_types[sideID], 0, PixelInternalFormat.Rgba8, BitmapImage.Width, BitmapImage.Height, 0,
+                Core.Graphics.OpenGL.PixelFormat.Bgra, PixelType.UnsignedByte, bitmapData.Scan0);
+            GL.TexParameteri(TextureTarget.TextureCubeMap, TextureParameterName.TextureMagFilter,
+                TextureParameter.Linear);
+            GL.TexParameteri(TextureTarget.TextureCubeMap, TextureParameterName.TextureMinFilter,
+                TextureParameter.Linear);
+            GL.TexParameteri(TextureTarget.TextureCubeMap, TextureParameterName.TextureWrapS,
+                TextureParameter.ClampToEdge);
+            GL.TexParameteri(TextureTarget.TextureCubeMap, TextureParameterName.TextureWrapT,
+                TextureParameter.ClampToEdge);
+            GL.TexParameteri(TextureTarget.TextureCubeMap, TextureParameterName.TextureWrapR,
+                TextureParameter.ClampToEdge);
 
             // Dispose bitmap (it will not longer be used)
             BitmapImage.UnlockBits(bitmapData);
@@ -157,6 +167,7 @@ namespace AlienEngine.Imaging
         #endregion
 
         #region IDisposable Support
+
         private bool disposedValue = false; // To detect redundant calls
 
         protected virtual void Dispose(bool disposing)
@@ -164,7 +175,7 @@ namespace AlienEngine.Imaging
             if (!disposedValue)
             {
                 if (_textureID != 0)
-                    GL.DeleteTextures(1, new uint[] { _textureID });
+                    GL.DeleteTextures(1, new uint[] {_textureID});
 
                 if (_images != null)
                     for (int i = 0; i < _images.Length; i++)
@@ -185,6 +196,7 @@ namespace AlienEngine.Imaging
             Dispose(true);
             GC.SuppressFinalize(this);
         }
+
         #endregion
     }
 }
