@@ -3,6 +3,7 @@ using AlienEngine.Core.Graphics.OpenGL;
 using AlienEngine.Core.Resources;
 using System;
 using System.Drawing;
+using AlienEngine.Core.Game;
 
 namespace AlienEngine.Imaging
 {
@@ -20,8 +21,6 @@ namespace AlienEngine.Imaging
 
         #region Propreties
 
-        public string Filename { get; private set; }
-
         [CLSCompliant(false)]
         public uint TextureID { get; private set; }
 
@@ -31,12 +30,22 @@ namespace AlienEngine.Imaging
 
         #endregion
 
-        public Texture(string filename = null, TextureTarget target = TextureTarget.Texture2D, bool flipY = true)
+        public Texture()
+        {
+            _image = null;
+            TextureID = 0;
+            TextureTarget = TextureTarget.Texture2D;
+            FlipY = true;
+
+            // Register this resource as a disposable resource
+            ResourcesManager.AddDisposableResource(this);
+        }
+
+        public Texture(string filename, TextureTarget target = TextureTarget.Texture2D, bool flipY = true)
         {
             _image = null;
             TextureID = 0;
             TextureTarget = target;
-            Filename = filename;
             FlipY = flipY;
 
             if (!string.IsNullOrEmpty(filename))
@@ -46,20 +55,30 @@ namespace AlienEngine.Imaging
             ResourcesManager.AddDisposableResource(this);
         }
 
-        public bool LoadImage(string filename)
+        public Texture(Image image, TextureTarget target = TextureTarget.Texture2D, bool flipY = true)
+        {
+            _image = image;
+            TextureID = 0;
+            TextureTarget = target;
+            FlipY = flipY;
+
+            LoadImage(image);
+
+            // Register this resource as a disposable resource
+            ResourcesManager.AddDisposableResource(this);
+        }
+
+        public bool LoadImage(Image image)
         {
             // Release the previously loaded texture
             Clear();
-
-            // Change the file name of this texture
-            Filename = filename;
 
             bool ret = false;
 
             try
             {
-                // Import the image
-                _image = Image.FromFile(filename);
+                // Set the image
+                _image = image;
 
                 // TODO: Apply image filters here
                 _applyFilters();
@@ -75,7 +94,8 @@ namespace AlienEngine.Imaging
                 GL.BindTexture(TextureTarget, TextureID);
 
                 // Set texture data
-                GL.TexImage2D(TextureTarget, 0, PixelInternalFormat.Rgba8, _image.Width, _image.Height, 0, PixelFormat.Bgra, PixelType.UnsignedByte, _image.Pixels);
+                GL.TexImage2D(TextureTarget, 0, PixelInternalFormat.Rgba8, _image.Width, _image.Height, 0,
+                    PixelFormat.Bgra, PixelType.UnsignedByte, _image.Pixels);
 
                 // Set texture filters
                 GL.TexParameteri(TextureTarget, TextureParameterName.TextureMinFilter, TextureParameter.Linear);
@@ -94,8 +114,14 @@ namespace AlienEngine.Imaging
             return ret;
         }
 
+        public bool LoadImage(string filename)
+        {
+            return LoadImage(Image.FromFile(filename));
+        }
+
         private void _applyFilters()
-        { }
+        {
+        }
 
         [CLSCompliant(false)]
         public void Bind(uint textureUnit)
@@ -120,6 +146,7 @@ namespace AlienEngine.Imaging
         }
 
         #region IDisposable Support
+
         private bool disposedValue = false; // To detect redundant calls
 
         protected virtual void Dispose(bool disposing)
@@ -142,6 +169,7 @@ namespace AlienEngine.Imaging
             Dispose(true);
             GC.SuppressFinalize(this);
         }
+
         #endregion
     }
 }
