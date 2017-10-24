@@ -2,6 +2,9 @@
 using AlienEngine.Core.Graphics.DevIL.Unmanaged;
 using AlienEngine.Core.Resources;
 using System;
+using AlienEngine.Core.Physics.BroadPhaseEntries;
+using AlienEngine.Imaging;
+using Image = AlienEngine.Core.Graphics.DevIL.Image;
 
 namespace AlienEngine.Core.Graphics
 {
@@ -11,20 +14,31 @@ namespace AlienEngine.Core.Graphics
     public class Cursor : IDisposable
     {
         #region Fields
+
         private GLFW.GLFW.Cursor _cursor;
         private GLFW.GLFW.Image _image;
         private int xhot = 0;
         private int yhot = 0;
+
+        public static readonly Cursor Default;
+        public static readonly Cursor Beam;
+        public static readonly Cursor Hand;
+        public static readonly Cursor ResizeY;
+        public static readonly Cursor ResizeTop;
+        public static readonly Cursor ResizeBottom;
+        public static readonly Cursor ResizeX;
+        public static readonly Cursor ResizeLeft;
+        public static readonly Cursor ResizeRight;
+        public static readonly Cursor Crosshair;
+
         #endregion
 
         #region Properties
+
         /// <summary>
         /// Internal cursor's pointer.
         /// </summary>
-        internal GLFW.GLFW.Cursor Handle
-        {
-            get { return _cursor; }
-        }
+        internal GLFW.GLFW.Cursor Handle => _cursor;
 
         /// <summary>
         /// The height of this cursor.
@@ -70,9 +84,11 @@ namespace AlienEngine.Core.Graphics
             get { return yhot; }
             set { yhot = value; }
         }
+
         #endregion
 
         #region Enums
+
         /// <summary>
         /// Standard cursor shapes.
         /// </summary>
@@ -109,9 +125,28 @@ namespace AlienEngine.Core.Graphics
             /// </summary>
             ResizeY = 0x00036006
         }
+
+        #endregion
+
+        #region Initializer
+
+        static Cursor()
+        {
+            Default = new Cursor(CursorType.Arrow);
+            Beam = new Cursor(CursorType.Beam);
+            ResizeX = new Cursor(CursorType.ResizeX);
+            ResizeY = new Cursor(CursorType.ResizeY);
+            Crosshair = new Cursor(CursorType.Crosshair);
+            ResizeBottom = ResizeY;
+            ResizeTop = ResizeY;
+            ResizeLeft = ResizeX;
+            ResizeRight = ResizeX;
+        }
+
         #endregion
 
         #region Constructor
+
         private Cursor(GLFW.GLFW.Cursor cursor)
         {
             _image = new GLFW.GLFW.Image();
@@ -121,10 +156,12 @@ namespace AlienEngine.Core.Graphics
         }
 
         public Cursor() : this(GLFW.GLFW.CreateStandardCursor(CursorType.Arrow))
-        { }
+        {
+        }
 
         public Cursor(CursorType type) : this(GLFW.GLFW.CreateStandardCursor(type))
-        { }
+        {
+        }
 
         public Cursor(int hotX, int hotY) : this()
         {
@@ -136,9 +173,11 @@ namespace AlienEngine.Core.Graphics
         {
             FromImage(image);
         }
+
         #endregion
 
         #region Methods
+
         /// <summary>
         /// Load an image and use it as a cursor.
         /// </summary>
@@ -184,9 +223,11 @@ namespace AlienEngine.Core.Graphics
         {
             GLFW.GLFW.DestroyCursor(_cursor);
         }
+
         #endregion
 
         #region Static Members
+
         /// <summary>
         /// Gets an empty cursor.
         /// </summary>
@@ -194,7 +235,7 @@ namespace AlienEngine.Core.Graphics
         {
             get { return new Cursor(GLFW.GLFW.Cursor.None); }
         }
-        
+
         /// <summary>
         /// Sets the cursor by the standard <see cref="CursorType"/>.
         /// </summary>
@@ -233,9 +274,11 @@ namespace AlienEngine.Core.Graphics
         {
             cursor.Destroy();
         }
+
         #endregion
 
         #region IDisposable Support
+
         private bool disposedValue = false;
 
         protected virtual void Dispose(bool disposing)
@@ -259,6 +302,7 @@ namespace AlienEngine.Core.Graphics
             Dispose(true);
             GC.SuppressFinalize(this);
         }
+
         #endregion
     }
 }
