@@ -3,11 +3,9 @@ using AlienEngine.Core.Graphics;
 
 namespace AlienEngine.Core.Game
 {
-    public class Game
+    public abstract class Game
     {
-        private static Game _instance = null;
-
-        /// <summary>
+       /// <summary>
         /// The window who handle the game.
         /// </summary>
         private static GameWindow _gameWindow = GameWindow.None;
@@ -20,28 +18,19 @@ namespace AlienEngine.Core.Game
         /// <summary>
         /// Define if the game has already started.
         /// </summary>
-        private static bool _hasStarted = false;
+        private static bool _hasStarted;
 
         /// <summary>
         /// The window who handle the game.
         /// </summary>
-        public static GameWindow Window
-        {
-            get { return _gameWindow; }
-        }
+        public static GameWindow Window => _gameWindow;
 
         /// <summary>
         /// The current scene.
         /// </summary>
-        public static Scene CurrentScene
-        {
-            get { return _currentScene; }
-        }
+        public static Scene CurrentScene => _currentScene;
 
-        public static bool HasStarted
-        {
-            get { return _hasStarted; }
-        }
+        public static bool HasStarted => _hasStarted;
 
         public static void Start()
         {
