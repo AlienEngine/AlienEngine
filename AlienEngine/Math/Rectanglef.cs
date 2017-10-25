@@ -1,4 +1,4 @@
-#region License
+﻿#region License
 // Copyright (C) 2017 AlienGames
 // 
 // This library is free software; you can redistribute it and/or
@@ -28,57 +28,56 @@ namespace AlienEngine
     /// </summary>
     [Serializable]
     [StructLayout(LayoutKind.Sequential)]
-    public struct Rectangle : IEquatable<Rectangle>
+    public struct Rectanglef : IEquatable<Rectanglef>
     {
         #region Fields
 
         /// <summary>
         /// The location of the rectangle.
         /// </summary>
-        private Point2i _location;
+        Point2f location;
 
         /// <summary>
         /// The size of the rectangle.
         /// </summary>
-        private Sizei _size;
+        Sizef size;
 
         #endregion
 
         #region Constructors
 
         /// <summary>
-        /// Constructs a new Rectangle instance.
+        /// Constructs a new Rectanglef instance.
         /// </summary>
-        /// <param name="location">The top-left corner of the Rectangle.</param>
-        /// <param name="size">The width and height of the Rectangle.</param>
-        public Rectangle(Point2i location, Sizei size) : this()
+        /// <param name="location">The top-left corner of the Rectanglef.</param>
+        /// <param name="size">The width and height of the Rectanglef.</param>
+        public Rectanglef(Point2f location, Sizef size) : this()
         {
             Location = location;
             Size = size;
         }
 
-        /// <inheritdoc />
         /// <summary>
-        /// Constructs a new Rectangle instance.
+        /// Constructs a new Rectanglef instance.
         /// </summary>
-        /// <param name="x">The x coordinate of the Rectangle.</param>
-        /// <param name="y">The y coordinate of the Rectangle.</param>
-        /// <param name="width">The width coordinate of the Rectangle.</param>
-        /// <param name="height">The height coordinate of the Rectangle.</param>
-        public Rectangle(int x, int y, int width, int height) : this(new Point2i(x, y), new Sizei(width, height))
+        /// <param name="x">The x coordinate of the Rectanglef.</param>
+        /// <param name="y">The y coordinate of the Rectanglef.</param>
+        /// <param name="width">The width coordinate of the Rectanglef.</param>
+        /// <param name="height">The height coordinate of the Rectanglef.</param>
+        public Rectanglef(float x, float y, float width, float height) : this(new Point2f(x, y), new Sizef(width, height))
         { }
 
         /// <summary>
-        /// Constructs a new Rectangle instance.
+        /// Constructs a new Rectanglef instance.
         /// </summary>
-        /// <param name="a">The left-top corner of the Rectangle.</param>
-        /// <param name="b">The right-top corner of the Rectangle.</param>
-        /// <param name="c">The left-bottom of the Rectangle.</param>
-        /// <param name="d">The right-bottom of the Rectangle.</param>
-        public Rectangle(Point2i a, Point2i b, Point2i c, Point2i d) : this()
+        /// <param name="a">The left-top corner of the Rectanglef.</param>
+        /// <param name="b">The right-top corner of the Rectanglef.</param>
+        /// <param name="c">The left-bottom of the Rectanglef.</param>
+        /// <param name="d">The right-bottom of the Rectanglef.</param>
+        public Rectanglef(Point2f a, Point2f b, Point2f c, Point2f d) : this()
         {
             Location = a;
-            Size = new Sizei(d.X - c.X, d.Y - b.Y);
+            Size = new Sizef(d.X - c.X, d.Y - b.Y);
         }
 
         #endregion
@@ -86,131 +85,131 @@ namespace AlienEngine
         #region Public Members
 
         /// <summary>
-        /// Gets or sets the x coordinate of the Rectangle.
+        /// Gets or sets the x coordinate of the Rectanglef.
         /// </summary>
-        public int X
+        public float X
         {
             get { return Location.X; }
-            set { Location = new Point2i(value, Y); }
+            set { Location = new Point2f(value, Y); }
         }
 
         /// <summary>
-        /// Gets or sets the y coordinate of the Rectangle.
+        /// Gets or sets the y coordinate of the Rectanglef.
         /// </summary>
-        public int Y
+        public float Y
         {
             get { return Location.Y; }
-            set { Location = new Point2i(X, value); }
+            set { Location = new Point2f(X, value); }
         }
 
         /// <summary>
-        /// Gets or sets the width of the Rectangle.
+        /// Gets or sets the width of the Rectanglef.
         /// </summary>
-        public int Width
+        public float Width
         {
             get { return Size.Width; }
-            set { Size = new Sizei(value, Height); }
+            set { Size = new Sizef(value, Height); }
         }
 
         /// <summary>
-        /// Gets or sets the height of the Rectangle.
+        /// Gets or sets the height of the Rectanglef.
         /// </summary>
-        public int Height
+        public float Height
         {
             get { return Size.Height; }
-            set { Size = new Sizei(Width, value); }
+            set { Size = new Sizef(Width, value); }
         }
 
         /// <summary>
-        /// Gets or sets a <see cref="Point2i"/> representing the x and y coordinates
-        /// of the Rectangle.
+        /// Gets or sets a <see cref="Point2f"/> representing the x and y coordinates
+        /// of the Rectanglef.
         /// </summary>
-        public Point2i Location
+        public Point2f Location
         {
-            get { return _location; }
-            set { _location = value; }
+            get { return location; }
+            set { location = value; }
         }
 
         /// <summary>
         /// Gets or sets a <see cref="Size"/> representing the width and height
-        /// of the Rectangle.
+        /// of the Rectanglef.
         /// </summary>
-        public Sizei Size
+        public Sizef Size
         {
-            get { return _size; }
-            set { _size = value; }
+            get { return size; }
+            set { size = value; }
         }
 
         /// <summary>
-        /// Gets the y coordinate of the top edge of this Rectangle.
+        /// Gets the y coordinate of the top edge of this Rectanglef.
         /// </summary>
-        public int Top => Y;
+        public float Top { get { return Y; } }
 
         /// <summary>
-        /// Gets the x coordinate of the right edge of this Rectangle.
+        /// Gets the x coordinate of the right edge of this Rectanglef.
         /// </summary>
-        public int Right => X + Width;
+        public float Right { get { return X + Width; } }
 
         /// <summary>
-        /// Gets the y coordinate of the bottom edge of this Rectangle.
+        /// Gets the y coordinate of the bottom edge of this Rectanglef.
         /// </summary>
-        public int Bottom => Y + Height;
+        public float Bottom { get { return Y + Height; } }
 
         /// <summary>
-        /// Gets the x coordinate of the left edge of this Rectangle.
+        /// Gets the x coordinate of the left edge of this Rectanglef.
         /// </summary>
-        public int Left => X;
+        public float Left { get { return X; } }
 
         /// <summary>
-        /// Gets the TopLeft corner of this <see cref="Rectangle"/>
+        /// Gets the TopLeft corner of this <see cref="Rectangled"/>
         /// </summary>
-        public Point2i TopLeft => new Point2i(Left, Top);
+        public Point2f TopLeft => new Point2f(Left, Top);
 
         /// <summary>
-        /// Gets the TopRight corner of this <see cref="Rectangle"/>
+        /// Gets the TopRight corner of this <see cref="Rectangled"/>
         /// </summary>
-        public Point2i TopRight => new Point2i(Right, Top);
+        public Point2f TopRight => new Point2f(Right, Top);
 
         /// <summary>
-        /// Gets the BottomLeft corner of this <see cref="Rectangle"/>
+        /// Gets the BottomLeft corner of this <see cref="Rectangled"/>
         /// </summary>
-        public Point2i BottomLeft => new Point2i(Left, Bottom);
+        public Point2f BottomLeft => new Point2f(Left, Bottom);
 
         /// <summary>
-        /// Gets the BottomRight corner of this <see cref="Rectangle"/>
+        /// Gets the BottomRight corner of this <see cref="Rectangled"/>
         /// </summary>
-        public Point2i BottomRight => new Point2i(Right, Bottom);
+        public Point2f BottomRight => new Point2f(Right, Bottom);
 
         /// <summary>
         /// Gets a <see cref="bool"/> that indicates whether this
-        /// Rectangle is equal to the empty Rectangle.
+        /// Rectanglef is equal to the empty Rectanglef.
         /// </summary>
         public bool IsEmpty()
         {
-            return Location == Point2i.Zero && Size.IsZero();
+            return Location == Point2f.Zero && Size.IsZero();
         }
 
         /// <summary>
-        /// Defines the empty Rectangle.
+        /// Defines the empty Rectanglef.
         /// </summary>
-        public static readonly Rectangle Zero = new Rectangle();
+        public static readonly Rectanglef Zero = new Rectanglef();
 
         /// <summary>
-        /// Defines the empty Rectangle.
+        /// Defines the empty Rectanglef.
         /// </summary>
-        public static readonly Rectangle Empty = new Rectangle();
+        public static readonly Rectanglef Empty = new Rectanglef();
 
         /// <summary>
         /// Constructs a new instance with the specified edges.
         /// </summary>
-        /// <param name="left">The left edge of the Rectangle.</param>
-        /// <param name="top">The top edge of the Rectangle.</param>
-        /// <param name="right">The right edge of the Rectangle.</param>
-        /// <param name="bottom">The bottom edge of the Rectangle.</param>
-        /// <returns>A new Rectangle instance with the specified edges.</returns>
-        public static Rectangle FromLTRB(int left, int top, int right, int bottom)
+        /// <param name="left">The left edge of the Rectanglef.</param>
+        /// <param name="top">The top edge of the Rectanglef.</param>
+        /// <param name="right">The right edge of the Rectanglef.</param>
+        /// <param name="bottom">The bottom edge of the Rectanglef.</param>
+        /// <returns>A new Rectanglef instance with the specified edges.</returns>
+        public static Rectanglef FromLTRB(float left, float top, float right, float bottom)
         {
-            return new Rectangle(new Point2i(left, top), new Sizei(right - left, bottom - top));
+            return new Rectanglef(new Point2f(left, top), new Sizef(right - left, bottom - top));
         }
 
         /// <summary>
@@ -221,31 +220,31 @@ namespace AlienEngine
         /// <returns>True if this instance contains the x, y coordinates; false otherwise.</returns>
         /// <remarks>The left and top edges are inclusive. The right and bottom edges
         /// are exclusive.</remarks>
-        public bool Contains(int x, int y)
+        public bool Contains(float x, float y)
         {
-            return Contains(new Point2i(x, y));
+            return x >= Left && x < Right && y >= Top && y < Bottom;
         }
 
         /// <summary>
-        /// Tests whether this instance contains the specified Point2i.
+        /// Tests whether this instance contains the specified Point2f.
         /// </summary>
-        /// <param name="point">The <see cref="Point2i"/> to test.</param>
+        /// <param name="point">The <see cref="Point2f"/> to test.</param>
         /// <returns>True if this instance contains point; false otherwise.</returns>
         /// <remarks>The left and top edges are inclusive. The right and bottom edges
         /// are exclusive.</remarks>
-        public bool Contains(Point2i point)
+        public bool Contains(Point2f point)
         {
             return point.X >= Left && point.X < Right && point.Y >= Top && point.Y < Bottom;
         }
 
         /// <summary>
-        /// Tests whether this instance contains the specified Rectangle.
+        /// Tests whether this instance contains the specified Rectanglef.
         /// </summary>
-        /// <param name="rect">The <see cref="Rectangle"/> to test.</param>
+        /// <param name="rect">The <see cref="Rectanglef"/> to test.</param>
         /// <returns>True if this instance contains rect; false otherwise.</returns>
         /// <remarks>The left and top edges are inclusive. The right and bottom edges
         /// are exclusive.</remarks>
-        public bool Contains(Rectangle rect)
+        public bool Contains(Rectanglef rect)
         {
             return Contains(rect.Location) && Contains(rect.Location + rect.Size);
         }
@@ -255,7 +254,7 @@ namespace AlienEngine
         /// </summary>
         /// <param name="rect">The <see cref="Rectangle"/> to test.</param>
         /// <returns>True if this instance intersects rect; false otherwise.</returns>
-        public bool IntersectsWith(Rectangle rect)
+        public bool IntersectsWith(Rectanglef rect)
         {
             if (Contains(rect))
                 return true;
@@ -277,13 +276,13 @@ namespace AlienEngine
 
             return false;
         }
-
+        
         /// <summary>
-        /// Transforms this <see cref="Rectangle"/> to the intersection
+        /// Transforms this <see cref="Rectangled"/> to the intersection
         /// between this one and the other <paramref name="rectangle"/>.
         /// </summary>
         /// <param name="rectangle">The other rectangle used to compute the intersection.</param>
-        public void Intersect(Rectangle rectangle)
+        public void Intersect(Rectanglef rectangle)
         {
             if (rectangle.Contains(this))
                 return;
@@ -296,7 +295,7 @@ namespace AlienEngine
             
             else
             {
-                int top = 0, left = 0, right = 0, bottom = 0;
+                float top = 0, left = 0, right = 0, bottom = 0;
 
                 if (Bottom > rectangle.Bottom)
                 {
@@ -318,14 +317,14 @@ namespace AlienEngine
 
             }
         }
-        
+
         /// <summary>
         /// Compares two instances for equality.
         /// </summary>
         /// <param name="left">The first instance.</param>
         /// <param name="right">The second instance.</param>
         /// <returns>True, if left is equal to right; false otherwise.</returns>
-        public static bool operator ==(Rectangle left, Rectangle right)
+        public static bool operator ==(Rectanglef left, Rectanglef right)
         {
             return left.Equals(right);
         }
@@ -336,7 +335,7 @@ namespace AlienEngine
         /// <param name="left">The first instance.</param>
         /// <param name="right">The second instance.</param>
         /// <returns>True, if left is not equal to right; false otherwise.</returns>
-        public static bool operator !=(Rectangle left, Rectangle right)
+        public static bool operator !=(Rectanglef left, Rectanglef right)
         {
             return !left.Equals(right);
         }
@@ -346,14 +345,14 @@ namespace AlienEngine
         /// </summary>
         /// <param name="a">The alpha component.</param>
         /// <param name="b">The blue component.</param>
-        public static Rectangle Union(Rectangle a, Rectangle b)
+        public static Rectanglef Union(Rectanglef a, Rectanglef b)
         {
-            var x1 = MathHelper.Min(a.X, b.X);
-            var x2 = MathHelper.Max(a.X + a.Width, b.X + b.Width);
-            var y1 = MathHelper.Min(a.Y, b.Y);
-            var y2 = MathHelper.Max(a.Y + a.Height, b.Y + b.Height);
+            float x1 = System.Math.Min(a.X, b.X);
+            float x2 = System.Math.Max(a.X + a.Width, b.X + b.Width);
+            float y1 = System.Math.Min(a.Y, b.Y);
+            float y2 = System.Math.Max(a.Y + a.Height, b.Y + b.Height);
 
-            return new Rectangle(x1, y1, x2 - x1, y2 - y1);
+            return new Rectanglef(x1, y1, x2 - x1, y2 - y1);
         }
 
         /// <summary>
@@ -363,8 +362,8 @@ namespace AlienEngine
         /// <returns>True, if both instances are equal; false otherwise.</returns>
         public override bool Equals(object obj)
         {
-            if (obj is Rectangle)
-                return Equals((Rectangle)obj);
+            if (obj is Rectanglef)
+                return Equals((Rectanglef)obj);
 
             return false;
         }
@@ -389,15 +388,14 @@ namespace AlienEngine
 
         #endregion
 
-        #region IEquatable<Rectangle> Members
+        #region IEquatable<Rectanglef> Members
 
-        /// <inheritdoc />
         /// <summary>
-        /// Indicates whether this instance is equal to the specified Rectangle.
+        /// Indicates whether this instance is equal to the specified Rectanglef.
         /// </summary>
         /// <param name="other">The instance to compare to.</param>
         /// <returns>True, if both instances are equal; false otherwise.</returns>
-        public bool Equals(Rectangle other)
+        public bool Equals(Rectanglef other)
         {
             return Location.Equals(other.Location) && Size.Equals(other.Size);
         }
