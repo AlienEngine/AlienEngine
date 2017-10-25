@@ -1,8 +1,13 @@
-﻿using System.Drawing;
+﻿using System.Diagnostics;
+using System.Drawing;
 
-namespace AlienEngine.Core.Rendering.Fonts
+namespace QuickFont
 {
-    public class FontGlyph
+    /// <summary>
+    /// A <see cref="QFontGlyph"/> that holds the glyph data
+    /// </summary>
+    [DebuggerDisplay("{Character} Pg:{Page}")]
+    public class QFontGlyph
     {
         /// <summary>
         /// Which texture page the glyph is on
@@ -24,9 +29,14 @@ namespace AlienEngine.Core.Rendering.Fonts
         /// </summary>
         public char Character;
 
-        public PointF TextureMin, TextureMax;
-
-        public FontGlyph(int page, Rectangle rect, int yOffset, char character)
+        /// <summary>
+        /// Create a new <see cref="QFontGlyph"/> object
+        /// </summary>
+        /// <param name="page">The texture page this glyph is on</param>
+        /// <param name="rect">The glyph rectangle</param>
+        /// <param name="yOffset">The glyph y offset</param>
+        /// <param name="character">The glyph character</param>
+        public QFontGlyph(int page, Rectangle rect, int yOffset, char character)
         {
             Page = page;
             Rect = rect;

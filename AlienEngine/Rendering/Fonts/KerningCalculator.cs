@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using QuickFont.Configuration;
 
-namespace AlienEngine.Core.Rendering.Fonts
+namespace QuickFont
 {
-    class FontKerningCalculator
+    /// <summary>
+    /// Static methods for calculating kerning
+    /// </summary>
+    static class KerningCalculator
     {
         private struct XLimits
         {
@@ -11,8 +15,22 @@ namespace AlienEngine.Core.Rendering.Fonts
             public int Max;
         }
 
-        private static int Kerning(FontGlyph g1, FontGlyph g2, XLimits[] lim1, XLimits[] lim2, FontKerningConfiguration config)
+        /// <summary>
+        /// Calculate the kerning between two glyphs
+        /// </summary>
+        /// <param name="g1">The first glyph</param>
+        /// <param name="g2">The second glyph</param>
+        /// <param name="lim1">The first glyph limits</param>
+        /// <param name="lim2">The second glyph limits</param>
+        /// <param name="config">The kerning configuration to use</param>
+        /// <param name="font">The glyph's <see cref="IFont"/></param>
+        /// <returns>The x coordinate kerning offset</returns>
+        private static int Kerning(QFontGlyph g1, QFontGlyph g2, XLimits[] lim1, XLimits[] lim2, QFontKerningConfiguration config, IFont font)
         {
+			// Use kerning information from the font if it exists
+			if (font != null && font.HasKerningInformation) return font.GetKerning(g1.Character, g2.Character);
+
+            // Otherwise, calculate our own kerning
             int yOffset1 = g1.YOffset;
             int yOffset2 = g2.YOffset;
 
@@ -32,22 +50,31 @@ namespace AlienEngine.Core.Rendering.Fonts
             worstCase = Math.Min(worstCase, g2.Rect.Width);
 
             //modify by character kerning rules
-            FontCharacterKerningRule kerningRule = config.GetOverridingCharacterKerningRuleForPair(""+g1.Character + g2.Character);
-            if (kerningRule == FontCharacterKerningRule.Zero)
+            CharacterKerningRule kerningRule = config.GetOverridingCharacterKerningRuleForPair(""+g1.Character + g2.Character);
+
+            switch (kerningRule)
             {
-                return 0;
-            }
-            else if (kerningRule == FontCharacterKerningRule.NotMoreThanHalf)
-            {
-                return (int)Math.Min(Math.Min(g1.Rect.Width,g2.Rect.Width)*0.5f, worstCase);
+                case CharacterKerningRule.Zero:
+                    return 1;
+                case CharacterKerningRule.NotMoreThanHalf:
+                    return 1 - (int)Math.Min(Math.Min(g1.Rect.Width,g2.Rect.Width)*0.5f, worstCase);
             }
 
-            return worstCase;
+            return 1 - worstCase;
         }
 
-        public static Dictionary<String, int> CalculateKerning(char[] charSet, FontGlyph[] glyphs, List<FontBitmap> bitmapPages, FontKerningConfiguration config)
+        /// <summary>
+        /// Calculates the kerning values for the given character set
+        /// </summary>
+        /// <param name="charSet">The character set to calculate kerning values for</param>
+        /// <param name="glyphs">The glyphs used for kerning</param>
+        /// <param name="bitmapPages">The bitmap pages of the glyphs</param>
+        /// <param name="config">The kerning configuration</param>
+        /// <param name="font">The <see cref="IFont"/> used to create the glyphs and bitmaps</param>
+        /// <returns>A <see cref="Dictionary{TKey,TValue}"/> mapping of every glyph pair to a kerning amount</returns>
+        public static Dictionary<string, int> CalculateKerning(char[] charSet, QFontGlyph[] glyphs, List<QBitmap> bitmapPages, QFontKerningConfiguration config, IFont font = null)
         {
-            var kerningPairs = new Dictionary<String, int>();
+            var kerningPairs = new Dictionary<string, int>();
 
             //we start by computing the index of the first and last non-empty pixel in each row of each glyph
             XLimits[][] limits = new XLimits[charSet.Length][];
@@ -57,7 +84,7 @@ namespace AlienEngine.Core.Rendering.Fonts
                 var rect = glyphs[n].Rect;
                 var page = bitmapPages[glyphs[n].Page];
 
-                limits[n] = new XLimits[rect.Height];
+                limits[n] = new XLimits[rect.Height+1];
 
                 maxHeight = Math.Max(rect.Height, maxHeight);
 
@@ -66,14 +93,14 @@ namespace AlienEngine.Core.Rendering.Fonts
                 int xStart = rect.X;
                 int xEnd = rect.X + rect.Width;
 
-                for (int j = yStart; j < yEnd; j++)
+                for (int j = yStart; j <= yEnd; j++)
                 {
                     int last = xStart;
 
                     bool yetToFindFirst = true;
-                    for (int i = xStart; i < xEnd; i++)
+                    for (int i = xStart; i <= xEnd; i++)
                     {
-                        if (!FontBitmap.EmptyAlphaPixel(page.bitmapData, i, j,config.AlphaEmptyPixelTolerance))
+                        if (!QBitmap.EmptyAlphaPixel(page.BitmapData, i, j,config.AlphaEmptyPixelTolerance))
                         {
 
                             if (yetToFindFirst)
@@ -93,7 +120,7 @@ namespace AlienEngine.Core.Rendering.Fonts
             }
 
             //we now bring up each row to the max (or min) of it's two adjacent rows, this is to stop glyphs sliding together too closely
-            var tmp = new XLimits[maxHeight];
+            var tmp = new XLimits[maxHeight+1];
 
             for (int n = 0; n < charSet.Length; n++)
             {
@@ -118,12 +145,13 @@ namespace AlienEngine.Core.Rendering.Fonts
 
                 for (int j = 0; j < limits[n].Length; j++)
                     limits[n][j] = tmp[j];
-
             }
 
+            // For each character in the character set, 
+            // combine it with every other character and add it to the kerning pair dictionary
             for (int i = 0; i < charSet.Length; i++)
                 for (int j = 0; j < charSet.Length; j++)
-                    kerningPairs.Add("" + charSet[i] + charSet[j], 1-Kerning(glyphs[i], glyphs[j], limits[i], limits[j],config));
+                    kerningPairs.Add("" + charSet[i] + charSet[j], Kerning(glyphs[i], glyphs[j], limits[i], limits[j],config, font));
 
             return kerningPairs;
         }
