@@ -7,7 +7,7 @@ using AlienEngine.Core.Graphics.GLFW;
 
 namespace AlienEngine.Core.Inputs
 {
-    public static class Joystick
+    internal static class Joystick
     {
         public static void Update()
         {

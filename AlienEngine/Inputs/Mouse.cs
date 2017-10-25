@@ -7,7 +7,7 @@ using AlienEngine.Core.Game;
 
 namespace AlienEngine.Core.Inputs
 {
-    public static class Mouse
+    internal static class Mouse
     {
         private static List<MouseButton> _currentButtons;
         private static Array _allKeys;
@@ -19,27 +19,25 @@ namespace AlienEngine.Core.Inputs
             get { return mousePosition; }
             set
             {
-                PreviousPosition = mousePosition;
+                prevMousePosition = mousePosition;
                 mousePosition = value;
                 GLFW.SetCursorPos(Game.Game.Window.Handle, value.X, value.Y);
             }
         }
 
-        public static Point2d PreviousPosition
-        {
-            get { return prevMousePosition; }
-            set { prevMousePosition = value; }
-        }
+        public static Point2d PreviousPosition => prevMousePosition;
 
         public static bool Grabbed
         {
             get
             {
-                return GLFW.GetInputMode(Game.Game.Window.Handle, GLFW.InputMode.Cursor) == (int)GLFW.CursorMode.Disabled;
+                return GLFW.GetInputMode(Game.Game.Window.Handle, GLFW.InputMode.Cursor) ==
+                       (int) GLFW.CursorMode.Disabled;
             }
             set
             {
-                GLFW.SetInputMode(Game.Game.Window.Handle, GLFW.InputMode.Cursor, value ? GLFW.CursorMode.Disabled : GLFW.CursorMode.Normal);
+                GLFW.SetInputMode(Game.Game.Window.Handle, GLFW.InputMode.Cursor,
+                    value ? GLFW.CursorMode.Disabled : GLFW.CursorMode.Normal);
             }
         }
 
@@ -47,11 +45,13 @@ namespace AlienEngine.Core.Inputs
         {
             get
             {
-                return GLFW.GetInputMode(Game.Game.Window.Handle, GLFW.InputMode.Cursor) == (int)GLFW.CursorMode.Hidden;
+                return GLFW.GetInputMode(Game.Game.Window.Handle, GLFW.InputMode.Cursor) ==
+                       (int) GLFW.CursorMode.Hidden;
             }
             set
             {
-                GLFW.SetInputMode(Game.Game.Window.Handle, GLFW.InputMode.Cursor, value ? GLFW.CursorMode.Hidden : GLFW.CursorMode.Normal);
+                GLFW.SetInputMode(Game.Game.Window.Handle, GLFW.InputMode.Cursor,
+                    value ? GLFW.CursorMode.Hidden : GLFW.CursorMode.Normal);
             }
         }
 
@@ -66,7 +66,7 @@ namespace AlienEngine.Core.Inputs
             Point2d pos;
             GLFW.GetCursorPos(Game.Game.Window.Handle, out pos.X, out pos.Y);
             Position = pos;
-
+            
             _currentButtons.Clear();
             foreach (MouseButton i in _allKeys)
                 if (GetButton(i))

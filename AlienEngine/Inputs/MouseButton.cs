@@ -1,10 +1,17 @@
-﻿namespace AlienEngine
+﻿using System;
+
+namespace AlienEngine
 {
     /// <summary>
     /// Mouse buttons.
     /// </summary>
-    public enum MouseButton : int
+    public enum MouseButton
     {
+        /// <summary>
+        /// References an unknown button.
+        /// </summary>
+        Unknown = -1,
+
         /// <summary>
         /// The first mouse button.
         /// </summary>
@@ -78,6 +85,21 @@
         /// <summary>
         /// The middle click mouse button.
         /// </summary>
-        MiddleClick = Button3
+        MiddleClick = Button3,
+
+        /// <summary>
+        /// The left click mouse button.
+        /// </summary>
+        Left = Button1,
+
+        /// <summary>
+        /// The right click mouse button.
+        /// </summary>
+        Right = Button2,
+
+        /// <summary>
+        /// The middle click mouse button.
+        /// </summary>
+        Middle = Button3
     }
 }

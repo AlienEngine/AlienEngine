@@ -5,7 +5,7 @@ using AlienEngine.Core.Game;
 
 namespace AlienEngine.Core.Inputs
 {
-    public static class Keyboard
+    internal static class Keyboard
     {
         private static List<KeyCode> _currentKeys;
         private static Array _allKeys;
