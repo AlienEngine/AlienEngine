@@ -230,7 +230,6 @@
     <Compile Include="Game\Components\PlaneCollider.cs" />
     <Compile Include="Game\Components\RigidBody.cs" />
     <Compile Include="Game\Components\SphereCollider.cs" />
-    <Compile Include="Game\Components\Terrain.cs" />
     <Compile Include="Game\GameElementCollection.cs" />
     <Compile Include="Game\GameSettings.cs" />
     <Compile Include="Game\IComponent.cs" />

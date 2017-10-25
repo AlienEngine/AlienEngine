@@ -218,19 +218,19 @@ namespace AlienEngine
 
             if (HasTextureDiffuse)
             {
-                ShaderProgram.SetUniform("materialState.textureDiffuse", GL.COLOR_TEXTURE_UNIT_INDEX);
+                ShaderProgram.SetUniform("textureDiffuse", GL.COLOR_TEXTURE_UNIT_INDEX);
                 TextureDiffuse.Bind(GL.COLOR_TEXTURE_UNIT_INDEX);
             }
 
             if (HasTextureNormal)
             {
-                ShaderProgram.SetUniform("materialState.textureNormal", GL.NORMAL_TEXTURE_UNIT_INDEX);
+                ShaderProgram.SetUniform("textureNormal", GL.NORMAL_TEXTURE_UNIT_INDEX);
                 TextureNormal.Bind(GL.NORMAL_TEXTURE_UNIT_INDEX);
             }
 
             if (HasTextureDisplacement)
             {
-                ShaderProgram.SetUniform("materialState.textureDisplacement", GL.DISPLACEMENT_TEXTURE_UNIT_INDEX);
+                ShaderProgram.SetUniform("textureDisplacement", GL.DISPLACEMENT_TEXTURE_UNIT_INDEX);
                 TextureDisplacement.Bind(GL.DISPLACEMENT_TEXTURE_UNIT_INDEX);
             }
         }
