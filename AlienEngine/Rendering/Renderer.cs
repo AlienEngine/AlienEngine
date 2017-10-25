@@ -8,13 +8,6 @@ using System.Collections.Generic;
 
 namespace AlienEngine.Core.Rendering
 {
-    public enum RendererBackupMode
-    {
-        DepthTest,
-        Blending,
-        FaceCulling
-    }
-
     public static class Renderer
     {
         private static List<IRenderable> _renderables;
@@ -30,11 +23,13 @@ namespace AlienEngine.Core.Rendering
 
         // Face culling
         private static bool _faceCullingEnabled;
+
         private static CullFaceMode _faceCullingMode;
         private static FrontFaceDirection _faceCullingFrontFaceDirection;
 
         // Backup
         private static Tuple<bool, CullFaceMode, FrontFaceDirection> _faceCullingBackup;
+
         private static Tuple<bool, DepthFunction> _depthTestBackup;
 
         public static bool IsFaceCullingEnabled
@@ -71,7 +66,8 @@ namespace AlienEngine.Core.Rendering
                 case RendererBackupMode.Blending:
                     break;
                 case RendererBackupMode.FaceCulling:
-                    _faceCullingBackup = new Tuple<bool, CullFaceMode, FrontFaceDirection>(_faceCullingEnabled, _faceCullingMode, _faceCullingFrontFaceDirection);
+                    _faceCullingBackup = new Tuple<bool, CullFaceMode, FrontFaceDirection>(_faceCullingEnabled,
+                        _faceCullingMode, _faceCullingFrontFaceDirection);
                     break;
             }
         }
@@ -126,7 +122,8 @@ namespace AlienEngine.Core.Rendering
             Viewport(viewport.X, viewport.Y, viewport.Width, viewport.Height);
         }
 
-        public static void ClearScreen(ClearBufferMask mask = ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit)
+        public static void ClearScreen(
+            ClearBufferMask mask = ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit)
         {
             GL.Clear(mask);
         }
@@ -143,7 +140,8 @@ namespace AlienEngine.Core.Rendering
             _depthTestEnabled = enable;
         }
 
-        public static void Blending(bool enable = true, BlendingFactorSrc srcFactor = BlendingFactorSrc.SrcAlpha, BlendingFactorDest dstFactor = BlendingFactorDest.OneMinusSrcAlpha)
+        public static void Blending(bool enable = true, BlendingFactorSrc srcFactor = BlendingFactorSrc.SrcAlpha,
+            BlendingFactorDest dstFactor = BlendingFactorDest.OneMinusSrcAlpha)
         {
             if (enable)
             {
@@ -155,7 +153,8 @@ namespace AlienEngine.Core.Rendering
             _blendingEnabled = enable;
         }
 
-        public static void FaceCulling(bool enable = true, CullFaceMode cullFaceMode = CullFaceMode.Back, FrontFaceDirection frontFace = FrontFaceDirection.Ccw)
+        public static void FaceCulling(bool enable = true, CullFaceMode cullFaceMode = CullFaceMode.Back,
+            FrontFaceDirection frontFace = FrontFaceDirection.Ccw)
         {
             if (enable)
             {
@@ -187,14 +186,15 @@ namespace AlienEngine.Core.Rendering
             // Create the screen if it's not exist
             if (screenVAO == 0)
             {
-                float[] indArray = new float[] {
-                    -1.0f,  1.0f,  0.0f, 1.0f,
-                     1.0f,  1.0f,  1.0f, 1.0f,
-                     1.0f, -1.0f,  1.0f, 0.0f,
+                float[] indArray = new float[]
+                {
+                    -1.0f,  1.0f,  0.0f,  1.0f,
+                     1.0f,  1.0f,  1.0f,  1.0f,
+                     1.0f, -1.0f,  1.0f,  0.0f,
 
-                     1.0f, -1.0f,  1.0f, 0.0f,
-                    -1.0f, -1.0f,  0.0f, 0.0f,
-                    -1.0f,  1.0f,  0.0f, 1.0f
+                     1.0f, -1.0f,  1.0f,  0.0f,
+                    -1.0f, -1.0f,  0.0f,  0.0f,
+                    -1.0f,  1.0f,  0.0f,  1.0f
                 };
 
                 screenVAO = GL.GenVertexArray();
@@ -202,11 +202,14 @@ namespace AlienEngine.Core.Rendering
 
                 GL.BindVertexArray(screenVAO);
                 GL.BindBuffer(BufferTarget.ArrayBuffer, screenVBO);
-                GL.BufferData(BufferTarget.ArrayBuffer, sizeof(float) * indArray.Length, indArray, BufferUsageHint.StaticDraw);
+                GL.BufferData(BufferTarget.ArrayBuffer, sizeof(float) * indArray.Length, indArray,
+                    BufferUsageHint.StaticDraw);
                 GL.EnableVertexAttribArray(GL.VERTEX_POSITION_LOCATION);
-                GL.VertexAttribPointer(GL.VERTEX_POSITION_LOCATION, 2, VertexAttribPointerType.Float, false, 4 * sizeof(float), 0);
+                GL.VertexAttribPointer(GL.VERTEX_POSITION_LOCATION, 2, VertexAttribPointerType.Float, false,
+                    4 * sizeof(float), 0);
                 GL.EnableVertexAttribArray(GL.VERTEX_TEXTURE_COORD_LOCATION);
-                GL.VertexAttribPointer(GL.VERTEX_TEXTURE_COORD_LOCATION, 2, VertexAttribPointerType.Float, false, 4 * sizeof(float), 2 * sizeof(float));
+                GL.VertexAttribPointer(GL.VERTEX_TEXTURE_COORD_LOCATION, 2, VertexAttribPointerType.Float, false,
+                    4 * sizeof(float), 2 * sizeof(float));
 
                 screenShaderProgram = new RenderTextureShaderProgram()
                 {
