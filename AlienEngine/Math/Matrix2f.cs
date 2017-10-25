@@ -34,14 +34,24 @@ namespace AlienEngine
         #region Fields
 
         /// <summary>
-        /// Top row of the matrix.
+        /// Value at row 1, column 1 of the matrix.
         /// </summary>
-        public Vector2f Row0;
+        public float M11;
 
         /// <summary>
-        /// Bottom row of the matrix.
+        /// Value at row 1, column 2 of the matrix.
         /// </summary>
-        public Vector2f Row1;
+        public float M12;
+
+        /// <summary>
+        /// Value at row 2, column 1 of the matrix.
+        /// </summary>
+        public float M21;
+
+        /// <summary>
+        /// Value at row 2, column 2 of the matrix.
+        /// </summary>
+        public float M22;
 
         /// <summary>
         /// THe identity matrix.
@@ -82,8 +92,10 @@ namespace AlienEngine
             if (rows.Length < 2)
                 throw new ArgumentException();
 
-            Row0 = rows[0];
-            Row1 = rows[1];
+            M11 = rows[0].X;
+            M12 = rows[0].Y;
+            M21 = rows[1].X;
+            M22 = rows[1].Y;
         }
 
         /// <summary>
@@ -93,8 +105,10 @@ namespace AlienEngine
         /// <param name="row1">The second row of the matrix.</param>
         public Matrix2f(Vector2f row0, Vector2f row1)
         {
-            Row0 = row0;
-            Row1 = row1;
+            M11 = row0.X;
+            M12 = row0.Y;
+            M21 = row1.X;
+            M22 = row1.Y;
         }
 
         /// <summary>
@@ -106,10 +120,11 @@ namespace AlienEngine
         /// <param name="d">The second row, second column value.</param>
         public Matrix2f(float a, float b, float c, float d)
         {
-            Row0 = new Vector2f(a, b);
-            Row1 = new Vector2f(c, d);
+            M11 = a;
+            M12 = b;
+            M21 = c;
+            M22 = d;
         }
-
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Matrix2f"/> struct.
@@ -117,8 +132,10 @@ namespace AlienEngine
         /// <param name="row">The value used to populate the matrix</param>
         public Matrix2f(Vector2f row)
         {
-            Row0 = row;
-            Row1 = row;
+            M11 = row.X;
+            M12 = row.Y;
+            M21 = row.X;
+            M22 = row.Y;
         }
 
         /// <summary>
@@ -127,8 +144,10 @@ namespace AlienEngine
         /// <param name="matrix">The matrix used for copy</param>
         public Matrix2f(Matrix2f matrix)
         {
-            Row0 = matrix.Row0;
-            Row1 = matrix.Row1;
+            M11 = matrix.M11;
+            M12 = matrix.M12;
+            M21 = matrix.M21;
+            M22 = matrix.M22;
         }
 
         /// <summary>
@@ -137,8 +156,13 @@ namespace AlienEngine
         /// <param name="values">An array of values used to populate the matrix.</param>
         public Matrix2f(float[] values)
         {
-            Row0 = new Vector2f(values[0], values[1]);
-            Row1 = new Vector2f(values[2], values[3]);
+            if (values.Length < 4)
+                throw new ArgumentOutOfRangeException();
+
+            M11 = values[0];
+            M12 = values[1];
+            M21 = values[2];
+            M22 = values[3];
         }
 
         #endregion
@@ -152,7 +176,7 @@ namespace AlienEngine
         /// </summary>
         public Matrix2f Transposed
         {
-            get { return new Matrix2f(new Vector2f(Row0.X, Row1.X), new Vector2f(Row0.Y, Row1.Y)); }
+            get { return new Matrix2f(Column0, Column1); }
         }
 
         /// <summary>
@@ -160,7 +184,7 @@ namespace AlienEngine
         /// </summary>
         public float Determinant
         {
-            get { return Row0.X * Row1.Y - Row1.X * Row0.Y; }
+            get { return M11 * M22 - M21 * M12; }
         }
 
         /// <summary>
@@ -186,9 +210,10 @@ namespace AlienEngine
         {
             get
             {
+                float oneOverDeterminant = OneOverDeterminant;
                 return new Matrix2f(
-                    new Vector2f(M22, -M12) * OneOverDeterminant,
-                    new Vector2f(-M21, M11) * OneOverDeterminant
+                    new Vector2f(M22, -M12) * oneOverDeterminant,
+                    new Vector2f(-M21, M11) * oneOverDeterminant
                 );
             }
         }
@@ -198,11 +223,11 @@ namespace AlienEngine
         /// </summary>
         public Vector2f Column0
         {
-            get { return new Vector2f(Row0.X, Row1.X); }
+            get { return new Vector2f(M11, M21); }
             set
             {
-                Row0.X = value.X;
-                Row1.X = value.Y;
+                M11 = value.X;
+                M21 = value.Y;
             }
         }
 
@@ -211,33 +236,39 @@ namespace AlienEngine
         /// </summary>
         public Vector2f Column1
         {
-            get { return new Vector2f(Row0.Y, Row1.Y); }
+            get { return new Vector2f(M12, M22); }
             set
             {
-                Row0.Y = value.X;
-                Row1.Y = value.Y;
+                M12 = value.X;
+                M22 = value.Y;
             }
         }
 
         /// <summary>
-        /// Gets or sets the value at row 1, column 1 of this instance.
+        /// Top row of the matrix.
         /// </summary>
-        public float M11 { get { return Row0.X; } set { Row0.X = value; } }
+        public Vector2f Row0
+        {
+            get { return new Vector2f(M11, M12); }
+            set
+            {
+                M11 = value.X;
+                M12 = value.Y;
+            }
+        }
 
         /// <summary>
-        /// Gets or sets the value at row 1, column 2 of this instance.
+        /// Bottom row of the matrix.
         /// </summary>
-        public float M12 { get { return Row0.Y; } set { Row0.Y = value; } }
-
-        /// <summary>
-        /// Gets or sets the value at row 1, column 3 of this instance.
-        /// </summary>
-        public float M21 { get { return Row1.X; } set { Row1.X = value; } }
-
-        /// <summary>
-        /// Gets or sets the value at row 1, column 4 of this instance.
-        /// </summary>
-        public float M22 { get { return Row1.Y; } set { Row1.Y = value; } }
+        public Vector2f Row1
+        {
+            get { return new Vector2f(M21, M22); }
+            set
+            {
+                M21 = value.X;
+                M22 = value.Y;
+            }
+        }
 
         #endregion
 
@@ -282,14 +313,22 @@ namespace AlienEngine
         {
             get
             {
-                if (row == 0) { return Row0[column]; }
-                if (row == 1) { return Row1[column]; }
+                if (row == 0) return Row0[column];
+                if (row == 1) return Row1[column];
                 throw new ArgumentOutOfRangeException();
             }
             set
             {
-                if (row == 0) { this.Row0[column] = value; }
-                else if (row == 1) { this.Row1[column] = value; }
+                if (row == 0)
+                {
+                    if (column == 0) M11 = value;
+                    if (column == 1) M12 = value;
+                }
+                else if (row == 1)
+                {
+                    if (column == 0) M21 = value;
+                    if (column == 1) M22 = value;
+                }
                 else throw new ArgumentOutOfRangeException();
             }
         }
@@ -298,14 +337,20 @@ namespace AlienEngine
 
         #region Transform
 
+        /// <summary>
+        /// Transpose this instance.
+        /// </summary>
         public void Transpose()
         {
             this = Transpose(this);
         }
 
+        /// <summary>
+        /// Inverse this instance.
+        /// </summary>
         public void Inverse()
         {
-            this = Inverse(this);
+            this = Invert(this);
         }
 
         #endregion
@@ -315,21 +360,313 @@ namespace AlienEngine
         /// <summary>
         /// Gets the transposed matrix.
         /// </summary>
-        /// <param name="m">The matrix to transpose.</param>
+        /// <param name="matrix">The matrix to transpose.</param>
         /// <returns>The transposed matrix.</returns>
-        public static Matrix2f Transpose(Matrix2f m)
+        public static Matrix2f Transpose(Matrix2f matrix)
         {
-            return m.Transposed;
+            Matrix2f res;
+            Transpose(ref matrix, out res);
+            return res;
+        }
+
+        /// <summary>
+        /// Gets the transposed matrix.
+        /// </summary>
+        /// <param name="matrix">The matrix to transpose.</param>
+        /// <param name="transpose">The transposed matrix.</param>
+        public static void Transpose(ref Matrix2f matrix, out Matrix2f transpose)
+        {
+            transpose = matrix.Transposed;
         }
 
         /// <summary>
         /// Gets the inversed matrix.
         /// </summary>
-        /// <param name="m">The matrix to inverse.</param>
+        /// <param name="matrix">The matrix to inverse.</param>
         /// <returns>The inversed matrix.</returns>
-        public static Matrix2f Inverse(Matrix2f m)
+        public static Matrix2f Invert(Matrix2f matrix)
         {
-            return m.Inversed;
+            Matrix2f res;
+            Invert(ref matrix, out res);
+            return res;
+        }
+
+        /// <summary>
+        /// Gets the inversed matrix.
+        /// </summary>
+        /// <param name="matrix">The matrix to inverse.</param>
+        /// <returns>The inversed matrix.</returns>
+        public static void Invert(ref Matrix2f matrix, out Matrix2f inverse)
+        {
+            inverse = matrix.Inversed;
+        }
+
+        /// <summary>
+        /// Constructs a uniform scaling matrix.
+        /// </summary>
+        /// <param name="scale">Value to use in the diagonal.</param>
+        /// <returns>Scaling matrix.</returns>
+        public static Matrix2f CreateScale(float scale)
+        {
+            Matrix2f res;
+            CreateScale(scale, out res);
+            return res;
+        }
+
+        /// <summary>
+        /// Constructs a uniform scaling matrix.
+        /// </summary>
+        /// <param name="scale">Value to use in the diagonal.</param>
+        /// <param name="matrix">Scaling matrix.</param>
+        public static void CreateScale(float scale, out Matrix2f matrix)
+        {
+            matrix.M11 = scale;
+            matrix.M22 = scale;
+
+            matrix.M12 = 0;
+            matrix.M21 = 0;
+        }
+
+        /// <summary>
+        /// Multiplies the two matrices.
+        /// </summary>
+        /// <param name="left">First matrix to multiply.</param>
+        /// <param name="right">Second matrix to multiply.</param>
+        /// <returns>Product of the multiplication.</returns>
+        public static Matrix2f Multiply(Matrix2f left, Matrix2f right)
+        {
+            Matrix2f res;
+            Multiply(ref left, ref right, out res);
+            return res;
+        }
+
+        /// <summary>
+        /// Multiplies the two matrices.
+        /// </summary>
+        /// <param name="left">First matrix to multiply.</param>
+        /// <param name="right">Second matrix to multiply.</param>
+        /// <param name="result">Product of the multiplication.</param>
+        public static void Multiply(ref Matrix2f left, ref Matrix2f right, out Matrix2f result)
+        {
+            result.M11 = Vector2f.Dot(left.Row0, right.Column0);
+            result.M12 = Vector2f.Dot(left.Row0, right.Column1);
+
+            result.M21 = Vector2f.Dot(left.Row1, right.Column0);
+            result.M22 = Vector2f.Dot(left.Row1, right.Column1);
+        }
+
+        /// <summary>
+        /// Multiplies the two matrices.
+        /// </summary>
+        /// <param name="left">First matrix to multiply.</param>
+        /// <param name="right">Second matrix to multiply.</param>
+        /// <returns>Product of the multiplication.</returns>
+        public static Matrix2f Multiply(Matrix2f left, Matrix4f right)
+        {
+            Matrix2f res;
+            Multiply(ref left, ref right, out res);
+            return res;
+        }
+
+        /// <summary>
+        /// Multiplies the two matrices.
+        /// </summary>
+        /// <param name="left">First matrix to multiply.</param>
+        /// <param name="right">Second matrix to multiply.</param>
+        /// <param name="result">Product of the multiplication.</param>
+        public static void Multiply(ref Matrix2f left, ref Matrix4f right, out Matrix2f result)
+        {
+            float resultM11 = left.M11 * right.M11 + left.M12 * right.M21;
+            float resultM12 = left.M11 * right.M12 + left.M12 * right.M22;
+
+            float resultM21 = left.M21 * right.M11 + left.M22 * right.M21;
+            float resultM22 = left.M21 * right.M12 + left.M22 * right.M22;
+
+            result.M11 = resultM11;
+            result.M12 = resultM12;
+
+            result.M21 = resultM21;
+            result.M22 = resultM22;
+        }
+
+        /// <summary>
+        /// Multiplies the two matrices.
+        /// </summary>
+        /// <param name="left">First matrix to multiply.</param>
+        /// <param name="right">Second matrix to multiply.</param>
+        /// <returns>Product of the multiplication.</returns>
+        public static Matrix2f Multiply(Matrix4f left, Matrix2f right)
+        {
+            Matrix2f res;
+            Multiply(ref left, ref right, out res);
+            return res;
+        }
+
+        /// <summary>
+        /// Multiplies the two matrices.
+        /// </summary>
+        /// <param name="left">First matrix to multiply.</param>
+        /// <param name="right">Second matrix to multiply.</param>
+        /// <param name="result">Product of the multiplication.</param>
+        public static void Multiply(ref Matrix4f left, ref Matrix2f right, out Matrix2f result)
+        {
+            float resultM11 = left.M11 * right.M11 + left.M12 * right.M21;
+            float resultM12 = left.M11 * right.M12 + left.M12 * right.M22;
+
+            float resultM21 = left.M21 * right.M11 + left.M22 * right.M21;
+            float resultM22 = left.M21 * right.M12 + left.M22 * right.M22;
+
+            result.M11 = resultM11;
+            result.M12 = resultM12;
+
+            result.M21 = resultM21;
+            result.M22 = resultM22;
+        }
+
+        /// <summary>
+        /// Multiplies the two matrices.
+        /// </summary>
+        /// <param name="left">First matrix to multiply.</param>
+        /// <param name="right">Second matrix to multiply.</param>
+        /// <returns>Product of the multiplication.</returns>
+        public static Matrix2f Multiply(Matrix2x3f left, Matrix3x2f right)
+        {
+            Matrix2f res;
+            Multiply(ref left, ref right, out res);
+            return res;
+        }
+
+        /// <summary>
+        /// Multiplies the two matrices.
+        /// </summary>
+        /// <param name="left">First matrix to multiply.</param>
+        /// <param name="right">Second matrix to multiply.</param>
+        /// <param name="result">Product of the multiplication.</param>
+        public static void Multiply(ref Matrix2x3f left, ref Matrix3x2f right, out Matrix2f result)
+        {
+            result.M11 = left.M11 * right.M11 + left.M12 * right.M21 + left.M13 * right.M31;
+            result.M12 = left.M11 * right.M12 + left.M12 * right.M22 + left.M13 * right.M32;
+
+            result.M21 = left.M21 * right.M11 + left.M22 * right.M21 + left.M23 * right.M31;
+            result.M22 = left.M21 * right.M12 + left.M22 * right.M22 + left.M23 * right.M32;
+        }
+
+        /// <summary>
+        /// Multiplies the <paramref name="matrix"/> matrix by the <paramref name="vector"/> vector.
+        /// </summary>
+        /// <param name="matrix">The LHS matrix.</param>
+        /// <param name="vector">The RHS vector.</param>
+        /// <returns>The product of <paramref name="matrix"/> and <paramref name="vector"/>.</returns>
+        public static Vector2f Multiply(Matrix2f matrix, Vector2f vector)
+        {
+            Vector2f res;
+            Multiply(ref matrix, ref vector, out res);
+            return res;
+        }
+
+        /// <summary>
+        /// Multiplies the <paramref name="matrix"/> matrix by the <paramref name="vector"/> vector.
+        /// </summary>
+        /// <param name="matrix">The LHS matrix.</param>
+        /// <param name="vector">The RHS vector.</param>
+        /// <param name="result">The product of <paramref name="matrix"/> and <paramref name="vector"/>.</param>
+        public static void Multiply(ref Matrix2f matrix, ref Vector2f vector, out Vector2f result)
+        {
+            result = new Vector2f(
+                matrix.M11 * vector.X + matrix.M12 * vector.Y,
+                matrix.M21 * vector.X + matrix.M22 * vector.Y
+            );
+        }
+
+        /// <summary>
+        /// Multiplies the <paramref name="matrix"/> by a <paramref name="scale"/>.
+        /// </summary>
+        /// <param name="matrix">The matrix.</param>
+        /// <param name="scale">The scale</param>
+        /// <returns>The result.</returns>
+        public static Matrix2f Multiply(Matrix2f matrix, float scale)
+        {
+            Matrix2f res;
+            Multiply(ref matrix, scale, out res);
+            return res;
+        }
+
+        /// <summary>
+        /// Multiplies the <paramref name="matrix"/> by a <paramref name="scale"/>.
+        /// </summary>
+        /// <param name="matrix">The matrix.</param>
+        /// <param name="scale">The scale</param>
+        /// <param name="result">The result.</param>
+        public static void Multiply(ref Matrix2f matrix, float scale, out Matrix2f result)
+        {
+            result = new Matrix2f(matrix.Row0 * scale, matrix.Row1 * scale);
+        }
+
+        /// <summary>
+        /// Negates every element in the matrix.
+        /// </summary>
+        /// <param name="matrix">Matrix to negate.</param>
+        /// <returns>Negated matrix.</returns>
+        public static Matrix2f Negate(Matrix2f matrix)
+        {
+            Matrix2f res;
+            Negate(ref matrix, out res);
+            return res;
+        }
+
+        /// <summary>
+        /// Negates every element in the matrix.
+        /// </summary>
+        /// <param name="matrix">Matrix to negate.</param>
+        /// <param name="result">Negated matrix.</param>
+        public static void Negate(ref Matrix2f matrix, out Matrix2f result)
+        {
+            float m11 = -matrix.M11;
+            float m12 = -matrix.M12;
+
+            float m21 = -matrix.M21;
+            float m22 = -matrix.M22;
+
+
+            result.M11 = m11;
+            result.M12 = m12;
+
+            result.M21 = m21;
+            result.M22 = m22;
+        }
+
+        /// <summary>
+        /// Subtracts the two matrices from each other on a per-element basis.
+        /// </summary>
+        /// <param name="left">First matrix to subtract.</param>
+        /// <param name="right">Second matrix to subtract.</param>
+        /// <returns>Difference of the two matrices.</returns>
+        public static Matrix2f Subtract(Matrix2f left, Matrix2f right)
+        {
+            Matrix2f res;
+            Subtract(ref left, ref right, out res);
+            return res;
+        }
+
+        /// <summary>
+        /// Subtracts the two matrices from each other on a per-element basis.
+        /// </summary>
+        /// <param name="left">First matrix to subtract.</param>
+        /// <param name="right">Second matrix to subtract.</param>
+        /// <param name="result">Difference of the two matrices.</param>
+        public static void Subtract(ref Matrix2f left, ref Matrix2f right, out Matrix2f result)
+        {
+            float m11 = left.M11 - right.M11;
+            float m12 = left.M12 - right.M12;
+
+            float m21 = left.M21 - right.M21;
+            float m22 = left.M22 - right.M22;
+
+            result.M11 = m11;
+            result.M12 = m12;
+
+            result.M21 = m21;
+            result.M22 = m22;
         }
 
         #endregion
@@ -355,10 +692,9 @@ namespace AlienEngine
         /// <returns>The product of <paramref name="matrix"/> and <paramref name="vector"/>.</returns>
         public static Vector2f operator *(Matrix2f matrix, Vector2f vector)
         {
-            return new Vector2f(
-                matrix.M11 * vector.X + matrix.M12 * vector.Y,
-                matrix.M21 * vector.X + matrix.M22 * vector.Y
-            );
+            Vector2f res;
+            Multiply(ref matrix, ref vector, out res);
+            return res;
         }
 
         /// <summary>
@@ -369,13 +705,8 @@ namespace AlienEngine
         /// <returns>The product of <paramref name="left"/> and <paramref name="right"/>.</returns>
         public static Matrix2f operator *(Matrix2f left, Matrix2f right)
         {
-            Matrix2f result = new Matrix2f(
-                Vector2f.Dot(left.Row0, right.Column0),
-                Vector2f.Dot(left.Row0, right.Column1),
-                Vector2f.Dot(left.Row1, right.Column0),
-                Vector2f.Dot(left.Row1, right.Column1)
-            );
-
+            Matrix2f result;
+            Multiply(ref left, ref right, out result);
             return result;
         }
 
@@ -387,7 +718,9 @@ namespace AlienEngine
         /// <returns>The result.</returns>
         public static Matrix2f operator *(Matrix2f matrix, float scale)
         {
-            return new Matrix2f(matrix.Row0 * scale, matrix.Row1 * scale);
+            Matrix2f result;
+            Multiply(ref matrix, scale, out result);
+            return result;
         }
 
         /// <summary>

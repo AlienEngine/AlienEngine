@@ -237,7 +237,7 @@ namespace AlienEngine
         /// <seealso cref="LengthSquared"/>
         public float Length
         {
-            get { return (float)System.Math.Sqrt(X * X + Y * Y); }
+            get { return MathHelper.Sqrt(X * X + Y * Y); }
         }
 
         /// <summary>
@@ -312,8 +312,9 @@ namespace AlienEngine
         /// <returns>Result of operation.</returns>
         public static Vector2f Add(Vector2f a, Vector2f b)
         {
-            Add(ref a, ref b, out a);
-            return a;
+            Vector2f res;
+            Add(ref a, ref b, out res);
+            return res;
         }
 
         /// <summary>
@@ -335,8 +336,9 @@ namespace AlienEngine
         /// <returns>Result of subtraction</returns>
         public static Vector2f Subtract(Vector2f a, Vector2f b)
         {
-            Subtract(ref a, ref b, out a);
-            return a;
+            Vector2f res;
+            Subtract(ref a, ref b, out res);
+            return res;
         }
 
         /// <summary>
@@ -358,8 +360,9 @@ namespace AlienEngine
         /// <returns>Result of the operation.</returns>
         public static Vector2f Multiply(Vector2f vector, float scale)
         {
-            Multiply(ref vector, scale, out vector);
-            return vector;
+            Vector2f res;
+            Multiply(ref vector, scale, out res);
+            return res;
         }
 
         /// <summary>
@@ -381,8 +384,9 @@ namespace AlienEngine
         /// <returns>Result of the operation.</returns>
         public static Vector2f Multiply(Vector2f vector, Vector2f scale)
         {
-            Multiply(ref vector, ref scale, out vector);
-            return vector;
+            Vector2f res;
+            Multiply(ref vector, ref scale, out res);
+            return res;
         }
 
         /// <summary>
@@ -404,8 +408,9 @@ namespace AlienEngine
         /// <returns>Result of the operation.</returns>
         public static Vector2f Divide(Vector2f vector, float scale)
         {
-            Divide(ref vector, scale, out vector);
-            return vector;
+            Vector2f res;
+            Divide(ref vector, scale, out res);
+            return res;
         }
 
         /// <summary>
@@ -427,8 +432,9 @@ namespace AlienEngine
         /// <returns>Result of the operation.</returns>
         public static Vector2f Divide(Vector2f vector, Vector2f scale)
         {
-            Divide(ref vector, ref scale, out vector);
-            return vector;
+            Vector2f res;
+            Divide(ref vector, ref scale, out res);
+            return res;
         }
 
         /// <summary>
@@ -599,7 +605,9 @@ namespace AlienEngine
         /// <returns>The dot product of the two inputs</returns>
         public static float Dot(Vector2f left, Vector2f right)
         {
-            return left.X * right.X + left.Y * right.Y;
+            float res;
+            Dot(ref left, ref right, out res);
+            return res;
         }
 
         /// <summary>
@@ -621,7 +629,9 @@ namespace AlienEngine
         /// <returns>The perpendicular dot product of the two inputs</returns>
         public static float PerpDot(Vector2f left, Vector2f right)
         {
-            return left.X * right.Y - left.Y * right.X;
+            float res;
+            PerpDot(ref left, ref right, out res);
+            return res;
         }
 
         /// <summary>
@@ -663,6 +673,17 @@ namespace AlienEngine
         }
 
         /// <summary>
+        /// Negates the vector.
+        /// </summary>
+        /// <param name="v">Vector to negate.</param>
+        /// <param name="negated">Negated version of the vector.</param>
+        public static void Negate(ref Vector2f v, out Vector2f negated)
+        {
+            negated.X = -v.X;
+            negated.Y = -v.Y;
+        }
+
+        /// <summary>
         /// Interpolate 3 Vectors using Barycentric coordinates
         /// </summary>
         /// <param name="a">First input Vector</param>
@@ -696,6 +717,82 @@ namespace AlienEngine
             Subtract(ref temp, ref a, out temp);
             Multiply(ref temp, v, out temp);
             Add(ref result, ref temp, out result);
+        }
+
+        /// <summary>
+        /// Computes the absolute value of the input vector.
+        /// </summary>
+        /// <param name="v">Vector to take the absolute value of.</param>
+        /// <returns>Vector with nonnegative elements.</returns>
+        public static Vector2f Abs(Vector2f v)
+        {
+            Vector2f result;
+            Abs(ref v, out result);
+            return result;
+        }
+
+        /// <summary>
+        /// Computes the absolute value of the input vector.
+        /// </summary>
+        /// <param name="v">Vector to take the absolute value of.</param>
+        /// <param name="result">Vector with nonnegative elements.</param>
+        public static void Abs(ref Vector2f v, out Vector2f result)
+        {
+            if (v.X < 0)
+                result.X = -v.X;
+            else
+                result.X = v.X;
+            if (v.Y < 0)
+                result.Y = -v.Y;
+            else
+                result.Y = v.Y;
+        }
+
+        /// <summary>
+        /// Transforms the vector by the matrix.
+        /// </summary>
+        /// <param name="v">Vector2 to transform.</param>
+        /// <param name="matrix">Matrix to use as the transformation.</param>
+        /// <param name="result">Product of the transformation.</param>
+        public static void Transform(ref Vector2f v, ref Matrix2f matrix, out Vector2f result)
+        {
+            float vX = v.X;
+            float vY = v.Y;
+#if !WINDOWS
+            result = new Vector2f();
+#endif
+            result.X = vX * matrix.M11 + vY * matrix.M21;
+            result.Y = vX * matrix.M12 + vY * matrix.M22;
+        }
+
+        /// <summary>
+        /// Transforms the vector by the matrix.
+        /// </summary>
+        /// <param name="v">Vector2 to transform.  Considered to be a column vector for purposes of multiplication.</param>
+        /// <param name="matrix">Matrix to use as the transformation.</param>
+        /// <param name="result">Column vector product of the transformation.</param>
+        public static void Transform(ref Vector3f v, ref Matrix2x3f matrix, out Vector2f result)
+        {
+#if !WINDOWS
+            result = new Vector2f();
+#endif
+            result.X = matrix.M11 * v.X + matrix.M12 * v.Y + matrix.M13 * v.Z;
+            result.Y = matrix.M21 * v.X + matrix.M22 * v.Y + matrix.M23 * v.Z;
+        }
+
+        /// <summary>
+        /// Transforms the vector by the matrix.
+        /// </summary>
+        /// <param name="v">Vector2 to transform.  Considered to be a row vector for purposes of multiplication.</param>
+        /// <param name="matrix">Matrix to use as the transformation.</param>
+        /// <param name="result">Row vector product of the transformation.</param>
+        public static void Transform(ref Vector3f v, ref Matrix3x2f matrix, out Vector2f result)
+        {
+#if !WINDOWS
+            result = new Vector2f();
+#endif
+            result.X = v.X * matrix.M11 + v.Y * matrix.M21 + v.Z * matrix.M31;
+            result.Y = v.X * matrix.M12 + v.Y * matrix.M22 + v.Z * matrix.M32;
         }
 
         /// <summary>

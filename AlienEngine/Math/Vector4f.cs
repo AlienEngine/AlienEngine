@@ -407,13 +407,11 @@ namespace AlienEngine
         /// <param name="a">First operand</param>
         /// <param name="b">Second operand</param>
         /// <returns>Result of subtraction</returns>
-        public static Vector4f Sub(Vector4f a, Vector4f b)
+        public static Vector4f Subtract(Vector4f a, Vector4f b)
         {
-            a.X -= b.X;
-            a.Y -= b.Y;
-            a.Z -= b.Z;
-            a.W -= b.W;
-            return a;
+            Vector4f res;
+            Subtract(ref a, ref b, out res);
+            return res;
         }
 
         /// <summary>
@@ -422,7 +420,7 @@ namespace AlienEngine
         /// <param name="a">First operand</param>
         /// <param name="b">Second operand</param>
         /// <param name="result">Result of subtraction</param>
-        public static void Sub(ref Vector4f a, ref Vector4f b, out Vector4f result)
+        public static void Subtract(ref Vector4f a, ref Vector4f b, out Vector4f result)
         {
             result.X = a.X - b.X;
             result.Y = a.Y - b.Y;
@@ -436,13 +434,11 @@ namespace AlienEngine
         /// <param name="a">Vector operand</param>
         /// <param name="f">Scalar operand</param>
         /// <returns>Result of the multiplication</returns>
-        public static Vector4f Mult(Vector4f a, float f)
+        public static Vector4f Multiply(Vector4f a, float f)
         {
-            a.X *= f;
-            a.Y *= f;
-            a.Z *= f;
-            a.W *= f;
-            return a;
+            Vector4f res;
+            Multiply(ref a, f, out res);
+            return res;
         }
 
         /// <summary>
@@ -451,7 +447,7 @@ namespace AlienEngine
         /// <param name="a">Vector operand</param>
         /// <param name="f">Scalar operand</param>
         /// <param name="result">Result of the multiplication</param>
-        public static void Mult(ref Vector4f a, float f, out Vector4f result)
+        public static void Multiply(ref Vector4f a, float f, out Vector4f result)
         {
             result.X = a.X * f;
             result.Y = a.Y * f;
@@ -465,14 +461,11 @@ namespace AlienEngine
         /// <param name="a">Vector operand</param>
         /// <param name="f">Scalar operand</param>
         /// <returns>Result of the division</returns>
-        public static Vector4f Div(Vector4f a, float f)
+        public static Vector4f Divide(Vector4f a, float f)
         {
-            float mult = 1.0f / f;
-            a.X *= mult;
-            a.Y *= mult;
-            a.Z *= mult;
-            a.W *= mult;
-            return a;
+            Vector4f res;
+            Divide(ref a, f, out res);
+            return res;
         }
 
         /// <summary>
@@ -481,7 +474,7 @@ namespace AlienEngine
         /// <param name="a">Vector operand</param>
         /// <param name="f">Scalar operand</param>
         /// <param name="result">Result of the division</param>
-        public static void Div(ref Vector4f a, float f, out Vector4f result)
+        public static void Divide(ref Vector4f a, float f, out Vector4f result)
         {
             float mult = 1.0f / f;
             result.X = a.X * mult;
@@ -498,8 +491,9 @@ namespace AlienEngine
         /// <returns>Result of operation.</returns>
         public static Vector4f Add(Vector4f a, Vector4f b)
         {
-            Add(ref a, ref b, out a);
-            return a;
+            Vector4f res;
+            Add(ref a, ref b, out res);
+            return res;
         }
 
         /// <summary>
@@ -514,52 +508,6 @@ namespace AlienEngine
         }
 
         /// <summary>
-        /// Subtract one Vector from another
-        /// </summary>
-        /// <param name="a">First operand</param>
-        /// <param name="b">Second operand</param>
-        /// <returns>Result of subtraction</returns>
-        public static Vector4f Subtract(Vector4f a, Vector4f b)
-        {
-            Subtract(ref a, ref b, out a);
-            return a;
-        }
-
-        /// <summary>
-        /// Subtract one Vector from another
-        /// </summary>
-        /// <param name="a">First operand</param>
-        /// <param name="b">Second operand</param>
-        /// <param name="result">Result of subtraction</param>
-        public static void Subtract(ref Vector4f a, ref Vector4f b, out Vector4f result)
-        {
-            result = new Vector4f(a.X - b.X, a.Y - b.Y, a.Z - b.Z, a.W - b.W);
-        }
-
-        /// <summary>
-        /// Multiplies a vector by a scalar.
-        /// </summary>
-        /// <param name="vector">Left operand.</param>
-        /// <param name="scale">Right operand.</param>
-        /// <returns>Result of the operation.</returns>
-        public static Vector4f Multiply(Vector4f vector, float scale)
-        {
-            Multiply(ref vector, scale, out vector);
-            return vector;
-        }
-
-        /// <summary>
-        /// Multiplies a vector by a scalar.
-        /// </summary>
-        /// <param name="vector">Left operand.</param>
-        /// <param name="scale">Right operand.</param>
-        /// <param name="result">Result of the operation.</param>
-        public static void Multiply(ref Vector4f vector, float scale, out Vector4f result)
-        {
-            result = new Vector4f(vector.X * scale, vector.Y * scale, vector.Z * scale, vector.W * scale);
-        }
-
-        /// <summary>
         /// Multiplies a vector by the components a vector (scale).
         /// </summary>
         /// <param name="vector">Left operand.</param>
@@ -567,8 +515,9 @@ namespace AlienEngine
         /// <returns>Result of the operation.</returns>
         public static Vector4f Multiply(Vector4f vector, Vector4f scale)
         {
-            Multiply(ref vector, ref scale, out vector);
-            return vector;
+            Vector4f res;
+            Multiply(ref vector, ref scale, out res);
+            return res;
         }
 
         /// <summary>
@@ -583,29 +532,6 @@ namespace AlienEngine
         }
 
         /// <summary>
-        /// Divides a vector by a scalar.
-        /// </summary>
-        /// <param name="vector">Left operand.</param>
-        /// <param name="scale">Right operand.</param>
-        /// <returns>Result of the operation.</returns>
-        public static Vector4f Divide(Vector4f vector, float scale)
-        {
-            Divide(ref vector, scale, out vector);
-            return vector;
-        }
-
-        /// <summary>
-        /// Divides a vector by a scalar.
-        /// </summary>
-        /// <param name="vector">Left operand.</param>
-        /// <param name="scale">Right operand.</param>
-        /// <param name="result">Result of the operation.</param>
-        public static void Divide(ref Vector4f vector, float scale, out Vector4f result)
-        {
-            Multiply(ref vector, 1 / scale, out result);
-        }
-
-        /// <summary>
         /// Divides a vector by the components of a vector (scale).
         /// </summary>
         /// <param name="vector">Left operand.</param>
@@ -613,8 +539,9 @@ namespace AlienEngine
         /// <returns>Result of the operation.</returns>
         public static Vector4f Divide(Vector4f vector, Vector4f scale)
         {
-            Divide(ref vector, ref scale, out vector);
-            return vector;
+            Vector4f res;
+            Divide(ref vector, ref scale, out res);
+            return res;
         }
 
         /// <summary>
@@ -634,13 +561,11 @@ namespace AlienEngine
         /// <param name="a">First operand</param>
         /// <param name="b">Second operand</param>
         /// <returns>The component-wise minimum</returns>
-        public static Vector4f Min(Vector4f a, Vector4f b)
+        public static Vector4f ComponentMin(Vector4f a, Vector4f b)
         {
-            a.X = a.X < b.X ? a.X : b.X;
-            a.Y = a.Y < b.Y ? a.Y : b.Y;
-            a.Z = a.Z < b.Z ? a.Z : b.Z;
-            a.W = a.W < b.W ? a.W : b.W;
-            return a;
+            Vector4f res;
+            ComponentMin(ref a, ref b, out res);
+            return res;
         }
 
         /// <summary>
@@ -649,7 +574,7 @@ namespace AlienEngine
         /// <param name="a">First operand</param>
         /// <param name="b">Second operand</param>
         /// <param name="result">The component-wise minimum</param>
-        public static void Min(ref Vector4f a, ref Vector4f b, out Vector4f result)
+        public static void ComponentMin(ref Vector4f a, ref Vector4f b, out Vector4f result)
         {
             result.X = a.X < b.X ? a.X : b.X;
             result.Y = a.Y < b.Y ? a.Y : b.Y;
@@ -663,13 +588,11 @@ namespace AlienEngine
         /// <param name="a">First operand</param>
         /// <param name="b">Second operand</param>
         /// <returns>The component-wise maximum</returns>
-        public static Vector4f Max(Vector4f a, Vector4f b)
+        public static Vector4f ComponentMax(Vector4f a, Vector4f b)
         {
-            a.X = a.X > b.X ? a.X : b.X;
-            a.Y = a.Y > b.Y ? a.Y : b.Y;
-            a.Z = a.Z > b.Z ? a.Z : b.Z;
-            a.W = a.W > b.W ? a.W : b.W;
-            return a;
+            Vector4f res;
+            ComponentMax(ref a, ref b, out res);
+            return res;
         }
 
         /// <summary>
@@ -678,7 +601,7 @@ namespace AlienEngine
         /// <param name="a">First operand</param>
         /// <param name="b">Second operand</param>
         /// <param name="result">The component-wise maximum</param>
-        public static void Max(ref Vector4f a, ref Vector4f b, out Vector4f result)
+        public static void ComponentMax(ref Vector4f a, ref Vector4f b, out Vector4f result)
         {
             result.X = a.X > b.X ? a.X : b.X;
             result.Y = a.Y > b.Y ? a.Y : b.Y;
@@ -864,28 +787,120 @@ namespace AlienEngine
             Add(ref result, ref temp, out result);
         }
 
-        /// <summary>Transform a Vector by the given Matrix</summary>
-        /// <param name="vec">The vector to transform</param>
-        /// <param name="mat">The desired transformation</param>
-        /// <returns>The transformed vector</returns>
-        public static Vector4f Transform(Vector4f vec, Matrix4f mat)
+        /// <summary>
+        /// Transforms a vector using a matrix.
+        /// </summary>
+        /// <param name="v">Vector to transform.</param>
+        /// <param name="matrix">Transform to apply to the vector.</param>
+        /// <param name="result">Transformed vector.</param>
+        public static void Transform(ref Vector4f v, ref Matrix4f matrix, out Vector4f result)
         {
-            Vector4f result;
-            Transform(ref vec, ref mat, out result);
-            return result;
+            float vX = v.X;
+            float vY = v.Y;
+            float vZ = v.Z;
+            float vW = v.W;
+            result.X = vX * matrix.M11 + vY * matrix.M21 + vZ * matrix.M31 + vW * matrix.M41;
+            result.Y = vX * matrix.M12 + vY * matrix.M22 + vZ * matrix.M32 + vW * matrix.M42;
+            result.Z = vX * matrix.M13 + vY * matrix.M23 + vZ * matrix.M33 + vW * matrix.M43;
+            result.W = vX * matrix.M14 + vY * matrix.M24 + vZ * matrix.M34 + vW * matrix.M44;
         }
 
-        /// <summary>Transform a Vector by the given Matrix</summary>
-        /// <param name="vec">The vector to transform</param>
-        /// <param name="mat">The desired transformation</param>
-        /// <param name="result">The transformed vector</param>
-        public static void Transform(ref Vector4f vec, ref Matrix4f mat, out Vector4f result)
+        /// <summary>
+        /// Transforms a vector using a matrix.
+        /// </summary>
+        /// <param name="v">Vector to transform.</param>
+        /// <param name="matrix">Transform to apply to the vector.</param>
+        /// <returns>Transformed vector.</returns>
+        public static Vector4f Transform(Vector4f v, Matrix4f matrix)
         {
-            result = new Vector4f(
-                vec.X * mat.Row0.X + vec.Y * mat.Row1.X + vec.Z * mat.Row2.X + vec.W * mat.Row3.X,
-                vec.X * mat.Row0.Y + vec.Y * mat.Row1.Y + vec.Z * mat.Row2.Y + vec.W * mat.Row3.Y,
-                vec.X * mat.Row0.Z + vec.Y * mat.Row1.Z + vec.Z * mat.Row2.Z + vec.W * mat.Row3.Z,
-                vec.X * mat.Row0.W + vec.Y * mat.Row1.W + vec.Z * mat.Row2.W + vec.W * mat.Row3.W);
+            Vector4f toReturn;
+            Transform(ref v, ref matrix, out toReturn);
+            return toReturn;
+        }
+
+        /// <summary>
+        /// Transforms a vector using the transpose of a matrix.
+        /// </summary>
+        /// <param name="v">Vector to transform.</param>
+        /// <param name="matrix">Transform to tranpose and apply to the vector.</param>
+        /// <param name="result">Transformed vector.</param>
+        public static void TransformTranspose(ref Vector4f v, ref Matrix4f matrix, out Vector4f result)
+        {
+            float vX = v.X;
+            float vY = v.Y;
+            float vZ = v.Z;
+            float vW = v.W;
+            result.X = vX * matrix.M11 + vY * matrix.M12 + vZ * matrix.M13 + vW * matrix.M14;
+            result.Y = vX * matrix.M21 + vY * matrix.M22 + vZ * matrix.M23 + vW * matrix.M24;
+            result.Z = vX * matrix.M31 + vY * matrix.M32 + vZ * matrix.M33 + vW * matrix.M34;
+            result.W = vX * matrix.M41 + vY * matrix.M42 + vZ * matrix.M43 + vW * matrix.M44;
+        }
+
+        /// <summary>
+        /// Transforms a vector using the transpose of a matrix.
+        /// </summary>
+        /// <param name="v">Vector to transform.</param>
+        /// <param name="matrix">Transform to tranpose and apply to the vector.</param>
+        /// <returns>Transformed vector.</returns>
+        public static Vector4f TransformTranspose(Vector4f v, Matrix4f matrix)
+        {
+            Vector4f toReturn;
+            TransformTranspose(ref v, ref matrix, out toReturn);
+            return toReturn;
+        }
+
+        /// <summary>
+        /// Transforms a vector using a matrix.
+        /// </summary>
+        /// <param name="v">Vector to transform.</param>
+        /// <param name="matrix">Transform to apply to the vector.</param>
+        /// <param name="result">Transformed vector.</param>
+        public static void Transform(ref Vector3f v, ref Matrix4f matrix, out Vector4f result)
+        {
+            result.X = v.X * matrix.M11 + v.Y * matrix.M21 + v.Z * matrix.M31 + matrix.M41;
+            result.Y = v.X * matrix.M12 + v.Y * matrix.M22 + v.Z * matrix.M32 + matrix.M42;
+            result.Z = v.X * matrix.M13 + v.Y * matrix.M23 + v.Z * matrix.M33 + matrix.M43;
+            result.W = v.X * matrix.M14 + v.Y * matrix.M24 + v.Z * matrix.M34 + matrix.M44;
+        }
+
+        /// <summary>
+        /// Transforms a vector using a matrix.
+        /// </summary>
+        /// <param name="v">Vector to transform.</param>
+        /// <param name="matrix">Transform to apply to the vector.</param>
+        /// <returns>Transformed vector.</returns>
+        public static Vector4f Transform(Vector3f v, Matrix4f matrix)
+        {
+            Vector4f toReturn;
+            Transform(ref v, ref matrix, out toReturn);
+            return toReturn;
+        }
+
+        /// <summary>
+        /// Transforms a vector using the transpose of a matrix.
+        /// </summary>
+        /// <param name="v">Vector to transform.</param>
+        /// <param name="matrix">Transform to tranpose and apply to the vector.</param>
+        /// <param name="result">Transformed vector.</param>
+        public static void TransformTranspose(ref Vector3f v, ref Matrix4f matrix, out Vector4f result)
+        {
+            result.X = v.X * matrix.M11 + v.Y * matrix.M12 + v.Z * matrix.M13 + matrix.M14;
+            result.Y = v.X * matrix.M21 + v.Y * matrix.M22 + v.Z * matrix.M23 + matrix.M24;
+            result.Z = v.X * matrix.M31 + v.Y * matrix.M32 + v.Z * matrix.M33 + matrix.M34;
+            result.W = v.X * matrix.M41 + v.Y * matrix.M42 + v.Z * matrix.M43 + matrix.M44;
+        }
+
+        /// <summary>
+        /// Transforms a vector using the transpose of a matrix.
+        /// </summary>
+        /// <param name="v">Vector to transform.</param>
+        /// <param name="matrix">Transform to tranpose and apply to the vector.</param>
+        /// <returns>Transformed vector.</returns>
+        public static Vector4f TransformTranspose(Vector3f v, Matrix4f matrix)
+        {
+            Vector4f toReturn;
+            TransformTranspose(ref v, ref matrix, out toReturn);
+            return toReturn;
         }
 
         /// <summary>
@@ -915,6 +930,163 @@ namespace AlienEngine
             Quaternion.Multiply(ref t, ref i, out v);
 
             result = new Vector4f(v.X, v.Y, v.Z, v.W);
+        }
+
+        /// <summary>
+        /// Computes the squared distance between two two vectors.
+        /// </summary>
+        /// <param name="a">First vector.</param>
+        /// <param name="b">Second vector.</param>
+        /// <returns>Squared distance between the two vectors.</returns>
+        public static float DistanceSquared(ref Vector4f a, ref Vector4f b)
+        {
+            float toReturn;
+            DistanceSquared(ref a, ref b, out toReturn);
+            return toReturn;
+        }
+
+        /// <summary>
+        /// Computes the squared distance between two vectors.
+        /// </summary>
+        /// <param name="a">First vector.</param>
+        /// <param name="b">Second vector.</param>
+        /// <param name="distanceSquared">Squared distance between the two vectors.</param>
+        public static void DistanceSquared(ref Vector4f a, ref Vector4f b, out float distanceSquared)
+        {
+            float x = a.X - b.X;
+            float y = a.Y - b.Y;
+            float z = a.Z - b.Z;
+            float w = a.W - b.W;
+            distanceSquared = x * x + y * y + z * z + w * w;
+        }
+
+        /// <summary>
+        /// Computes the distance between two two vectors.
+        /// </summary>
+        /// <param name="a">First vector.</param>
+        /// <param name="b">Second vector.</param>
+        /// <returns>Distance between the two vectors.</returns>
+        public static float Distance(Vector4f a, Vector4f b)
+        {
+            float toReturn;
+            Distance(ref a, ref b, out toReturn);
+            return toReturn;
+        }
+
+        /// <summary>
+        /// Computes the distance between two two vectors.
+        /// </summary>
+        /// <param name="a">First vector.</param>
+        /// <param name="b">Second vector.</param>
+        /// <param name="distance">Distance between the two vectors.</param>
+        public static void Distance(ref Vector4f a, ref Vector4f b, out float distance)
+        {
+            float x = a.X - b.X;
+            float y = a.Y - b.Y;
+            float z = a.Z - b.Z;
+            float w = a.W - b.W;
+            distance = (float)System.Math.Sqrt(x * x + y * y + z * z + w * w);
+        }
+
+        /// <summary>
+        /// Negates a vector.
+        /// </summary>
+        /// <param name="v">Vector to negate.</param>
+        /// <returns>Negated vector.</returns>
+        public static Vector4f Negate(Vector4f v)
+        {
+            Vector4f negated;
+            Negate(ref v, out negated);
+            return negated;
+        }
+
+        /// <summary>
+        /// Negates a vector.
+        /// </summary>
+        /// <param name="v">Vector to negate.</param>
+        /// <param name="negated">Negated vector.</param>
+        public static void Negate(ref Vector4f v, out Vector4f negated)
+        {
+            negated.X = -v.X;
+            negated.Y = -v.Y;
+            negated.Z = -v.Z;
+            negated.W = -v.W;
+        }
+
+        /// <summary>
+        /// Computes the absolute value of the input vector.
+        /// </summary>
+        /// <param name="v">Vector to take the absolute value of.</param>
+        /// <returns>Vector with nonnegative elements.</returns>
+        public static Vector4f Abs(Vector4f v)
+        {
+            Vector4f result;
+            Abs(ref v, out result);
+            return result;
+        }
+
+        /// <summary>
+        /// Computes the absolute value of the input vector.
+        /// </summary>
+        /// <param name="v">Vector to take the absolute value of.</param>
+        /// <param name="result">Vector with nonnegative elements.</param>
+        public static void Abs(ref Vector4f v, out Vector4f result)
+        {
+            if (v.X < 0)
+                result.X = -v.X;
+            else
+                result.X = v.X;
+            if (v.Y < 0)
+                result.Y = -v.Y;
+            else
+                result.Y = v.Y;
+            if (v.Z < 0)
+                result.Z = -v.Z;
+            else
+                result.Z = v.Z;
+            if (v.W < 0)
+                result.W = -v.W;
+            else
+                result.W = v.W;
+        }
+
+        /// <summary>
+        /// Computes an intermediate location using hermite interpolation.
+        /// </summary>
+        /// <param name="value1">First position.</param>
+        /// <param name="tangent1">Tangent associated with the first position.</param>
+        /// <param name="value2">Second position.</param>
+        /// <param name="tangent2">Tangent associated with the second position.</param>
+        /// <param name="interpolationAmount">Amount of the second point to use.</param>
+        /// <returns>Interpolated intermediate state.</returns>
+        public static Vector4f Hermite(Vector4f value1, Vector4f tangent1, Vector4f value2, Vector4f tangent2, float interpolationAmount)
+        {
+            Vector4f toReturn;
+            Hermite(ref value1, ref tangent1, ref value2, ref tangent2, interpolationAmount, out toReturn);
+            return toReturn;
+        }
+
+        /// <summary>
+        /// Computes an intermediate location using hermite interpolation.
+        /// </summary>
+        /// <param name="value1">First position.</param>
+        /// <param name="tangent1">Tangent associated with the first position.</param>
+        /// <param name="value2">Second position.</param>
+        /// <param name="tangent2">Tangent associated with the second position.</param>
+        /// <param name="interpolationAmount">Amount of the second point to use.</param>
+        /// <param name="result">Interpolated intermediate state.</param>
+        public static void Hermite(ref Vector4f value1, ref Vector4f tangent1, ref Vector4f value2, ref Vector4f tangent2, float interpolationAmount, out Vector4f result)
+        {
+            float weightSquared = interpolationAmount * interpolationAmount;
+            float weightCubed = interpolationAmount * weightSquared;
+            float value1Blend = 2 * weightCubed - 3 * weightSquared + 1;
+            float tangent1Blend = weightCubed - 2 * weightSquared + interpolationAmount;
+            float value2Blend = -2 * weightCubed + 3 * weightSquared;
+            float tangent2Blend = weightCubed - weightSquared;
+            result.X = value1.X * value1Blend + value2.X * value2Blend + tangent1.X * tangent1Blend + tangent2.X * tangent2Blend;
+            result.Y = value1.Y * value1Blend + value2.Y * value2Blend + tangent1.Y * tangent1Blend + tangent2.Y * tangent2Blend;
+            result.Z = value1.Z * value1Blend + value2.Z * value2Blend + tangent1.Z * tangent1Blend + tangent2.Z * tangent2Blend;
+            result.W = value1.W * value1Blend + value2.W * value2Blend + tangent1.W * tangent1Blend + tangent2.W * tangent2Blend;
         }
 
         /// <summary>
@@ -1876,11 +2048,9 @@ namespace AlienEngine
         /// <returns>The result of the calculation.</returns>
         public static Vector4f operator +(Vector4f left, Vector4f right)
         {
-            left.X += right.X;
-            left.Y += right.Y;
-            left.Z += right.Z;
-            left.W += right.W;
-            return left;
+            Vector4f res;
+            Add(ref left, ref right, out res);
+            return res;
         }
 
         /// <summary>
@@ -1891,11 +2061,9 @@ namespace AlienEngine
         /// <returns>The result of the calculation.</returns>
         public static Vector4f operator -(Vector4f left, Vector4f right)
         {
-            left.X -= right.X;
-            left.Y -= right.Y;
-            left.Z -= right.Z;
-            left.W -= right.W;
-            return left;
+            Vector4f res;
+            Subtract(ref left, ref right, out res);
+            return res;
         }
 
         /// <summary>
@@ -1905,11 +2073,9 @@ namespace AlienEngine
         /// <returns>The result of the calculation.</returns>
         public static Vector4f operator -(Vector4f vec)
         {
-            vec.X = -vec.X;
-            vec.Y = -vec.Y;
-            vec.Z = -vec.Z;
-            vec.W = -vec.W;
-            return vec;
+            Vector4f res;
+            Negate(ref vec, out res);
+            return res;
         }
 
         /// <summary>
@@ -1920,11 +2086,22 @@ namespace AlienEngine
         /// <returns>The result of the calculation.</returns>
         public static Vector4f operator *(Vector4f vec, float scale)
         {
-            vec.X *= scale;
-            vec.Y *= scale;
-            vec.Z *= scale;
-            vec.W *= scale;
-            return vec;
+            Vector4f res;
+            Multiply(ref vec, scale, out res);
+            return res;
+        }
+
+        /// <summary>
+        /// Multiplies two vectors on a per-component basis.
+        /// </summary>
+        /// <param name="a">First vector to multiply.</param>
+        /// <param name="b">Second vector to multiply.</param>
+        /// <returns>Result of the componentwise multiplication.</returns>
+        public static Vector4f operator *(Vector4f a, Vector4f b)
+        {
+            Vector4f result;
+            Multiply(ref a, ref b, out result);
+            return result;
         }
 
         /// <summary>
@@ -1935,11 +2112,9 @@ namespace AlienEngine
         /// <returns>The result of the calculation.</returns>
         public static Vector4f operator *(float scale, Vector4f vec)
         {
-            vec.X *= scale;
-            vec.Y *= scale;
-            vec.Z *= scale;
-            vec.W *= scale;
-            return vec;
+            Vector4f res;
+            Multiply(ref vec, scale, out res);
+            return res;
         }
 
         /// <summary>
@@ -1950,12 +2125,9 @@ namespace AlienEngine
         /// <returns>The result of the calculation.</returns>
         public static Vector4f operator /(Vector4f vec, float scale)
         {
-            float mult = 1.0f / scale;
-            vec.X *= mult;
-            vec.Y *= mult;
-            vec.Z *= mult;
-            vec.W *= mult;
-            return vec;
+            Vector4f res;
+            Divide(ref vec, scale, out res);
+            return res;
         }
 
         /// <summary>
@@ -1995,21 +2167,9 @@ namespace AlienEngine
         /// </summary>
         /// <param name="v">The instance.</param>
         /// <returns>A pointer to the first element of v.</returns>
-        public static explicit operator IntPtr(Vector4f v)
+        unsafe public static explicit operator IntPtr(Vector4f v)
         {
-            unsafe
-            {
-                return (IntPtr)(&v.X);
-            }
-        }
-
-        /// <summary>
-        /// Explicitly cast this <see cref="Vector4f"/> into a <see cref="BEPUutilities.Vector4"/>.
-        /// </summary>
-        /// <param name="vec">The vector to cast.</param>
-        public static explicit operator BEPUutilities.Vector4(Vector4f vec)
-        {
-            return new BEPUutilities.Vector4(vec.X, vec.Y, vec.Z, vec.W);
+            return (IntPtr)(&v.X);
         }
 
         /// <summary>

@@ -29,6 +29,26 @@ namespace AlienEngine
     public static class MathHelper
     {
         /// <summary>
+        /// Large tolerance value. Defaults to 1e-5f.
+        /// </summary>
+        public static float BigEpsilon = 1E-5f;
+
+        /// <summary>
+        /// Tolerance value. Defaults to 1e-7f.
+        /// </summary>
+        public static float Epsilon = 1E-7f;
+
+        /// <summary>
+        /// Refers to the identity quaternion.
+        /// </summary>
+        public static Quaternion IdentityOrientation = Quaternion.Identity;
+
+        /// <summary>
+        /// Refers to the rigid identity transformation.
+        /// </summary>
+        public static RigidTransform RigidIdentity = RigidTransform.Identity;
+
+        /// <summary>
         /// Defines the value of tau divided by two as a <see cref="System.Single"/>.
         /// </summary>
         public const float Pi = 3.141592653589793238462643383279502884197169399375105820974944592307816406286208998628034825342117067982148086513282306647093844609550582231725359408128481117450284102701938521105559644622948954930382f;
@@ -662,7 +682,7 @@ namespace AlienEngine
         /// Returns the minimal value of an array.
         /// </summary>
         /// <param name="array">The array of values</param>
-        public static byte Min(byte[] array)
+        public static byte Min(params byte[] array)
         {
             byte Minimum;
 
@@ -691,7 +711,7 @@ namespace AlienEngine
         /// </summary>
         /// <param name="array">The array of values</param>
         [CLSCompliant(false)]
-        public static sbyte Min(sbyte[] array)
+        public static sbyte Min(params sbyte[] array)
         {
             sbyte Minimum;
 
@@ -719,7 +739,7 @@ namespace AlienEngine
         /// Returns the minimal value of an array.
         /// </summary>
         /// <param name="array">The array of values</param>
-        public static int Min(int[] array)
+        public static int Min(params int[] array)
         {
             int Minimum;
 
@@ -748,7 +768,7 @@ namespace AlienEngine
         /// </summary>
         /// <param name="array">The array of values</param>
         [CLSCompliant(false)]
-        public static uint Min(uint[] array)
+        public static uint Min(params uint[] array)
         {
             uint Minimum;
 
@@ -776,7 +796,7 @@ namespace AlienEngine
         /// Returns the minimal value of an array.
         /// </summary>
         /// <param name="array">The array of values</param>
-        public static long Min(long[] array)
+        public static long Min(params long[] array)
         {
             long Minimum;
 
@@ -805,7 +825,7 @@ namespace AlienEngine
         /// </summary>
         /// <param name="array">The array of values</param>
         [CLSCompliant(false)]
-        public static ulong Min(ulong[] array)
+        public static ulong Min(params ulong[] array)
         {
             ulong Minimum;
 
@@ -833,7 +853,7 @@ namespace AlienEngine
         /// Returns the minimal value of an array.
         /// </summary>
         /// <param name="array">The array of values</param>
-        public static short Min(short[] array)
+        public static short Min(params short[] array)
         {
             short Minimum;
 
@@ -862,7 +882,7 @@ namespace AlienEngine
         /// </summary>
         /// <param name="array">The array of values</param>
         [CLSCompliant(false)]
-        public static ushort Min(ushort[] array)
+        public static ushort Min(params ushort[] array)
         {
             ushort Minimum;
 
@@ -890,7 +910,7 @@ namespace AlienEngine
         /// Returns the minimal value of an array.
         /// </summary>
         /// <param name="array">The array of values</param>
-        public static decimal Min(decimal[] array)
+        public static decimal Min(params decimal[] array)
         {
             decimal Minimum;
 
@@ -918,7 +938,7 @@ namespace AlienEngine
         /// Returns the minimal value of an array.
         /// </summary>
         /// <param name="array">The array of values</param>
-        public static float Min(float[] array)
+        public static float Min(params float[] array)
         {
             float Minimum;
 
@@ -946,7 +966,7 @@ namespace AlienEngine
         /// Returns the minimal value of an array.
         /// </summary>
         /// <param name="array">The array of values</param>
-        public static double Min(double[] array)
+        public static double Min(params double[] array)
         {
             double Minimum;
 
@@ -974,7 +994,7 @@ namespace AlienEngine
         /// Returns the maximal value of an array.
         /// </summary>
         /// <param name="array">The array of values</param>
-        public static byte Max(byte[] array)
+        public static byte Max(params byte[] array)
         {
             byte Maximum;
 
@@ -1003,7 +1023,7 @@ namespace AlienEngine
         /// </summary>
         /// <param name="array">The array of values</param>
         [CLSCompliant(false)]
-        public static sbyte Max(sbyte[] array)
+        public static sbyte Max(params sbyte[] array)
         {
             sbyte Maximum;
 
@@ -1031,7 +1051,7 @@ namespace AlienEngine
         /// Returns the maximal value of an array.
         /// </summary>
         /// <param name="array">The array of values</param>
-        public static int Max(int[] array)
+        public static int Max(params int[] array)
         {
             int Maximum;
 
@@ -1060,7 +1080,7 @@ namespace AlienEngine
         /// </summary>
         /// <param name="array">The array of values</param>
         [CLSCompliant(false)]
-        public static uint Max(uint[] array)
+        public static uint Max(params uint[] array)
         {
             uint Maximum;
 
@@ -1088,7 +1108,7 @@ namespace AlienEngine
         /// Returns the maximal value of an array.
         /// </summary>
         /// <param name="array">The array of values</param>
-        public static long Max(long[] array)
+        public static long Max(params long[] array)
         {
             long Maximum;
 
@@ -1117,7 +1137,7 @@ namespace AlienEngine
         /// </summary>
         /// <param name="array">The array of values</param>
         [CLSCompliant(false)]
-        public static ulong Max(ulong[] array)
+        public static ulong Max(params ulong[] array)
         {
             ulong Maximum;
 
@@ -1145,7 +1165,7 @@ namespace AlienEngine
         /// Returns the maximal value of an array.
         /// </summary>
         /// <param name="array">The array of values</param>
-        public static short Max(short[] array)
+        public static short Max(params short[] array)
         {
             short Maximum;
 
@@ -1174,7 +1194,7 @@ namespace AlienEngine
         /// </summary>
         /// <param name="array">The array of values</param>
         [CLSCompliant(false)]
-        public static ushort Max(ushort[] array)
+        public static ushort Max(params ushort[] array)
         {
             ushort Maximum;
 
@@ -1202,7 +1222,7 @@ namespace AlienEngine
         /// Returns the maximal value of an array.
         /// </summary>
         /// <param name="array">The array of values</param>
-        public static float Max(float[] array)
+        public static float Max(params float[] array)
         {
             float Maximum;
 
@@ -1230,7 +1250,7 @@ namespace AlienEngine
         /// Returns the maximal value of an array.
         /// </summary>
         /// <param name="array">The array of values</param>
-        public static double Max(double[] array)
+        public static double Max(params double[] array)
         {
             double Maximum;
 
@@ -1258,7 +1278,7 @@ namespace AlienEngine
         /// Returns the maximal value of an array.
         /// </summary>
         /// <param name="array">The array of values</param>
-        public static decimal Max(decimal[] array)
+        public static decimal Max(params decimal[] array)
         {
             decimal Maximum;
 
@@ -1438,6 +1458,26 @@ namespace AlienEngine
             dummy = val1;
             val1 = val2;
             val2 = dummy;
+        }
+
+        /// <summary>
+        /// Reduces the angle into a range from -Pi to Pi.
+        /// </summary>
+        /// <param name="angle">Angle to wrap.</param>
+        /// <returns>Wrapped angle.</returns>
+        public static float WrapAngle(float angle)
+        {
+            angle = (float)Math.IEEERemainder(angle, TwoPi);
+            if (angle < -Pi)
+            {
+                angle += TwoPi;
+                return angle;
+            }
+            if (angle >= Pi)
+            {
+                angle -= TwoPi;
+            }
+            return angle;
         }
 
         public static byte HighNibble(byte value)

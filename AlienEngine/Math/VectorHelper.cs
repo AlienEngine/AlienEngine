@@ -17,6 +17,8 @@
 // USA
 #endregion
 
+using System;
+
 namespace AlienEngine
 {
     /// <summary>
@@ -24,6 +26,107 @@ namespace AlienEngine
     /// </summary>
     public static class VectorHelper
     {
+        /// <summary>
+        /// Gets the up vector (0,1,0).
+        /// </summary>
+        public static Vector3f Up
+        {
+            get
+            {
+                return new Vector3f()
+                {
+                    X = 0,
+                    Y = 1,
+                    Z = 0
+                };
+            }
+        }
+
+        /// <summary>
+        /// Gets the down vector (0,-1,0).
+        /// </summary>
+        public static Vector3f Down
+        {
+            get
+            {
+                return new Vector3f()
+                {
+                    X = 0,
+                    Y = -1,
+                    Z = 0
+                };
+            }
+        }
+
+        /// <summary>
+        /// Gets the right vector (1,0,0).
+        /// </summary>
+        public static Vector3f Right
+        {
+            get
+            {
+                return new Vector3f()
+                {
+                    X = 1,
+                    Y = 0,
+                    Z = 0
+                };
+            }
+        }
+
+        /// <summary>
+        /// Gets the left vector (-1,0,0).
+        /// </summary>
+        public static Vector3f Left
+        {
+            get
+            {
+                return new Vector3f()
+                {
+                    X = -1,
+                    Y = 0,
+                    Z = 0
+                };
+            }
+        }
+
+        /// <summary>
+        /// Gets the forward vector (0,0,-1).
+        /// </summary>
+        public static Vector3f Forward
+        {
+            get
+            {
+                return new Vector3f()
+                {
+                    X = 0,
+                    Y = 0,
+                    Z = -1
+                };
+            }
+        }
+
+        /// <summary>
+        /// Gets the back vector (0,0,1).
+        /// </summary>
+        public static Vector3f Backward
+        {
+            get
+            {
+                return new Vector3f()
+                {
+                    X = 0,
+                    Y = 0,
+                    Z = 1
+                };
+            }
+        }
+
+        /// <summary>
+        /// Represents an invalid Vector3.
+        /// </summary>
+        public static readonly Vector3f NoVector = new Vector3f(-Single.MaxValue, -Single.MaxValue, -Single.MaxValue);
+
         /// <summary>
         /// Update maximum values.
         /// </summary>
