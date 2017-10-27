@@ -1397,6 +1397,26 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <param name="offset">The offset in bytes into the data store.</param>
         /// <param name="size">The size of the data store region in bytes.</param>
         /// <param name="data">The data that will be loaded.</param>
+        public static void BufferSubData(BufferTarget target, long offset, long size, float[,] data)
+        {
+            GCHandle h = GCHandle.Alloc(data, GCHandleType.Pinned);
+            try
+            {
+                BufferSubData(target, offset, size, h.AddrOfPinnedObject());
+            }
+            finally
+            {
+                h.Free();
+            }
+        }
+
+        /// <summary>
+        /// Updates a subset of a data store.
+        /// </summary>
+        /// <param name="target">A <see cref="BufferTarget"/> specifying the target.</param>
+        /// <param name="offset">The offset in bytes into the data store.</param>
+        /// <param name="size">The size of the data store region in bytes.</param>
+        /// <param name="data">The data that will be loaded.</param>
         public static void BufferSubData(BufferTarget target, int offset, int size, double[] data)
         {
             GCHandle h = GCHandle.Alloc(data, GCHandleType.Pinned);
