@@ -1,4 +1,5 @@
 ﻿#region Copyright and License
+
 // Copyright (c) 2013-2014 The Khronos Group Inc.
 // Copyright (c) of C# port 2014 by Shinta <shintadono@gooemail.com>
 //
@@ -20,6 +21,7 @@
 // CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 // TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 // MATERIALS OR THE USE OR OTHER DEALINGS IN THE MATERIALS.
+
 #endregion
 
 using System;
@@ -44,12 +46,24 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <param name="invert">Set <b>true</b> if coverage mask should be inverted.</param>
         public delegate void SampleCoverage(float value, [MarshalAs(UnmanagedType.I1)] bool invert);
 
-        internal delegate void CompressedTexImage3D(TextureTarget target, int level, PixelInternalFormat internalformat, int width, int height, int depth, int border, int imageSize, IntPtr data);
-        internal delegate void CompressedTexImage2D(TextureTarget target, int level, PixelInternalFormat internalformat, int width, int height, int border, int imageSize, IntPtr data);
-        internal delegate void CompressedTexImage1D(TextureTarget target, int level, PixelInternalFormat internalformat, int width, int border, int imageSize, IntPtr data);
-        internal delegate void CompressedTexSubImage3D(TextureTarget target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, PixelInternalFormat format, int imageSize, IntPtr data);
-        internal delegate void CompressedTexSubImage2D(TextureTarget target, int level, int xoffset, int yoffset, int width, int height, PixelInternalFormat format, int imageSize, IntPtr data);
-        internal delegate void CompressedTexSubImage1D(TextureTarget target, int level, int xoffset, int width, PixelInternalFormat format, int imageSize, IntPtr data);
+        internal delegate void CompressedTexImage3D(TextureTarget target, int level, PixelInternalFormat internalformat,
+            int width, int height, int depth, int border, int imageSize, IntPtr data);
+
+        internal delegate void CompressedTexImage2D(TextureTarget target, int level, PixelInternalFormat internalformat,
+            int width, int height, int border, int imageSize, IntPtr data);
+
+        internal delegate void CompressedTexImage1D(TextureTarget target, int level, PixelInternalFormat internalformat,
+            int width, int border, int imageSize, IntPtr data);
+
+        internal delegate void CompressedTexSubImage3D(TextureTarget target, int level, int xoffset, int yoffset,
+            int zoffset, int width, int height, int depth, PixelInternalFormat format, int imageSize, IntPtr data);
+
+        internal delegate void CompressedTexSubImage2D(TextureTarget target, int level, int xoffset, int yoffset,
+            int width, int height, PixelInternalFormat format, int imageSize, IntPtr data);
+
+        internal delegate void CompressedTexSubImage1D(TextureTarget target, int level, int xoffset, int width,
+            PixelInternalFormat format, int imageSize, IntPtr data);
+
         internal delegate void GetCompressedTexImage(TextureTarget target, int level, IntPtr img);
     }
 
@@ -61,6 +75,7 @@ namespace AlienEngine.Core.Graphics.OpenGL
         public static bool VERSION_1_3;
 
         #region Delegates
+
         /// <summary>
         /// Sets the active texture unit.
         /// </summary>
@@ -78,21 +93,26 @@ namespace AlienEngine.Core.Graphics.OpenGL
         private static CompressedTexSubImage2D _CompressedTexSubImage2D;
         private static CompressedTexSubImage3D _CompressedTexSubImage3D;
         private static GetCompressedTexImage _GetCompressedTexImage;
+
         #endregion
 
         #region Overloads
+
         #region ActiveTexture
+
         /// <summary>
         /// Sets the active texture unit.
         /// </summary>
         [CLSCompliant(false)]
         public static void ActiveTexture(uint textureUnit)
         {
-            _ActiveTexture((uint)TextureUnit.Texture0 + textureUnit);
+            _ActiveTexture((uint) TextureUnit.Texture0 + textureUnit);
         }
+
         #endregion
 
         #region CompressedTexImage1D
+
         /// <summary>
         /// Loads a compressed 1D texture.
         /// </summary>
@@ -103,9 +123,10 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <param name="border">Must be zero for core profile.</param>
         /// <param name="imageSize">Size of the compressed texture in bytes.</param>
         /// <param name="offset">The offset into the array bound to <see cref="BufferTarget.PIXEL_UNPACK_BUFFER"/>.</param>
-        public static void CompressedTexImage1D(TextureTarget target, int level, PixelInternalFormat internalformat, int width, int border, int imageSize, int offset)
+        public static void CompressedTexImage1D(TextureTarget target, int level, PixelInternalFormat internalformat,
+            int width, int border, int imageSize, int offset)
         {
-            _CompressedTexImage1D(target, level, internalformat, width, border, imageSize, (IntPtr)offset);
+            _CompressedTexImage1D(target, level, internalformat, width, border, imageSize, (IntPtr) offset);
         }
 
         /// <summary>
@@ -118,10 +139,12 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <param name="border">Must be zero for core profile.</param>
         /// <param name="imageSize">Size of the compressed texture in bytes.</param>
         /// <param name="offset">The offset into the array bound to <see cref="BufferTarget.PIXEL_UNPACK_BUFFER"/>.</param>
-        public static void CompressedTexImage1D(TextureTarget target, int level, PixelInternalFormat internalformat, int width, int border, int imageSize, long offset)
+        public static void CompressedTexImage1D(TextureTarget target, int level, PixelInternalFormat internalformat,
+            int width, int border, int imageSize, long offset)
         {
-            if (IntPtr.Size == 4 && ((long)offset >> 32) != 0) throw new ArgumentOutOfRangeException("offset", PlatformErrorString);
-            _CompressedTexImage1D(target, level, internalformat, width, border, imageSize, (IntPtr)offset);
+            if (IntPtr.Size == 4 && ((long) offset >> 32) != 0)
+                throw new ArgumentOutOfRangeException("offset", PlatformErrorString);
+            _CompressedTexImage1D(target, level, internalformat, width, border, imageSize, (IntPtr) offset);
         }
 
         /// <summary>
@@ -134,21 +157,25 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <param name="border">Must be zero for core profile.</param>
         /// <param name="imageSize">Size of the compressed texture in bytes.</param>
         /// <param name="pixels">Pointer to the pixels.</param>
-        public static void CompressedTexImage1D(TextureTarget target, int level, PixelInternalFormat internalformat, int width, int border, int imageSize, byte[] pixels)
+        public static void CompressedTexImage1D(TextureTarget target, int level, PixelInternalFormat internalformat,
+            int width, int border, int imageSize, byte[] pixels)
         {
             GCHandle hPixels = GCHandle.Alloc(pixels, GCHandleType.Pinned);
             try
             {
-                _CompressedTexImage1D(target, level, internalformat, width, border, imageSize, hPixels.AddrOfPinnedObject());
+                _CompressedTexImage1D(target, level, internalformat, width, border, imageSize,
+                    hPixels.AddrOfPinnedObject());
             }
             finally
             {
                 hPixels.Free();
             }
         }
+
         #endregion
 
         #region CompressedTexImage2D
+
         /// <summary>
         /// Loads a compressed 2D texture.
         /// </summary>
@@ -160,9 +187,10 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <param name="border">Must be zero for core profile.</param>
         /// <param name="imageSize">Size of the compressed texture in bytes.</param>
         /// <param name="offset">The offset into the array bound to <see cref="BufferTarget.PIXEL_UNPACK_BUFFER"/>.</param>
-        public static void CompressedTexImage2D(TextureTarget target, int level, PixelInternalFormat internalformat, int width, int height, int border, int imageSize, int offset)
+        public static void CompressedTexImage2D(TextureTarget target, int level, PixelInternalFormat internalformat,
+            int width, int height, int border, int imageSize, int offset)
         {
-            _CompressedTexImage2D(target, level, internalformat, width, height, border, imageSize, (IntPtr)offset);
+            _CompressedTexImage2D(target, level, internalformat, width, height, border, imageSize, (IntPtr) offset);
         }
 
         /// <summary>
@@ -176,10 +204,12 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <param name="border">Must be zero for core profile.</param>
         /// <param name="imageSize">Size of the compressed texture in bytes.</param>
         /// <param name="offset">The offset into the array bound to <see cref="BufferTarget.PIXEL_UNPACK_BUFFER"/>.</param>
-        public static void CompressedTexImage2D(TextureTarget target, int level, PixelInternalFormat internalformat, int width, int height, int border, int imageSize, long offset)
+        public static void CompressedTexImage2D(TextureTarget target, int level, PixelInternalFormat internalformat,
+            int width, int height, int border, int imageSize, long offset)
         {
-            if (IntPtr.Size == 4 && ((long)offset >> 32) != 0) throw new ArgumentOutOfRangeException("offset", PlatformErrorString);
-            _CompressedTexImage2D(target, level, internalformat, width, height, border, imageSize, (IntPtr)offset);
+            if (IntPtr.Size == 4 && ((long) offset >> 32) != 0)
+                throw new ArgumentOutOfRangeException("offset", PlatformErrorString);
+            _CompressedTexImage2D(target, level, internalformat, width, height, border, imageSize, (IntPtr) offset);
         }
 
         /// <summary>
@@ -193,21 +223,25 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <param name="border">Must be zero for core profile.</param>
         /// <param name="imageSize">Size of the compressed texture in bytes.</param>
         /// <param name="pixels">Pointer to the pixels.</param>
-        public static void CompressedTexImage2D(TextureTarget target, int level, PixelInternalFormat internalformat, int width, int height, int border, int imageSize, byte[] pixels)
+        public static void CompressedTexImage2D(TextureTarget target, int level, PixelInternalFormat internalformat,
+            int width, int height, int border, int imageSize, byte[] pixels)
         {
             GCHandle hPixels = GCHandle.Alloc(pixels, GCHandleType.Pinned);
             try
             {
-                _CompressedTexImage2D(target, level, internalformat, width, height, border, imageSize, hPixels.AddrOfPinnedObject());
+                _CompressedTexImage2D(target, level, internalformat, width, height, border, imageSize,
+                    hPixels.AddrOfPinnedObject());
             }
             finally
             {
                 hPixels.Free();
             }
         }
+
         #endregion
 
         #region CompressedTexImage3D
+
         /// <summary>
         /// Loads a compressed 3D texture.
         /// </summary>
@@ -220,9 +254,11 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <param name="border">Must be zero for core profile.</param>
         /// <param name="imageSize">Size of the compressed texture in bytes.</param>
         /// <param name="offset">The offset into the array bound to <see cref="BufferTarget.PIXEL_UNPACK_BUFFER"/>.</param>
-        public static void CompressedTexImage3D(TextureTarget target, int level, PixelInternalFormat internalformat, int width, int height, int depth, int border, int imageSize, int offset)
+        public static void CompressedTexImage3D(TextureTarget target, int level, PixelInternalFormat internalformat,
+            int width, int height, int depth, int border, int imageSize, int offset)
         {
-            _CompressedTexImage3D(target, level, internalformat, width, height, depth, border, imageSize, (IntPtr)offset);
+            _CompressedTexImage3D(target, level, internalformat, width, height, depth, border, imageSize,
+                (IntPtr) offset);
         }
 
         /// <summary>
@@ -237,10 +273,13 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <param name="border">Must be zero for core profile.</param>
         /// <param name="imageSize">Size of the compressed texture in bytes.</param>
         /// <param name="offset">The offset into the array bound to <see cref="BufferTarget.PIXEL_UNPACK_BUFFER"/>.</param>
-        public static void CompressedTexImage3D(TextureTarget target, int level, PixelInternalFormat internalformat, int width, int height, int depth, int border, int imageSize, long offset)
+        public static void CompressedTexImage3D(TextureTarget target, int level, PixelInternalFormat internalformat,
+            int width, int height, int depth, int border, int imageSize, long offset)
         {
-            if (IntPtr.Size == 4 && ((long)offset >> 32) != 0) throw new ArgumentOutOfRangeException("offset", PlatformErrorString);
-            _CompressedTexImage3D(target, level, internalformat, width, height, depth, border, imageSize, (IntPtr)offset);
+            if (IntPtr.Size == 4 && ((long) offset >> 32) != 0)
+                throw new ArgumentOutOfRangeException("offset", PlatformErrorString);
+            _CompressedTexImage3D(target, level, internalformat, width, height, depth, border, imageSize,
+                (IntPtr) offset);
         }
 
         /// <summary>
@@ -255,21 +294,25 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <param name="border">Must be zero for core profile.</param>
         /// <param name="imageSize">Size of the compressed texture in bytes.</param>
         /// <param name="pixels">Pointer to the pixels.</param>
-        public static void CompressedTexImage3D(TextureTarget target, int level, PixelInternalFormat internalformat, int width, int height, int depth, int border, int imageSize, byte[] pixels)
+        public static void CompressedTexImage3D(TextureTarget target, int level, PixelInternalFormat internalformat,
+            int width, int height, int depth, int border, int imageSize, byte[] pixels)
         {
             GCHandle hPixels = GCHandle.Alloc(pixels, GCHandleType.Pinned);
             try
             {
-                _CompressedTexImage3D(target, level, internalformat, width, height, depth, border, imageSize, hPixels.AddrOfPinnedObject());
+                _CompressedTexImage3D(target, level, internalformat, width, height, depth, border, imageSize,
+                    hPixels.AddrOfPinnedObject());
             }
             finally
             {
                 hPixels.Free();
             }
         }
+
         #endregion
 
         #region CompressedTexSubImage1D
+
         /// <summary>
         /// Loads a compressed texture as part a 1D texture.
         /// </summary>
@@ -280,9 +323,10 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <param name="format">A <see cref="PixelInternalFormat"/> specifying the format of the compressed data.</param>
         /// <param name="imageSize">Size of the compressed texture in bytes.</param>
         /// <param name="offset">The offset into the array bound to <see cref="BufferTarget.PIXEL_UNPACK_BUFFER"/>.</param>
-        public static void CompressedTexSubImage1D(TextureTarget target, int level, int xoffset, int width, PixelInternalFormat format, int imageSize, int offset)
+        public static void CompressedTexSubImage1D(TextureTarget target, int level, int xoffset, int width,
+            PixelInternalFormat format, int imageSize, int offset)
         {
-            _CompressedTexSubImage1D(target, level, xoffset, width, format, imageSize, (IntPtr)offset);
+            _CompressedTexSubImage1D(target, level, xoffset, width, format, imageSize, (IntPtr) offset);
         }
 
         /// <summary>
@@ -295,10 +339,12 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <param name="format">A <see cref="PixelInternalFormat"/> specifying the format of the compressed data.</param>
         /// <param name="imageSize">Size of the compressed texture in bytes.</param>
         /// <param name="offset">The offset into the array bound to <see cref="BufferTarget.PIXEL_UNPACK_BUFFER"/>.</param>
-        public static void CompressedTexSubImage1D(TextureTarget target, int level, int xoffset, int width, PixelInternalFormat format, int imageSize, long offset)
+        public static void CompressedTexSubImage1D(TextureTarget target, int level, int xoffset, int width,
+            PixelInternalFormat format, int imageSize, long offset)
         {
-            if (IntPtr.Size == 4 && ((long)offset >> 32) != 0) throw new ArgumentOutOfRangeException("offset", PlatformErrorString);
-            _CompressedTexSubImage1D(target, level, xoffset, width, format, imageSize, (IntPtr)offset);
+            if (IntPtr.Size == 4 && ((long) offset >> 32) != 0)
+                throw new ArgumentOutOfRangeException("offset", PlatformErrorString);
+            _CompressedTexSubImage1D(target, level, xoffset, width, format, imageSize, (IntPtr) offset);
         }
 
         /// <summary>
@@ -311,21 +357,25 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <param name="format">A <see cref="PixelInternalFormat"/> specifying the format of the compressed data.</param>
         /// <param name="imageSize">Size of the compressed texture in bytes.</param>
         /// <param name="pixels">Pointer to the pixels.</param>
-        public static void CompressedTexSubImage1D(TextureTarget target, int level, int xoffset, int width, PixelInternalFormat format, int imageSize, byte[] pixels)
+        public static void CompressedTexSubImage1D(TextureTarget target, int level, int xoffset, int width,
+            PixelInternalFormat format, int imageSize, byte[] pixels)
         {
             GCHandle hPixels = GCHandle.Alloc(pixels, GCHandleType.Pinned);
             try
             {
-                _CompressedTexSubImage1D(target, level, xoffset, width, format, imageSize, hPixels.AddrOfPinnedObject());
+                _CompressedTexSubImage1D(target, level, xoffset, width, format, imageSize,
+                    hPixels.AddrOfPinnedObject());
             }
             finally
             {
                 hPixels.Free();
             }
         }
+
         #endregion
 
         #region CompressedTexSubImage2D
+
         /// <summary>
         /// Loads a compressed texture as part a 2D texture.
         /// </summary>
@@ -338,9 +388,11 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <param name="format">A <see cref="PixelInternalFormat"/> specifying the format of the compressed data.</param>
         /// <param name="imageSize">Size of the compressed texture in bytes.</param>
         /// <param name="offset">The offset into the array bound to <see cref="BufferTarget.PIXEL_UNPACK_BUFFER"/>.</param>
-        public static void CompressedTexSubImage2D(TextureTarget target, int level, int xoffset, int yoffset, int width, int height, PixelInternalFormat format, int imageSize, int offset)
+        public static void CompressedTexSubImage2D(TextureTarget target, int level, int xoffset, int yoffset, int width,
+            int height, PixelInternalFormat format, int imageSize, int offset)
         {
-            _CompressedTexSubImage2D(target, level, xoffset, yoffset, width, height, format, imageSize, (IntPtr)offset);
+            _CompressedTexSubImage2D(target, level, xoffset, yoffset, width, height, format, imageSize,
+                (IntPtr) offset);
         }
 
         /// <summary>
@@ -355,10 +407,13 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <param name="format">A <see cref="PixelInternalFormat"/> specifying the format of the compressed data.</param>
         /// <param name="imageSize">Size of the compressed texture in bytes.</param>
         /// <param name="offset">The offset into the array bound to <see cref="BufferTarget.PIXEL_UNPACK_BUFFER"/>.</param>
-        public static void CompressedTexSubImage2D(TextureTarget target, int level, int xoffset, int yoffset, int width, int height, PixelInternalFormat format, int imageSize, long offset)
+        public static void CompressedTexSubImage2D(TextureTarget target, int level, int xoffset, int yoffset, int width,
+            int height, PixelInternalFormat format, int imageSize, long offset)
         {
-            if (IntPtr.Size == 4 && ((long)offset >> 32) != 0) throw new ArgumentOutOfRangeException("offset", PlatformErrorString);
-            _CompressedTexSubImage2D(target, level, xoffset, yoffset, width, height, format, imageSize, (IntPtr)offset);
+            if (IntPtr.Size == 4 && ((long) offset >> 32) != 0)
+                throw new ArgumentOutOfRangeException("offset", PlatformErrorString);
+            _CompressedTexSubImage2D(target, level, xoffset, yoffset, width, height, format, imageSize,
+                (IntPtr) offset);
         }
 
         /// <summary>
@@ -373,21 +428,25 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <param name="format">A <see cref="PixelInternalFormat"/> specifying the format of the compressed data.</param>
         /// <param name="imageSize">Size of the compressed texture in bytes.</param>
         /// <param name="pixels">Pointer to the pixels.</param>
-        public static void CompressedTexSubImage2D(TextureTarget target, int level, int xoffset, int yoffset, int width, int height, PixelInternalFormat format, int imageSize, byte[] pixels)
+        public static void CompressedTexSubImage2D(TextureTarget target, int level, int xoffset, int yoffset, int width,
+            int height, PixelInternalFormat format, int imageSize, byte[] pixels)
         {
             GCHandle hPixels = GCHandle.Alloc(pixels, GCHandleType.Pinned);
             try
             {
-                _CompressedTexSubImage2D(target, level, xoffset, yoffset, width, height, format, imageSize, hPixels.AddrOfPinnedObject());
+                _CompressedTexSubImage2D(target, level, xoffset, yoffset, width, height, format, imageSize,
+                    hPixels.AddrOfPinnedObject());
             }
             finally
             {
                 hPixels.Free();
             }
         }
+
         #endregion
 
         #region CompressedTexSubImage3D
+
         /// <summary>
         /// Loads a compressed texture as part a 3D texture.
         /// </summary>
@@ -402,9 +461,11 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <param name="format">A <see cref="PixelInternalFormat"/> specifying the format of the compressed data.</param>
         /// <param name="imageSize">Size of the compressed texture in bytes.</param>
         /// <param name="offset">The offset into the array bound to <see cref="BufferTarget.PIXEL_UNPACK_BUFFER"/>.</param>
-        public static void CompressedTexSubImage3D(TextureTarget target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, PixelInternalFormat format, int imageSize, int offset)
+        public static void CompressedTexSubImage3D(TextureTarget target, int level, int xoffset, int yoffset,
+            int zoffset, int width, int height, int depth, PixelInternalFormat format, int imageSize, int offset)
         {
-            _CompressedTexSubImage3D(target, level, xoffset, yoffset, zoffset, width, height, depth, format, imageSize, (IntPtr)offset);
+            _CompressedTexSubImage3D(target, level, xoffset, yoffset, zoffset, width, height, depth, format, imageSize,
+                (IntPtr) offset);
         }
 
         /// <summary>
@@ -421,10 +482,13 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <param name="format">A <see cref="PixelInternalFormat"/> specifying the format of the compressed data.</param>
         /// <param name="imageSize">Size of the compressed texture in bytes.</param>
         /// <param name="offset">The offset into the array bound to <see cref="BufferTarget.PIXEL_UNPACK_BUFFER"/>.</param>
-        public static void CompressedTexSubImage3D(TextureTarget target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, PixelInternalFormat format, int imageSize, long offset)
+        public static void CompressedTexSubImage3D(TextureTarget target, int level, int xoffset, int yoffset,
+            int zoffset, int width, int height, int depth, PixelInternalFormat format, int imageSize, long offset)
         {
-            if (IntPtr.Size == 4 && ((long)offset >> 32) != 0) throw new ArgumentOutOfRangeException("offset", PlatformErrorString);
-            _CompressedTexSubImage3D(target, level, xoffset, yoffset, zoffset, width, height, depth, format, imageSize, (IntPtr)offset);
+            if (IntPtr.Size == 4 && ((long) offset >> 32) != 0)
+                throw new ArgumentOutOfRangeException("offset", PlatformErrorString);
+            _CompressedTexSubImage3D(target, level, xoffset, yoffset, zoffset, width, height, depth, format, imageSize,
+                (IntPtr) offset);
         }
 
         /// <summary>
@@ -441,21 +505,25 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <param name="format">A <see cref="PixelInternalFormat"/> specifying the format of the compressed data.</param>
         /// <param name="imageSize">Size of the compressed texture in bytes.</param>
         /// <param name="pixels">Pointer to the pixels.</param>
-        public static void CompressedTexSubImage3D(TextureTarget target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, PixelInternalFormat format, int imageSize, byte[] pixels)
+        public static void CompressedTexSubImage3D(TextureTarget target, int level, int xoffset, int yoffset,
+            int zoffset, int width, int height, int depth, PixelInternalFormat format, int imageSize, byte[] pixels)
         {
             GCHandle hPixels = GCHandle.Alloc(pixels, GCHandleType.Pinned);
             try
             {
-                _CompressedTexSubImage3D(target, level, xoffset, yoffset, zoffset, width, height, depth, format, imageSize, hPixels.AddrOfPinnedObject());
+                _CompressedTexSubImage3D(target, level, xoffset, yoffset, zoffset, width, height, depth, format,
+                    imageSize, hPixels.AddrOfPinnedObject());
             }
             finally
             {
                 hPixels.Free();
             }
         }
+
         #endregion
 
         #region GetCompressedTexImage
+
         /// <summary>
         /// Read a texture as compressed texture.
         /// </summary>
@@ -464,7 +532,7 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <param name="offset">The offset into the array bound to <see cref="BufferTarget.PIXEL_PACK_BUFFER"/>.</param>
         public static void GetCompressedTexImage(TextureTarget target, int level, int offset)
         {
-            _GetCompressedTexImage(target, level, (IntPtr)offset);
+            _GetCompressedTexImage(target, level, (IntPtr) offset);
         }
 
         /// <summary>
@@ -475,8 +543,9 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <param name="offset">The offset into the array bound to <see cref="BufferTarget.PIXEL_PACK_BUFFER"/>.</param>
         public static void GetCompressedTexImage(TextureTarget target, int level, long offset)
         {
-            if (IntPtr.Size == 4 && ((long)offset >> 32) != 0) throw new ArgumentOutOfRangeException("offset", PlatformErrorString);
-            _GetCompressedTexImage(target, level, (IntPtr)offset);
+            if (IntPtr.Size == 4 && ((long) offset >> 32) != 0)
+                throw new ArgumentOutOfRangeException("offset", PlatformErrorString);
+            _GetCompressedTexImage(target, level, (IntPtr) offset);
         }
 
         /// <summary>
@@ -497,7 +566,9 @@ namespace AlienEngine.Core.Graphics.OpenGL
                 hImg.Free();
             }
         }
+
         #endregion
+
         #endregion
 
         private static void Load_VERSION_1_3()
@@ -512,8 +583,9 @@ namespace AlienEngine.Core.Graphics.OpenGL
             _CompressedTexSubImage3D = GetAddress<CompressedTexSubImage3D>("glCompressedTexSubImage3D");
             _GetCompressedTexImage = GetAddress<GetCompressedTexImage>("glGetCompressedTexImage");
 
-            VERSION_1_3 = VERSION_1_2 && _ActiveTexture != null && SampleCoverage != null && _CompressedTexImage3D != null &&
-                _CompressedTexSubImage3D != null && _GetCompressedTexImage != null;
+            VERSION_1_3 = VERSION_1_2 && _ActiveTexture != null && SampleCoverage != null &&
+                          _CompressedTexImage3D != null &&
+                          _CompressedTexSubImage3D != null && _GetCompressedTexImage != null;
         }
     }
 }
