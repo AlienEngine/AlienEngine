@@ -144,24 +144,24 @@ namespace AlienEngine.Imaging
             GL.BindTexture(TextureTarget.TextureCubeMap, _textureID);
         }
 
+        public void Unbind()
+        {
+            GL.BindTexture(TextureTarget.TextureCubeMap, 0);
+        }
+        
         public void Render()
         {
-            bool fc = false;
-
-            if (Renderer.IsFaceCullingEnabled)
-            {
-                fc = true;
-                Renderer.BackupState(RendererBackupMode.FaceCulling);
-                Renderer.FaceCulling(false);
-            }
+            Renderer.BackupState(RendererBackupMode.FaceCulling);
+            Renderer.FaceCulling(false);
 
             _cube.Program.Bind();
             _cube.Program.SetUniform("pcm_matrix", _camera.CubemapMatrix * _camera.ProjectionMatrix);
             _cube.Program.SetUniform("textureCubemap", GL.COLOR_TEXTURE_UNIT_INDEX);
             Bind(GL.COLOR_TEXTURE_UNIT_INDEX);
             _cube.Draw();
+            Unbind();
 
-            if (fc) Renderer.RestoreState(RendererBackupMode.FaceCulling);
+            Renderer.RestoreState(RendererBackupMode.FaceCulling);
         }
 
         #endregion
