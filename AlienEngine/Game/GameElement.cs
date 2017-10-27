@@ -16,10 +16,11 @@ namespace AlienEngine
         #region Static Members
 
         #region Properties
+
         /// <summary>
         /// Create a new empty <see cref="GameElement"/>.
         /// </summary>
-        public static GameElement Empty { get { return new GameElement("GameElement"); } }
+        public static GameElement Empty => new GameElement("GameElement");
 
         /// <summary>
         /// An internal counter used to automaticaly rename
@@ -31,9 +32,11 @@ namespace AlienEngine
         /// The list of registered <see cref="GameElement"/>s.
         /// </summary>
         private static Dictionary<string, GameElement> _gameElements;
+
         #endregion Properties
 
         #region Methods
+
         /// <summary>
         /// Initialize static data.
         /// </summary>
@@ -143,6 +146,7 @@ namespace AlienEngine
             foreach (var gameElement in _gameElements)
                 gameElement.Value.Stop();
         }
+
         #endregion Methods
 
         #endregion Static Members
@@ -150,6 +154,7 @@ namespace AlienEngine
         #region Private Members
 
         #region Fields
+
         /// <summary>
         /// The scene in which this game element is.
         /// </summary>
@@ -165,7 +170,7 @@ namespace AlienEngine
         /// The list of childs in the current <see cref="GameElement"/>.
         /// </summary>
         private GameElementCollection _childs;
-    
+
         /// <summary>
         /// The name of the current <see cref="GameElement"/>.
         /// </summary>
@@ -188,18 +193,17 @@ namespace AlienEngine
         /// The world transformation of this <see cref="GameElement"/>.
         /// </summary>
         private Transform _worldTransform;
+
         #endregion Fields
 
         #region Properties
+
         /// <summary>
         /// The real scale of this element.
         /// </summary>
         private Vector3f _realScale
         {
-            get
-            {
-                return (Parent != null) ? Parent._realScale * LocalTransform.Scale : LocalTransform.Scale;
-            }
+            get { return (Parent != null) ? Parent._realScale * LocalTransform.Scale : LocalTransform.Scale; }
         }
 
         /// <summary>
@@ -207,10 +211,7 @@ namespace AlienEngine
         /// </summary>
         private Vector3f _realRotation
         {
-            get
-            {
-                return (Parent != null) ? Parent._realRotation + LocalTransform.Rotation : LocalTransform.Rotation;
-            }
+            get { return (Parent != null) ? Parent._realRotation + LocalTransform.Rotation : LocalTransform.Rotation; }
         }
 
         /// <summary>
@@ -220,9 +221,12 @@ namespace AlienEngine
         {
             get
             {
-                return (Parent != null) ? Parent._realTranslation + (LocalTransform.Translation * _realScale) : LocalTransform.Translation;
+                return (Parent != null)
+                    ? Parent._realTranslation + (LocalTransform.Translation * _realScale)
+                    : LocalTransform.Translation;
             }
         }
+
         #endregion Properties
 
         #endregion Private Members
@@ -230,34 +234,53 @@ namespace AlienEngine
         #region Public Members
 
         #region Properties
+
         /// <summary>
         /// The scene in which this <see cref="GameElement"/> is.
         /// </summary>
-        public Scene ParentScene { get { return _parentScene; } }
+        public Scene ParentScene
+        {
+            get { return _parentScene; }
+        }
 
-        public GameElementCollection Childs { get { return _childs; } }
+        public GameElementCollection Childs
+        {
+            get { return _childs; }
+        }
 
         /// <summary>
         /// The name of this <see cref="GameElement"/>.
         /// </summary>
-        public string Name { get { return _name; } }
+        public string Name
+        {
+            get { return _name; }
+        }
 
         /// <summary>
         /// The tag group of this <see cref="GameElement"/>.
         /// </summary>
-        public string Tag { get { return _tag; } }
+        public string Tag
+        {
+            get { return _tag; }
+        }
 
         /// <summary>
         /// The parent <see cref="GameElement"/> of this one. If this
         /// <see cref="GameElement"/> is in the top of the hierarchy (the world)
         /// <see cref="Parent"/> = <see cref="null"/>.
         /// </summary>
-        public GameElement Parent { get { return _parent; } }
+        public GameElement Parent
+        {
+            get { return _parent; }
+        }
 
         /// <summary>
         /// Checks if this <see cref="GameElement"/> has childs.
         /// </summary>
-        public bool HasChilds { get { return _childs.Length > 0; } }
+        public bool HasChilds
+        {
+            get { return _childs.Length > 0; }
+        }
 
         /// <summary>
         /// Get local transformations for this <see cref="GameElement"/>.
@@ -286,9 +309,11 @@ namespace AlienEngine
                 return _worldTransform;
             }
         }
+
         #endregion Properties
 
         #region Constructor
+
         /// <summary>
         /// Create a new <see cref="GameElement"/> with a name.
         /// </summary>
@@ -303,9 +328,11 @@ namespace AlienEngine
 
             GameElement.Add(_name, this);
         }
+
         #endregion
 
         #region Methods
+
         /// <summary>
         /// Add a child in this <see cref="GameElement"/>.
         /// </summary>
@@ -442,7 +469,7 @@ namespace AlienEngine
             if (HasComponent<T>())
             {
                 foreach (IComponent component in _attachedComponents)
-                    if (component is T) DetachComponent((T)component);
+                    if (component is T) DetachComponent((T) component);
             }
         }
 
@@ -498,6 +525,7 @@ namespace AlienEngine
         {
             return Name;
         }
+
         #endregion
 
         #endregion Public Members
