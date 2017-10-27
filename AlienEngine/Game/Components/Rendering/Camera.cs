@@ -6,10 +6,14 @@ namespace AlienEngine
     public class Camera : Component
     {
         #region Static members
-        public static readonly Camera None = new Camera(Vector3f.Zero, Vector3f.Zero, 1.0f, 1.0f, 2.0f) { ViewportSize = Sizei.One };
+
+        public static readonly Camera None =
+            new Camera(Vector3f.Zero, Vector3f.Zero, 1.0f, 1.0f, 2.0f) {ViewportSize = Sizei.One};
+
         #endregion
 
         #region Fields
+
         private ClearScreenTypes _clearScreenType = ClearScreenTypes.Color;
         private ProjectionTypes _projectionType = ProjectionTypes.Perspective;
 
@@ -32,9 +36,11 @@ namespace AlienEngine
         private bool _isPrimary;
 
         private bool _shouldUpdate = false;
+
         #endregion
 
         #region Enums
+
         public enum ClearScreenTypes
         {
             Color,
@@ -46,9 +52,11 @@ namespace AlienEngine
             Perspective,
             Orthogonal
         }
+
         #endregion
 
         #region Properties
+
         /// <summary>
         /// Method used to render clear screen.
         /// </summary>
@@ -266,11 +274,14 @@ namespace AlienEngine
             get { return _isPrimary; }
             set { _isPrimary = value; }
         }
+
         #endregion
 
         #region Constructors
+
         public Camera() : this(-Vector3f.UnitZ, Vector3f.UnitY, MathHelper.Deg2Rad(60f), 0.25f, 1000f)
-        { }
+        {
+        }
 
         public Camera(Vector3f forward, Vector3f up, float fov, float near, float far)
         {
@@ -285,15 +296,14 @@ namespace AlienEngine
 
             if (gameElement != null)
             {
-                gameElement.LocalTransform.OnAllChange += (_old, _new) =>
-                {
-                    _shouldUpdate = true;
-                };
+                gameElement.LocalTransform.OnAllChange += (_old, _new) => { _shouldUpdate = true; };
             }
         }
+
         #endregion
 
         #region Methods
+
         private void _init()
         {
             Vector3f HTarget = new Vector3f(_forward.X, 0.0f, _forward.Z);
@@ -333,7 +343,7 @@ namespace AlienEngine
         /// <param name="angle">The amount of rotation in radians</param>
         public void Yaw(double angle)
         {
-            Yaw((float)angle);
+            Yaw((float) angle);
         }
 
         /// <summary>
@@ -352,7 +362,7 @@ namespace AlienEngine
         /// <param name="angle">The amount of rotation in radians</param>
         public void SetYaw(double angle)
         {
-            SetYaw((float)angle);
+            SetYaw((float) angle);
         }
 
         /// <summary>
@@ -371,7 +381,7 @@ namespace AlienEngine
         /// <param name="angle">The amount of rotation in radians</param>
         public void Pitch(double angle)
         {
-            Pitch((float)angle);
+            Pitch((float) angle);
         }
 
         /// <summary>
@@ -390,7 +400,7 @@ namespace AlienEngine
         /// <param name="angle">The amount of rotation in radians</param>
         public void SetPitch(double angle)
         {
-            SetPitch((float)angle);
+            SetPitch((float) angle);
         }
 
         /// <summary>
@@ -409,7 +419,7 @@ namespace AlienEngine
         /// <param name="angle">The amount of rotation in radians</param>
         public void Roll(double angle)
         {
-            Roll((float)angle);
+            Roll((float) angle);
         }
 
         /// <summary>
@@ -428,7 +438,7 @@ namespace AlienEngine
         /// <param name="angle">The amount of rotation in radians</param>
         public void SetRoll(double angle)
         {
-            SetRoll((float)angle);
+            SetRoll((float) angle);
         }
 
         public override void Start()
@@ -526,20 +536,24 @@ namespace AlienEngine
         private void _setProjectionMatrix()
         {
             if (ProjectionType == ProjectionTypes.Perspective)
-                _projectionMatrix = Matrix4f.CreatePerspectiveFieldOfView(_fov, _viewportSize.Width / _viewportSize.Height, _near, _far);
+                _projectionMatrix =
+                    Matrix4f.CreatePerspectiveFieldOfView(_fov, _viewportSize.Width / _viewportSize.Height, _near,
+                        _far);
             else
                 _projectionMatrix = Matrix4f.CreateOrthographic(_viewportSize.Width, _viewportSize.Height, _near, _far);
         }
 
         private void _setViewMatrix()
         {
-            _viewMatrix = Matrix4f.CreateTranslation(-gameElement.WorldTransform.Translation) * Matrix4f.LookAt(_forward, _up);
+            _viewMatrix = Matrix4f.CreateTranslation(-gameElement.WorldTransform.Translation) *
+                          Matrix4f.LookAt(_forward, _up);
         }
 
         private void _setCubemapMatrix()
         {
             _cubemapMatrix = Matrix4f.LookAt(_forward, _up);
         }
+
         #endregion
     }
 }

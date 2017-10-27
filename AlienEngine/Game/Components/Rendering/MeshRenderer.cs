@@ -20,6 +20,12 @@ namespace AlienEngine
             get { return _visible; }
             set { _visible = value; }
         }
+        
+        public Mesh Mesh
+        {
+            get { return _mesh; }
+            set { _mesh = value; }
+        }
 
         /// <summary>
         /// Create a new MeshRenderer with the given mesh.
