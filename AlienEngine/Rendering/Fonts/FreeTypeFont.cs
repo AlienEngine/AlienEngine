@@ -1,236 +1,414 @@
 ﻿using System;
-using System.Drawing;
-using SharpFont;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Runtime.InteropServices;
+using AlienEngine.Core.Graphics;
+using AlienEngine.Core.Graphics.OpenGL;
+using AlienEngine.Core.Graphics.Shaders;
+using AlienEngine.Core.Physics.Entities.Prefabs;
+using AlienEngine.Core.Resources;
+using AlienEngine.Imaging;
+using AlienEngine.Shaders;
+using SharpFont;
 
-namespace QuickFont
+namespace AlienEngine.Core.Rendering.Fonts
 {
-	/// <summary>
-	/// An implementation of <see cref="IFont"/> that uses FreeType via
-	/// SharpFont to load the font file. This implementation supports reading
-	/// kerning information directly from the font file.
-	/// </summary>
-	public class FreeTypeFont : IFont
-	{
-		private Library _fontLibrary = new Library();
-		private const uint DPI = 96;
+    public class FreeTypeFont : IFont, IDisposable
+    {
+        private Library _fontLibrary;
 
-		private Face _fontFace;
+        private Face _fontFace;
 
-		private int _maxHorizontalBearyingY = 0;
+        private readonly float Size;
 
-		/// <summary>
-		/// The size of the font
-		/// </summary>
-		public float Size { get; private set; }
+        private const uint DPI = 96;
 
-		/// <summary>
-		/// Whether the font has kerning information available, or if it needs
-		/// to be calculated
-		/// </summary>
-		public bool HasKerningInformation { get { return _fontFace.HasKerning; } }
+        private Dictionary<char, Character> _characters;
 
-		/// <summary>
-		/// Creates a new instace of FreeTypeFont
-		/// </summary>
-		/// <param name="fontPath">The path to the font file</param>
-		/// <param name="size">Size of the font</param>
-		/// <param name="style">Style of the font</param>
-		/// <param name="superSampleLevels">Super sample levels</param>
-		/// <param name="scale">Scale</param>
-		/// <exception cref="ArgumentException"></exception>
-		public FreeTypeFont(string fontPath, float size, FontStyle style, int superSampleLevels = 1, float scale = 1.0f)
-		{
-			// Check that the font exists
-			if (!File.Exists(fontPath)) throw new ArgumentException("The specified font path does not exist", nameof(fontPath));
+        public Dictionary<char, Character> Characters => _characters;
 
-			StyleFlags fontStyle = StyleFlags.None;
-			switch (style)
-			{
-				case FontStyle.Bold:
-					fontStyle = StyleFlags.Bold;
-					break;
-				case FontStyle.Italic:
-					fontStyle = StyleFlags.Italic;
-					break;
-				case FontStyle.Regular:
-					fontStyle = StyleFlags.None;
-					break;
-				default:
-					Debug.WriteLine("Invalid style flag chosen for FreeTypeFont: " + style);
-					break;
-			}
+        private ShaderProgram _shaderProgram = new FontShaderProgram();
 
-			LoadFontFace(fontPath, size, fontStyle, superSampleLevels, scale);
-		}
+        private uint _vao;
 
-		private void LoadFontFace(string fontPath, float size, StyleFlags fontStyle, int superSampleLevels, float scale)
-		{
-			// Get total number of faces in a font file
-			var tempFace = _fontLibrary.NewFace(fontPath, -1);
-			int numberOfFaces = tempFace.FaceCount;
+        private uint _vbo;
 
-			// Dispose of the temporary face
-			tempFace.Dispose();
-			tempFace = null;
+        private Matrix4f _projectionMatrix;
 
-			// Loop through to find the style we want
-			for (int i = 0; i < numberOfFaces; i++)
-			{
-				tempFace = _fontLibrary.NewFace(fontPath, i);
+        public Matrix4f ProjectionMatrix
+        {
+            get { return _projectionMatrix; }
+            set { _projectionMatrix = value; }
+        }
 
-				// If we've found the style, exit loop
-				if (tempFace.StyleFlags == fontStyle)
-					break;
+        /// <summary>
+        /// Creates a new instace of FreeTypeFont
+        /// </summary>
+        /// <param name="fontPath">The path to the font file</param>
+        /// <param name="size">Size of the font</param>
+        /// <param name="style">Style of the font</param>
+        /// <exception cref="ArgumentException"></exception>
+        public FreeTypeFont(string fontPath, float size, FontStyle style)
+        {
+            // Check that the font exists
+            if (!File.Exists(fontPath))
+                throw new ArgumentException("The specified font path does not exist", nameof(fontPath));
 
-				// Dispose temp face and keep searching
-				tempFace.Dispose();
-				tempFace = null;
-			}
+            // Initialize
+            _characters = new Dictionary<char, Character>();
+            _fontLibrary = new Library();
 
-			// Use default font face if correct style not found
-			if (tempFace == null)
-			{
-				Debug.WriteLine("Could not find correct face style in font: " + fontStyle);
-				tempFace = _fontLibrary.NewFace(fontPath, 0);
-			}
+            StyleFlags fontStyle = StyleFlags.None;
+            switch (style)
+            {
+                case FontStyle.Bold:
+                    fontStyle = StyleFlags.Bold;
+                    break;
+                case FontStyle.Italic:
+                    fontStyle = StyleFlags.Italic;
+                    break;
+                case FontStyle.Regular:
+                    fontStyle = StyleFlags.None;
+                    break;
+                default:
+                    Debug.WriteLine("Invalid style flag chosen for FreeTypeFont: " + style);
+                    break;
+            }
 
-			// Set the face for this instance
-			_fontFace = tempFace;
+            // Get total number of faces in a font file
+            var tempFace = _fontLibrary.NewFace(fontPath, -1);
+            int numberOfFaces = tempFace.FaceCount;
 
-			// Set the size
-			Size = size * scale * superSampleLevels;
-			_fontFace.SetCharSize(0, Size, 0, DPI);
-		}
+            // Dispose of the temporary face
+            tempFace.Dispose();
+            tempFace = null;
 
-		/// <summary>Returns a string that represents the current object.</summary>
-		/// <returns>A string that represents the current object.</returns>
-		/// <filterpriority>2</filterpriority>
-		public override string ToString()
-		{
-			return _fontFace.FamilyName ?? "";
-		}
+            // Loop through to find the style we want
+            for (int i = 0; i < numberOfFaces; i++)
+            {
+                tempFace = _fontLibrary.NewFace(fontPath, i);
 
-		/// <summary>
-		/// Draws the given string at the specified location
-		/// </summary>
-		/// <param name="s">The string to draw</param>
-		/// <param name="graph">The graphics surface to draw the string on to</param>
-		/// <param name="color">The color of the text</param>
-		/// <param name="x">The x position of the string</param>
-		/// <param name="y">The y position of the string</param>
-		/// <returns>Returns the offset of the glyph from the given x and y. Only non-zero with <see cref="FreeTypeFont"/></returns>
-		public Point DrawString(string s, Graphics graph, Brush color, int x, int y)
-		{
-			// Check we are only passed a single character
-			if (s.Length > 1)
-				throw new ArgumentOutOfRangeException(nameof(s), "Implementation currently only supports drawing individual characters");
+                // If we've found the style, exit loop
+                if (tempFace.StyleFlags == fontStyle)
+                    break;
 
-			// Check the brush is a solid colour brush
-			if (!(color is SolidBrush))
-				throw new ArgumentException("Brush is required to be a SolidBrush (single, solid color)", nameof(color));
+                // Dispose temp face and keep searching
+                tempFace.Dispose();
+                tempFace = null;
+            }
 
-			var fontColor = ((SolidBrush) color).Color;
+            // Use default font face if correct style not found
+            if (tempFace == null)
+            {
+                Debug.WriteLine("Could not find correct face style in font: " + fontStyle);
+                tempFace = _fontLibrary.NewFace(fontPath, 0);
+            }
 
-			// Load the glyph into the face's glyph slot
-			LoadGlyph(s[0]);
+            // Set the face for this instance
+            _fontFace = tempFace;
 
-			// Render the glyph
-			_fontFace.Glyph.RenderGlyph(RenderMode.Normal);
+            // Set the size
+            Size = size;
+            _fontFace.SetCharSize(0, Size, 0, DPI);
 
-			// If glyph rendered correctly, copy onto graphics
-			if (_fontFace.Glyph.Bitmap.Width > 0)
-			{
-				var bitmap = _fontFace.Glyph.Bitmap.ToGdipBitmap(fontColor);
-				int baseline = y + _maxHorizontalBearyingY;
-				graph.DrawImageUnscaled(bitmap, x, (baseline - _fontFace.Glyph.Metrics.HorizontalBearingY.Ceiling()));
-				return new Point(0, baseline - _fontFace.Glyph.Metrics.HorizontalBearingY.Ceiling() - 2*y);
-			}
+            // Load characters
+            BuildCharMap();
 
-			return Point.Empty;
-		}
+            // Build buffer objects
+            BuildBufferObjects();
 
-		/// <summary>
-		/// Gets the kerning between the given characters, if the font supports it
-		/// </summary>
-		/// <param name="c1">The first character of the character pair</param>
-		/// <param name="c2">The second character of the character pair</param>
-		/// <returns>The horizontal kerning offset of the character pair</returns>
-		public int GetKerning(char c1, char c2)
-		{
-			var c1Index = _fontFace.GetCharIndex(c1);
-			var c2Index = _fontFace.GetCharIndex(c2);
-			var kerning = _fontFace.GetKerning(c1Index, c2Index, KerningMode.Default);
-			return kerning.X.Ceiling();
-		}
+            // Register this element as a disposable resource
+            ResourcesManager.AddDisposableResource(this);
+        }
 
-		private void LoadGlyph(char c)
-		{
-			_fontFace.LoadGlyph(_fontFace.GetCharIndex(c), LoadFlags.Default, LoadTarget.Normal);
-		}
+        private void BuildCharMap()
+        {
+            for (uint i = 0; i < 256; i++)
+            {
+                try
+                {
+                    // Load character glyph
+                    _fontFace.LoadChar(i, LoadFlags.Render, LoadTarget.Normal);
 
-		/// <summary>
-		/// Measures the given string and returns the size
-		/// </summary>
-		/// <param name="s">The string to measure</param>
-		/// <param name="graph">The graphics surface to use for temporary purposes</param>
-		/// <returns>The size of the given string</returns>
-		public SizeF MeasureString(string s, Graphics graph)
-		{
-			// Check we are only passed a single character
-			if (s.Length > 1)
-				throw new ArgumentOutOfRangeException(nameof(s), "Implementation currently only supports drawing individual characters");
+                    // Now store the character for later use
+                    _characters[(char) i] = new Character
+                    {
+                        Texture = new Texture(_fontFace.Glyph),
+                        Size = new Sizef(_fontFace.Glyph.Bitmap.Width, _fontFace.Glyph.Bitmap.Rows),
+                        Bearing = new Vector2f(_fontFace.Glyph.BitmapLeft, _fontFace.Glyph.BitmapTop),
+                        Advance = (uint) _fontFace.Glyph.Advance.X.Value
+                    };
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Unable to load the character \"" + (char) i + "\"");
+                }
+            }
+        }
 
-			// Load the glyph into the face's glyph slot
-			LoadGlyph(s[0]);
+        private void BuildBufferObjects()
+        {
+            _vao = GL.GenVertexArray();
+            _vbo = GL.GenBuffer();
 
-			// Get the glyph metrics
-			var gMetrics = _fontFace.Glyph.Metrics;
+            GL.BindVertexArray(_vao);
+            GL.BindBuffer(BufferTarget.ArrayBuffer, _vbo);
 
-			// Update max horizontal y bearing if needed
-			var yBearing = (int)gMetrics.HorizontalBearingY;
+            GL.BufferData(BufferTarget.ArrayBuffer, sizeof(float) * 6 * 4, new float[0], BufferUsageHint.DynamicDraw);
 
-			if (yBearing > _maxHorizontalBearyingY)
-				_maxHorizontalBearyingY = yBearing;
+            GL.EnableVertexAttribArray(0);
+            GL.VertexAttribPointer(0, 4, VertexAttribPointerType.Float, false, 4 * sizeof(float), 0);
 
-			return new SizeF((float)(gMetrics.Width), (float)(gMetrics.Height));
-		}
+            GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
+            GL.BindVertexArray(0);
+        }
 
-		private bool _disposedValue; // To detect redundant calls
+        public void RenderText(string text, FontRendererConfiguration config)
+        {
+            var textWidth = CalculateWidth(text, config.Scale);
 
-		/// <summary>
-		/// Dispose resources 
-		/// </summary>
-		/// <param name="disposing"></param>
-		protected virtual void Dispose(bool disposing)
-		{
-			if (!_disposedValue)
-			{
-				if (disposing)
-				{
-					if (_fontFace != null)
-					{
-						_fontFace.Dispose();
-						_fontFace = null;
-					}
-				    if (_fontLibrary != null)
-				    {
-				        _fontLibrary.Dispose();
-				        _fontLibrary = null;
-				    }
-				}
-				_disposedValue = true;
-			}
-		}
+            // Change the renderer behaviour
+            Renderer.BackupState(RendererBackupMode.Blending);
+            Renderer.Blending();
 
-		// This code added to correctly implement the disposable pattern.
-		/// <summary>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</summary>
-		/// <filterpriority>2</filterpriority>
-		public void Dispose()
-		{
-			// Do not change this code. Put cleanup code in Dispose(bool disposing) above.
-			Dispose(true);
-		}
-	}
+            _shaderProgram.Bind();
+            _shaderProgram.SetUniform("textColor", config.Color);
+            _shaderProgram.SetUniform("projection", ProjectionMatrix);
+
+            GL.ActiveTexture(GL.COLOR_TEXTURE_UNIT_INDEX);
+
+            GL.BindVertexArray(_vao);
+
+            switch (config.TextAlignement)
+            {
+                case TextAlignement.Center:
+                    config.Position.X += config.Container.Width / 2;
+                    break;
+                case TextAlignement.Right:
+                    config.Position.X += config.Container.Width;
+                    break;
+            }
+                        
+            switch (config.TextOrigin)
+            {
+                case TextOrigin.Bottom:
+                        config.Position.X -= textWidth / 2;
+                    break;
+
+                case TextOrigin.BottomRight:
+                    config.Position.X -= textWidth;
+                    break;
+
+                case TextOrigin.MiddleLeft:
+                    config.Position.Y -= Size / 2;
+                    break;
+
+                case TextOrigin.Middle:
+                    config.Position.X -= textWidth / 2;
+                    config.Position.Y -= Size / 2;
+                    break;
+
+                case TextOrigin.MiddleRight:
+                    config.Position.Y -= Size / 2;
+                    break;
+
+                case TextOrigin.TopLeft:
+                    config.Position.Y -= Size;
+                    break;
+
+                case TextOrigin.Top:
+                    config.Position.X -= textWidth / 2;
+                    config.Position.Y -= Size;
+                    break;
+
+                case TextOrigin.TopRight:
+                    config.Position.X -= textWidth;
+                    config.Position.Y -= Size;
+                    break;
+            }
+
+            float currentWidth = 0.0f;
+            int currentLine = 0;
+            float xAdvance = 0.0f;
+            float yAdvance = 0.0f;
+
+            if (config.TextWrapMode == TextWrapMode.None)
+            {
+                foreach (char c in text)
+                {
+                    Character ch = Characters[c];
+
+                    var xpos = config.Position.X + xAdvance + ch.Bearing.X * config.Scale.X;
+                    var ypos = config.Position.Y - yAdvance - (ch.Size.Y - ch.Bearing.Y) * config.Scale.Y;
+
+                    var w = ch.Size.X * config.Scale.X;
+                    var h = ch.Size.Y * config.Scale.Y;
+
+                    DrawLetter(xpos, ypos, h, w, ch);
+
+                    xAdvance += (ch.Advance >> 6) * config.Scale.X + config.CharacterSpacing;;
+                }
+            }
+            else if (config.TextWrapMode == TextWrapMode.BreakWord)
+            {
+                foreach (char c in text)
+                {
+                    Character ch = Characters[c];
+
+                    currentWidth += (ch.Advance >> 6) * config.Scale.X + config.CharacterSpacing;
+
+                    if (config.Container.Width > 0 && currentWidth + config.Scale.X > config.Container.Width)
+                    {
+                        xAdvance = 0;
+                        currentLine++;
+                        currentWidth = (ch.Advance >> 6) * config.Scale.X + config.CharacterSpacing;
+                    }
+
+                    yAdvance = currentLine * Size * config.LineSpacing * config.Scale.Y;
+
+                    var xpos = config.Position.X + xAdvance + ch.Bearing.X * config.Scale.X;
+                    var ypos = config.Position.Y - yAdvance - (ch.Size.Y - ch.Bearing.Y) * config.Scale.Y;
+
+                    var w = ch.Size.X * config.Scale.X;
+                    var h = ch.Size.Y * config.Scale.Y;
+
+                    DrawLetter(xpos, ypos, h, w, ch);
+
+                    xAdvance = currentWidth;
+                }
+            }
+            else if (config.TextWrapMode == TextWrapMode.Normal)
+            {
+                var words = text.Split(new char[] {' '}, StringSplitOptions.RemoveEmptyEntries);
+
+                foreach (string word in words)
+                {
+                    var _word = word + " ";
+
+                    currentWidth += CalculateWidth(_word, config.Scale) + config.CharacterSpacing * _word.Length;
+                    
+                    if (config.Container.Width > 0 && currentWidth + config.Scale.X > config.Container.Width)
+                    {
+                        xAdvance = 0;
+                        currentLine++;
+                        currentWidth = CalculateWidth(_word, config.Scale) + config.CharacterSpacing * _word.Length;
+                    }
+
+                    yAdvance = currentLine * Size * config.LineSpacing * config.Scale.Y;
+                    
+                    foreach (char c in _word)
+                    {
+                        Character ch = Characters[c];
+
+                        var xpos = config.Position.X + xAdvance + ch.Bearing.X * config.Scale.X;
+                        var ypos = config.Position.Y - yAdvance - (ch.Size.Y - ch.Bearing.Y) * config.Scale.Y;
+
+                        var w = ch.Size.X * config.Scale.X;
+                        var h = ch.Size.Y * config.Scale.Y;
+
+                        DrawLetter(xpos, ypos, h, w, ch);
+
+                        xAdvance += (ch.Advance >> 6) * config.Scale.X + config.CharacterSpacing;;
+                    }
+                }
+            }
+
+            GL.BindVertexArray(0);
+
+            GL.BindTexture(TextureTarget.Texture2D, 0);
+        }
+
+        private void DrawLetter(float xpos, float ypos, float h, float w, Character ch)
+        {
+            var vertices = new float[6, 4]
+            {
+                {xpos, ypos + h, 0.0f, 0.0f},
+                {xpos, ypos, 0.0f, 1.0f},
+                {xpos + w, ypos, 1.0f, 1.0f},
+                {xpos, ypos + h, 0.0f, 0.0f},
+                {xpos + w, ypos, 1.0f, 1.0f},
+                {xpos + w, ypos + h, 1.0f, 0.0f}
+            };
+
+            ch.Texture.Bind(GL.COLOR_TEXTURE_UNIT_INDEX);
+
+            GL.BindBuffer(BufferTarget.ArrayBuffer, _vbo);
+
+            GL.BufferSubData(BufferTarget.ArrayBuffer, 0, sizeof(float) * 6 * 4, vertices);
+
+            GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
+
+            GL.DrawArrays(BeginMode.Triangles, 0, 6);
+        }
+
+        public float CalculateWidth(string text)
+        {
+            return CalculateWidth(text, Vector2f.One);
+        }
+
+        public float CalculateWidth(string text, Vector2f scale)
+        {
+            float width = 0;
+
+            foreach (char c in text)
+                width += (Characters[c].Advance >> 6) * scale.X;
+
+            return width;
+        }
+
+        /// <summary>Returns a string that represents the current object.</summary>
+        /// <returns>A string that represents the current object.</returns>
+        /// <filterpriority>2</filterpriority>
+        public override string ToString()
+        {
+            return _fontFace.FamilyName ?? "";
+        }
+
+        private void ReleaseUnmanagedResources()
+        {
+            if (_vao != 0)
+            {
+                GL.DeleteVertexArray(_vao);
+                _vao = 0;
+            }
+
+            if (_vbo != 0)
+            {
+                GL.DeleteBuffer(_vbo);
+                _vbo = 0;
+            }
+        }
+
+        private void Dispose(bool disposing)
+        {
+            ReleaseUnmanagedResources();
+
+            if (disposing)
+            {
+                _fontFace.Dispose();
+                _fontFace = null;
+
+                _fontLibrary.Dispose();
+                _fontLibrary = null;
+
+                _shaderProgram.Dispose();
+                _shaderProgram = null;
+
+                _characters.Clear();
+                _characters = null;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        ~FreeTypeFont()
+        {
+            Dispose(false);
+        }
+    }
 }

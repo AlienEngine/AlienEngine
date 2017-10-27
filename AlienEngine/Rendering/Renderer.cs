@@ -1,46 +1,63 @@
-﻿using AlienEngine.Core.Game;
-using AlienEngine.Core.Graphics;
+﻿using AlienEngine.Core.Graphics;
 using AlienEngine.Core.Graphics.OpenGL;
 using AlienEngine.Core.Graphics.Shaders;
 using AlienEngine.Shaders;
 using System;
 using System.Collections.Generic;
+using System.Data.OleDb;
 
 namespace AlienEngine.Core.Rendering
 {
     public static class Renderer
     {
         private static List<IRenderable> _renderables;
+        private static List<IRenderableText> _renderableTexts;
+        private static bool _faceCullingEnabled;
         private static bool _depthTestEnabled;
         private static bool _blendingEnabled;
         private static bool _multisampleEnabled;
         private static uint screenVAO;
         private static uint screenVBO;
         private static ShaderProgram screenShaderProgram;
+        private static Rectangle _viewport;
 
         // Depth test
         private static DepthFunction _depthTestFunction;
 
         // Face culling
-        private static bool _faceCullingEnabled;
-
         private static CullFaceMode _faceCullingMode;
+
         private static FrontFaceDirection _faceCullingFrontFaceDirection;
+
+        // Blending
+        private static BlendingFactorSrc _blendingFactorSrc;
+
+        private static BlendingFactorDest _blendingFactorDest;
 
         // Backup
         private static Tuple<bool, CullFaceMode, FrontFaceDirection> _faceCullingBackup;
 
         private static Tuple<bool, DepthFunction> _depthTestBackup;
 
-        public static bool IsFaceCullingEnabled
-        {
-            get { return _faceCullingEnabled; }
-        }
+        private static Tuple<bool, BlendingFactorSrc, BlendingFactorDest> _blendingBackup;
 
+        public static Rectangle Viewport => _viewport;
+
+        public static bool IsFaceCullingEnabled => _faceCullingEnabled;
+
+        public static bool IsDepthTestEnabled => _depthTestEnabled;
+
+        public static bool IsBlendingEnabled => _blendingEnabled;
+
+        public delegate void ViewportChanged(object sender, ViewportChangedEventArgs e);
+
+        public static event ViewportChanged OnViewportChange;
+        
         static Renderer()
         {
             // Renderables
             _renderables = new List<IRenderable>();
+            _renderableTexts = new List<IRenderableText>();
 
             // States
             _depthTestEnabled = false;
@@ -50,6 +67,10 @@ namespace AlienEngine.Core.Rendering
             // Backups
             _faceCullingBackup = null;
             _depthTestBackup = null;
+            _blendingBackup = null;
+
+            // Viewport
+            _viewport = Rectangle.Empty;
 
             // Screen
             screenVAO = 0;
@@ -64,6 +85,8 @@ namespace AlienEngine.Core.Rendering
                     _depthTestBackup = new Tuple<bool, DepthFunction>(_depthTestEnabled, _depthTestFunction);
                     break;
                 case RendererBackupMode.Blending:
+                    _blendingBackup = new Tuple<bool, BlendingFactorSrc, BlendingFactorDest>(_blendingEnabled,
+                        _blendingFactorSrc, _blendingFactorDest);
                     break;
                 case RendererBackupMode.FaceCulling:
                     _faceCullingBackup = new Tuple<bool, CullFaceMode, FrontFaceDirection>(_faceCullingEnabled,
@@ -84,6 +107,11 @@ namespace AlienEngine.Core.Rendering
                     }
                     break;
                 case RendererBackupMode.Blending:
+                    if (_blendingBackup != null)
+                    {
+                        Blending(_blendingBackup.Item1, _blendingBackup.Item2, _blendingBackup.Item3);
+                        _blendingBackup = null;
+                    }
                     break;
                 case RendererBackupMode.FaceCulling:
                     if (_faceCullingBackup != null)
@@ -112,14 +140,45 @@ namespace AlienEngine.Core.Rendering
             return _renderables.Contains(_object);
         }
 
-        public static void Viewport(int x, int y, int width, int height)
+        public static void RegisterRenderableText(IRenderableText _object)
         {
-            GL.Viewport(x, y, width, height);
+            if (!HasRenderableText(_object))
+                _renderableTexts.Add(_object);
         }
 
-        public static void Viewport(Rectangle viewport)
+        public static void UnregisterRenderableText(IRenderableText _object)
         {
-            Viewport(viewport.X, viewport.Y, viewport.Width, viewport.Height);
+            if (HasRenderableText(_object))
+                _renderableTexts.Remove(_object);
+        }
+
+        public static bool HasRenderableText(IRenderableText _object)
+        {
+            return _renderableTexts.Contains(_object);
+        }
+
+        public static void SetViewport(int x, int y, int width, int height)
+        {
+            Rectangle old = _viewport;
+            GL.Viewport(x, y, width, height);
+            _viewport = new Rectangle(x, y, width, height);
+            OnViewportChange?.Invoke(null, new ViewportChangedEventArgs(old, _viewport));
+        }
+
+        public static void SetViewport(Rectangle viewport)
+        {
+            Rectangle old = _viewport;
+            SetViewport(viewport.X, viewport.Y, viewport.Width, viewport.Height);
+            _viewport = viewport;
+            OnViewportChange?.Invoke(null, new ViewportChangedEventArgs(old, _viewport));
+        }
+
+        public static void SetViewport(Point2i location, Sizei size)
+        {
+            Rectangle old = _viewport;
+            SetViewport(location.X, location.Y, size.Width, size.Height);
+            _viewport = new Rectangle(location, size);
+            OnViewportChange?.Invoke(null, new ViewportChangedEventArgs(old, _viewport));
         }
 
         public static void ClearScreen(
@@ -147,6 +206,9 @@ namespace AlienEngine.Core.Rendering
             {
                 if (!_blendingEnabled) GL.Enable(EnableCap.Blend);
                 GL.BlendFunc(srcFactor, dstFactor);
+
+                _blendingFactorSrc = srcFactor;
+                _blendingFactorDest = dstFactor;
             }
             else if (_blendingEnabled) GL.Disable(EnableCap.Blend);
 
@@ -188,13 +250,13 @@ namespace AlienEngine.Core.Rendering
             {
                 float[] indArray = new float[]
                 {
-                    -1.0f,  1.0f,  0.0f,  1.0f,
-                     1.0f,  1.0f,  1.0f,  1.0f,
-                     1.0f, -1.0f,  1.0f,  0.0f,
+                    -1.0f, 1.0f, 0.0f, 1.0f,
+                    1.0f, 1.0f, 1.0f, 1.0f,
+                    1.0f, -1.0f, 1.0f, 0.0f,
 
-                     1.0f, -1.0f,  1.0f,  0.0f,
-                    -1.0f, -1.0f,  0.0f,  0.0f,
-                    -1.0f,  1.0f,  0.0f,  1.0f
+                    1.0f, -1.0f, 1.0f, 0.0f,
+                    -1.0f, -1.0f, 0.0f, 0.0f,
+                    -1.0f, 1.0f, 0.0f, 1.0f
                 };
 
                 screenVAO = GL.GenVertexArray();
@@ -270,6 +332,10 @@ namespace AlienEngine.Core.Rendering
             }
 
             RestoreState(RendererBackupMode.DepthTest);
+            
+            // Render all renderable texts
+            foreach (IRenderableText _text in _renderableTexts)
+                _text.Render();
         }
     }
 }
