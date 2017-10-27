@@ -1,5 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\SharpFont.4.0.1\build\SharpFont.props"
+          Condition="Exists('..\packages\SharpFont.4.0.1\build\SharpFont.props')"/>
+  <Import Project="..\packages\SharpFont.Dependencies.2.6\build\SharpFont.Dependencies.props"
+          Condition="Exists('..\packages\SharpFont.Dependencies.2.6\build\SharpFont.Dependencies.props')"/>
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -34,6 +38,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugSymbols>true</DebugSymbols>
@@ -58,6 +63,7 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
@@ -69,7 +75,7 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <WarningLevel>4</WarningLevel>
-    <Optimize>true</Optimize>
+    <Optimize>false</Optimize>
     <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
@@ -101,12 +107,14 @@
     <OutputPath>bin\Debug Linux</OutputPath>
     <WarningLevel>4</WarningLevel>
     <Optimize>false</Optimize>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug Linux|x86'">
     <Prefer32Bit>false</Prefer32Bit>
     <OutputPath>bin\Debug Linux</OutputPath>
     <WarningLevel>4</WarningLevel>
     <Optimize>false</Optimize>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>false</SignAssembly>
@@ -118,6 +126,10 @@
     <DelaySign>false</DelaySign>
   </PropertyGroup>
   <ItemGroup>
+    <Reference
+            Include="SharpFont, Version=4.0.1.200, Culture=neutral, PublicKeyToken=48add4c483071cdf, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpFont.4.0.1\lib\net45\SharpFont.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -208,10 +220,24 @@
     <Compile Include="Engine.cs" />
     <Compile Include="Audio\AudioSourceState.cs" />
     <Compile Include="GameWindow.cs" />
-    <Compile Include="Game\Components\AudioClip.cs" />
-    <Compile Include="Game\Components\AudioReverbZone.cs" />
-    <Compile Include="Game\Components\BoxCollider.cs" />
-    <Compile Include="Game\Components\CapsuleCollider.cs" />
+    <Compile Include="Game\Components\Audio\AudioClip.cs"/>
+    <Compile Include="Game\Components\Audio\AudioListener.cs"/>
+    <Compile Include="Game\Components\Audio\AudioReverbZone.cs"/>
+    <Compile Include="Game\Components\Audio\AudioSource.cs"/>
+    <Compile Include="Game\Components\Lightning\Light.cs"/>
+    <Compile Include="Game\Components\Physics\BoxCollider.cs"/>
+    <Compile Include="Game\Components\Physics\CapsuleCollider.cs"/>
+    <Compile Include="Game\Components\Physics\MeshCollider.cs"/>
+    <Compile Include="Game\Components\Physics\PlaneCollider.cs"/>
+    <Compile Include="Game\Components\Physics\RigidBody.cs"/>
+    <Compile Include="Game\Components\Physics\SphereCollider.cs"/>
+    <Compile Include="Game\Components\Rendering\Camera.cs"/>
+    <Compile Include="Game\Components\Rendering\Material.cs"/>
+    <Compile Include="Game\Components\Rendering\MeshRenderer.cs"/>
+    <Compile Include="Game\Components\UI\Label2D.cs"/>
+    <Compile Include="Game\Shaders\FontShaderProgram.cs"/>
+    <Compile Include="Graphics\Shaders\Samples\Fragment Shaders\FontFragmentShader.cs"/>
+    <Compile Include="Graphics\Shaders\Samples\Vertex Shaders\FontVertexShader.cs"/>
     <Compile Include="Imaging\Enums.cs" />
     <Compile Include="Imaging\Image.cs" />
     <Compile Include="Inputs\KeyboardKeyEventArgs.cs" />
@@ -289,11 +315,6 @@
     <Compile Include="Physics\Character\SupportFinder.cs" />
     <Compile Include="Physics\Character\VerticalMotionConstraint.cs" />
     <Compile Include="Physics\Collider.cs" />
-    <Compile Include="Game\Components\Light.cs" />
-    <Compile Include="Game\Components\MeshCollider.cs" />
-    <Compile Include="Game\Components\PlaneCollider.cs" />
-    <Compile Include="Game\Components\RigidBody.cs" />
-    <Compile Include="Game\Components\SphereCollider.cs" />
     <Compile Include="Game\GameElementCollection.cs" />
     <Compile Include="Game\GameSettings.cs" />
     <Compile Include="Game\IComponent.cs" />
@@ -625,29 +646,20 @@
     <Compile Include="Physics\Vehicle\WheelShape.cs" />
     <Compile Include="Physics\Vehicle\WheelSlidingFriction.cs" />
     <Compile Include="Physics\Vehicle\WheelSuspension.cs" />
-    <Compile Include="Rendering\Fonts\Font.cs" />
-    <Compile Include="Rendering\Fonts\FontAlignment.cs" />
-    <Compile Include="Rendering\Fonts\FontBitmap.cs" />
-    <Compile Include="Rendering\Fonts\FontBuilder.cs" />
-    <Compile Include="Rendering\Fonts\FontBuilderConfiguration.cs" />
-    <Compile Include="Rendering\Fonts\FontCharacterKerningRule.cs" />
-    <Compile Include="Rendering\Fonts\FontData.cs" />
-    <Compile Include="Rendering\Fonts\FontGlyph.cs" />
-    <Compile Include="Rendering\Fonts\FontKerningCalculator.cs" />
-    <Compile Include="Rendering\Fonts\FontKerningConfiguration.cs" />
-    <Compile Include="Rendering\Fonts\FontMonospacing.cs" />
-    <Compile Include="Rendering\Fonts\FontRenderHint.cs" />
-    <Compile Include="Rendering\Fonts\FontRenderOptions.cs" />
-    <Compile Include="Rendering\Fonts\FontText.cs" />
-    <Compile Include="Rendering\Fonts\FontTextNode.cs" />
-    <Compile Include="Rendering\Fonts\FontTextNodeList.cs" />
-    <Compile Include="Rendering\Fonts\FontTextNodeType.cs" />
-    <Compile Include="Rendering\Fonts\FontTextPosition.cs" />
-    <Compile Include="Rendering\Fonts\FontTexture.cs" />
-    <Compile Include="Rendering\Fonts\FontVertexBuffer.cs" />
+    <Compile Include="Rendering\Fonts\TextOrigin.cs"/>
+    <Compile Include="Rendering\Fonts\Character.cs"/>
+    <Compile Include="Rendering\Fonts\FontRendererConfiguration.cs"/>
+    <Compile Include="Rendering\Fonts\FontRenderingProjectionMethod.cs"/>
+    <Compile Include="Rendering\Fonts\FontStyle.cs"/>
+    <Compile Include="Rendering\Fonts\FontType.cs"/>
+    <Compile Include="Rendering\Fonts\FreeTypeFont.cs"/>
+    <Compile Include="Rendering\Fonts\IFont.cs"/>
+    <Compile Include="Rendering\Fonts\TextAlignement.cs"/>
+    <Compile Include="Rendering\Fonts\TextWrapMode.cs"/>
     <Compile Include="Rendering\IRenderable.cs" />
     <Compile Include="Game\LightType.cs" />
     <Compile Include="Game\PostEffectMode.cs" />
+    <Compile Include="Rendering\IRenderableText.cs"/>
     <Compile Include="Rendering\RenderableCollection.cs" />
     <Compile Include="Rendering\Renderer.cs" />
     <Compile Include="Game\Scene.cs" />
@@ -658,10 +670,6 @@
     <Compile Include="Graphics\Cursor.cs" />
     <Compile Include="BlittableValueType.cs" />
     <Compile Include="Game\Component.cs" />
-    <Compile Include="Game\Components\AudioListener.cs" />
-    <Compile Include="Game\Components\AudioSource.cs" />
-    <Compile Include="Game\Components\Camera.cs" />
-    <Compile Include="Game\Components\MeshRenderer.cs" />
     <Compile Include="Game\Transform.cs" />
     <Compile Include="Game\Game.cs" />
     <Compile Include="Game\GameElement.cs" />
@@ -685,7 +693,6 @@
     <Compile Include="Graphics\DevIL\Unmanaged\Structures.cs" />
     <Compile Include="Graphics\FBO.cs" />
     <Compile Include="Graphics\Geometry.cs" />
-    <Compile Include="Game\Components\Material.cs" />
     <Compile Include="Graphics\MeshEntry.cs" />
     <Compile Include="Graphics\MeshFactory.cs" />
     <Compile Include="Graphics\MeshImporter.cs" />
@@ -710,6 +717,7 @@
     <Compile Include="Inputs\MouseButton.cs" />
     <Compile Include="Physics\ColliderShapes.cs" />
     <Compile Include="Rendering\RendererBackupMode.cs" />
+    <Compile Include="Rendering\ViewportChangedEventArgs.cs"/>
     <Compile Include="ResizeEventArgs.cs" />
     <Compile Include="Resources\AssetsManager.cs" />
     <Compile Include="Resources\BufferPool.cs" />
@@ -724,34 +732,7 @@
     <Compile Include="Threading\ParallelLoopWorker.cs" />
     <Compile Include="Threading\SpinLock.cs" />
     <Compile Include="Threading\ThreadsManager.cs" />
-    <Compile Include="UI\Advanced\DataControl.cs" />
-    <Compile Include="UI\Clipboard.cs" />
-    <Compile Include="UI\AnchorStyles.cs" />
-    <Compile Include="UI\Button.cs" />
-    <Compile Include="UI\CheckBox.cs" />
-    <Compile Include="UI\ContextMenu.cs" />
-    <Compile Include="UI\ContextMenuEntry.cs" />
-    <Compile Include="UI\Control.cs" />
-    <Compile Include="UI\Draw.cs" />
-    <Compile Include="UI\FlowDirection.cs" />
-    <Compile Include="UI\FlowLayout.cs" />
-    <Compile Include="UI\FontTextNodeList.cs" />
-    <Compile Include="UI\Form.cs" />
-    <Compile Include="UI\GroupLayout.cs" />
-    <Compile Include="UI\Gui.cs" />
-    <Compile Include="UI\Label.cs" />
-    <Compile Include="UI\LinkLabel.cs" />
-    <Compile Include="UI\Options.cs" />
-    <Compile Include="UI\Padding.cs" />
-    <Compile Include="UI\ScrollableControl.cs" />
-    <Compile Include="UI\ScrolledControl.cs" />
-    <Compile Include="UI\Skin.cs" />
-    <Compile Include="UI\Slider.cs" />
-    <Compile Include="UI\SliderOrientation.cs" />
-    <Compile Include="UI\SplitLayout.cs" />
-    <Compile Include="UI\SplitterOrientation.cs" />
-    <Compile Include="UI\TextBox.cs" />
-    <Compile Include="UI\Viewport.cs" />
+    <Compile Include="UI\Anchor.cs"/>
     <Compile Include="Utils\ConvertX.cs" />
     <Compile Include="Utils\CPUInfo.cs" />
     <Compile Include="Utils\DataStructures\ConcurrentDeque.cs" />
@@ -805,11 +786,8 @@
     <Compile Include="Graphics\OpenGL\Structs\UFloat10.cs" />
     <Compile Include="Graphics\OpenGL\Structs\UFloat11.cs" />
     <Compile Include="Game\Shaders\DiffuseShaderProgram.cs" />
-    <Compile Include="Graphics\Shaders\Samples\UI\FontFragmentShader.cs" />
-    <Compile Include="Graphics\Shaders\Samples\UI\FontShaderProgram.cs" />
     <Compile Include="Graphics\Shaders\Samples\UI\TexturedUIShaderProgram.cs" />
     <Compile Include="Graphics\Shaders\Samples\UI\UITexturedFragmentShader.cs" />
-    <Compile Include="Graphics\Shaders\Samples\UI\FontVertexShader.cs" />
     <Compile Include="Graphics\Shaders\Samples\UI\UITexturedVertexShader.cs" />
     <Compile Include="Graphics\Mesh.cs" />
     <Compile Include="Graphics\Shaders\Samples\Fragment Shaders\DiffuseFragmentShader.cs" />
@@ -914,6 +892,10 @@
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\AssimpNet.3.3.2\build\AssimpNet.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\AssimpNet.3.3.2\build\AssimpNet.targets'))" />
+    <Error Condition="!Exists('..\packages\SharpFont.Dependencies.2.6\build\SharpFont.Dependencies.props')"
+           Text="$([System.String]::Format('$(ErrorText)', '..\packages\SharpFont.Dependencies.2.6\build\SharpFont.Dependencies.props'))"/>
+    <Error Condition="!Exists('..\packages\SharpFont.4.0.1\build\SharpFont.props')"
+           Text="$([System.String]::Format('$(ErrorText)', '..\packages\SharpFont.4.0.1\build\SharpFont.props'))"/>
   </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
