@@ -47687,6 +47687,10 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// </summary>
         DepthComponent = ((int)0x1902),
         /// <summary>
+        /// Original was GL_RED = 0x1903
+        /// </summary>
+        Red = ((int)0x1903),
+        /// <summary>
         /// Original was GL_ALPHA = 0x1906
         /// </summary>
         Alpha = ((int)0x1906),

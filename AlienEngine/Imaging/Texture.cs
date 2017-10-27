@@ -3,7 +3,9 @@ using AlienEngine.Core.Graphics.OpenGL;
 using AlienEngine.Core.Resources;
 using System;
 using System.Drawing;
+using System.Net.Mime;
 using AlienEngine.Core.Game;
+using SharpFont;
 
 namespace AlienEngine.Imaging
 {
@@ -68,6 +70,37 @@ namespace AlienEngine.Imaging
             ResourcesManager.AddDisposableResource(this);
         }
 
+        internal Texture(GlyphSlot fontGlyph)
+        {
+            // No image is referenced in this case...
+            _image = null;
+
+            // These parameters are always the same
+            TextureTarget = TextureTarget.Texture2D;
+            FlipY = false;
+            
+            // Generate a texture
+            TextureID = GL.GenTexture();
+
+            // Set pixel alignment
+            GL.PixelStorei(PixelStoreParameter.UnpackAlignment, 1);
+
+            // Bind the texture into the memory
+            GL.BindTexture(TextureTarget, TextureID);
+            
+            // Set texture data
+            GL.TexImage2D(TextureTarget, 0, PixelInternalFormat.Red, fontGlyph.Bitmap.Width, fontGlyph.Bitmap.Rows, 0, PixelFormat.Red, PixelType.UnsignedByte, fontGlyph.Bitmap.Buffer);
+            
+            // Set texture options
+            GL.TexParameteri(TextureTarget, TextureParameterName.TextureWrapS, TextureParameter.ClampToEdge);
+            GL.TexParameteri(TextureTarget, TextureParameterName.TextureWrapT, TextureParameter.ClampToEdge);
+            GL.TexParameteri(TextureTarget, TextureParameterName.TextureMinFilter, TextureParameter.Linear);
+            GL.TexParameteri(TextureTarget, TextureParameterName.TextureMagFilter, TextureParameter.Linear);
+
+            // Make sure the texture will not be modified from the outside
+            GL.BindTexture(TextureTarget, 0);
+        }
+        
         public bool LoadImage(Image image)
         {
             // Release the previously loaded texture
@@ -90,6 +123,7 @@ namespace AlienEngine.Imaging
 
                 // Set pixel alignment
                 GL.PixelStorei(PixelStoreParameter.UnpackAlignment, 1);
+                
                 // Bind the texture to memory in OpenGL
                 GL.BindTexture(TextureTarget, TextureID);
 
