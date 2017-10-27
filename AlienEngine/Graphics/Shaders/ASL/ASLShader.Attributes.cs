@@ -102,18 +102,12 @@ namespace AlienEngine.ASL
         [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
         public sealed class VersionAttribute : Attribute
         {
-            private int _v = DefaultShaderVersion;
-
             public VersionAttribute(int version)
             {
                 Version = version;
             }
 
-            public int Version
-            {
-                get { return _v; }
-                private set { _v = value; }
-            }
+            public int Version { get; }
         }
 
         /// <summary>
