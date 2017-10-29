@@ -1,6 +1,7 @@
-﻿using GLFWMonitor = AlienEngine.Core.Graphics.GLFW.GLFW.Monitor;
+﻿using AlienEngine.Core.Graphics.GLFW;
+using GLFWMonitor = AlienEngine.Core.Graphics.GLFW.GLFW.Monitor;
 
-namespace AlienEngine.Core.Graphics
+namespace AlienEngine.Core
 {
     /// <summary>
     /// Handle and manage monitors.
@@ -35,7 +36,7 @@ namespace AlienEngine.Core.Graphics
         /// <summary>
         /// Gets the name of this <see cref="Monitor"/>.
         /// </summary>
-        public string Name => GLFW.GLFW.GetMonitorName(Handle);
+        public string Name => GLFW.GetMonitorName(Handle);
 
         #endregion
 
@@ -49,7 +50,7 @@ namespace AlienEngine.Core.Graphics
         /// <summary>
         /// Gets the primary monitor.
         /// </summary>
-        public static Monitor PrimaryMonitor => new Monitor(GLFW.GLFW.GetPrimaryMonitor());
+        public static Monitor PrimaryMonitor => new Monitor(GLFW.GetPrimaryMonitor());
 
         /// <summary>
         /// Gets the total number of monitors.
@@ -69,7 +70,7 @@ namespace AlienEngine.Core.Graphics
         /// <returns>An array of <see cref="Monitor"/>.</returns>
         public static Monitor[] GetMonitors()
         {
-            var glfwMonitors = GLFW.GLFW.GetMonitors();
+            var glfwMonitors = GLFW.GetMonitors();
             var monitors = new Monitor[glfwMonitors.Length];
 
             for (int i = 0, l = glfwMonitors.Length; i < l; i++)
