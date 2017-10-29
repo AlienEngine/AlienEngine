@@ -8,7 +8,7 @@ namespace AlienEngine
         #region Static members
 
         public static readonly Camera None =
-            new Camera(Vector3f.Zero, Vector3f.Zero, 1.0f, 1.0f, 2.0f) {ViewportSize = Sizei.One};
+            new Camera(Vector3f.Zero, Vector3f.Zero, 1.0f, 1.0f, 2.0f) {Viewport = Sizei.One};
 
         #endregion
 
@@ -150,7 +150,7 @@ namespace AlienEngine
         /// <summary>
         /// Gets or sets the viewport size.
         /// </summary>
-        public Sizei ViewportSize
+        public Sizei Viewport
         {
             get { return _viewportSize; }
             set
@@ -495,7 +495,7 @@ namespace AlienEngine
         /// <param name="size">The new viewport <see cref="Sizef"/>.</param>
         public void SetViewportSize(Sizei size)
         {
-            ViewportSize = size;
+            Viewport = size;
         }
 
         /// <summary>
@@ -505,7 +505,7 @@ namespace AlienEngine
         public void SetViewportWidth(int width)
         {
             Sizei v = new Sizei(width, _viewportSize.Height);
-            ViewportSize = v;
+            Viewport = v;
         }
 
         /// <summary>
@@ -515,7 +515,7 @@ namespace AlienEngine
         public void SetViewportHeight(int height)
         {
             Sizei v = new Sizei(_viewportSize.Width, height);
-            ViewportSize = v;
+            Viewport = v;
         }
 
         /// <summary>

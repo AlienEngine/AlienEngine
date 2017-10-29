@@ -45,6 +45,8 @@ namespace AlienEngine
         public float CharacterSpacing;
 
         public float LineSpacing;
+
+        private Camera _camera;
         
         public Label2D()
         {
@@ -60,6 +62,8 @@ namespace AlienEngine
 
         public override void Start()
         {
+            _camera = Game.CurrentScene.PrimaryCamera.GetComponent<Camera>();
+
             InitFontEngine(FontType);
 
             InitConfiguration();
@@ -96,50 +100,50 @@ namespace AlienEngine
             {
                 case Anchor.TopLeft:
                     _fontEngine.ProjectionMatrix = Matrix4f.CreateOrthographicOffCenter(0.0f,
-                        Renderer.Viewport.Width, -Renderer.Viewport.Height, 0.0f, 0.0f, 1.0f);
+                        _camera.Viewport.Width, -_camera.Viewport.Height, 0.0f, 0.0f, 1.0f);
                     break;
 
                 case Anchor.Top:
-                    _fontEngine.ProjectionMatrix = Matrix4f.CreateOrthographicOffCenter(-Renderer.Viewport.Width / 2.0f,
-                        Renderer.Viewport.Width / 2.0f, -Renderer.Viewport.Height, 0.0f, 0.0f,
+                    _fontEngine.ProjectionMatrix = Matrix4f.CreateOrthographicOffCenter(-_camera.Viewport.Width / 2.0f,
+                        _camera.Viewport.Width / 2.0f, -_camera.Viewport.Height, 0.0f, 0.0f,
                         1.0f);
                     break;
 
                 case Anchor.TopRight:
-                    _fontEngine.ProjectionMatrix = Matrix4f.CreateOrthographicOffCenter(Renderer.Viewport.Width,
-                        Renderer.Viewport.Width * 2.0f, -Renderer.Viewport.Height, 0.0f, 0.0f,
+                    _fontEngine.ProjectionMatrix = Matrix4f.CreateOrthographicOffCenter(_camera.Viewport.Width,
+                        _camera.Viewport.Width * 2.0f, -_camera.Viewport.Height, 0.0f, 0.0f,
                         1.0f);
                     break;
 
                 case Anchor.MiddleLeft:
-                    _fontEngine.ProjectionMatrix = Matrix4f.CreateOrthographicOffCenter(0.0f, Renderer.Viewport.Width,
-                        -Renderer.Viewport.Height / 2.0f, Renderer.Viewport.Height / 2.0f, 0.0f, 1.0f);
+                    _fontEngine.ProjectionMatrix = Matrix4f.CreateOrthographicOffCenter(0.0f, _camera.Viewport.Width,
+                        -_camera.Viewport.Height / 2.0f, _camera.Viewport.Height / 2.0f, 0.0f, 1.0f);
                     break;
 
                 case Anchor.Middle:
-                    _fontEngine.ProjectionMatrix = Matrix4f.CreateOrthographic(Renderer.Viewport.Width,
-                        Renderer.Viewport.Height, 0.0f, 1.0f);
+                    _fontEngine.ProjectionMatrix = Matrix4f.CreateOrthographic(_camera.Viewport.Width,
+                        _camera.Viewport.Height, 0.0f, 1.0f);
                     break;
 
                 case Anchor.MiddleRight:
-                    _fontEngine.ProjectionMatrix = Matrix4f.CreateOrthographicOffCenter(Renderer.Viewport.Width,
-                        Renderer.Viewport.Width * 2.0f,
-                        -Renderer.Viewport.Height / 2.0f, Renderer.Viewport.Height / 2.0f, 0.0f, 1.0f);
+                    _fontEngine.ProjectionMatrix = Matrix4f.CreateOrthographicOffCenter(_camera.Viewport.Width,
+                        _camera.Viewport.Width * 2.0f,
+                        -_camera.Viewport.Height / 2.0f, _camera.Viewport.Height / 2.0f, 0.0f, 1.0f);
                     break;
 
                 case Anchor.BottomLeft:
-                    _fontEngine.ProjectionMatrix = Matrix4f.CreateOrthographicOffCenter(0.0f, Renderer.Viewport.Width,
-                        0.0f, Renderer.Viewport.Height, 0.0f, 1.0f);
+                    _fontEngine.ProjectionMatrix = Matrix4f.CreateOrthographicOffCenter(0.0f, _camera.Viewport.Width,
+                        0.0f, _camera.Viewport.Height, 0.0f, 1.0f);
                     break;
 
                 case Anchor.Bottom:
-                    _fontEngine.ProjectionMatrix = Matrix4f.CreateOrthographicOffCenter(-Renderer.Viewport.Width / 2.0f,
-                        Renderer.Viewport.Width / 2.0f, 0.0f, Renderer.Viewport.Height, 0.0f, 1.0f);
+                    _fontEngine.ProjectionMatrix = Matrix4f.CreateOrthographicOffCenter(-_camera.Viewport.Width / 2.0f,
+                        _camera.Viewport.Width / 2.0f, 0.0f, _camera.Viewport.Height, 0.0f, 1.0f);
                     break;
 
                 case Anchor.BottomRight:
-                    _fontEngine.ProjectionMatrix = Matrix4f.CreateOrthographicOffCenter(Renderer.Viewport.Width,
-                        Renderer.Viewport.Width * 2.0f, 0.0f, Renderer.Viewport.Height, 0.0f, 1.0f);
+                    _fontEngine.ProjectionMatrix = Matrix4f.CreateOrthographicOffCenter(_camera.Viewport.Width,
+                        _camera.Viewport.Width * 2.0f, 0.0f, _camera.Viewport.Height, 0.0f, 1.0f);
                     break;
             }
         }
