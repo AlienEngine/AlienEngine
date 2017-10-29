@@ -2,6 +2,7 @@
 using System;
 using AlienEngine.Core.Graphics;
 using AlienEngine.Core.Graphics.GLFW;
+using AlienEngine.Core.Rendering;
 using Window = AlienEngine.Core.Graphics.GLFW.GLFW.Window;
 
 namespace AlienEngine.Core
@@ -15,18 +16,6 @@ namespace AlienEngine.Core
     /// </remarks>
     public class GameWindow
     {
-        #region Static members
-
-        /// <summary>
-        /// Gets a NULL window's pointer.
-        /// </summary>
-        public static GameWindow None
-        {
-            get { return new GameWindow(Window.None); }
-        }
-
-        #endregion
-
         #region Fields
 
         /// <summary>
@@ -43,6 +32,11 @@ namespace AlienEngine.Core
         /// Stores the current size of the <see cref="GameWindow"/>.
         /// </summary>
         private Sizei _size;
+
+        /// <summary>
+        /// Stores the current framebuffer size of the <see cref="GameWindow"/>.
+        /// </summary>
+        private Sizei _framebufferSize;
 
         /// <summary>
         /// The <see cref="Cursor"/> of this <see cref="GameWindow"/>.
@@ -76,6 +70,17 @@ namespace AlienEngine.Core
             if (!GLFW.Initialize())
                 Environment.Exit(-1);
             // --------------------
+
+            // Set default window hints
+            GLFW.DefaultWindowHints();
+            GLFW.WindowHint(GLFW.Hint.OpenglProfile, GLFW.OpenGLProfile.Core);
+#if APPLE
+            GLFW.WindowHint(GLFW.Hint.OpenglForwardCompat, true);
+#endif
+            GLFW.WindowHint(GLFW.Hint.Resizable, false);
+            GLFW.WindowHint(GLFW.Hint.AutoIconify, true);
+            GLFW.WindowHint(GLFW.Hint.Doublebuffer, true);
+            GLFW.WindowHint(GLFW.Hint.Visible, false);
         }
 
         /// <summary>
@@ -93,13 +98,6 @@ namespace AlienEngine.Core
         /// <param name="share">The window to share context resources with.</param>
         public GameWindow(string title, GameWindow share) : this()
         {
-            // Set default window hints
-            GLFW.DefaultWindowHints();
-            GLFW.WindowHint(GLFW.Hint.Resizable, false);
-            GLFW.WindowHint(GLFW.Hint.AutoIconify, true);
-            GLFW.WindowHint(GLFW.Hint.Doublebuffer, true);
-            GLFW.WindowHint(GLFW.Hint.Visible, false);
-
             if (GameSettings.MultisampleEnabled)
                 GLFW.WindowHint(GLFW.Hint.Samples, GameSettings.MultisampleLevel);
             else
@@ -131,13 +129,6 @@ namespace AlienEngine.Core
 
         public GameWindow(Sizei size, string title, GameWindow share) : this()
         {
-            // Set default window hints
-            GLFW.DefaultWindowHints();
-            GLFW.WindowHint(GLFW.Hint.Resizable, false);
-            GLFW.WindowHint(GLFW.Hint.AutoIconify, true);
-            GLFW.WindowHint(GLFW.Hint.Visible, false);
-            GLFW.WindowHint(GLFW.Hint.Doublebuffer, true);
-
             if (GameSettings.MultisampleEnabled)
                 GLFW.WindowHint(GLFW.Hint.Samples, GameSettings.MultisampleLevel);
             else
@@ -185,12 +176,6 @@ namespace AlienEngine.Core
 
         public GameWindow(Sizei size, string title, bool fullscreen, GameWindow share) : this()
         {
-            // Set default window hints
-            GLFW.DefaultWindowHints();
-            GLFW.WindowHint(GLFW.Hint.Resizable, false);
-            GLFW.WindowHint(GLFW.Hint.AutoIconify, true);
-            GLFW.WindowHint(GLFW.Hint.Doublebuffer, true);
-
             if (GameSettings.MultisampleEnabled)
                 GLFW.WindowHint(GLFW.Hint.Samples, GameSettings.MultisampleLevel);
             else
@@ -227,12 +212,6 @@ namespace AlienEngine.Core
 
         public GameWindow(Sizei size, string title, Monitor monitor, GameWindow share) : this()
         {
-            // Set default window hints
-            GLFW.DefaultWindowHints();
-            GLFW.WindowHint(GLFW.Hint.Resizable, false);
-            GLFW.WindowHint(GLFW.Hint.AutoIconify, true);
-            GLFW.WindowHint(GLFW.Hint.Doublebuffer, true);
-
             if (GameSettings.MultisampleEnabled)
                 GLFW.WindowHint(GLFW.Hint.Samples, GameSettings.MultisampleLevel);
             else
@@ -270,12 +249,6 @@ namespace AlienEngine.Core
 
         public GameWindow(Sizei size, string title, bool fullscreen, Monitor monitor, GameWindow share) : this()
         {
-            // Set default window hints
-            GLFW.DefaultWindowHints();
-            GLFW.WindowHint(GLFW.Hint.Resizable, false);
-            GLFW.WindowHint(GLFW.Hint.AutoIconify, true);
-            GLFW.WindowHint(GLFW.Hint.Doublebuffer, true);
-
             if (GameSettings.MultisampleEnabled)
                 GLFW.WindowHint(GLFW.Hint.Samples, GameSettings.MultisampleLevel);
             else
@@ -321,6 +294,8 @@ namespace AlienEngine.Core
 
         public event MouseLeaveEvent MouseLeave;
 
+        public event ResizeEvent FramebufferSizeChange;
+
         #endregion
 
         #region Private Members
@@ -338,6 +313,14 @@ namespace AlienEngine.Core
                 MouseEnter?.Invoke(null, new MouseEnterEventArgs(Input.MousePosition));
             else
                 MouseLeave?.Invoke(null, new MouseLeaveEventArgs(Input.MousePosition));
+        }
+
+        private void OnFramebufferSizeChange(Window window, int width, int height)
+        {
+            var size = new Sizei(width, height);
+            Renderer.SetViewport(Point2i.Zero, size);
+            FramebufferSizeChange?.Invoke(this, new ResizeEventArgs(size, FramebufferSize));
+            _framebufferSize = size;
         }
         
         #endregion
@@ -378,59 +361,38 @@ namespace AlienEngine.Core
         /// Gets a boolean defining if the <see cref="GameWindow"/> is decorated
         /// (has border, close buttons, window's title, etc...).
         /// </summary>
-        public bool Decorated
-        {
-            get { return GLFW.GetWindowAttrib(Handle, GLFW.WindowAttrib.Decorated); }
-        }
+        public bool Decorated => GLFW.GetWindowAttrib(Handle, GLFW.WindowAttrib.Decorated);
 
         /// <summary>
         /// Gets a boolean defining if the <see cref="GameWindow"/> is floating
         /// (is always-on-top).
         /// </summary>
-        public bool Floating
-        {
-            get { return GLFW.GetWindowAttrib(Handle, GLFW.WindowAttrib.Floating); }
-        }
+        public bool Floating => GLFW.GetWindowAttrib(Handle, GLFW.WindowAttrib.Floating);
 
         /// <summary>
         /// Gets a boolean defining if the <see cref="GameWindow"/> is focused.
         /// </summary>
-        public bool Focused
-        {
-            get { return GLFW.GetWindowAttrib(Handle, GLFW.WindowAttrib.Focused); }
-        }
+        public bool Focused => GLFW.GetWindowAttrib(Handle, GLFW.WindowAttrib.Focused);
 
         /// <summary>
         /// Gets a boolean defining if the <see cref="GameWindow"/> is iconified.
         /// </summary>
-        public bool Iconified
-        {
-            get { return GLFW.GetWindowAttrib(Handle, GLFW.WindowAttrib.Iconified); }
-        }
+        public bool Iconified => GLFW.GetWindowAttrib(Handle, GLFW.WindowAttrib.Iconified);
 
         /// <summary>
         /// Gets a boolean defining if the <see cref="GameWindow"/> is maximized.
         /// </summary>
-        public bool Maximized
-        {
-            get { return GLFW.GetWindowAttrib(Handle, GLFW.WindowAttrib.Maximized); }
-        }
+        public bool Maximized => GLFW.GetWindowAttrib(Handle, GLFW.WindowAttrib.Maximized);
 
         /// <summary>
         /// Gets a boolean defining if the <see cref="GameWindow"/> is resizable.
         /// </summary>
-        public bool Resizable
-        {
-            get { return GLFW.GetWindowAttrib(Handle, GLFW.WindowAttrib.Resizable); }
-        }
+        public bool Resizable => GLFW.GetWindowAttrib(Handle, GLFW.WindowAttrib.Resizable);
 
         /// <summary>
         /// Gets a boolean defining if the <see cref="GameWindow"/> is visible.
         /// </summary>
-        public bool Visible
-        {
-            get { return GLFW.GetWindowAttrib(Handle, GLFW.WindowAttrib.Visible); }
-        }
+        public bool Visible => GLFW.GetWindowAttrib(Handle, GLFW.WindowAttrib.Visible);
 
         /// <summary>
         /// Gets or sets the title of this <see cref="GameWindow"/>.
@@ -457,6 +419,11 @@ namespace AlienEngine.Core
                 GLFW.SetWindowSize(Handle, value.Width, value.Height);
             }
         }
+
+        /// <summary>
+        /// Gets the framebuffer size of this <see cref="GameWindow"/>.
+        /// </summary>
+        public Sizei FramebufferSize => _framebufferSize;
 
         /// <summary>
         /// Gets or sets the width of this <see cref="GameWindow"/>.
@@ -537,6 +504,7 @@ namespace AlienEngine.Core
             
             GLFW.SetWindowSizeCallback(Handle, OnResize);
             GLFW.SetCursorEnterCallback(Handle, OnMouseLeaveEnter);
+            GLFW.SetFramebufferSizeCallback(Handle, OnFramebufferSizeChange);
         }
 
         /// <summary>
@@ -594,6 +562,11 @@ namespace AlienEngine.Core
         #endregion
 
         #region Static members
+
+        /// <summary>
+        /// Gets a NULL window's pointer.
+        /// </summary>
+        public static GameWindow None => new GameWindow(Window.None);
 
         /// <summary>
         /// Makes current the given window's context.
