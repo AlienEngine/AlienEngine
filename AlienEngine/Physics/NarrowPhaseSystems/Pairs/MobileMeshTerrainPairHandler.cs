@@ -1,6 +1,7 @@
 ﻿using System;
 using AlienEngine.Core.Physics.BroadPhaseEntries;
 using AlienEngine.Core.Physics.BroadPhaseEntries.MobileCollidables;
+using AlienEngine.Core.Physics.Materials;
 using AlienEngine.Core.Resources;
 using AlienEngine.Core.Utils.DataStructures;
 
@@ -23,7 +24,7 @@ namespace AlienEngine.Core.Physics.NarrowPhaseSystems.Pairs
         {
             get { return null; }
         }
-        protected override Materials.PhysicsMaterial MaterialB
+        protected override PhysicsMaterial MaterialB
         {
             get { return mesh.material; }
         }
