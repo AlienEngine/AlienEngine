@@ -51,7 +51,7 @@ namespace AlienEngine.Core.Physics.Character
 
                 for (int i = 0; i < involvedCharacters.Count; ++i)
                 {
-                    Monitor.Enter(involvedCharacters[i]);
+                    System.Threading.Monitor.Enter(involvedCharacters[i]);
                 }
             }
         }
@@ -77,7 +77,7 @@ namespace AlienEngine.Core.Physics.Character
             //Unlock the pairs, LIFO.
             for (int i = involvedCharacters.Count - 1; i >= 0; i--)
             {
-                Monitor.Exit(involvedCharacters[i]);
+                System.Threading.Monitor.Exit(involvedCharacters[i]);
             }
             involvedCharacters.Clear();
         }
