@@ -1,9 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-    <Import Project="..\packages\SharpFont.4.0.1\build\SharpFont.props"
-            Condition="Exists('..\packages\SharpFont.4.0.1\build\SharpFont.props')"/>
-    <Import Project="..\packages\SharpFont.Dependencies.2.6\build\SharpFont.Dependencies.props"
-            Condition="Exists('..\packages\SharpFont.Dependencies.2.6\build\SharpFont.Dependencies.props')"/>
+  <Import Project="..\packages\SharpFont.4.0.1\build\SharpFont.props" Condition="Exists('..\packages\SharpFont.4.0.1\build\SharpFont.props')" />
+  <Import Project="..\packages\SharpFont.Dependencies.2.6\build\SharpFont.Dependencies.props" Condition="Exists('..\packages\SharpFont.Dependencies.2.6\build\SharpFont.Dependencies.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -126,8 +124,7 @@
     <DelaySign>false</DelaySign>
   </PropertyGroup>
   <ItemGroup>
-      <Reference
-              Include="SharpFont, Version=4.0.1.200, Culture=neutral, PublicKeyToken=48add4c483071cdf, processorArchitecture=MSIL">
+    <Reference Include="SharpFont, Version=4.0.1.200, Culture=neutral, PublicKeyToken=48add4c483071cdf, processorArchitecture=MSIL">
       <HintPath>..\packages\SharpFont.4.0.1\lib\net45\SharpFont.dll</HintPath>
     </Reference>
     <Reference Include="System" />
@@ -220,24 +217,28 @@
     <Compile Include="Engine.cs" />
     <Compile Include="Audio\AudioSourceState.cs" />
     <Compile Include="GameWindow.cs" />
-      <Compile Include="Game\Components\Audio\AudioClip.cs"/>
-      <Compile Include="Game\Components\Audio\AudioListener.cs"/>
-      <Compile Include="Game\Components\Audio\AudioReverbZone.cs"/>
-      <Compile Include="Game\Components\Audio\AudioSource.cs"/>
-      <Compile Include="Game\Components\Lightning\Light.cs"/>
-      <Compile Include="Game\Components\Physics\BoxCollider.cs"/>
-      <Compile Include="Game\Components\Physics\CapsuleCollider.cs"/>
-      <Compile Include="Game\Components\Physics\MeshCollider.cs"/>
-      <Compile Include="Game\Components\Physics\PlaneCollider.cs"/>
-      <Compile Include="Game\Components\Physics\RigidBody.cs"/>
-      <Compile Include="Game\Components\Physics\SphereCollider.cs"/>
-      <Compile Include="Game\Components\Rendering\Camera.cs"/>
-      <Compile Include="Game\Components\Rendering\Material.cs"/>
-      <Compile Include="Game\Components\Rendering\MeshRenderer.cs"/>
-      <Compile Include="Game\Components\UI\Label2D.cs"/>
-      <Compile Include="Game\Shaders\FontShaderProgram.cs"/>
-      <Compile Include="Graphics\Shaders\Samples\Fragment Shaders\FontFragmentShader.cs"/>
-      <Compile Include="Graphics\Shaders\Samples\Vertex Shaders\FontVertexShader.cs"/>
+    <Compile Include="Game\Components\Audio\AudioClip.cs" />
+    <Compile Include="Game\Components\Audio\AudioListener.cs" />
+    <Compile Include="Game\Components\Audio\AudioReverbZone.cs" />
+    <Compile Include="Game\Components\Audio\AudioSource.cs" />
+    <Compile Include="Game\Components\Lightning\Light.cs" />
+    <Compile Include="Game\Components\Physics\BoxCollider.cs" />
+    <Compile Include="Game\Components\Physics\CapsuleCollider.cs" />
+    <Compile Include="Game\Components\Physics\MeshCollider.cs" />
+    <Compile Include="Game\Components\Physics\PlaneCollider.cs" />
+    <Compile Include="Game\Components\Physics\RigidBody.cs" />
+    <Compile Include="Game\Components\Physics\SphereCollider.cs" />
+    <Compile Include="Game\Components\Rendering\Camera.cs" />
+    <Compile Include="Game\Components\Rendering\Material.cs" />
+    <Compile Include="Game\Components\Rendering\MeshRenderer.cs" />
+    <Compile Include="Game\Components\UI\Button.cs" />
+    <Compile Include="Game\Components\UI\Label2D.cs" />
+    <Compile Include="Game\Shaders\FontShaderProgram.cs" />
+    <Compile Include="Game\UIComponent.cs" />
+    <Compile Include="Game\UIElement.cs" />
+    <Compile Include="Game\UserInterface.cs" />
+    <Compile Include="Graphics\Shaders\Samples\Fragment Shaders\FontFragmentShader.cs" />
+    <Compile Include="Graphics\Shaders\Samples\Vertex Shaders\FontVertexShader.cs" />
     <Compile Include="Imaging\Enums.cs" />
     <Compile Include="Imaging\Image.cs" />
     <Compile Include="Inputs\KeyboardKeyEventArgs.cs" />
@@ -259,7 +260,7 @@
     <Compile Include="Math\Rectanglef.cs" />
     <Compile Include="Math\RigidTransform.cs" />
     <Compile Include="Math\Sized.cs" />
-      <Compile Include="Monitor.cs"/>
+    <Compile Include="Monitor.cs" />
     <Compile Include="MouseEnterEventArgs.cs" />
     <Compile Include="MouseLeaveEventArgs.cs" />
     <Compile Include="Physics\BroadPhaseEntries\BroadPhaseEntry.cs" />
@@ -647,20 +648,20 @@
     <Compile Include="Physics\Vehicle\WheelShape.cs" />
     <Compile Include="Physics\Vehicle\WheelSlidingFriction.cs" />
     <Compile Include="Physics\Vehicle\WheelSuspension.cs" />
-      <Compile Include="Rendering\Fonts\TextOrigin.cs"/>
-      <Compile Include="Rendering\Fonts\Character.cs"/>
-      <Compile Include="Rendering\Fonts\FontRendererConfiguration.cs"/>
-      <Compile Include="Rendering\Fonts\FontRenderingProjectionMethod.cs"/>
-      <Compile Include="Rendering\Fonts\FontStyle.cs"/>
-      <Compile Include="Rendering\Fonts\FontType.cs"/>
-      <Compile Include="Rendering\Fonts\FreeTypeFont.cs"/>
-      <Compile Include="Rendering\Fonts\IFont.cs"/>
-      <Compile Include="Rendering\Fonts\TextAlignement.cs"/>
-      <Compile Include="Rendering\Fonts\TextWrapMode.cs"/>
+    <Compile Include="Rendering\Fonts\TextOrigin.cs" />
+    <Compile Include="Rendering\Fonts\Character.cs" />
+    <Compile Include="Rendering\Fonts\FontRendererConfiguration.cs" />
+    <Compile Include="Rendering\Fonts\FontRenderingProjectionMethod.cs" />
+    <Compile Include="Rendering\Fonts\FontStyle.cs" />
+    <Compile Include="Rendering\Fonts\FontType.cs" />
+    <Compile Include="Rendering\Fonts\FreeTypeFont.cs" />
+    <Compile Include="Rendering\Fonts\IFont.cs" />
+    <Compile Include="Rendering\Fonts\TextAlignement.cs" />
+    <Compile Include="Rendering\Fonts\TextWrapMode.cs" />
     <Compile Include="Rendering\IRenderable.cs" />
     <Compile Include="Game\LightType.cs" />
     <Compile Include="Game\PostEffectMode.cs" />
-      <Compile Include="Rendering\IRenderableText.cs"/>
+    <Compile Include="Rendering\IPostRenderable.cs" />
     <Compile Include="Rendering\RenderableCollection.cs" />
     <Compile Include="Rendering\Renderer.cs" />
     <Compile Include="Game\Scene.cs" />
@@ -717,8 +718,9 @@
     <Compile Include="Inputs\MouseButton.cs" />
     <Compile Include="Physics\ColliderShapes.cs" />
     <Compile Include="Rendering\RendererBackupMode.cs" />
-      <Compile Include="Rendering\ViewportChangedEventArgs.cs"/>
+    <Compile Include="Rendering\ViewportChangedEventArgs.cs" />
     <Compile Include="ResizeEventArgs.cs" />
+    <Compile Include="ScreenMode.cs" />
     <Compile Include="Resources\AssetsManager.cs" />
     <Compile Include="Resources\BufferPool.cs" />
     <Compile Include="Resources\BufferPools.cs" />
@@ -732,7 +734,7 @@
     <Compile Include="Threading\ParallelLoopWorker.cs" />
     <Compile Include="Threading\SpinLock.cs" />
     <Compile Include="Threading\ThreadsManager.cs" />
-      <Compile Include="UI\Anchor.cs"/>
+    <Compile Include="UI\Anchor.cs" />
     <Compile Include="Utils\ConvertX.cs" />
     <Compile Include="Utils\CPUInfo.cs" />
     <Compile Include="Utils\DataStructures\ConcurrentDeque.cs" />
@@ -892,10 +894,8 @@
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\AssimpNet.3.3.2\build\AssimpNet.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\AssimpNet.3.3.2\build\AssimpNet.targets'))" />
-      <Error Condition="!Exists('..\packages\SharpFont.Dependencies.2.6\build\SharpFont.Dependencies.props')"
-             Text="$([System.String]::Format('$(ErrorText)', '..\packages\SharpFont.Dependencies.2.6\build\SharpFont.Dependencies.props'))"/>
-      <Error Condition="!Exists('..\packages\SharpFont.4.0.1\build\SharpFont.props')"
-             Text="$([System.String]::Format('$(ErrorText)', '..\packages\SharpFont.4.0.1\build\SharpFont.props'))"/>
+    <Error Condition="!Exists('..\packages\SharpFont.Dependencies.2.6\build\SharpFont.Dependencies.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\SharpFont.Dependencies.2.6\build\SharpFont.Dependencies.props'))" />
+    <Error Condition="!Exists('..\packages\SharpFont.4.0.1\build\SharpFont.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\SharpFont.4.0.1\build\SharpFont.props'))" />
   </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
