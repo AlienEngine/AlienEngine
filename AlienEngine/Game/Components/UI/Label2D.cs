@@ -6,7 +6,7 @@ using AlienEngine.UI;
 
 namespace AlienEngine
 {
-    public class Label2D : Component, IRenderableText
+    public class Label2D : Component, IPostRenderable
     {
         public Point2f Position;
 
@@ -75,7 +75,7 @@ namespace AlienEngine
                 SetProjectionMatrix();
             };
 
-            Renderer.RegisterRenderableText(this);
+            Renderer.RegisterPostRenderable(this);
         }
 
         private void InitConfiguration()

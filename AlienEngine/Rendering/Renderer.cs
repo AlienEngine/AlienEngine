@@ -11,7 +11,7 @@ namespace AlienEngine.Core.Rendering
     public static class Renderer
     {
         private static List<IRenderable> _renderables;
-        private static List<IRenderableText> _renderableTexts;
+        private static List<IPostRenderable> _postRenderables;
         private static bool _faceCullingEnabled;
         private static bool _depthTestEnabled;
         private static bool _blendingEnabled;
@@ -57,7 +57,7 @@ namespace AlienEngine.Core.Rendering
         {
             // Renderables
             _renderables = new List<IRenderable>();
-            _renderableTexts = new List<IRenderableText>();
+            _postRenderables = new List<IPostRenderable>();
 
             // States
             _depthTestEnabled = false;
@@ -140,21 +140,21 @@ namespace AlienEngine.Core.Rendering
             return _renderables.Contains(_object);
         }
 
-        public static void RegisterRenderableText(IRenderableText _object)
+        public static void RegisterPostRenderable(IPostRenderable _object)
         {
-            if (!HasRenderableText(_object))
-                _renderableTexts.Add(_object);
+            if (!HasPostRenderable(_object))
+                _postRenderables.Add(_object);
         }
 
-        public static void UnregisterRenderableText(IRenderableText _object)
+        public static void UnregisterPostRenderable(IPostRenderable _object)
         {
-            if (HasRenderableText(_object))
-                _renderableTexts.Remove(_object);
+            if (HasPostRenderable(_object))
+                _postRenderables.Remove(_object);
         }
 
-        public static bool HasRenderableText(IRenderableText _object)
+        public static bool HasPostRenderable(IPostRenderable _object)
         {
-            return _renderableTexts.Contains(_object);
+            return _postRenderables.Contains(_object);
         }
 
         public static void SetViewport(int x, int y, int width, int height)
@@ -333,8 +333,8 @@ namespace AlienEngine.Core.Rendering
 
             RestoreState(RendererBackupMode.DepthTest);
             
-            // Render all renderable texts
-            foreach (IRenderableText _text in _renderableTexts)
+            // Render all post-state renderable objects 
+            foreach (IPostRenderable _text in _postRenderables)
                 _text.Render();
         }
     }
