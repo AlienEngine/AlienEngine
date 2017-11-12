@@ -1,4 +1,5 @@
 ﻿using AlienEngine.Core.Game;
+using AlienEngine.Core.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -415,6 +416,14 @@ namespace AlienEngine
             {
                 component.SetGameElement(this);
                 _attachedComponents.Add(component);
+
+                if (component is IRenderable)
+                    Renderer.RegisterRenderable(component as IRenderable);
+
+                if (component is IPostRenderable)
+                    Renderer.RegisterPostRenderable(component as IPostRenderable);
+
+                component.TriggerAttachEvent();
             }
         }
 
@@ -422,11 +431,7 @@ namespace AlienEngine
         {
             foreach (Component component in components)
             {
-                if (!HasComponent(component))
-                {
-                    component.SetGameElement(this);
-                    _attachedComponents.Add(component);
-                }
+                AttachComponent(component);
             }
         }
 

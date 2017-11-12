@@ -39,7 +39,6 @@ namespace AlienEngine
         public override void Start()
         {
             _material = GetComponent<Material>();
-            Renderer.RegisterRenderable(this);
         }
 
         public void Render()
