@@ -55,12 +55,23 @@ namespace AlienEngine.Core.Game
         /// </summary>
         public static readonly Sizei GameWindowSize;
         // ----------
+        // Aspect ratio
+        // ----------
+        public static readonly int[] GameWindowAspectRatio;
+        // ----------
         // Fullscreen mode
         // ----------
         /// <summary>
         /// Define if the game window is in fullscreen mode.
         /// </summary>
         public static readonly bool GameWindowFullscreenMode;
+        // ----------
+        // Resizable
+        // ----------
+        /// <summary>
+        /// Define if the game window is resizable or not.
+        /// </summary>
+        public static readonly bool GameWindowResizable;
         // --------------------
 
         /// <summary>
@@ -99,10 +110,26 @@ namespace AlienEngine.Core.Game
             else
                 GameWindowSize = Sizei.Zero;
 
+            if (config.RawResult["AspectRatio"].Length > 0)
+            {
+                var ratio = config.RawResult["AspectRatio"].Split(':');
+                if (int.TryParse(ratio[0].Trim(), out _int1) && int.TryParse(ratio[1].Trim(), out _int2))
+                    GameWindowAspectRatio = new int[] { _int1, _int2 };
+                else
+                    GameWindowAspectRatio = new int[] { 16, 9 };
+            }
+            else
+                GameWindowAspectRatio = new int[] { 16, 9 };
+
             if (int.TryParse(config.RawResult["FullscreenMode"], out _int1))
                 GameWindowFullscreenMode = _int1 == 1;
             else
                 GameWindowFullscreenMode = false;
+
+            if (int.TryParse(config.RawResult["Resizable"], out _int1))
+                GameWindowResizable = _int1 == 1;
+            else
+                GameWindowResizable = true;
         }
     }
 }
