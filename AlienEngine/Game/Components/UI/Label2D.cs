@@ -1,26 +1,18 @@
 ﻿using System;
-using AlienEngine.Core.Game;
 using AlienEngine.Core.Rendering;
 using AlienEngine.Core.Rendering.Fonts;
 using AlienEngine.UI;
 
 namespace AlienEngine
 {
-    public class Label2D : Component, IPostRenderable
+    public class Label2D : UIComponent, IPostRenderable
     {
-        public Point2f Position;
-
-        public Vector2f Scale;
-
-        public Color4 Color;
-
         public string Text;
 
         private IFont _fontEngine;
-        private FontType _fontType;
         private FontRendererConfiguration _fontRendererConfiguration;
 
-        public string Fontpath;
+        public string FontPath;
 
         public float FontSize;
 
@@ -30,31 +22,20 @@ namespace AlienEngine
 
         public TextWrapMode TextWrapMode;
 
-        public FontType FontType
-        {
-            get { return _fontType; }
-            set { _fontType = value; }
-        }
-
-        public Sizef Size;
-
-        public Anchor Anchor;
-
-        public TextOrigin TextOrigin;
+        public FontType FontType;
         
         public float CharacterSpacing;
 
         public float LineSpacing;
 
-        private Camera _camera;
-        
-        public Label2D()
+        public Label2D() : base()
         {
             Position = Point2f.Zero;
             Scale = Vector2f.One;
-            Color = Color4.Black;
+            ForegroundColor = Color4.Black;
+            BackgroundColor = Color4.Transparent;
             Text = string.Empty;
-            Fontpath = string.Empty;
+            FontPath = string.Empty;
             FontSize = 12;
             FontStyle = FontStyle.Regular;
             FontType = FontType.FreeType;
@@ -62,11 +43,11 @@ namespace AlienEngine
 
         public override void Start()
         {
-            _camera = Game.CurrentScene.PrimaryCamera.GetComponent<Camera>();
+            InitUI();
 
-            InitFontEngine(FontType);
+            BuildConfiguration();
 
-            InitConfiguration();
+            InitFontEngine();
 
             SetProjectionMatrix();
 
@@ -74,99 +55,52 @@ namespace AlienEngine
             {
                 SetProjectionMatrix();
             };
-
-            Renderer.RegisterPostRenderable(this);
         }
 
-        private void InitConfiguration()
+        private void BuildConfiguration()
         {
             _fontRendererConfiguration = new FontRendererConfiguration
             {
-                Color = Color,
-                Position = Position,
+                Color = ForegroundColor,
+                Position = CorrectedPosition,
                 Scale = Scale,
                 TextAlignement = TextAlignement,
                 TextWrapMode = TextWrapMode,
-                TextOrigin = TextOrigin,
+                TextOrigin = Origin,
                 Container = Size,
                 CharacterSpacing = CharacterSpacing,
-                LineSpacing = LineSpacing
+                LineSpacing = LineSpacing,
+                FontSize = FontSize,
+                FontStyle = FontStyle
             };
         }
 
         private void SetProjectionMatrix()
         {
-            switch (Anchor)
-            {
-                case Anchor.TopLeft:
-                    _fontEngine.ProjectionMatrix = Matrix4f.CreateOrthographicOffCenter(0.0f,
-                        _camera.Viewport.Width, -_camera.Viewport.Height, 0.0f, 0.0f, 1.0f);
-                    break;
-
-                case Anchor.Top:
-                    _fontEngine.ProjectionMatrix = Matrix4f.CreateOrthographicOffCenter(-_camera.Viewport.Width / 2.0f,
-                        _camera.Viewport.Width / 2.0f, -_camera.Viewport.Height, 0.0f, 0.0f,
-                        1.0f);
-                    break;
-
-                case Anchor.TopRight:
-                    _fontEngine.ProjectionMatrix = Matrix4f.CreateOrthographicOffCenter(_camera.Viewport.Width,
-                        _camera.Viewport.Width * 2.0f, -_camera.Viewport.Height, 0.0f, 0.0f,
-                        1.0f);
-                    break;
-
-                case Anchor.MiddleLeft:
-                    _fontEngine.ProjectionMatrix = Matrix4f.CreateOrthographicOffCenter(0.0f, _camera.Viewport.Width,
-                        -_camera.Viewport.Height / 2.0f, _camera.Viewport.Height / 2.0f, 0.0f, 1.0f);
-                    break;
-
-                case Anchor.Middle:
-                    _fontEngine.ProjectionMatrix = Matrix4f.CreateOrthographic(_camera.Viewport.Width,
-                        _camera.Viewport.Height, 0.0f, 1.0f);
-                    break;
-
-                case Anchor.MiddleRight:
-                    _fontEngine.ProjectionMatrix = Matrix4f.CreateOrthographicOffCenter(_camera.Viewport.Width,
-                        _camera.Viewport.Width * 2.0f,
-                        -_camera.Viewport.Height / 2.0f, _camera.Viewport.Height / 2.0f, 0.0f, 1.0f);
-                    break;
-
-                case Anchor.BottomLeft:
-                    _fontEngine.ProjectionMatrix = Matrix4f.CreateOrthographicOffCenter(0.0f, _camera.Viewport.Width,
-                        0.0f, _camera.Viewport.Height, 0.0f, 1.0f);
-                    break;
-
-                case Anchor.Bottom:
-                    _fontEngine.ProjectionMatrix = Matrix4f.CreateOrthographicOffCenter(-_camera.Viewport.Width / 2.0f,
-                        _camera.Viewport.Width / 2.0f, 0.0f, _camera.Viewport.Height, 0.0f, 1.0f);
-                    break;
-
-                case Anchor.BottomRight:
-                    _fontEngine.ProjectionMatrix = Matrix4f.CreateOrthographicOffCenter(_camera.Viewport.Width,
-                        _camera.Viewport.Width * 2.0f, 0.0f, _camera.Viewport.Height, 0.0f, 1.0f);
-                    break;
-            }
+            _fontEngine.ProjectionMatrix = Matrix4f.CreateOrthographicOffCenter(0.0f, Camera.Viewport.Width,
+                0.0f, Camera.Viewport.Height, 0.0f, 1.0f);
         }
 
-        private void InitFontEngine(FontType value)
+        private void InitFontEngine()
         {
-            switch (value)
+            switch (FontType)
             {
                 case FontType.FreeType:
-                    _fontEngine = new FreeTypeFont(Fontpath, FontSize, FontStyle);
+                    _fontEngine = new FreeTypeFont(FontPath, _fontRendererConfiguration);
                     break;
 
-                case FontType.BMFont:
+                case FontType.Bitmap:
                     break;
 
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(value), value, null);
+                    throw new ArgumentOutOfRangeException(nameof(FontType), FontType, null);
             }
         }
 
         public void Render()
         {
-            _fontEngine.RenderText(Text, _fontRendererConfiguration);
+            RenderColoredQuad();
+            _fontEngine.RenderText(Text);
         }
     }
 }
