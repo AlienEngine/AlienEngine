@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using AlienEngine.Core.Graphics.GLFW;
-using AlienEngine.Core.Game;
 
 namespace AlienEngine.Core.Inputs
 {
@@ -11,21 +8,21 @@ namespace AlienEngine.Core.Inputs
     {
         private static List<MouseButton> _currentButtons;
         private static Array _allKeys;
-        private static Point2d mousePosition;
-        private static Point2d prevMousePosition;
+        private static Point2d _mousePosition;
+        private static Point2d _prevMousePosition;
 
         public static Point2d Position
         {
-            get { return mousePosition; }
+            get { return _mousePosition; }
             set
             {
-                prevMousePosition = mousePosition;
-                mousePosition = value;
+                _prevMousePosition = _mousePosition;
+                _mousePosition = value;
                 GLFW.SetCursorPos(Game.Game.Window.Handle, value.X, value.Y);
             }
         }
 
-        public static Point2d PreviousPosition => prevMousePosition;
+        public static Point2d PreviousPosition => _prevMousePosition;
 
         public static bool Grabbed
         {
