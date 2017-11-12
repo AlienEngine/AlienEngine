@@ -174,7 +174,7 @@ namespace AlienEngine
 
         #endregion
 
-        #region Members
+        #region Keyboard
 
         public static bool Holding(KeyCode key)
         {
@@ -190,6 +190,10 @@ namespace AlienEngine
         {
             return Keyboard.GetKeyDown(key);
         }
+
+        #endregion
+
+        #region Mouse
 
         public static bool Holding(MouseButton key)
         {
@@ -211,21 +215,6 @@ namespace AlienEngine
             return Joystick.GetButton(joystick, button);
         }
 
-        public static bool Released(JoystickDevice joystick, int button)
-        {
-            return Joystick.GetButtonUp(joystick, button);
-        }
-
-        public static bool Pressed(JoystickDevice joystick, int button)
-        {
-            return Joystick.GetButtonDown(joystick, button);
-        }
-
-        public static float Axis(JoystickDevice joystick, int axis)
-        {
-            return Joystick.GetAxis(joystick, axis);
-        }
-
         public static void GrabMouse(bool state = true)
         {
             Mouse.Grabbed = state;
@@ -241,10 +230,38 @@ namespace AlienEngine
             return Game.Window.GetCursorState();
         }
 
+        #endregion
+
+        #region Joystick
+
+        public static bool Released(JoystickDevice joystick, int button)
+        {
+            return Joystick.GetButtonUp(joystick, button);
+        }
+
+        public static bool Pressed(JoystickDevice joystick, int button)
+        {
+            return Joystick.GetButtonDown(joystick, button);
+        }
+
+        public static float Axis(JoystickDevice joystick, int axis)
+        {
+            return Joystick.GetAxis(joystick, axis);
+        }
+
         public static JoystickState GetJoystickState(JoystickDevice joystick)
         {
             return Joystick.GetJoystickState(joystick);
         }
+
+        public static bool JoystickIsConnected(JoystickDevice joystick)
+        {
+            return Joystick.IsPresent(joystick);
+        }
+
+        #endregion
+
+        #region Events
 
         public static void BackupEvents()
         {

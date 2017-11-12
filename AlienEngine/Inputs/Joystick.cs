@@ -25,15 +25,18 @@ namespace AlienEngine.Core.Inputs
             _joystickStates = new List<JoystickState>();
         }
 
+        /// <summary>
+        /// Updates Joystick input manager on each frames.
+        /// </summary>
         public static void Update()
         {
             _joystickStates.Clear();
             foreach (JoystickDevice i in _allJoysticks)
             {
                 JoystickState state = new JoystickState(
-                    GLFW.JoystickPresent(i),
+                    IsPresent(i),
                     i,
-                    GLFW.GetJoystickName(i),
+                    GetName(i),
                     GLFW.GetJoystickButtons(i),
                     GLFW.GetJoystickAxes(i)
                 );
@@ -115,5 +118,18 @@ namespace AlienEngine.Core.Inputs
 
             return _joystickStates[(int)joystick];
         }
+
+        /// <summary>
+        /// Checks if the given <paramref name="joystick"/> is connected.
+        /// </summary>
+        /// <param name="joystick">The joystick devive.</param>
+        public static bool IsPresent(JoystickDevice joystick) => GLFW.JoystickPresent(joystick);
+
+        /// <summary>
+        /// Returns the name of the given <paramref name="joystick"/>.
+        /// </summary>
+        /// <param name="joystick">The joystick device.</param>
+        /// <returns>The <paramref name="joystick"/>'s name if it's connected and an empty string otherwise.</returns>
+        public static string GetName(JoystickDevice joystick) => GLFW.GetJoystickName(joystick);
     }
 }
