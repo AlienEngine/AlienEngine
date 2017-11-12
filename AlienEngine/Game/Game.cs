@@ -42,7 +42,7 @@ namespace AlienEngine.Core.Game
             _hasStarted = false;
         }
 
-        public static void SetGameWindow(GameWindow w)
+        internal static void SetGameWindow(GameWindow w)
         {
             _gameWindow = w;
             Input.Refresh();

@@ -73,14 +73,20 @@ namespace AlienEngine.Core
 
             // Set default window hints
             GLFW.DefaultWindowHints();
-            GLFW.WindowHint(GLFW.Hint.OpenglProfile, GLFW.OpenGLProfile.Core);
+
 #if APPLE
+            // Activate forward compatibility on MacOS/iOS
             GLFW.WindowHint(GLFW.Hint.OpenglForwardCompat, true);
 #endif
-            GLFW.WindowHint(GLFW.Hint.Resizable, false);
+            GLFW.WindowHint(GLFW.Hint.Resizable, GameSettings.GameWindowResizable);
             GLFW.WindowHint(GLFW.Hint.AutoIconify, true);
             GLFW.WindowHint(GLFW.Hint.Doublebuffer, true);
             GLFW.WindowHint(GLFW.Hint.Visible, false);
+
+            if (GameSettings.MultisampleEnabled)
+                GLFW.WindowHint(GLFW.Hint.Samples, GameSettings.MultisampleLevel);
+            else
+                GLFW.WindowHint(GLFW.Hint.Samples, 0);
         }
 
         /// <summary>
@@ -89,6 +95,7 @@ namespace AlienEngine.Core
         /// <param name="title">The title of the <see cref="GameWindow"/>.</param>
         public GameWindow(string title) : this(title, GameWindow.None)
         {
+            _title = title;
         }
 
         /// <summary>
@@ -98,10 +105,15 @@ namespace AlienEngine.Core
         /// <param name="share">The window to share context resources with.</param>
         public GameWindow(string title, GameWindow share) : this()
         {
-            if (GameSettings.MultisampleEnabled)
-                GLFW.WindowHint(GLFW.Hint.Samples, GameSettings.MultisampleLevel);
-            else
-                GLFW.WindowHint(GLFW.Hint.Samples, 0);
+            if (GameSettings.GameWindowFullscreenMode)
+            {
+                var mode = GLFW.GetVideoMode(Monitor.PrimaryMonitor.Handle);
+
+                GLFW.WindowHint(GLFW.Hint.RedBits, mode.RedBits);
+                GLFW.WindowHint(GLFW.Hint.GreenBits, mode.GreenBits);
+                GLFW.WindowHint(GLFW.Hint.BlueBits, mode.BlueBits);
+                GLFW.WindowHint(GLFW.Hint.RefreshRate, mode.RefreshRate);
+            }
 
             Handle = GLFW.CreateWindow(GameSettings.GameWindowSize.Width,
                 GameSettings.GameWindowSize.Height,
@@ -114,9 +126,7 @@ namespace AlienEngine.Core
                 Environment.Exit(-1);
             }
 
-            // Enable V-Sync
-            if (GameSettings.VSyncEnabled)
-                GLFW.SwapInterval(GameSettings.VSyncInterval);
+            _initWindow();
         }
 
         public GameWindow(Sizei size, string title) : this(size, title, GameWindow.None)
@@ -129,10 +139,18 @@ namespace AlienEngine.Core
 
         public GameWindow(Sizei size, string title, GameWindow share) : this()
         {
-            if (GameSettings.MultisampleEnabled)
-                GLFW.WindowHint(GLFW.Hint.Samples, GameSettings.MultisampleLevel);
-            else
-                GLFW.WindowHint(GLFW.Hint.Samples, 0);
+            _title = title;
+            _size = size;
+
+            if (GameSettings.GameWindowFullscreenMode)
+            {
+                var mode = GLFW.GetVideoMode(Monitor.PrimaryMonitor.Handle);
+
+                GLFW.WindowHint(GLFW.Hint.RedBits, mode.RedBits);
+                GLFW.WindowHint(GLFW.Hint.GreenBits, mode.GreenBits);
+                GLFW.WindowHint(GLFW.Hint.BlueBits, mode.BlueBits);
+                GLFW.WindowHint(GLFW.Hint.RefreshRate, mode.RefreshRate);
+            }
 
             Handle = GLFW.CreateWindow(size.Width, size.Height, title,
                 (GameSettings.GameWindowFullscreenMode) ? Monitor.PrimaryMonitor.Handle : Monitor.None.Handle,
@@ -144,9 +162,7 @@ namespace AlienEngine.Core
                 Environment.Exit(-1);
             }
 
-            // Enable V-Sync
-            if (GameSettings.VSyncEnabled)
-                GLFW.SwapInterval(GameSettings.VSyncInterval);
+            _initWindow();
         }
 
         public GameWindow(int width, int height, string title, GameWindow share) : this(new Sizei(width, height), title,
@@ -176,10 +192,18 @@ namespace AlienEngine.Core
 
         public GameWindow(Sizei size, string title, bool fullscreen, GameWindow share) : this()
         {
-            if (GameSettings.MultisampleEnabled)
-                GLFW.WindowHint(GLFW.Hint.Samples, GameSettings.MultisampleLevel);
-            else
-                GLFW.WindowHint(GLFW.Hint.Samples, 0);
+            _title = title;
+            _size = size;
+
+            if (fullscreen)
+            {
+                var mode = GLFW.GetVideoMode(Monitor.PrimaryMonitor.Handle);
+
+                GLFW.WindowHint(GLFW.Hint.RedBits, mode.RedBits);
+                GLFW.WindowHint(GLFW.Hint.GreenBits, mode.GreenBits);
+                GLFW.WindowHint(GLFW.Hint.BlueBits, mode.BlueBits);
+                GLFW.WindowHint(GLFW.Hint.RefreshRate, mode.RefreshRate);
+            }
 
             Handle = GLFW.CreateWindow(size.Width, size.Height, title,
                 (fullscreen) ? Monitor.PrimaryMonitor.Handle : Monitor.None.Handle,
@@ -191,9 +215,7 @@ namespace AlienEngine.Core
                 Environment.Exit(-1);
             }
 
-            // Enable V-Sync
-            if (GameSettings.VSyncEnabled)
-                GLFW.SwapInterval(GameSettings.VSyncInterval);
+            _initWindow();
         }
 
         public GameWindow(Sizei size, string title, Monitor monitor) : this(size, title, monitor, GameWindow.None)
@@ -212,10 +234,18 @@ namespace AlienEngine.Core
 
         public GameWindow(Sizei size, string title, Monitor monitor, GameWindow share) : this()
         {
-            if (GameSettings.MultisampleEnabled)
-                GLFW.WindowHint(GLFW.Hint.Samples, GameSettings.MultisampleLevel);
-            else
-                GLFW.WindowHint(GLFW.Hint.Samples, 0);
+            _title = title;
+            _size = size;
+
+            if (GameSettings.GameWindowFullscreenMode)
+            {
+                var mode = GLFW.GetVideoMode(monitor.Handle);
+
+                GLFW.WindowHint(GLFW.Hint.RedBits, mode.RedBits);
+                GLFW.WindowHint(GLFW.Hint.GreenBits, mode.GreenBits);
+                GLFW.WindowHint(GLFW.Hint.BlueBits, mode.BlueBits);
+                GLFW.WindowHint(GLFW.Hint.RefreshRate, mode.RefreshRate);
+            }
 
             Handle = GLFW.CreateWindow(size.Width, size.Height, title,
                 (GameSettings.GameWindowFullscreenMode) ? monitor.Handle : Monitor.None.Handle,
@@ -227,9 +257,7 @@ namespace AlienEngine.Core
                 Environment.Exit(-1);
             }
 
-            // Enable V-Sync
-            if (GameSettings.VSyncEnabled)
-                GLFW.SwapInterval(GameSettings.VSyncInterval);
+            _initWindow();
         }
 
         public GameWindow(Sizei size, string title, bool fullscreen, Monitor monitor) : this(size, title, fullscreen,
@@ -249,13 +277,21 @@ namespace AlienEngine.Core
 
         public GameWindow(Sizei size, string title, bool fullscreen, Monitor monitor, GameWindow share) : this()
         {
-            if (GameSettings.MultisampleEnabled)
-                GLFW.WindowHint(GLFW.Hint.Samples, GameSettings.MultisampleLevel);
-            else
-                GLFW.WindowHint(GLFW.Hint.Samples, 0);
+            _title = title;
+            _size = size;
+
+            if (fullscreen)
+            {
+                var mode = GLFW.GetVideoMode(monitor.Handle);
+
+                GLFW.WindowHint(GLFW.Hint.RedBits, mode.RedBits);
+                GLFW.WindowHint(GLFW.Hint.GreenBits, mode.GreenBits);
+                GLFW.WindowHint(GLFW.Hint.BlueBits, mode.BlueBits);
+                GLFW.WindowHint(GLFW.Hint.RefreshRate, mode.RefreshRate);
+            }
 
             Handle = GLFW.CreateWindow(size.Width, size.Height, title,
-                (GameSettings.GameWindowFullscreenMode) ? monitor.Handle : Monitor.None.Handle,
+                (fullscreen) ? monitor.Handle : Monitor.None.Handle,
                 (share != null) ? share.Handle : None.Handle);
 
             if (!Handle)
@@ -264,9 +300,7 @@ namespace AlienEngine.Core
                 Environment.Exit(-1);
             }
 
-            // Enable V-Sync
-            if (GameSettings.VSyncEnabled)
-                GLFW.SwapInterval(GameSettings.VSyncInterval);
+            _initWindow();
         }
 
         #endregion
@@ -284,11 +318,13 @@ namespace AlienEngine.Core
 
         public delegate void MouseLeaveEvent(object sender, MouseLeaveEventArgs e);
 
+        public delegate void GameWindowEvent(object sender, EventArgs e);
+
         #endregion
 
         #region Events
 
-        public event ResizeEvent Resize;
+        public event ResizeEvent WindowSizeChange;
 
         public event MouseEnterEvent MouseEnter;
 
@@ -296,23 +332,39 @@ namespace AlienEngine.Core
 
         public event ResizeEvent FramebufferSizeChange;
 
+        public event GameWindowEvent Closing;
+
+        public event GameWindowEvent OnGotFocus;
+
+        public event GameWindowEvent OnLostFocus;
+
         #endregion
 
         #region Private Members
 
+        private void _initWindow()
+        {
+            // Enable V-Sync
+            if (GameSettings.VSyncEnabled)
+                GLFW.SwapInterval(GameSettings.VSyncInterval);
+
+            // Set the aspect ratio
+            // GLFW.SetWindowAspectRatio(Handle, GameSettings.GameWindowAspectRatio[0], GameSettings.GameWindowAspectRatio[1]);
+        }
+
         private void OnResize(Window window, int width, int height)
         {
             var size = new Sizei(width, height);
-            Resize?.Invoke(null, new ResizeEventArgs(size, Size));
+            WindowSizeChange?.Invoke(this, new ResizeEventArgs(size, Size));
             _size = size;
         }
 
         private void OnMouseLeaveEnter(Window window, bool entered)
         {
             if (entered)
-                MouseEnter?.Invoke(null, new MouseEnterEventArgs(Input.MousePosition));
+                MouseEnter?.Invoke(this, new MouseEnterEventArgs(Input.MousePosition));
             else
-                MouseLeave?.Invoke(null, new MouseLeaveEventArgs(Input.MousePosition));
+                MouseLeave?.Invoke(this, new MouseLeaveEventArgs(Input.MousePosition));
         }
 
         private void OnFramebufferSizeChange(Window window, int width, int height)
@@ -322,7 +374,20 @@ namespace AlienEngine.Core
             FramebufferSizeChange?.Invoke(this, new ResizeEventArgs(size, FramebufferSize));
             _framebufferSize = size;
         }
-        
+
+        private void OnClose(Window window)
+        {
+            Closing?.Invoke(this, new EventArgs());
+        }
+
+        private void OnFocusChange(Window window, bool focused)
+        {
+            if (focused)
+                OnGotFocus?.Invoke(this, new EventArgs());
+            else
+                OnLostFocus?.Invoke(this, new EventArgs());
+        }
+
         #endregion
 
         #region Public members
@@ -377,7 +442,7 @@ namespace AlienEngine.Core
         /// <summary>
         /// Gets a boolean defining if the <see cref="GameWindow"/> is iconified.
         /// </summary>
-        public bool Iconified => GLFW.GetWindowAttrib(Handle, GLFW.WindowAttrib.Iconified);
+        public bool Minimized => GLFW.GetWindowAttrib(Handle, GLFW.WindowAttrib.Iconified);
 
         /// <summary>
         /// Gets a boolean defining if the <see cref="GameWindow"/> is maximized.
@@ -480,6 +545,14 @@ namespace AlienEngine.Core
         }
 
         /// <summary>
+        /// Minimize the window;
+        /// </summary>
+        public void Minimize()
+        {
+            GLFW.IconifyWindow(Handle);
+        }
+
+        /// <summary>
         /// Maximize the window.
         /// </summary>
         public void Maximize()
@@ -501,10 +574,6 @@ namespace AlienEngine.Core
         public void Show()
         {
             GLFW.ShowWindow(Handle);
-            
-            GLFW.SetWindowSizeCallback(Handle, OnResize);
-            GLFW.SetCursorEnterCallback(Handle, OnMouseLeaveEnter);
-            GLFW.SetFramebufferSizeCallback(Handle, OnFramebufferSizeChange);
         }
 
         /// <summary>
@@ -559,6 +628,21 @@ namespace AlienEngine.Core
             GLFW.DestroyWindow(Handle);
         }
 
+        /// <summary>
+        /// Sets this <see cref="GameWindow"/> as the current ones.
+        /// </summary>
+        public void SetCurrent()
+        {
+            Game.Game.SetGameWindow(this);
+            
+            // Apply callbacks
+            GLFW.SetWindowSizeCallback(Handle, (window, width, height) => Game.Game.Window.OnResize(window, width, height));
+            GLFW.SetCursorEnterCallback(Handle, (window, entered) => Game.Game.Window.OnMouseLeaveEnter(window, entered));
+            GLFW.SetFramebufferSizeCallback(Handle, (window, width, height) => Game.Game.Window.OnFramebufferSizeChange(window, width, height));
+            GLFW.SetWindowCloseCallback(Handle, (window) => Game.Game.Window.OnClose(window));
+            GLFW.SetWindowFocusCallback(Handle, (window, focused) => Game.Game.Window.OnFocusChange(window, focused));
+        }
+
         #endregion
 
         #region Static members
@@ -574,7 +658,7 @@ namespace AlienEngine.Core
         /// <param name="window">The window.</param>
         public static void MakeContextCurrent(ref GameWindow window)
         {
-            GLFW.MakeContextCurrent(window.Handle);
+            window.MakeContextCurrent();
         }
 
         /// <summary>
@@ -591,7 +675,7 @@ namespace AlienEngine.Core
         /// <param name="window">The window.</param>
         public static void SwapBuffers(ref GameWindow window)
         {
-            GLFW.SwapBuffers(window.Handle);
+            window.SwapBuffers();
         }
 
         /// <summary>
@@ -600,7 +684,7 @@ namespace AlienEngine.Core
         /// <param name="window">The window.</param>
         public static void Close(ref GameWindow window)
         {
-            GLFW.SetWindowShouldClose(window.Handle, true);
+            window.Close();
         }
 
         /// <summary>
@@ -609,7 +693,7 @@ namespace AlienEngine.Core
         /// <param name="window">The window.</param>
         public static void Destroy(ref GameWindow window)
         {
-            GLFW.DestroyWindow(window.Handle);
+            window.Destroy();
         }
 
         #endregion
