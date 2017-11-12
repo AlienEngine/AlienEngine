@@ -1,4 +1,6 @@
-﻿namespace AlienEngine
+﻿using System;
+
+namespace AlienEngine
 {
     /// <summary>
     /// Base class of all built-in and user defined
@@ -22,7 +24,10 @@
         /// Gets a boolean defining if this <see cref="Component"/>.
         /// is enabled or not.
         /// </summary>
-        protected bool Enabled { get { return _enabled; } }
+        protected bool Enabled
+        {
+            get { return _enabled; }
+        }
 
         /// <summary>
         /// Enable this <see cref="Component"/>.
@@ -138,6 +143,13 @@
             return _gameElement != null ? _gameElement.HasComponent(component) : false;
         }
 
+        protected event Action OnAttach;
+
+        internal void TriggerAttachEvent()
+        {
+            OnAttach?.Invoke();
+        }
+
         internal void SetGameElement(GameElement gameElement)
         {
             _gameElement = gameElement;
@@ -146,31 +158,64 @@
         #region Overriden Methods
 
         public virtual void Start()
-        { }
+        {
+        }
 
         public virtual void BeforeUpdate()
-        { }
+        {
+        }
 
         public virtual void Update()
-        { }
+        {
+        }
 
         public virtual void AfterUpdate()
-        { }
+        {
+        }
 
         public virtual void Stop()
-        { }
+        {
+        }
 
+        #region Physics triggers
+
+        /// <summary>
+        /// Trigerred when the <see cref="Collider"/> of this
+        /// <see cref="GameElement"/> hit another.
+        /// </summary>
+        /// <param name="element">The other collider.</param>
         public virtual void OnColliderHit(Collider element)
-        { }
+        {
+        }
 
+        /// <summary>
+        /// Trigerred when the <see cref="Collider"/> of this
+        /// <see cref="GameElement"/> enter in another.
+        /// </summary>
+        /// <param name="element">The other collider.</param>
         public virtual void OnColliderEnter(Collider element)
-        { }
+        {
+        }
 
+        /// <summary>
+        /// Trigerred when the <see cref="Collider"/> of this
+        /// <see cref="GameElement"/> is in another.
+        /// </summary>
+        /// <param name="element">The other collider.</param>
         public virtual void OnColliderStay(Collider element)
-        { }
+        {
+        }
 
+        /// <summary>
+        /// Trigerred when the <see cref="Collider"/> of this
+        /// <see cref="GameElement"/> exit out another.
+        /// </summary>
+        /// <param name="element">The other collider.</param>
         public virtual void OnColliderExit(Collider element)
-        { }
+        {
+        }
+
+        #endregion
 
         #endregion
     }

@@ -40,37 +40,5 @@ namespace AlienEngine
         void Stop();
 
         #endregion
-
-        #region Physics triggers
-
-        /// <summary>
-        /// Trigerred when the <see cref="Collider"/> of this
-        /// <see cref="GameElement"/> hit another.
-        /// </summary>
-        /// <param name="element">The other collider.</param>
-        void OnColliderHit(Collider element);
-
-        /// <summary>
-        /// Trigerred when the <see cref="Collider"/> of this
-        /// <see cref="GameElement"/> enter in another.
-        /// </summary>
-        /// <param name="element">The other collider.</param>
-        void OnColliderEnter(Collider element);
-
-        /// <summary>
-        /// Trigerred when the <see cref="Collider"/> of this
-        /// <see cref="GameElement"/> is in another.
-        /// </summary>
-        /// <param name="element">The other collider.</param>
-        void OnColliderStay(Collider element);
-
-        /// <summary>
-        /// Trigerred when the <see cref="Collider"/> of this
-        /// <see cref="GameElement"/> exit out another.
-        /// </summary>
-        /// <param name="element">The other collider.</param>
-        void OnColliderExit(Collider element);
-
-        #endregion
     }
 }
