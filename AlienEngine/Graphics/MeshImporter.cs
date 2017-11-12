@@ -81,7 +81,7 @@ namespace AlienEngine.Core.Graphics
                 ResourcesManager.AddOnDisposeEvent(() =>
                 {
                     if (_vao != 0)
-                        GL.DeleteVertexArrays(1, new uint[] { _vao });
+                        GL.DeleteVertexArray(_vao);
                 });
             }
             catch (Exception e)
@@ -405,9 +405,16 @@ namespace AlienEngine.Core.Graphics
             {
                 if (disposing)
                 {
+                    positions.Clear();
                     positions = null;
+
+                    uvs.Clear();
                     uvs = null;
+
+                    indices.Clear();
                     indices = null;
+
+                    normals.Clear();
                     normals = null;
                 }
 
