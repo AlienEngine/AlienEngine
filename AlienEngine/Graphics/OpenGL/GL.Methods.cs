@@ -697,6 +697,7 @@ namespace AlienEngine.Core.Graphics.OpenGL
             GL.DeleteTextures(1, new uint[] {texture});
         }
 
+        [CLSCompliant(false)]
         public static void DeleteVertexArray(uint vao)
         {
             GL.DeleteVertexArrays(1, new uint[] {vao});
