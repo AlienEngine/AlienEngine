@@ -221,6 +221,11 @@ namespace AlienEngine
             return Joystick.GetButtonDown(joystick, button);
         }
 
+        public static float Axis(JoystickDevice joystick, int axis)
+        {
+            return Joystick.GetAxis(joystick, axis);
+        }
+
         public static void GrabMouse(bool state = true)
         {
             Mouse.Grabbed = state;

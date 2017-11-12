@@ -90,6 +90,21 @@ namespace AlienEngine.Core.Inputs
         }
 
         /// <summary>
+        /// Returns the value of an axis.
+        /// </summary>
+        /// <param name="joystick">The joystick device.</param>
+        /// <param name="axis">The axis.</param>
+        public static float GetAxis(JoystickDevice joystick, int axis)
+        {
+            if (axis <= 0)
+                throw new ArgumentOutOfRangeException(nameof(axis), "The value must be positive and greater than 0.");
+
+            var states = GLFW.GetJoystickAxes(joystick);
+
+            return states[axis - 1];
+        }
+
+        /// <summary>
         /// Returns the state of the given joystick device.
         /// </summary>
         /// <param name="joystick">The joystick device.</param>
