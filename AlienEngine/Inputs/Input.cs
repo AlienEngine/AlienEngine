@@ -206,6 +206,21 @@ namespace AlienEngine
             return Mouse.GetButtonDown(key);
         }
 
+        public static bool Holding(JoystickDevice joystick, int button)
+        {
+            return Joystick.GetButton(joystick, button);
+        }
+
+        public static bool Released(JoystickDevice joystick, int button)
+        {
+            return Joystick.GetButtonUp(joystick, button);
+        }
+
+        public static bool Pressed(JoystickDevice joystick, int button)
+        {
+            return Joystick.GetButtonDown(joystick, button);
+        }
+
         public static void GrabMouse(bool state = true)
         {
             Mouse.Grabbed = state;
@@ -219,6 +234,11 @@ namespace AlienEngine
         public static CursorState GetCursorState()
         {
             return Game.Window.GetCursorState();
+        }
+
+        public static JoystickState GetJoystickState(JoystickDevice joystick)
+        {
+            return Joystick.GetJoystickState(joystick);
         }
 
         public static void BackupEvents()
