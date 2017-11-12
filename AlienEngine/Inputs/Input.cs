@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using AlienEngine.Core.Graphics.GLFW;
+using AlienEngine.Core;
 using AlienEngine.Core.Game;
 using AlienEngine.Core.Graphics.OpenGL;
 using AlienEngine.Core.Inputs;
@@ -17,6 +18,9 @@ namespace AlienEngine
     {
         #region Fields
 
+        /// <summary>
+        /// The scroll offset of the last scroll event.
+        /// </summary>
         private static Vector2d _lastScrollOffset;
 
         /// <summary>
@@ -98,6 +102,16 @@ namespace AlienEngine
         /// </summary>
         public static Point2d PreviousMousePosition => Mouse.PreviousPosition;
 
+        /// <summary>
+        /// Check if the mouse is currently grabbed in the <see cref="GameWindow"/>.
+        /// </summary>
+        public static bool MouseIsGrabbed => Mouse.Grabbed;
+
+        /// <summary>
+        /// Check if the mouse is currently hidden in the <see cref="GameWindow"/>.
+        /// </summary>
+        public static bool MouseIsHidden => Mouse.Hidden;
+
         #endregion
 
         #region Delegates
@@ -136,6 +150,9 @@ namespace AlienEngine
 
         #region Initializer
 
+        /// <summary>
+        /// Initialize the manager.
+        /// </summary>
         static Input()
         {
             _lastScrollOffset = Vector2d.Zero;
@@ -164,7 +181,7 @@ namespace AlienEngine
             return Keyboard.GetKey(key);
         }
 
-        public static bool Up(KeyCode key)
+        public static bool Released(KeyCode key)
         {
             return Keyboard.GetKeyUp(key);
         }
@@ -174,12 +191,12 @@ namespace AlienEngine
             return Keyboard.GetKeyDown(key);
         }
 
-        public static bool Held(MouseButton key)
+        public static bool Holding(MouseButton key)
         {
             return Mouse.GetButton(key);
         }
 
-        public static bool Up(MouseButton key)
+        public static bool Released(MouseButton key)
         {
             return Mouse.GetButtonUp(key);
         }
@@ -440,7 +457,7 @@ namespace AlienEngine
             {
                 foreach (var e in _keyEvents)
                 {
-                    if (e != null) e(null, new KeyboardKeyEventArgs(key, state, mods));
+                    e?.Invoke(null, new KeyboardKeyEventArgs(key, state, mods));
                 }
             });
 
@@ -448,7 +465,7 @@ namespace AlienEngine
             {
                 foreach (var e in _textEvents)
                 {
-                    if (e != null) e(null, new TextInputEventArgs(code));
+                    e?.Invoke(null, new TextInputEventArgs(code));
                 }
             });
 
@@ -456,7 +473,7 @@ namespace AlienEngine
             {
                 foreach (var e in _mouseMoveEvents)
                 {
-                    if (e != null) e(null, new MouseMoveEventArgs(new Point2d(x, y), PreviousMousePosition));
+                    e?.Invoke(null, new MouseMoveEventArgs(new Point2d(x, y), PreviousMousePosition));
                 }
             });
 
@@ -466,12 +483,12 @@ namespace AlienEngine
                 {
                     case InputState.Pressed:
                         foreach (var e in _mouseButtonDownEvents)
-                            if (e != null) e(null, new MouseButtonEventArgs(MousePosition, b, s, k));
+                            e?.Invoke(null, new MouseButtonEventArgs(MousePosition, b, s, k));
                         break;
 
                     case InputState.Released:
                         foreach (var e in _mouseButtonUpEvents)
-                            if (e != null) e(null, new MouseButtonEventArgs(MousePosition, b, s, k));
+                            e?.Invoke(null, new MouseButtonEventArgs(MousePosition, b, s, k));
                         break;
                 }
             });
@@ -482,7 +499,7 @@ namespace AlienEngine
 
                 foreach (var e in _mouseWheelEvents)
                 {
-                    if (e != null) e(null, new MouseWheelEventArgs(MousePosition, offset, offset - _lastScrollOffset));
+                    e?.Invoke(null, new MouseWheelEventArgs(MousePosition, offset, offset - _lastScrollOffset));
                 }
 
                 _lastScrollOffset = offset;
