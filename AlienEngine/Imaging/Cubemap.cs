@@ -6,18 +6,15 @@ using AlienEngine.Core.Rendering;
 using AlienEngine.Core.Resources;
 using AlienEngine.Shaders;
 using System;
-using System.Drawing;
-using System.Drawing.Imaging;
-using System.IO;
 
 namespace AlienEngine.Imaging
 {
-    public class Cubemap : IDisposable, IRenderable
+    public class Cubemap : IDisposable
     {
         private string[] _textures;
-        private Core.Graphics.DevIL.Image[] _images;
+        private Image[] _images;
         private uint _textureID;
-        private VAO _cube;
+        private Mesh _cube;
         private CubemapShaderProgram _program;
         private bool _loaded;
         private Camera _camera;
@@ -35,7 +32,7 @@ namespace AlienEngine.Imaging
         public Cubemap(string posx, string negx, string posy, string negy, string posz, string negz)
         {
             _textures = new string[6];
-            _images = new Core.Graphics.DevIL.Image[6];
+            _images = new Image[6] { null, null, null, null, null, null };
 
             _textures[0] = posx;
             _textures[1] = negx;
@@ -51,40 +48,19 @@ namespace AlienEngine.Imaging
 
         private void _loadCubeSide(uint sideID)
         {
-            var extension = new FileInfo(_textures[sideID]).Extension.ToLower();
-            switch (extension)
-            {
-                //case ".dds":
-                //    _loadDDS(sideID);
-                //    break;
-                default:
-                    _loadBitmap(sideID);
-                    break;
-            }
+            _loadBitmap(sideID);
         }
 
         private void _loadBitmap(uint sideID)
         {
-            // Import the image
-            ImageImporter _importer = new ImageImporter();
-            _images[sideID] = _importer.LoadImage(_textures[sideID]);
+            if (_images[sideID] == null)
+            {
+                // Create the image
+                _images[sideID] = Image.FromFile(_textures[sideID]);
+            }
 
-            // Dispose the importer
-            _importer.Dispose();
-
-            // Bind the impi]orted Image
-            _images[sideID].Bind();
-
-            // Generate bitmap from image
-            Bitmap BitmapImage = _images[sideID].ToBitmap();
-
-            // Must be Format32bppArgb file format, so convert it if it isn't in that format
-            BitmapData bitmapData =
-                BitmapImage.LockBits(new System.Drawing.Rectangle(0, 0, BitmapImage.Width, BitmapImage.Height),
-                    ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
-
-            GL.TexImage2D(_types[sideID], 0, PixelInternalFormat.Rgba8, BitmapImage.Width, BitmapImage.Height, 0,
-                Core.Graphics.OpenGL.PixelFormat.Bgra, PixelType.UnsignedByte, bitmapData.Scan0);
+            GL.TexImage2D(_types[sideID], 0, PixelInternalFormat.Rgba8, _images[sideID].Width, _images[sideID].Height, 0,
+                Core.Graphics.OpenGL.PixelFormat.Bgra, PixelType.UnsignedByte, _images[sideID].Pixels);
             GL.TexParameteri(TextureTarget.TextureCubeMap, TextureParameterName.TextureMagFilter,
                 TextureParameter.Linear);
             GL.TexParameteri(TextureTarget.TextureCubeMap, TextureParameterName.TextureMinFilter,
@@ -95,13 +71,6 @@ namespace AlienEngine.Imaging
                 TextureParameter.ClampToEdge);
             GL.TexParameteri(TextureTarget.TextureCubeMap, TextureParameterName.TextureWrapR,
                 TextureParameter.ClampToEdge);
-
-            // Dispose bitmap (it will not longer be used)
-            BitmapImage.UnlockBits(bitmapData);
-            BitmapImage.Dispose();
-
-            // Make sure the Image will not be modified from the outside
-            _images[sideID].Unbind();
         }
 
         public bool Load()
@@ -110,7 +79,7 @@ namespace AlienEngine.Imaging
             {
                 _camera = Game.CurrentScene.PrimaryCamera.GetComponent<Camera>();
                 _program = new CubemapShaderProgram();
-                _cube = Geometry.CreateCube(_program, Vector3f.One * -_camera.Far / 2, Vector3f.One * _camera.Far / 2);
+                _cube = MeshFactory.CreateCube(Vector3f.One * -_camera.Far / 2, Vector3f.One * _camera.Far / 2);
 
                 _textureID = GL.GenTexture();
                 GL.BindTexture(TextureTarget.TextureCubeMap, _textureID);
@@ -148,18 +117,28 @@ namespace AlienEngine.Imaging
         {
             GL.BindTexture(TextureTarget.TextureCubeMap, 0);
         }
-        
+
         public void Render()
         {
             Renderer.BackupState(RendererBackupMode.FaceCulling);
             Renderer.FaceCulling(false);
 
-            _cube.Program.Bind();
-            _cube.Program.SetUniform("pcm_matrix", _camera.CubemapMatrix * _camera.ProjectionMatrix);
-            _cube.Program.SetUniform("textureCubemap", GL.COLOR_TEXTURE_UNIT_INDEX);
+            Renderer.BackupState(RendererBackupMode.DepthMask);
+            Renderer.DepthMask(false);
+
+            _program.Bind();
+            _program.SetUniform("pcm_matrix", _camera.CubemapMatrix * _camera.ProjectionMatrix);
+            _program.SetUniform("textureCubemap", GL.COLOR_TEXTURE_UNIT_INDEX);
+
+            GL.BindVertexArray(_cube.VAO);
+
             Bind(GL.COLOR_TEXTURE_UNIT_INDEX);
-            _cube.Draw();
+            _cube.Render();
             Unbind();
+
+            GL.BindVertexArray(0);
+
+            Renderer.RestoreState(RendererBackupMode.DepthMask);
 
             Renderer.RestoreState(RendererBackupMode.FaceCulling);
         }
@@ -175,7 +154,7 @@ namespace AlienEngine.Imaging
             if (!disposedValue)
             {
                 if (_textureID != 0)
-                    GL.DeleteTextures(1, new uint[] {_textureID});
+                    GL.DeleteTexture(_textureID);
 
                 if (_images != null)
                     for (int i = 0; i < _images.Length; i++)
