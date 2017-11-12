@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AlienEngine.Core.Resources
 {
@@ -52,10 +49,11 @@ namespace AlienEngine.Core.Resources
             OnDisposeResources();
             OnDisposeResources = null;
 
-            for (int i = 0; i < _disposableResources.Count; i++)
+            for (int i = 0, l = _disposableResources.Count; i < l; i++)
                 if (_disposableResources[i] != null)
                     _disposableResources[i].Dispose();
 
+            _disposableResources.Clear();
             _disposableResources = null;
             _disposed = true;
         }
