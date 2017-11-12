@@ -1,11 +1,12 @@
 ﻿using AlienEngine.ASL;
+using AlienEngine.Core.Graphics.OpenGL;
 
 namespace AlienEngine.Shaders.Samples
 {
     [Version(330)]
     public class FontVertexShader : VertexShader
     {
-        [Layout(Location = 0)] [In] vec4 vertex;
+        [Layout(Location = GL.VERTEX_POSITION_LOCATION)] [In] vec4 vertex;
 
         [Out] vec2 texCoords;
 
@@ -13,8 +14,9 @@ namespace AlienEngine.Shaders.Samples
 
         void main()
         {
-            gl_Position = projection * new vec4(vertex.xy, 0.0f, 1.0f);
+            vec4 pos = projection * new vec4(vertex.xy, 0.0f, 1.0f);
             texCoords = vertex.zw;
+            gl_Position = pos.xyww;
         }
     }
 }

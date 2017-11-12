@@ -13,7 +13,7 @@ namespace AlienEngine.Shaders.Samples
 
         void main()
         {
-            vec4 t = new vec4(1, 1, 1, texture2D(text, texCoords).r);
+            vec4 t = new vec4(1, 1, 1, texture(text, texCoords).r);
             color = t * textColor;
         }
     }
