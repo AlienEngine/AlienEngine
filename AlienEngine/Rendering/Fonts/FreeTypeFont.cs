@@ -241,6 +241,7 @@ namespace AlienEngine.Core.Rendering.Fonts
                 case Origin.BottomLeft:
                     position.Y += textSize.Height - lineHeight;
                     break;
+
                 case Origin.Bottom:
                     position.X -= textSize.Width / 2;
                     position.Y += textSize.Height - lineHeight;
@@ -283,17 +284,34 @@ namespace AlienEngine.Core.Rendering.Fonts
             switch (_config.TextOrigin)
             {
                 case Origin.TopLeft:
-                case Origin.Top:
+                    position.X += (_config.Container.Width - textSize.Width) / 2f;
+                    position.Y -= (_config.Container.Height - textSize.Height) / 2f;
+                    break;
                 case Origin.TopRight:
                     position.X -= (_config.Container.Width - textSize.Width) / 2f;
                     position.Y -= (_config.Container.Height - textSize.Height) / 2f;
                     break;
 
                 case Origin.BottomLeft:
-                case Origin.Bottom:
-                case Origin.BottomRight:
                     position.X += (_config.Container.Width - textSize.Width) / 2f;
                     position.Y += (_config.Container.Height - textSize.Height) / 2f;
+                    break;
+                case Origin.BottomRight:
+                    position.X -= (_config.Container.Width - textSize.Width) / 2f;
+                    position.Y += (_config.Container.Height - textSize.Height) / 2f;
+                    break;
+
+                case Origin.Top:
+                    position.Y -= (_config.Container.Height - textSize.Height) / 2f;
+                    break;
+                case Origin.Bottom:
+                    position.Y += (_config.Container.Height - textSize.Height) / 2f;
+                    break;
+                case Origin.MiddleLeft:
+                    position.X += (_config.Container.Width - textSize.Width) / 2f;
+                    break;
+                case Origin.MiddleRight:
+                    position.X -= (_config.Container.Width - textSize.Width) / 2f;
                     break;
             }
 
