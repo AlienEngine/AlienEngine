@@ -3,6 +3,7 @@
     public enum RendererBackupMode
     {
         DepthTest,
+        DepthMask,
         Blending,
         FaceCulling
     }

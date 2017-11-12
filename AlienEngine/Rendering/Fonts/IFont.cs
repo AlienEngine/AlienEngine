@@ -2,10 +2,14 @@
 {
     public interface IFont
     {
+        FontRendererConfiguration Configuration { get; }
+
         Matrix4f ProjectionMatrix { get; set; }
         
-        void RenderText(string text, FontRendererConfiguration config);
+        void RenderText(string text);
 
-        float CalculateWidth(string text, Vector2f scale);
+        float CalculateWidth(string text);
+
+        Sizef CalculateSize(string text);
     }
 }

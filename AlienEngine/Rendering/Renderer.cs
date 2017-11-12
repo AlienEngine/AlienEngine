@@ -4,7 +4,6 @@ using AlienEngine.Core.Graphics.Shaders;
 using AlienEngine.Shaders;
 using System;
 using System.Collections.Generic;
-using System.Data.OleDb;
 
 namespace AlienEngine.Core.Rendering
 {
@@ -14,6 +13,7 @@ namespace AlienEngine.Core.Rendering
         private static List<IPostRenderable> _postRenderables;
         private static bool _faceCullingEnabled;
         private static bool _depthTestEnabled;
+        private static bool _depthMaskEnabled;
         private static bool _blendingEnabled;
         private static bool _multisampleEnabled;
         private static uint screenVAO;
@@ -39,6 +39,8 @@ namespace AlienEngine.Core.Rendering
 
         private static Tuple<bool, DepthFunction> _depthTestBackup;
 
+        private static Tuple<bool> _depthMaskBackup;
+
         private static Tuple<bool, BlendingFactorSrc, BlendingFactorDest> _blendingBackup;
 
         public static Rectangle Viewport => _viewport;
@@ -47,12 +49,14 @@ namespace AlienEngine.Core.Rendering
 
         public static bool IsDepthTestEnabled => _depthTestEnabled;
 
+        public static bool IsDepthMaskEnabled => _depthMaskEnabled;
+
         public static bool IsBlendingEnabled => _blendingEnabled;
 
         public delegate void ViewportChanged(object sender, ViewportChangedEventArgs e);
 
         public static event ViewportChanged OnViewportChange;
-        
+
         static Renderer()
         {
             // Renderables
@@ -61,12 +65,14 @@ namespace AlienEngine.Core.Rendering
 
             // States
             _depthTestEnabled = false;
+            _depthMaskEnabled = true;
             _blendingEnabled = false;
             _faceCullingEnabled = false;
 
             // Backups
             _faceCullingBackup = null;
             _depthTestBackup = null;
+            _depthMaskBackup = null;
             _blendingBackup = null;
 
             // Viewport
@@ -83,6 +89,9 @@ namespace AlienEngine.Core.Rendering
             {
                 case RendererBackupMode.DepthTest:
                     _depthTestBackup = new Tuple<bool, DepthFunction>(_depthTestEnabled, _depthTestFunction);
+                    break;
+                case RendererBackupMode.DepthMask:
+                    _depthMaskBackup = new Tuple<bool>(_depthMaskEnabled);
                     break;
                 case RendererBackupMode.Blending:
                     _blendingBackup = new Tuple<bool, BlendingFactorSrc, BlendingFactorDest>(_blendingEnabled,
@@ -104,6 +113,13 @@ namespace AlienEngine.Core.Rendering
                     {
                         DepthTest(_depthTestBackup.Item1, _depthTestBackup.Item2);
                         _depthTestBackup = null;
+                    }
+                    break;
+                case RendererBackupMode.DepthMask:
+                    if (_depthMaskBackup != null)
+                    {
+                        DepthMask(_depthMaskBackup.Item1);
+                        _depthMaskBackup = null;
                     }
                     break;
                 case RendererBackupMode.Blending:
@@ -193,10 +209,18 @@ namespace AlienEngine.Core.Rendering
             {
                 if (!_depthTestEnabled) GL.Enable(EnableCap.DepthTest);
                 GL.DepthFunc(depthFunction);
+
+                _depthTestFunction = depthFunction;
             }
             else if (_depthTestEnabled) GL.Disable(EnableCap.DepthTest);
 
             _depthTestEnabled = enable;
+        }
+
+        public static void DepthMask(bool enable = true)
+        {
+            GL.DepthMask(enable);
+            _depthMaskEnabled = enable;
         }
 
         public static void Blending(bool enable = true, BlendingFactorSrc srcFactor = BlendingFactorSrc.SrcAlpha,
@@ -314,10 +338,10 @@ namespace AlienEngine.Core.Rendering
             foreach (IRenderable _object in _renderables)
                 _object.Render();
 
-            // Render the skybox
             BackupState(RendererBackupMode.DepthTest);
             DepthTest(true, DepthFunction.Lequal);
 
+            // Render the skybox
             Camera _camera = Game.Game.CurrentScene.PrimaryCamera.GetComponent<Camera>();
 
             switch (_camera.ClearScreenType)
@@ -331,11 +355,13 @@ namespace AlienEngine.Core.Rendering
                     break;
             }
 
-            RestoreState(RendererBackupMode.DepthTest);
-            
+            DepthTest(true, DepthFunction.Always);
+
             // Render all post-state renderable objects 
-            foreach (IPostRenderable _text in _postRenderables)
-                _text.Render();
+            foreach (IPostRenderable _object in _postRenderables)
+                _object.Render();
+
+            RestoreState(RendererBackupMode.DepthTest);
         }
     }
 }

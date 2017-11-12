@@ -3,6 +3,6 @@
     public enum FontType
     {
         FreeType,
-        BMFont
+        Bitmap
     }
 }

@@ -2,11 +2,9 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Runtime.InteropServices;
-using AlienEngine.Core.Graphics;
+using AlienEngine.UI;
 using AlienEngine.Core.Graphics.OpenGL;
 using AlienEngine.Core.Graphics.Shaders;
-using AlienEngine.Core.Physics.Entities.Prefabs;
 using AlienEngine.Core.Resources;
 using AlienEngine.Imaging;
 using AlienEngine.Shaders;
@@ -19,8 +17,6 @@ namespace AlienEngine.Core.Rendering.Fonts
         private Library _fontLibrary;
 
         private Face _fontFace;
-
-        private readonly float Size;
 
         private const uint DPI = 96;
 
@@ -36,11 +32,15 @@ namespace AlienEngine.Core.Rendering.Fonts
 
         private Matrix4f _projectionMatrix;
 
+        private FontRendererConfiguration _config;
+
         public Matrix4f ProjectionMatrix
         {
             get { return _projectionMatrix; }
             set { _projectionMatrix = value; }
         }
+
+        public FontRendererConfiguration Configuration => _config;
 
         /// <summary>
         /// Creates a new instace of FreeTypeFont
@@ -49,7 +49,7 @@ namespace AlienEngine.Core.Rendering.Fonts
         /// <param name="size">Size of the font</param>
         /// <param name="style">Style of the font</param>
         /// <exception cref="ArgumentException"></exception>
-        public FreeTypeFont(string fontPath, float size, FontStyle style)
+        public FreeTypeFont(string fontPath, FontRendererConfiguration configuration)
         {
             // Check that the font exists
             if (!File.Exists(fontPath))
@@ -60,7 +60,7 @@ namespace AlienEngine.Core.Rendering.Fonts
             _fontLibrary = new Library();
 
             StyleFlags fontStyle = StyleFlags.None;
-            switch (style)
+            switch (configuration.FontStyle)
             {
                 case FontStyle.Bold:
                     fontStyle = StyleFlags.Bold;
@@ -72,7 +72,7 @@ namespace AlienEngine.Core.Rendering.Fonts
                     fontStyle = StyleFlags.None;
                     break;
                 default:
-                    Debug.WriteLine("Invalid style flag chosen for FreeTypeFont: " + style);
+                    Debug.WriteLine("Invalid style flag chosen for FreeTypeFont: " + configuration.FontStyle);
                     break;
             }
 
@@ -109,8 +109,10 @@ namespace AlienEngine.Core.Rendering.Fonts
             _fontFace = tempFace;
 
             // Set the size
-            Size = size;
-            _fontFace.SetCharSize(0, Size, 0, DPI);
+            _fontFace.SetCharSize(0, configuration.FontSize, 0, DPI);
+
+            // Save the configuration
+            _config = configuration;
 
             // Load characters
             BuildCharMap();
@@ -132,17 +134,17 @@ namespace AlienEngine.Core.Rendering.Fonts
                     _fontFace.LoadChar(i, LoadFlags.Render, LoadTarget.Normal);
 
                     // Now store the character for later use
-                    _characters[(char) i] = new Character
+                    _characters[(char)i] = new Character
                     {
                         Texture = new Texture(_fontFace.Glyph),
                         Size = new Sizef(_fontFace.Glyph.Bitmap.Width, _fontFace.Glyph.Bitmap.Rows),
                         Bearing = new Vector2f(_fontFace.Glyph.BitmapLeft, _fontFace.Glyph.BitmapTop),
-                        Advance = (uint) _fontFace.Glyph.Advance.X.Value
+                        Advance = (uint)_fontFace.Glyph.Advance.X.Value
                     };
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine("Unable to load the character \"" + (char) i + "\"");
+                    Console.WriteLine("Unable to load the character \"" + (char)i + "\"");
                 }
             }
         }
@@ -164,162 +166,217 @@ namespace AlienEngine.Core.Rendering.Fonts
             GL.BindVertexArray(0);
         }
 
-        public void RenderText(string text, FontRendererConfiguration config)
+        public void RenderLine(string lineText, Sizef textSize, Point2f textPosition, int lineNumber = 0)
         {
-            var textWidth = CalculateWidth(text, config.Scale);
+            lineText = lineText.Trim();
 
+            float textWidth = CalculateWidth(lineText);
+            float xAdvance = 0.0f;
+            float yAdvance = 0.0f;
+
+            if (_config.TextWrapMode == TextWrapMode.None)
+            {
+                switch (_config.TextAlignement)
+                {
+                    case TextAlignement.Center:
+                        xAdvance += (_config.Container.Width - textWidth) / 2;
+                        break;
+                    case TextAlignement.Right:
+                        xAdvance += (_config.Container.Width - textWidth);
+                        break;
+                }
+            }
+            else
+            {
+                switch (_config.TextAlignement)
+                {
+                    case TextAlignement.Center:
+                        xAdvance += (textSize.Width - textWidth) / 2;
+                        break;
+                    case TextAlignement.Right:
+                        xAdvance += (textSize.Width - textWidth);
+                        break;
+                }
+            }
+
+            yAdvance = lineNumber * (_config.FontSize + _config.LineSpacing) * _config.Scale.Y;
+
+            foreach (char c in lineText)
+            {
+                Character ch = Characters[c];
+
+                var xpos = textPosition.X + xAdvance + ch.Bearing.X * _config.Scale.X;
+                var ypos = textPosition.Y - yAdvance - (ch.Size.Y - ch.Bearing.Y) * _config.Scale.Y;
+
+                var w = ch.Size.X * _config.Scale.X;
+                var h = ch.Size.Y * _config.Scale.Y;
+
+                DrawCharacter(xpos, ypos, h, w, ch);
+
+                xAdvance += (ch.Advance >> 6) * _config.Scale.X + _config.CharacterSpacing;
+            }
+        }
+
+        // TODO: Add a RenderLine() method in FreeTypeFont to render text line by line and use TextAlignment
+        public void RenderText(string text)
+        {
             // Change the renderer behaviour
             Renderer.BackupState(RendererBackupMode.Blending);
             Renderer.Blending();
 
             _shaderProgram.Bind();
-            _shaderProgram.SetUniform("textColor", config.Color);
+            _shaderProgram.SetUniform("textColor", _config.Color);
             _shaderProgram.SetUniform("projection", ProjectionMatrix);
 
             GL.ActiveTexture(GL.COLOR_TEXTURE_UNIT_INDEX);
 
             GL.BindVertexArray(_vao);
 
-            switch (config.TextAlignement)
+            var textSize = CalculateSize(text);
+            var lineHeight = _config.FontSize * _config.Scale.Y;
+            var position = _config.Position;
+
+            switch (_config.TextOrigin)
             {
-                case TextAlignement.Center:
-                    config.Position.X += config.Container.Width / 2;
+                case Origin.BottomLeft:
+                    position.Y += textSize.Height - lineHeight;
                     break;
-                case TextAlignement.Right:
-                    config.Position.X += config.Container.Width;
+                case Origin.Bottom:
+                    position.X -= textSize.Width / 2;
+                    position.Y += textSize.Height - lineHeight;
+                    break;
+
+                case Origin.BottomRight:
+                    position.X -= textSize.Width;
+                    position.Y += textSize.Height - lineHeight;
+                    break;
+
+                case Origin.MiddleLeft:
+                    position.Y += (textSize.Height / 2) - lineHeight;
+                    break;
+
+                case Origin.Middle:
+                    position.X -= textSize.Width / 2;
+                    position.Y += (textSize.Height / 2) - lineHeight;
+                    break;
+
+                case Origin.MiddleRight:
+                    position.X -= textSize.Width;
+                    position.Y += (textSize.Height / 2) - lineHeight;
+                    break;
+
+                case Origin.TopLeft:
+                    position.Y -= lineHeight;
+                    break;
+
+                case Origin.Top:
+                    position.X -= textSize.Width / 2;
+                    position.Y -= lineHeight;
+                    break;
+
+                case Origin.TopRight:
+                    position.X -= textSize.Width;
+                    position.Y -= lineHeight;
                     break;
             }
-                        
-            switch (config.TextOrigin)
+
+            switch (_config.TextOrigin)
             {
-                case TextOrigin.Bottom:
-                        config.Position.X -= textWidth / 2;
+                case Origin.TopLeft:
+                case Origin.Top:
+                case Origin.TopRight:
+                    position.X -= (_config.Container.Width - textSize.Width) / 2f;
+                    position.Y -= (_config.Container.Height - textSize.Height) / 2f;
                     break;
 
-                case TextOrigin.BottomRight:
-                    config.Position.X -= textWidth;
-                    break;
-
-                case TextOrigin.MiddleLeft:
-                    config.Position.Y -= Size / 2;
-                    break;
-
-                case TextOrigin.Middle:
-                    config.Position.X -= textWidth / 2;
-                    config.Position.Y -= Size / 2;
-                    break;
-
-                case TextOrigin.MiddleRight:
-                    config.Position.Y -= Size / 2;
-                    break;
-
-                case TextOrigin.TopLeft:
-                    config.Position.Y -= Size;
-                    break;
-
-                case TextOrigin.Top:
-                    config.Position.X -= textWidth / 2;
-                    config.Position.Y -= Size;
-                    break;
-
-                case TextOrigin.TopRight:
-                    config.Position.X -= textWidth;
-                    config.Position.Y -= Size;
+                case Origin.BottomLeft:
+                case Origin.Bottom:
+                case Origin.BottomRight:
+                    position.X += (_config.Container.Width - textSize.Width) / 2f;
+                    position.Y += (_config.Container.Height - textSize.Height) / 2f;
                     break;
             }
 
             float currentWidth = 0.0f;
             int currentLine = 0;
-            float xAdvance = 0.0f;
-            float yAdvance = 0.0f;
 
-            if (config.TextWrapMode == TextWrapMode.None)
+            if (_config.TextWrapMode == TextWrapMode.None)
             {
-                foreach (char c in text)
-                {
-                    Character ch = Characters[c];
-
-                    var xpos = config.Position.X + xAdvance + ch.Bearing.X * config.Scale.X;
-                    var ypos = config.Position.Y - yAdvance - (ch.Size.Y - ch.Bearing.Y) * config.Scale.Y;
-
-                    var w = ch.Size.X * config.Scale.X;
-                    var h = ch.Size.Y * config.Scale.Y;
-
-                    DrawLetter(xpos, ypos, h, w, ch);
-
-                    xAdvance += (ch.Advance >> 6) * config.Scale.X + config.CharacterSpacing;;
-                }
+                RenderLine(text, textSize, position, currentLine);
             }
-            else if (config.TextWrapMode == TextWrapMode.BreakWord)
+            else if (_config.TextWrapMode == TextWrapMode.BreakWord)
             {
+                string line = string.Empty;
+
                 foreach (char c in text)
                 {
                     Character ch = Characters[c];
+                    float charWidth = (ch.Advance >> 6) * _config.Scale.X + _config.CharacterSpacing;
 
-                    currentWidth += (ch.Advance >> 6) * config.Scale.X + config.CharacterSpacing;
+                    currentWidth += charWidth;
 
-                    if (config.Container.Width > 0 && currentWidth + config.Scale.X > config.Container.Width)
+                    if (_config.Container.Width > 0 && currentWidth + _config.Scale.X > _config.Container.Width)
                     {
-                        xAdvance = 0;
+                        RenderLine(line, textSize, position, currentLine);
+
                         currentLine++;
-                        currentWidth = (ch.Advance >> 6) * config.Scale.X + config.CharacterSpacing;
+                        currentWidth = charWidth;
+
+                        line = string.Empty;
                     }
 
-                    yAdvance = currentLine * Size * config.LineSpacing * config.Scale.Y;
+                    line += c;
+                }
 
-                    var xpos = config.Position.X + xAdvance + ch.Bearing.X * config.Scale.X;
-                    var ypos = config.Position.Y - yAdvance - (ch.Size.Y - ch.Bearing.Y) * config.Scale.Y;
+                if (!string.IsNullOrEmpty(line) && !string.IsNullOrWhiteSpace(line))
+                {
+                    RenderLine(line, textSize, position, currentLine);
 
-                    var w = ch.Size.X * config.Scale.X;
-                    var h = ch.Size.Y * config.Scale.Y;
-
-                    DrawLetter(xpos, ypos, h, w, ch);
-
-                    xAdvance = currentWidth;
+                    line = string.Empty;
                 }
             }
-            else if (config.TextWrapMode == TextWrapMode.Normal)
+            else if (_config.TextWrapMode == TextWrapMode.Normal)
             {
-                var words = text.Split(new char[] {' '}, StringSplitOptions.RemoveEmptyEntries);
+                var words = text.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+                var line = string.Empty;
 
                 foreach (string word in words)
                 {
                     var _word = word + " ";
+                    float _wordWidth = CalculateWidth(_word) + _config.CharacterSpacing * _word.Length;
 
-                    currentWidth += CalculateWidth(_word, config.Scale) + config.CharacterSpacing * _word.Length;
-                    
-                    if (config.Container.Width > 0 && currentWidth + config.Scale.X > config.Container.Width)
+                    currentWidth += _wordWidth;
+
+                    if (_config.Container.Width > 0 && currentWidth + _config.Scale.X > _config.Container.Width)
                     {
-                        xAdvance = 0;
+                        RenderLine(line, textSize, position, currentLine);
+
                         currentLine++;
-                        currentWidth = CalculateWidth(_word, config.Scale) + config.CharacterSpacing * _word.Length;
+                        currentWidth = _wordWidth;
+
+                        line = string.Empty;
                     }
 
-                    yAdvance = currentLine * Size * config.LineSpacing * config.Scale.Y;
-                    
-                    foreach (char c in _word)
-                    {
-                        Character ch = Characters[c];
+                    line += _word;
+                }
 
-                        var xpos = config.Position.X + xAdvance + ch.Bearing.X * config.Scale.X;
-                        var ypos = config.Position.Y - yAdvance - (ch.Size.Y - ch.Bearing.Y) * config.Scale.Y;
+                if (!string.IsNullOrEmpty(line) && !string.IsNullOrWhiteSpace(line))
+                {
+                    RenderLine(line, textSize, position, currentLine);
 
-                        var w = ch.Size.X * config.Scale.X;
-                        var h = ch.Size.Y * config.Scale.Y;
-
-                        DrawLetter(xpos, ypos, h, w, ch);
-
-                        xAdvance += (ch.Advance >> 6) * config.Scale.X + config.CharacterSpacing;;
-                    }
+                    line = string.Empty;
                 }
             }
 
             GL.BindVertexArray(0);
 
             GL.BindTexture(TextureTarget.Texture2D, 0);
+
+            Renderer.RestoreState(RendererBackupMode.Blending);
         }
 
-        private void DrawLetter(float xpos, float ypos, float h, float w, Character ch)
+        private void DrawCharacter(float xpos, float ypos, float h, float w, Character ch)
         {
             var vertices = new float[6, 4]
             {
@@ -344,7 +401,7 @@ namespace AlienEngine.Core.Rendering.Fonts
 
         public float CalculateWidth(string text)
         {
-            return CalculateWidth(text, Vector2f.One);
+            return CalculateWidth(text, _config.Scale);
         }
 
         public float CalculateWidth(string text, Vector2f scale)
@@ -355,6 +412,80 @@ namespace AlienEngine.Core.Rendering.Fonts
                 width += (Characters[c].Advance >> 6) * scale.X;
 
             return width;
+        }
+
+        public Sizef CalculateSize(string text)
+        {
+            Sizef bRect;
+
+            float currentWidth = 0.0f;
+            int currentLine = 0;
+
+            float width = 0.0f;
+            float height = 0.0f;
+
+            if (_config.TextWrapMode == TextWrapMode.None)
+            {
+                width = CalculateWidth(text);
+                height = _config.FontSize * _config.Scale.Y;
+            }
+            else if (_config.TextWrapMode == TextWrapMode.BreakWord)
+            {
+                foreach (char c in text)
+                {
+                    Character ch = Characters[c];
+
+                    float charWidth = (ch.Advance >> 6) * _config.Scale.X + _config.CharacterSpacing;
+
+                    currentWidth += charWidth;
+
+                    if (_config.Container.Width > 0 && currentWidth + _config.Scale.X > _config.Container.Width)
+                    {
+                        currentLine++;
+                    }
+
+                    height = _config.Scale.Y * ((_config.FontSize + _config.LineSpacing) * (currentLine + 1) - _config.LineSpacing);
+
+                    if (_config.Container.Width > 0 && currentWidth + _config.Scale.X > _config.Container.Width)
+                    {
+                        width = MathHelper.Max(width, currentWidth - charWidth);
+                        currentWidth = charWidth;
+                    }
+                    else
+                        width = MathHelper.Max(width, currentWidth);
+                }
+            }
+            else if (_config.TextWrapMode == TextWrapMode.Normal)
+            {
+                var words = text.Split(new char[] { ' ' });
+
+                foreach (string word in words)
+                {
+                    var _word = word + " ";
+                    float _wordWidth = CalculateWidth(_word) + _config.CharacterSpacing * _word.Length;
+
+                    currentWidth += _wordWidth;
+
+                    if (_config.Container.Width > 0 && currentWidth + _config.Scale.X > _config.Container.Width)
+                    {
+                        currentLine++;
+                    }
+
+                    height = _config.Scale.Y * ((_config.FontSize + _config.LineSpacing) * (currentLine + 1) - _config.LineSpacing);
+
+                    if (_config.Container.Width > 0 && currentWidth + _config.Scale.X > _config.Container.Width)
+                    {
+                        width = MathHelper.Max(width, currentWidth - _wordWidth - CalculateWidth(" ") - _config.CharacterSpacing);
+                        currentWidth = _wordWidth;
+                    }
+                    else
+                        width = MathHelper.Max(width, currentWidth);
+                }
+            }
+
+            bRect = new Sizef(width, height);
+
+            return bRect;
         }
 
         /// <summary>Returns a string that represents the current object.</summary>
