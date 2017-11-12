@@ -1,5 +1,4 @@
 ﻿using AlienEngine.Core.Graphics;
-using AlienEngine.Core.Graphics.Shaders;
 using AlienEngine.Core.Rendering;
 using AlienEngine.Core.Resources;
 using AlienEngine.UI;
@@ -12,6 +11,52 @@ namespace AlienEngine
 {
     public abstract class UIComponent : Component, IDisposable
     {
+
+        /// <summary>
+        /// The UI element's rectangle according to screen units.
+        /// </summary>
+        protected Rectangled Rectangled
+        {
+            get
+            {
+                Point2f position = CorrectedPosition;
+
+                switch (Origin)
+                {
+                    case Origin.TopLeft:
+                        position.Y -= Size.Height;
+                        break;
+                    case Origin.Top:
+                        position.X -= Size.Width / 2f;
+                        position.Y -= Size.Height;
+                        break;
+                    case Origin.TopRight:
+                        position.X -= Size.Width;
+                        position.Y -= Size.Height;
+                        break;
+                    case Origin.MiddleLeft:
+                        position.Y -= Size.Height / 2f;
+                        break;
+                    case Origin.Middle:
+                        position.X -= Size.Width / 2f;
+                        position.Y -= Size.Height / 2f;
+                        break;
+                    case Origin.MiddleRight:
+                        position.X -= Size.Width;
+                        position.Y -= Size.Height / 2f;
+                        break;
+                    case Origin.Bottom:
+                        position.X -= Size.Width / 2f;
+                        break;
+                    case Origin.BottomRight:
+                        position.X -= Size.Width;
+                        break;
+                }
+
+                return Rectangled.FromLTRB(position.X, Camera.Viewport.Height - position.Y - Size.Height, position.X + Size.Width, Camera.Viewport.Height - position.Y);
+            }
+        }
+
         private Mesh _quad;
 
         protected Point2f CorrectedPosition;

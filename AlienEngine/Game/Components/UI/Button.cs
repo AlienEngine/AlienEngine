@@ -12,11 +12,6 @@ namespace AlienEngine
         #region Private Fields
 
         /// <summary>
-        /// The button's rectangle according to screen units.
-        /// </summary>
-        private Rectangled _rectangled => Rectangled.FromLTRB(CorrectedPosition.X, CorrectedPosition.Y - Size.Height, CorrectedPosition.X + Size.Width, CorrectedPosition.Y);
-
-        /// <summary>
         /// Defines if the button's state is hover.
         /// </summary>
         private bool _isHover;
@@ -30,6 +25,11 @@ namespace AlienEngine
         /// The text label of the button.
         /// </summary>
         private Label2D _label;
+
+        /// <summary>
+        /// The text of the button.
+        /// </summary>
+        private string _text;
 
         #endregion
 
@@ -55,7 +55,15 @@ namespace AlienEngine
         /// </summary>
         public Texture PressTexture;
 
-        public string Text;
+        public string Text
+        {
+            get => _text;
+            set
+            {
+                _text = value;
+                _label.Text = _text;
+            }
+        }
 
         public float CharacterSpacing;
 
@@ -100,7 +108,7 @@ namespace AlienEngine
         {
             InitUI();
 
-            _label.Anchor = UI.Anchor.BottomLeft;
+            _label.Anchor = Anchor;
             _label.BackgroundColor = Color4.Transparent;
             _label.CharacterSpacing = CharacterSpacing;
             _label.FontPath = FontPath;
@@ -109,8 +117,8 @@ namespace AlienEngine
             _label.FontType = FontType;
             _label.ForegroundColor = ForegroundColor;
             _label.LineSpacing = LineSpacing;
-            _label.Origin = UI.Origin.BottomLeft;
-            _label.Position = CorrectedPosition;
+            _label.Origin = Origin;
+            _label.Position = Position;
             _label.Scale = Scale;
             _label.Size = Size;
             _label.Text = Text;
@@ -119,7 +127,7 @@ namespace AlienEngine
 
             Input.AddMouseMoveEvent((sender, args) =>
             {
-                _isHover = Enabled && !Input.MouseIsGrabbed && _rectangled.Contains(args.Location);
+                _isHover = Enabled && !Input.MouseIsGrabbed && Rectangled.Contains(args.Location);
             });
         }
 
