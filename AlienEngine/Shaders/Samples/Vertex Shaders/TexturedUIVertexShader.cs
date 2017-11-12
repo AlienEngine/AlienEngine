@@ -18,7 +18,8 @@ namespace AlienEngine.Shaders.Samples
         void main()
         {
             uv = in_uv;
-            gl_Position = projection_matrix * new vec4(position + in_position, 1);
+            vec4 pos = projection_matrix * new vec4(position + in_position, 1);
+            gl_Position = pos.xyww;
         }
     }
 }
