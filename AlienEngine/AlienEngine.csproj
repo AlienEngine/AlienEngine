@@ -789,9 +789,9 @@
     <Compile Include="Graphics\OpenGL\Structs\UFloat10.cs" />
     <Compile Include="Graphics\OpenGL\Structs\UFloat11.cs" />
     <Compile Include="Game\Shaders\DiffuseShaderProgram.cs" />
-    <Compile Include="Shaders\Samples\UI\TexturedUIShaderProgram.cs" />
-    <Compile Include="Shaders\Samples\UI\TexturedUIFragmentShader.cs" />
-    <Compile Include="Shaders\Samples\UI\TexturedUIVertexShader.cs" />
+    <Compile Include="Game\Shaders\TexturedUIShaderProgram.cs" />
+    <Compile Include="Shaders\Samples\Fragment Shaders\TexturedUIFragmentShader.cs" />
+    <Compile Include="Shaders\Samples\Vertex Shaders\TexturedUIVertexShader.cs" />
     <Compile Include="Graphics\Mesh.cs" />
     <Compile Include="Shaders\Samples\Fragment Shaders\DiffuseFragmentShader.cs" />
     <Compile Include="Shaders\Samples\Vertex Shaders\DiffuseVertexShader.cs" />
