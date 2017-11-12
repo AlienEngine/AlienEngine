@@ -1,9 +1,9 @@
 ﻿namespace AlienEngine
 {
     /// <summary>
-    /// Joysticks.
+    /// Joystick devices.
     /// </summary>
-    public enum Joysticks : int
+    public enum JoystickDevice : int
     {
         Joystick1 = 0,
         Joystick2 = 1,

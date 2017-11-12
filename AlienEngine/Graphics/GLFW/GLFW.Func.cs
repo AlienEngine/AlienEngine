@@ -1558,7 +1558,7 @@ namespace AlienEngine.Core.Graphics.GLFW
         /// <returns><c>true</c> if the joystick is present, or <c>false</c> otherwise.</returns>
         [DllImport(Library, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwJoystickPresent"), SuppressUnmanagedCodeSecurity]
         [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern bool JoystickPresent(Joysticks joy);
+        public static extern bool JoystickPresent(JoystickDevice joy);
 
         /// <summary>
         /// <para>This function returns the values of all axes of the specified joystick. Each
@@ -1570,7 +1570,7 @@ namespace AlienEngine.Core.Graphics.GLFW
         /// <param name="joy">The joystick to query.</param>
         /// <returns>An array of axis values, or <c>null</c> if the joystick is not
         /// present.</returns>
-        public static unsafe float[] GetJoystickAxes(Joysticks joy)
+        public static unsafe float[] GetJoystickAxes(JoystickDevice joy)
         {
             int n;
             var array = glfwGetJoystickAxes((int)joy, &n);
@@ -1595,7 +1595,7 @@ namespace AlienEngine.Core.Graphics.GLFW
         /// <param name="joy">The joystick to query.</param>
         /// <returns>An array of button states, or <c>null</c> if the joystick is not
         /// present.</returns>
-        public static unsafe bool[] GetJoystickButtons(Joysticks joy)
+        public static unsafe bool[] GetJoystickButtons(JoystickDevice joy)
         {
             int n;
             var array = glfwGetJoystickButtons((int)joy, &n);
@@ -1626,7 +1626,7 @@ namespace AlienEngine.Core.Graphics.GLFW
         /// <param name="joy">The joystick to query.</param>
         /// <returns>The UTF-8 encoded name of the joystick, or <c>null</c> if the joystick is not
         /// present.</returns>
-        public static string GetJoystickName(Joysticks joy) => GLFW.FromUTF8(glfwGetJoystickName((int)joy));
+        public static string GetJoystickName(JoystickDevice joy) => GLFW.FromUTF8(glfwGetJoystickName((int)joy));
 
         [DllImport(Library, CallingConvention = CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
         static extern unsafe IntPtr glfwGetJoystickName(int joy);

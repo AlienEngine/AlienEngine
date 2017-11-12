@@ -715,7 +715,7 @@
     <Compile Include="Graphics\UBOData.cs" />
     <Compile Include="Inputs\CursorState.cs" />
     <Compile Include="Inputs\InputState.cs" />
-    <Compile Include="Inputs\Joysticks.cs" />
+    <Compile Include="Inputs\JoystickDevice.cs" />
     <Compile Include="Inputs\KeyCode.cs" />
     <Compile Include="Inputs\SpecialKeys.cs" />
     <Compile Include="Inputs\MouseButton.cs" />
