@@ -2,9 +2,6 @@
 using AlienEngine.Core.Graphics.OpenGL;
 using AlienEngine.Core.Resources;
 using System;
-using System.Drawing;
-using System.Net.Mime;
-using AlienEngine.Core.Game;
 using SharpFont;
 
 namespace AlienEngine.Imaging
@@ -29,6 +26,8 @@ namespace AlienEngine.Imaging
         public TextureTarget TextureTarget { get; private set; }
 
         public bool FlipY { get; private set; }
+
+        public Image Image => _image;
 
         #endregion
 
