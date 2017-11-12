@@ -41,7 +41,13 @@ namespace AlienEngine
             set
             {
                 _isChecked = value;
-                Checked?.Invoke(value);
+
+                Click?.Invoke(value);
+
+                if (value)
+                    Checked?.Invoke();
+                else
+                    Unchecked?.Invoke();
             }
         }
 
@@ -57,7 +63,17 @@ namespace AlienEngine
         /// <summary>
         /// The event trigerred when the checkbox is checked or unchecked.
         /// </summary>
-        public event Action<bool> Checked;
+        public event Action<bool> Click;
+
+        /// <summary>
+        /// The event trigerred when the checkbox is checked.
+        /// </summary>
+        public event Action Checked;
+
+        /// <summary>
+        /// The event trigerred when the checkbox is unchecked.
+        /// </summary>
+        public event Action Unchecked;
 
         #endregion
 
