@@ -259,6 +259,11 @@ namespace AlienEngine
             return Joystick.IsPresent(joystick);
         }
 
+        public static string GetJoystickName(JoystickDevice joystick)
+        {
+            return Joystick.GetName(joystick);
+        }
+
         #endregion
 
         #region Events
