@@ -38,6 +38,30 @@ namespace AlienEngine.Core
         /// </summary>
         public string Name => GLFW.GetMonitorName(Handle);
 
+        /// <summary>
+        /// Gets all supported screen modes of this <see cref="Monitor"/>.
+        /// </summary>
+        public ScreenMode[] ScreenModes => ScreenMode.GetScreenModes(this);
+
+        /// <summary>
+        /// Gets all supported resolutions of this <see cref="Monitor"/>.
+        /// </summary>
+        public Sizei[] Resolutions
+        {
+            get
+            {
+                var screenModes = ScreenModes;
+                var resolutions = new Sizei[screenModes.Length];
+                
+                for (int i = 0, l = screenModes.Length; i < l; i++)
+                {
+                    resolutions[i] = screenModes[i].Resolution;
+                }
+
+                return resolutions;
+            }
+        }
+            
         #endregion
 
         #region Static members
@@ -51,7 +75,7 @@ namespace AlienEngine.Core
         /// Gets the primary monitor.
         /// </summary>
         public static Monitor PrimaryMonitor => new Monitor(GLFW.GetPrimaryMonitor());
-
+        
         /// <summary>
         /// Gets the total number of monitors.
         /// </summary>
