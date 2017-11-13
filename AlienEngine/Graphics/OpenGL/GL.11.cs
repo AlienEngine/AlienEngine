@@ -70,142 +70,9 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <param name="offset">The offset into the array bound to <see cref="BufferTarget.ElementArrayBuffer"/>.</param>
         public static void DrawElements(BeginMode mode, int count, DrawElementsType type, long offset)
         {
-            if (IntPtr.Size == 4 && ((long)offset >> 32) != 0) throw new ArgumentOutOfRangeException(nameof(offset), PlatformErrorString);
+            if (IntPtr.Size == 4 && ((long)offset >> 32) != 0) throw new ArgumentOutOfRangeException("offset", PlatformErrorString);
             DrawElements(mode, count, type, (IntPtr)offset);
         }
-        #endregion
-
-        /// <summary>[requires: v1.1][deprecated: v3.2]
-        /// Define an array of vertex data
-        /// </summary>
-        /// <param name="size"> 
-        /// Specifies the number of coordinates per vertex. Must be 2, 3, or 4. The initial value is 4.
-        /// </param>
-        /// <param name="type"> 
-        /// Specifies the data type of each coordinate in the array. Symbolic constants Short, Int, Float, or Double are accepted. The initial value is Float.
-        /// </param>
-        /// <param name="stride"> 
-        /// Specifies the byte offset between consecutive vertices. If stride is 0, the vertices are understood to be tightly packed in the array. The initial value is 0.
-        /// </param>
-        /// <param name="pointer">[length: size,type,stride] 
-        /// Specifies a pointer to the first coordinate of the first vertex in the array. The initial value is 0.
-        /// </param>
-        [DllImport(DLLName, EntryPoint = "glVertexPointer")]
-        static extern void VertexPointer(Int32 size, VertexPointerType type, Int32 stride, IntPtr pointer);
-
-        #region Overloads for VertexPointer
-        /// <summary>[requires: v1.1][deprecated: v3.2]
-        /// Define an array of vertex data
-        /// </summary>
-        /// <param name="size"> 
-        /// Specifies the number of coordinates per vertex. Must be 2, 3, or 4. The initial value is 4.
-        /// </param>
-        /// <param name="type"> 
-        /// Specifies the data type of each coordinate in the array. Symbolic constants Short, Int, Float, or Double are accepted. The initial value is Float.
-        /// </param>
-        /// <param name="stride"> 
-        /// Specifies the byte offset between consecutive vertices. If stride is 0, the vertices are understood to be tightly packed in the array. The initial value is 0.
-        /// </param>
-        /// <param name="pointer">[length: size,type,stride] 
-        /// Specifies a pointer to the first coordinate of the first vertex in the array. The initial value is 0.
-        /// </param>
-        public static void VertexPointer(Int32 size, VertexPointerType type, Int32 stride, int pointer)
-        {
-            VertexPointer(size, type, stride, (IntPtr) pointer);
-        }
-
-        /// <summary>[requires: v1.1][deprecated: v3.2]
-        /// Define an array of vertex data
-        /// </summary>
-        /// <param name="size"> 
-        /// Specifies the number of coordinates per vertex. Must be 2, 3, or 4. The initial value is 4.
-        /// </param>
-        /// <param name="type"> 
-        /// Specifies the data type of each coordinate in the array. Symbolic constants Short, Int, Float, or Double are accepted. The initial value is Float.
-        /// </param>
-        /// <param name="stride"> 
-        /// Specifies the byte offset between consecutive vertices. If stride is 0, the vertices are understood to be tightly packed in the array. The initial value is 0.
-        /// </param>
-        /// <param name="pointer">[length: size,type,stride] 
-        /// Specifies a pointer to the first coordinate of the first vertex in the array. The initial value is 0.
-        /// </param>
-        public static void VertexPointer(Int32 size, VertexPointerType type, Int32 stride, long pointer)
-        {
-            if (IntPtr.Size == 4 && ((long)pointer >> 32) != 0) throw new ArgumentOutOfRangeException(nameof(pointer), PlatformErrorString);
-            VertexPointer(size, type, stride, (IntPtr) pointer);;
-        }
-        #endregion
-
-        /// <summary>[requires: v1.1][deprecated: v3.2]
-        /// Enable or disable client-side capability
-        /// </summary>
-        /// <param name="array"> 
-        /// Specifies the capability to enable. Symbolic constants ColorArray, EdgeFlagArray, FogCoordArray, IndexArray, NormalArray, SecondaryColorArray, TextureCoordArray, and VertexArray are accepted.
-        /// </param>
-        [DllImport(DLLName, EntryPoint = "glEnableClientState")]
-        public static extern void EnableClientState(ArrayCap array);
-
-        /// <summary>[requires: v1.1][deprecated: v3.2]
-        /// Define an array of texture coordinates
-        /// </summary>
-        /// <param name="size"> 
-        /// Specifies the number of coordinates per array element. Must be 1, 2, 3, or 4. The initial value is 4.
-        /// </param>
-        /// <param name="type"> 
-        /// Specifies the data type of each texture coordinate. Symbolic constants Short, Int, Float, or Double are accepted. The initial value is Float.
-        /// </param>
-        /// <param name="stride"> 
-        /// Specifies the byte offset between consecutive texture coordinate sets. If stride is 0, the array elements are understood to be tightly packed. The initial value is 0.
-        /// </param>
-        /// <param name="pointer">[length: size,type,stride] 
-        /// Specifies a pointer to the first coordinate of the first texture coordinate set in the array. The initial value is 0.
-        /// </param>
-        [DllImport(DLLName, EntryPoint = "glTexCoordPointer")]
-        static extern void TexCoordPointer(Int32 size, TexCoordPointerType type, Int32 stride, IntPtr pointer);
-        
-        #region Overloads for TexCoordPointer
-
-        /// <summary>[requires: v1.1][deprecated: v3.2]
-        /// Define an array of texture coordinates
-        /// </summary>
-        /// <param name="size"> 
-        /// Specifies the number of coordinates per array element. Must be 1, 2, 3, or 4. The initial value is 4.
-        /// </param>
-        /// <param name="type"> 
-        /// Specifies the data type of each texture coordinate. Symbolic constants Short, Int, Float, or Double are accepted. The initial value is Float.
-        /// </param>
-        /// <param name="stride"> 
-        /// Specifies the byte offset between consecutive texture coordinate sets. If stride is 0, the array elements are understood to be tightly packed. The initial value is 0.
-        /// </param>
-        /// <param name="pointer">[length: size,type,stride] 
-        /// Specifies a pointer to the first coordinate of the first texture coordinate set in the array. The initial value is 0.
-        /// </param>
-        public static void TexCoordPointer(Int32 size, TexCoordPointerType type, Int32 stride, int pointer)
-        {
-            TexCoordPointer(size, type, stride, (IntPtr) pointer);
-        }
-
-        /// <summary>[requires: v1.1][deprecated: v3.2]
-        /// Define an array of texture coordinates
-        /// </summary>
-        /// <param name="size"> 
-        /// Specifies the number of coordinates per array element. Must be 1, 2, 3, or 4. The initial value is 4.
-        /// </param>
-        /// <param name="type"> 
-        /// Specifies the data type of each texture coordinate. Symbolic constants Short, Int, Float, or Double are accepted. The initial value is Float.
-        /// </param>
-        /// <param name="stride"> 
-        /// Specifies the byte offset between consecutive texture coordinate sets. If stride is 0, the array elements are understood to be tightly packed. The initial value is 0.
-        /// </param>
-        /// <param name="pointer">[length: size,type,stride] 
-        /// Specifies a pointer to the first coordinate of the first texture coordinate set in the array. The initial value is 0.
-        /// </param>
-        public static void TexCoordPointer(Int32 size, TexCoordPointerType type, Int32 stride, long pointer)
-        {
-            if (IntPtr.Size == 4 && ((long)pointer >> 32) != 0) throw new ArgumentOutOfRangeException(nameof(pointer), PlatformErrorString);
-            TexCoordPointer(size, type, stride, (IntPtr) pointer);
-        }
-
         #endregion
 
         /// <summary>
@@ -318,7 +185,7 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <param name="offset">The offset into the array bound to <see cref="BufferTarget.PIXEL_UNPACK_BUFFER"/>.</param>
         public static void TexSubImage1D(TextureTarget target, int level, int xoffset, int width, PixelFormat format, PixelType type, long offset)
         {
-            if (IntPtr.Size == 4 && ((long)offset >> 32) != 0) throw new ArgumentOutOfRangeException(nameof(offset), PlatformErrorString);
+            if (IntPtr.Size == 4 && ((long)offset >> 32) != 0) throw new ArgumentOutOfRangeException("offset", PlatformErrorString);
             TexSubImage1D(target, level, xoffset, width, format, type, offset);
         }
 
@@ -504,7 +371,7 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <param name="offset">The offset into the array bound to <see cref="BufferTarget.PIXEL_UNPACK_BUFFER"/>.</param>
         public static void TexSubImage2D(TextureTarget target, int level, int xoffset, int yoffset, int width, int height, PixelFormat format, PixelType type, long offset)
         {
-            if (IntPtr.Size == 4 && ((long)offset >> 32) != 0) throw new ArgumentOutOfRangeException(nameof(offset), PlatformErrorString);
+            if (IntPtr.Size == 4 && ((long)offset >> 32) != 0) throw new ArgumentOutOfRangeException("offset", PlatformErrorString);
             TexSubImage2D(target, level, xoffset, yoffset, width, height, format, type, (IntPtr)offset);
         }
 
