@@ -43,7 +43,7 @@ namespace AlienEngine
 
         public override void Start()
         {
-            InitUI();
+            base.Start();
 
             BuildConfiguration();
 
@@ -51,10 +51,7 @@ namespace AlienEngine
 
             SetProjectionMatrix();
 
-            Renderer.OnViewportChange += (sender, args) =>
-            {
-                SetProjectionMatrix();
-            };
+            Renderer.OnViewportChange += (sender, args) => SetProjectionMatrix();
         }
 
         private void BuildConfiguration()

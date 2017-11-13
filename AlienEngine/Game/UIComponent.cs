@@ -57,6 +57,11 @@ namespace AlienEngine
             }
         }
 
+        /// <summary>
+        /// Defines if the button's state is hover.
+        /// </summary>
+        private bool _isHover;
+
         private Mesh _quad;
 
         protected Point2f CorrectedPosition;
@@ -81,6 +86,10 @@ namespace AlienEngine
 
         public Rectanglef Rectangle => new Rectanglef(Position, Size);
 
+        public bool IsHover => _isHover;
+
+        public event Action Hover;
+
         private ColoredUIShaderProgram _coloredUIShader;
         private TexturedUIShaderProgram _texturedUIShader;
 
@@ -92,6 +101,22 @@ namespace AlienEngine
             _texturedUIShader = new TexturedUIShaderProgram();
 
             ResourcesManager.AddDisposableResource(this);
+        }
+
+        public override void Start()
+        {
+            InitUI();
+
+            Input.AddMouseMoveEvent((sender, args) =>
+            {
+                _isHover = Enabled && !Input.MouseIsGrabbed && Rectangled.Contains(args.Location);
+            });
+        }
+
+        public override void Update()
+        {
+            if (_isHover)
+                Hover?.Invoke();
         }
 
         public void RenderColoredQuad()

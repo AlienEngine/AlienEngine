@@ -12,11 +12,6 @@ namespace AlienEngine
         #region Private Fields
 
         /// <summary>
-        /// Defines if the button's state is hover.
-        /// </summary>
-        private bool _isHover;
-
-        /// <summary>
         /// Define if the button's state is pressed.
         /// </summary>
         private bool _isPressed;
@@ -99,14 +94,12 @@ namespace AlienEngine
         {
             _label = new Label2D();
 
-            OnAttach += () => gameElement.AttachComponent(_label);
-
             ResourcesManager.AddDisposableResource(this);
         }
 
         public override void Start()
         {
-            InitUI();
+            base.Start();
 
             _label.Anchor = Anchor;
             _label.BackgroundColor = Color4.Transparent;
@@ -125,17 +118,16 @@ namespace AlienEngine
             _label.TextAlignement = TextAlignement;
             _label.TextWrapMode = TextWrapMode;
 
-            Input.AddMouseMoveEvent((sender, args) =>
-            {
-                _isHover = Enabled && !Input.MouseIsGrabbed && Rectangled.Contains(args.Location);
-            });
+            _label.Start();
         }
 
         public override void Update()
         {
-            _isPressed = _isHover && Input.Holding(MouseButton.Left);
+            base.Update();
 
-            if (_isHover)
+            _isPressed = IsHover && Input.Holding(MouseButton.Left);
+
+            if (IsHover)
             {
                 if (Input.Released(MouseButton.Left))
                 {
@@ -155,11 +147,13 @@ namespace AlienEngine
                     MiddleClick?.Invoke();
                 }
             }
+
+            _label.Update();
         }
 
         new public void RenderColoredQuad()
         {
-            Color4 color = _isPressed ? PressColor : (_isHover ? HoverColor : BackgroundColor);
+            Color4 color = _isPressed ? PressColor : (IsHover ? HoverColor : BackgroundColor);
 
             if (color == Color4.Transparent) return;
 
@@ -168,7 +162,7 @@ namespace AlienEngine
 
         new public void RenderTexturedQuad()
         {
-            Texture texture = _isPressed ? PressTexture : (_isHover ? HoverTexture : BackgroundTexture);
+            Texture texture = _isPressed ? PressTexture : (IsHover ? HoverTexture : BackgroundTexture);
 
             if (texture == null) return;
 
@@ -181,6 +175,8 @@ namespace AlienEngine
                 RenderTexturedQuad();
             else
                 RenderColoredQuad();
+
+            _label.Render();
         }
 
         protected override void Dispose(bool disposing)
