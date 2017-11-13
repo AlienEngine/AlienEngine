@@ -174,7 +174,7 @@ namespace AlienEngine
 
         #endregion
 
-        #region Members
+        #region Keyboard
 
         public static bool Holding(KeyCode key)
         {
@@ -190,6 +190,10 @@ namespace AlienEngine
         {
             return Keyboard.GetKeyDown(key);
         }
+
+        #endregion
+
+        #region Mouse
 
         public static bool Holding(MouseButton key)
         {
@@ -220,6 +224,137 @@ namespace AlienEngine
         {
             return Game.Window.GetCursorState();
         }
+
+        #endregion
+
+        #region Joystick
+
+        #region Properties
+
+        /// <summary>
+        /// Gets the state of the 01st joystick.
+        /// </summary>
+        public static JoystickState Joystick01 => Joystick.GetState(JoystickDevice.Joystick01);
+
+        /// <summary>
+        /// Gets the state of the 02nd joystick.
+        /// </summary>
+        public static JoystickState Joystick02 => Joystick.GetState(JoystickDevice.Joystick02);
+
+        /// <summary>
+        /// Gets the state of the 03rd joystick.
+        /// </summary>
+        public static JoystickState Joystick03 => Joystick.GetState(JoystickDevice.Joystick03);
+
+        /// <summary>
+        /// Gets the state of the 04th joystick.
+        /// </summary>
+        public static JoystickState Joystick04 => Joystick.GetState(JoystickDevice.Joystick04);
+
+        /// <summary>
+        /// Gets the state of the 05th joystick.
+        /// </summary>
+        public static JoystickState Joystick05 => Joystick.GetState(JoystickDevice.Joystick05);
+
+        /// <summary>
+        /// Gets the state of the 06th joystick.
+        /// </summary>
+        public static JoystickState Joystick06 => Joystick.GetState(JoystickDevice.Joystick06);
+
+        /// <summary>
+        /// Gets the state of the 07th joystick.
+        /// </summary>
+        public static JoystickState Joystick07 => Joystick.GetState(JoystickDevice.Joystick07);
+
+        /// <summary>
+        /// Gets the state of the 08th joystick.
+        /// </summary>
+        public static JoystickState Joystick08 => Joystick.GetState(JoystickDevice.Joystick08);
+
+        /// <summary>
+        /// Gets the state of the 09th joystick.
+        /// </summary>
+        public static JoystickState Joystick09 => Joystick.GetState(JoystickDevice.Joystick09);
+
+        /// <summary>
+        /// Gets the state of the 10th joystick.
+        /// </summary>
+        public static JoystickState Joystick10 => Joystick.GetState(JoystickDevice.Joystick10);
+
+        /// <summary>
+        /// Gets the state of the 11th joystick.
+        /// </summary>
+        public static JoystickState Joystick11 => Joystick.GetState(JoystickDevice.Joystick11);
+
+        /// <summary>
+        /// Gets the state of the 12th joystick.
+        /// </summary>
+        public static JoystickState Joystick12 => Joystick.GetState(JoystickDevice.Joystick12);
+
+        /// <summary>
+        /// Gets the state of the 13th joystick.
+        /// </summary>
+        public static JoystickState Joystick13 => Joystick.GetState(JoystickDevice.Joystick13);
+
+        /// <summary>
+        /// Gets the state of the 14th joystick.
+        /// </summary>
+        public static JoystickState Joystick14 => Joystick.GetState(JoystickDevice.Joystick14);
+
+        /// <summary>
+        /// Gets the state of the 15th joystick.
+        /// </summary>
+        public static JoystickState Joystick15 => Joystick.GetState(JoystickDevice.Joystick15);
+
+        /// <summary>
+        /// Gets the state of the 16th joystick.
+        /// </summary>
+        public static JoystickState Joystick16 => Joystick.GetState(JoystickDevice.Joystick16);
+
+        #endregion Properties
+
+        #region Methods
+
+        public static bool Holding(JoystickDevice joystick, JoystickButton button)
+        {
+            return Joystick.GetButton(joystick, button);
+        }
+
+        public static bool Released(JoystickDevice joystick, JoystickButton button)
+        {
+            return Joystick.GetButtonUp(joystick, button);
+        }
+
+        public static bool Pressed(JoystickDevice joystick, JoystickButton button)
+        {
+            return Joystick.GetButtonDown(joystick, button);
+        }
+
+        public static float Axis(JoystickDevice joystick, JoystickAxis axis)
+        {
+            return Joystick.GetAxis(joystick, axis);
+        }
+
+        public static JoystickState GetJoystickState(JoystickDevice joystick)
+        {
+            return Joystick.GetState(joystick);
+        }
+
+        public static bool JoystickIsConnected(JoystickDevice joystick)
+        {
+            return Joystick.IsPresent(joystick);
+        }
+
+        public static string GetJoystickName(JoystickDevice joystick)
+        {
+            return Joystick.GetName(joystick);
+        }
+
+        #endregion Methods
+
+        #endregion Joystick
+
+        #region Events
 
         public static void BackupEvents()
         {

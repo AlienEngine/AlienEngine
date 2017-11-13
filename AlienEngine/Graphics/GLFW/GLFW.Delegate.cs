@@ -96,7 +96,7 @@ namespace AlienEngine.Core.Graphics.GLFW
         /// <param name="evt">One of <see cref="ConnectionEvent"/>.</param>
         /// <seealso cref="SetJoystickCallback(JoystickFunc)"/>
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        public delegate void JoystickFunc(Joysticks joy, ConnectionEvent evt);
+        public delegate void JoystickFunc(JoystickDevice joy, ConnectionEvent evt);
 
         /// <summary>
         /// The function signature for monitor configuration callbacks.
