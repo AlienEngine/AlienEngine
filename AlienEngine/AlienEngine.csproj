@@ -234,6 +234,7 @@
     <Compile Include="Game\Components\UI\Button.cs" />
     <Compile Include="Game\Components\UI\Checkbox.cs" />
     <Compile Include="Game\Components\UI\Label2D.cs" />
+    <Compile Include="Game\Components\UI\ListBox.cs" />
     <Compile Include="Game\Shaders\FontShaderProgram.cs" />
     <Compile Include="Game\Shaders\ColoredUIShaderProgram.cs" />
     <Compile Include="Game\UIComponent.cs" />
