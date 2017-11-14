@@ -74,11 +74,21 @@ namespace AlienEngine
 
         public Vector2f Scale;
 
-        public Color4 ForegroundColor;
+        public Color4 ForegroundColor = Color4.Transparent;
 
-        public Color4 BackgroundColor;
+        public Color4 BackgroundColor = Color4.Transparent;
+
+        /// <summary>
+        /// The background <see cref="Color4"/> when the mouse is over.
+        /// </summary>
+        public Color4 HoverColor = Color4.Transparent;
 
         public Texture BackgroundTexture;
+
+        /// <summary>
+        /// The button's background <see cref="Texture"/> when the mouse is over.
+        /// </summary>
+        public Texture HoverTexture;
 
         public Anchor Anchor;
 
@@ -121,9 +131,11 @@ namespace AlienEngine
 
         public void RenderColoredQuad()
         {
-            if (BackgroundColor == Color4.Transparent) return;
+            Color4 color = _isHover ? HoverColor : BackgroundColor;
 
-            RenderColoredQuad(BackgroundColor);
+            if (color == Color4.Transparent) return;
+
+            RenderColoredQuad(color);
         }
 
         public void RenderColoredQuad(Color4 color)
@@ -145,9 +157,11 @@ namespace AlienEngine
 
         public void RenderTexturedQuad()
         {
-            if (BackgroundTexture == null) return;
+            Texture texture = IsHover ? HoverTexture : BackgroundTexture;
 
-            RenderTexturedQuad(BackgroundTexture);
+            if (texture == null) return;
+
+            RenderTexturedQuad(texture);
         }
 
         public void RenderTexturedQuad(Texture texture)

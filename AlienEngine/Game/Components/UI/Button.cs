@@ -19,7 +19,7 @@ namespace AlienEngine
         /// <summary>
         /// The text label of the button.
         /// </summary>
-        private Label2D _label;
+        private Text _label;
 
         /// <summary>
         /// The text of the button.
@@ -31,19 +31,9 @@ namespace AlienEngine
         #region Public Fields
 
         /// <summary>
-        /// The button's background <see cref="Color4"/> when the mouse is over.
-        /// </summary>
-        public Color4 HoverColor;
-
-        /// <summary>
         /// The button's background <see cref="Color4"/> when it is pressed.
         /// </summary>
         public Color4 PressColor;
-
-        /// <summary>
-        /// The button's background <see cref="Texture"/> when the mouse is over.
-        /// </summary>
-        public Texture HoverTexture;
 
         /// <summary>
         /// The button's background <see cref="Texture"/> when it is pressed.
@@ -52,11 +42,11 @@ namespace AlienEngine
 
         public string Text
         {
-            get => _text;
+            get { return _text; }
             set
             {
                 _text = value;
-                _label.Text = _text;
+                _label.Value = _text;
             }
         }
 
@@ -92,7 +82,7 @@ namespace AlienEngine
 
         public Button()
         {
-            _label = new Label2D();
+            _label = new Text();
 
             ResourcesManager.AddDisposableResource(this);
         }
@@ -114,7 +104,7 @@ namespace AlienEngine
             _label.Position = Position;
             _label.Scale = Scale;
             _label.Size = Size;
-            _label.Text = Text;
+            _label.Value = Text;
             _label.TextAlignement = TextAlignement;
             _label.TextWrapMode = TextWrapMode;
 
