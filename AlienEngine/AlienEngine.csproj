@@ -233,7 +233,8 @@
     <Compile Include="Game\Components\Rendering\MeshRenderer.cs" />
     <Compile Include="Game\Components\UI\Button.cs" />
     <Compile Include="Game\Components\UI\Checkbox.cs" />
-    <Compile Include="Game\Components\UI\Text.cs"/>
+    <Compile Include="Game\Components\UI\TextInput.cs" />
+    <Compile Include="Game\Components\UI\Text.cs" />
     <Compile Include="Game\Components\UI\ListBox.cs" />
     <Compile Include="Game\Shaders\FontShaderProgram.cs" />
     <Compile Include="Game\Shaders\ColoredUIShaderProgram.cs" />
@@ -654,7 +655,8 @@
     <Compile Include="Physics\Vehicle\WheelSlidingFriction.cs" />
     <Compile Include="Physics\Vehicle\WheelSuspension.cs" />
     <Compile Include="Shaders\Samples\Vertex Shaders\ColoredUIVertexShader.cs" />
-    <Compile Include="UI\ListBoxChangeEventArgs.cs"/>
+    <Compile Include="UI\InputFieldTextChangeEventArgs.cs" />
+    <Compile Include="UI\ListBoxChangeEventArgs.cs" />
     <Compile Include="UI\Origin.cs" />
     <Compile Include="Rendering\Fonts\Character.cs" />
     <Compile Include="Rendering\Fonts\FontRendererConfiguration.cs" />
