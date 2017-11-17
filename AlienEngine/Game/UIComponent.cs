@@ -103,7 +103,7 @@ namespace AlienEngine
         private ColoredUIShaderProgram _coloredUIShader;
         private TexturedUIShaderProgram _texturedUIShader;
 
-        private Matrix4f _projectionMatrix;
+        protected Matrix4f ProjectionMatrix;
 
         protected UIComponent()
         {
@@ -148,7 +148,7 @@ namespace AlienEngine
             _coloredUIShader.Bind();
             _coloredUIShader.SetPosition(new Vector3f(CorrectedPosition.X, CorrectedPosition.Y, 0));
             _coloredUIShader.SetColor(color);
-            _coloredUIShader.SetProjectionMatrix(_projectionMatrix);
+            _coloredUIShader.SetProjectionMatrix(ProjectionMatrix);
 
             _quad.Render();
 
@@ -175,7 +175,7 @@ namespace AlienEngine
             _texturedUIShader.Bind();
             _texturedUIShader.SetPosition(new Vector3f(CorrectedPosition.X, CorrectedPosition.Y, 0));
             _texturedUIShader.SetTexture(GL.COLOR_TEXTURE_UNIT_INDEX);
-            _texturedUIShader.SetProjectionMatrix(_projectionMatrix);
+            _texturedUIShader.SetProjectionMatrix(ProjectionMatrix);
 
             _quad.Render();
 
@@ -269,7 +269,7 @@ namespace AlienEngine
 
         protected void UpdateProjectionMatrix(Matrix4f pMatrix)
         {
-            _projectionMatrix = pMatrix;
+            ProjectionMatrix = pMatrix;
         }
 
         #region IDisposable Support
