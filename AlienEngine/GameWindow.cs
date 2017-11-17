@@ -350,6 +350,8 @@ namespace AlienEngine.Core
 
             // Set the aspect ratio
             // GLFW.SetWindowAspectRatio(Handle, GameSettings.GameWindowAspectRatio[0], GameSettings.GameWindowAspectRatio[1]);
+
+            Cursor = new Cursor(Cursor.CursorType.Arrow);
         }
 
         private void OnResize(Window window, int width, int height)
