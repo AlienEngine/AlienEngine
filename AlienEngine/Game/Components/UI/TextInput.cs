@@ -3,29 +3,45 @@ using AlienEngine.Core.Graphics;
 using AlienEngine.Core.Rendering.Fonts;
 using AlienEngine.Imaging;
 using AlienEngine.UI;
+using AlienEngine.Core.Graphics.Shaders;
+using AlienEngine.Shaders;
+using AlienEngine.Core.Rendering;
+using AlienEngine.Core.Game;
 
 namespace AlienEngine
 {
-    public class TextInput : UIComponent
+    public class TextInput : UIComponent, IRenderable
     {
         private static Cursor _Ibeam;
+
+        private static Cursor _default;
         
         private Text _content;
 
-        private string _value;
+        private string _value = string.Empty;
 
         private bool _isTyping;
+
+        private double _caretBlinkTimer;
+
+        private Point2d _cursorPosition;
+
+        private Mesh _caret;
+
+        private static ColoredUIShaderProgram _caretShaderProgram;
         
         public string Value
         {
             get { return _value; }
             set
             {
-                TextChange?.Invoke(this, new InputFieldTextChangeEventArgs(_value, value));
+                TextChange?.Invoke(this, new TextChangeEventArgs(_value, value));
                 _value = value;
                 _content.Value = value;
             }
         }
+
+        public bool IsFocused => _isTyping;
 
         public Color4 FocusColor;
 
@@ -47,11 +63,26 @@ namespace AlienEngine
 
         public TextWrapMode TextWrapMode;
 
-        public event Action<object, InputFieldTextChangeEventArgs> TextChange;
+        public double CaretBlinkInterval;
+
+        public float CaretWidth;
+
+        #region Delegates
+
+        public delegate void TextChangeEvent(object sender, TextChangeEventArgs args);
+
+        #endregion
+
+        #region Events
+
+        public event TextChangeEvent TextChange;
+
+        #endregion
 
         static TextInput()
         {
             _Ibeam = new Cursor(Cursor.CursorType.Beam);
+            _caretShaderProgram = new ColoredUIShaderProgram();
         }
         
         public TextInput()
@@ -71,7 +102,6 @@ namespace AlienEngine
             _content.LineSpacing = LineSpacing;
             _content.TextAlignement = TextAlignement;
             _content.TextWrapMode = TextWrapMode;
-            _content.Value = Value;
             _content.Anchor = Anchor;
             _content.BackgroundColor = Color4.Transparent;
             _content.ForegroundColor = ForegroundColor;
@@ -80,13 +110,107 @@ namespace AlienEngine
             _content.Position = Position;
             _content.Scale = Scale;
             _content.Size = Size;
+            _content.Value = Value;
             
             _content.Start();
 
-            Input.AddMouseButtonDownEvent((sender, args) =>
+            Input.AddMouseButtonDownEvent(_onMouseDown);
+            Input.AddTextInputEvent(_onTextInputEvent);
+            Input.AddKeyDownEvent(_onKeyDownEvent);
+
+            _caret = MeshFactory.CreateQuad(new Point2f(), new Sizef(CaretWidth, FontSize), Point2f.Zero, Sizef.One);
+
+            _updateCaretPosition();
+        }
+
+        private void _updateCaretPosition()
+        {
+            var textSize = _content.GetTextSize();
+            _cursorPosition = new Point2d(CorrectedPosition.X + MathHelper.Min(textSize.Width, Size.Width), CorrectedPosition.Y + ((Size.Height - textSize.Height) / 2));
+            _caretBlinkTimer = 0;
+        }
+
+        private void _onMouseDown(object sender, MouseButtonEventArgs args)
+        {
+            _isTyping = IsHover;
+        }
+
+        private void _onTextInputEvent(object sender, TextInputEventArgs args)
+        {
+            if (_isTyping)
             {
-                _isTyping = IsHover;
-            });
+                Value += args.KeyChar;
+                _updateCaretPosition();
+            }
+        }
+
+        private void _onKeyDownEvent(object sender, KeyboardKeyEventArgs args)
+        {
+            if (_isTyping && (args.KeyState == InputState.Pressed || args.KeyState == InputState.Repeated))
+            {
+                switch (args.Key)
+                {
+                    case KeyCode.Backspace:
+                        if (Value.Length > 1)
+                            Value = Value.Remove(Value.Length - 2, 1);
+                        else
+                            Value = "";
+                        _updateCaretPosition();
+                        break;
+                }
+            }
+        }
+
+        public override void Update()
+        {
+            base.Update();
+
+            _caretBlinkTimer += Time.DeltaTime;
+
+            if (IsHover && _default == null)
+            {
+                _default = Game.Window.Cursor;
+                Game.Window.SetCursor(_Ibeam);
+            }
+            else if (!IsHover && _default != null)
+            {
+                Game.Window.SetCursor(_default);
+                _default = null;
+            }
+
+            _content.Update();
+        }
+
+        public void Render()
+        {
+            if (_isTyping)
+            {
+                if (_caretBlinkTimer < CaretBlinkInterval)
+                {
+                    // var caretPosition = CorrectedPosition + _cursorPosition;
+
+                    Renderer.BackupState(RendererBackupMode.Blending);
+                    Renderer.Blending();
+
+                    _caretShaderProgram.Bind();
+                    _caretShaderProgram.SetPosition(new Vector3f((float)_cursorPosition.X, (float)_cursorPosition.Y, 0));
+                    _caretShaderProgram.SetColor(ForegroundColor);
+                    _caretShaderProgram.SetProjectionMatrix(ProjectionMatrix);
+
+                    _caret.Render();
+
+                    Renderer.RestoreState(RendererBackupMode.Blending);
+                }
+                else if (_caretBlinkTimer > CaretBlinkInterval * 2.0)
+                    _caretBlinkTimer -= CaretBlinkInterval * 2.0;
+            }
+
+            if (BackgroundTexture != null)
+                RenderTexturedQuad();
+            else
+                RenderColoredQuad();
+
+            _content.Render();
         }
     }
 }
