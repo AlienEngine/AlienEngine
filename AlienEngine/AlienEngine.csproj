@@ -655,7 +655,7 @@
     <Compile Include="Physics\Vehicle\WheelSlidingFriction.cs" />
     <Compile Include="Physics\Vehicle\WheelSuspension.cs" />
     <Compile Include="Shaders\Samples\Vertex Shaders\ColoredUIVertexShader.cs" />
-    <Compile Include="UI\InputFieldTextChangeEventArgs.cs" />
+    <Compile Include="UI\TextChangeEventArgs.cs" />
     <Compile Include="UI\ListBoxChangeEventArgs.cs" />
     <Compile Include="UI\Origin.cs" />
     <Compile Include="Rendering\Fonts\Character.cs" />
