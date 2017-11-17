@@ -143,13 +143,6 @@ namespace AlienEngine
             return _gameElement != null ? _gameElement.HasComponent(component) : false;
         }
 
-        protected event Action OnAttach;
-
-        internal void TriggerAttachEvent()
-        {
-            OnAttach?.Invoke();
-        }
-
         internal void SetGameElement(GameElement gameElement)
         {
             _gameElement = gameElement;
@@ -216,6 +209,9 @@ namespace AlienEngine
         }
 
         #endregion
+
+        public virtual void OnAttach()
+        { }
 
         #endregion
     }

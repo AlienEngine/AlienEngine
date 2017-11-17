@@ -423,7 +423,7 @@ namespace AlienEngine
                 if (component is IPostRenderable)
                     Renderer.RegisterPostRenderable(component as IPostRenderable);
 
-                component.TriggerAttachEvent();
+                component.OnAttach();
             }
         }
 
