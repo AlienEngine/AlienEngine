@@ -96,7 +96,11 @@ namespace AlienEngine
 
         public void Render()
         {
-            RenderColoredQuad();
+            if (BackgroundTexture != null)
+                RenderTexturedQuad();
+            else
+                RenderColoredQuad();
+
             _fontEngine.RenderText(Value);
         }
 
