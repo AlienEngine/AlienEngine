@@ -7,10 +7,11 @@ using AlienEngine.Core.Graphics.Shaders;
 using AlienEngine.Shaders;
 using AlienEngine.Core.Rendering;
 using AlienEngine.Core.Game;
+using AlienEngine.Core.Resources;
 
 namespace AlienEngine
 {
-    public class TextInput : UIComponent, IRenderable
+    public class TextInput : UIComponent, IRenderable, IDisposable
     {
         private static Cursor _Ibeam;
 
@@ -88,29 +89,30 @@ namespace AlienEngine
         public TextInput()
         {
             _content = new Text();
+            
+            ResourcesManager.AddDisposableResource(this);
         }
 
         public override void Start()
         {
             base.Start();
 
+            _content.Anchor = Anchor;
+            _content.BackgroundColor = Color4.Transparent;
             _content.CharacterSpacing = CharacterSpacing;
             _content.FontPath = FontPath;
             _content.FontSize = FontSize;
             _content.FontStyle = FontStyle;
             _content.FontType = FontType;
-            _content.LineSpacing = LineSpacing;
-            _content.TextAlignement = TextAlignement;
-            _content.TextWrapMode = TextWrapMode;
-            _content.Anchor = Anchor;
-            _content.BackgroundColor = Color4.Transparent;
             _content.ForegroundColor = ForegroundColor;
-            _content.HoverColor = Color4.Transparent;
+            _content.LineSpacing = LineSpacing;
             _content.Origin = Origin;
             _content.Position = Position;
             _content.Scale = Scale;
             _content.Size = Size;
             _content.Value = Value;
+            _content.TextAlignement = TextAlignement;
+            _content.TextWrapMode = TextWrapMode;
             
             _content.Start();
 
@@ -212,5 +214,17 @@ namespace AlienEngine
 
             _content.Render();
         }
+        
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+
+            if (HoverTexture != null)
+                HoverTexture.Dispose();
+
+            if (FocusTexture != null)
+                FocusTexture.Dispose();
+        }
+
     }
 }
