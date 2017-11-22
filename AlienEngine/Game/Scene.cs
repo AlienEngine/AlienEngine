@@ -1,6 +1,7 @@
 ﻿using AlienEngine.Core.Physics;
 using AlienEngine.Core.Threading;
 using System;
+using AlienEngine.Core.Rendering;
 
 namespace AlienEngine.Core.Game
 {
@@ -150,9 +151,43 @@ namespace AlienEngine.Core.Game
                 _audioListener = gameElement;
             }
 
+            var components = gameElement.GetComponents<Component>();
+            
+            foreach (Component component in components)
+            {
+                if (component is IRenderable)
+                    Renderer.RegisterRenderable(component as IRenderable);
+
+                if (component is IPostRenderable)
+                    Renderer.RegisterPostRenderable(component as IPostRenderable);
+            }
+            
             foreach (GameElement child in gameElement.Childs)
             {
                 AddGameElement(child);
+            }
+        }
+
+        /// <summary>
+        /// Removes a <see cref="GameElement"/> from the <see cref="Scene"/>.
+        /// </summary>
+        /// <param name="element">The game element to remove.</param>
+        public void RemoveGameElement(GameElement element)
+        {
+            if (_gameElements.Contains(element))
+            {
+                var components = element.GetComponents<Component>();
+            
+                foreach (Component component in components)
+                {
+                    if (component is IRenderable)
+                        Renderer.UnregisterRenderable(component as IRenderable);
+
+                    if (component is IPostRenderable)
+                        Renderer.UnregisterPostRenderable(component as IPostRenderable);
+                }
+                
+                _gameElements.Remove(element);
             }
         }
 
