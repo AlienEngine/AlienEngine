@@ -141,7 +141,7 @@ namespace AlienEngine
             _label.Update();
         }
 
-        new public void RenderColoredQuad()
+        public new void RenderColoredQuad()
         {
             Color4 color = _isPressed ? PressColor : (IsHover ? HoverColor : BackgroundColor);
 
@@ -150,7 +150,7 @@ namespace AlienEngine
             RenderColoredQuad(color);
         }
 
-        new public void RenderTexturedQuad()
+        public new void RenderTexturedQuad()
         {
             Texture texture = _isPressed ? PressTexture : (IsHover ? HoverTexture : BackgroundTexture);
 

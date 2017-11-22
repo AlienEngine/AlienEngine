@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace AlienEngine
+﻿namespace AlienEngine
 {
     /// <summary>
     /// Base class of all built-in and user defined
@@ -108,7 +106,7 @@ namespace AlienEngine
         /// </remarks>
         protected T GetComponent<T>() where T : Component
         {
-            return _gameElement != null ? _gameElement.GetComponent<T>() : null;
+            return _gameElement?.GetComponent<T>();
         }
 
         /// <summary>
@@ -118,7 +116,7 @@ namespace AlienEngine
         /// <typeparam name="T">The type of <see cref="Component"/> to return.</typeparam>
         protected T[] GetComponents<T>() where T : Component
         {
-            return _gameElement != null ? _gameElement.GetComponents<T>() : null;
+            return _gameElement?.GetComponents<T>();
         }
 
         /// <summary>
@@ -128,7 +126,7 @@ namespace AlienEngine
         /// <typeparam name="T">The type of <see cref="Component"/>.</typeparam>
         protected bool HasComponent<T>() where T : Component
         {
-            return _gameElement != null ? _gameElement.HasComponent<T>() : false;
+            return _gameElement != null && _gameElement.HasComponent<T>();
         }
 
         /// <summary>
@@ -140,7 +138,7 @@ namespace AlienEngine
         /// <param name="component">The instance of <typeparamref name="T"/> to find.</param>
         protected bool HasComponent<T>(T component) where T : Component
         {
-            return _gameElement != null ? _gameElement.HasComponent(component) : false;
+            return _gameElement != null && _gameElement.HasComponent(component);
         }
 
         internal void SetGameElement(GameElement gameElement)
