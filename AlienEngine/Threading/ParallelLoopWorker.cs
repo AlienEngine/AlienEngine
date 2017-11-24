@@ -11,7 +11,7 @@ namespace AlienEngine.Core.Threading
         internal int finalIndex;
 
         internal AutoResetEvent getToWork;
-        
+
         internal int iterationsPerSteal;
         private Thread thread;
         private Action threadStart;
@@ -26,10 +26,6 @@ namespace AlienEngine.Core.Threading
             thread = new Thread(Work) { IsBackground = true };
             thread.Start();
         }
-
-
-
-
 
         internal void Work()
         {
