@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace AlienEngine.Core.Rendering
 {
-    public static class Renderer
+    public static class RendererManager
     {
         private static List<IRenderable> _renderables;
         private static List<IPostRenderable> _postRenderables;
@@ -57,7 +57,7 @@ namespace AlienEngine.Core.Rendering
 
         public static event ViewportChanged OnViewportChange;
 
-        static Renderer()
+        static RendererManager()
         {
             // Renderables
             _renderables = new List<IRenderable>();
@@ -342,7 +342,7 @@ namespace AlienEngine.Core.Rendering
             DepthTest(true, DepthFunction.Lequal);
 
             // Render the skybox
-            Camera _camera = Game.Game.CurrentScene.PrimaryCamera.GetComponent<Camera>();
+            Camera _camera = Game.Game.Instance.CurrentScene.PrimaryCamera.GetComponent<Camera>();
 
             switch (_camera.ClearScreenType)
             {

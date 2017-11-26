@@ -18,7 +18,7 @@ namespace AlienEngine.Core.Inputs
             {
                 _prevMousePosition = _mousePosition;
                 _mousePosition = value;
-                GLFW.SetCursorPos(Game.Game.Window.Handle, value.X, value.Y);
+                GLFW.SetCursorPos(Game.Game.Instance.Window.Handle, value.X, value.Y);
             }
         }
 
@@ -28,12 +28,12 @@ namespace AlienEngine.Core.Inputs
         {
             get
             {
-                return GLFW.GetInputMode(Game.Game.Window.Handle, GLFW.InputMode.Cursor) ==
+                return GLFW.GetInputMode(Game.Game.Instance.Window.Handle, GLFW.InputMode.Cursor) ==
                        (int) GLFW.CursorMode.Disabled;
             }
             set
             {
-                GLFW.SetInputMode(Game.Game.Window.Handle, GLFW.InputMode.Cursor,
+                GLFW.SetInputMode(Game.Game.Instance.Window.Handle, GLFW.InputMode.Cursor,
                     value ? GLFW.CursorMode.Disabled : GLFW.CursorMode.Normal);
             }
         }
@@ -42,12 +42,12 @@ namespace AlienEngine.Core.Inputs
         {
             get
             {
-                return GLFW.GetInputMode(Game.Game.Window.Handle, GLFW.InputMode.Cursor) ==
+                return GLFW.GetInputMode(Game.Game.Instance.Window.Handle, GLFW.InputMode.Cursor) ==
                        (int) GLFW.CursorMode.Hidden;
             }
             set
             {
-                GLFW.SetInputMode(Game.Game.Window.Handle, GLFW.InputMode.Cursor,
+                GLFW.SetInputMode(Game.Game.Instance.Window.Handle, GLFW.InputMode.Cursor,
                     value ? GLFW.CursorMode.Hidden : GLFW.CursorMode.Normal);
             }
         }
@@ -61,18 +61,18 @@ namespace AlienEngine.Core.Inputs
         public static void Update()
         {
             Point2d pos;
-            GLFW.GetCursorPos(Game.Game.Window.Handle, out pos.X, out pos.Y);
+            GLFW.GetCursorPos(Game.Game.Instance.Window.Handle, out pos.X, out pos.Y);
             Position = pos;
             
             _currentButtons.Clear();
             foreach (MouseButton i in _allKeys)
-                if (GetButton(i))
+                if (GetButton(i) && !_currentButtons.Contains(i))
                     _currentButtons.Add(i);
         }
 
         public static bool GetButton(MouseButton keyCode)
         {
-            return GLFW.GetMouseButton(Game.Game.Window.Handle, keyCode);
+            return GLFW.GetMouseButton(Game.Game.Instance.Window.Handle, keyCode);
         }
 
         public static bool GetButtonDown(MouseButton keyCode)

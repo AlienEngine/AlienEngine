@@ -227,7 +227,7 @@ namespace AlienEngine
 
         public static CursorState GetCursorState()
         {
-            return Game.Window.GetCursorState();
+            return Game.Instance.Window.GetCursorState();
         }
 
         #endregion
@@ -500,7 +500,7 @@ namespace AlienEngine
 
         public static void Refresh()
         {
-            GLFW.SetKeyCallback(Game.Window.Handle, (w, key, scancode, state, mods) =>
+            GLFW.SetKeyCallback(Game.Instance.Window.Handle, (w, key, scancode, state, mods) =>
             {
                 foreach (var e in _keyEvents)
                 {
@@ -508,7 +508,7 @@ namespace AlienEngine
                 }
             });
 
-            GLFW.SetCharModsCallback(Game.Window.Handle, (w, code, mods) =>
+            GLFW.SetCharModsCallback(Game.Instance.Window.Handle, (w, code, mods) =>
             {
                 foreach (var e in _textEvents)
                 {
@@ -516,7 +516,7 @@ namespace AlienEngine
                 }
             });
 
-            GLFW.SetCursorPosCallback(Game.Window.Handle, (w, x, y) =>
+            GLFW.SetCursorPosCallback(Game.Instance.Window.Handle, (w, x, y) =>
             {
                 foreach (var e in _mouseMoveEvents)
                 {
@@ -524,7 +524,7 @@ namespace AlienEngine
                 }
             });
 
-            GLFW.SetMouseButtonCallback(Game.Window.Handle, (w, b, s, k) =>
+            GLFW.SetMouseButtonCallback(Game.Instance.Window.Handle, (w, b, s, k) =>
             {
                 switch (s)
                 {
@@ -540,7 +540,7 @@ namespace AlienEngine
                 }
             });
 
-            GLFW.SetScrollCallback(Game.Window.Handle, (w, x, y) =>
+            GLFW.SetScrollCallback(Game.Instance.Window.Handle, (w, x, y) =>
             {
                 var offset = new Vector2d(x, y);
 

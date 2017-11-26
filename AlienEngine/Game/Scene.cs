@@ -1,100 +1,135 @@
 ﻿using AlienEngine.Core.Physics;
+using AlienEngine.Core.Rendering;
 using AlienEngine.Core.Threading;
 using System;
 
 namespace AlienEngine.Core.Game
 {
-    public class Scene : IDisposable
+    public abstract class Scene : IDisposable
     {
-        // Game elements collections
+        /// <summary>
+        /// The name of the scene.
+        /// </summary>
+        private string _name;
+        
+        /// <summary>
+        /// A collection of all <see cref="GameElement"/>s in the <see cref="Scene"/>.
+        /// </summary>
         private GameElementCollection _gameElements;
+
+        /// <summary>
+        /// A collection of all <see cref="GameElement"/>s with <see cref="Light"/>
+        /// component.
+        /// </summary>
         private GameElementCollection _lights;
+
+        /// <summary>
+        /// A collection of all <see cref="GameElement"/>s with <see cref="Camera"/>
+        /// component.
+        /// </summary>
         private GameElementCollection _cameras;
+
+        /// <summary>
+        /// A collection of all <see cref="GameElement"/>s with <see cref="AudioSource"/>
+        /// component.
+        /// </summary>
         private GameElementCollection _audioSources;
+
+        /// <summary>
+        /// A collection of all <see cref="GameElement"/>s with <see cref="AudioReverbZone"/>
+        /// component.
+        /// </summary>
         private GameElementCollection _audioReverbZones;
 
-        // Unique game elements
+        /// <summary>
+        /// The unique <see cref="GameElement"/> with <see cref="AlienEngine.AudioListener"/>
+        /// component.
+        /// </summary>
+        /// <remarks>
+        /// If more than one audio listener exist in the scene, only the last one created is used.
+        /// </remarks>
         private GameElement _audioListener;
+
+        /// <summary>
+        /// The unique <see cref="GameElement"/> with <see cref="Camera"/>
+        /// component.
+        /// </summary>
+        /// <remarks>
+        /// If more than one camera exist in the scene, only the camera set to current is used.
+        /// </remarks>
         private GameElement _primaryCamera;
 
-        // Physics
+        /// <summary>
+        /// The handler of all rigid bodies.
+        /// </summary>
         private Space _space;
+
+        /// <summary>
+        /// The multi threading helper for physics simulations.
+        /// </summary>
         private ParallelLooper _parallelLooper;
 
+        /// <summary>
+        /// The name of this <see cref="Scene"/>.
+        /// </summary>
+        public string Name => _name;
+        
         /// <summary>
         /// Gets a collection of all <see cref="GameElement"/>s
         /// in the current <see cref="Scene"/>.
         /// </summary>
-        public GameElementCollection GameElements
-        {
-            get { return _gameElements; }
-        }
+        public GameElementCollection GameElements => _gameElements;
 
         /// <summary>
         /// Gets a collection of all <see cref="GameElement"/>s
         /// in the current <see cref="Scene"/> which have a
         /// <see cref="Light"/> component.
         /// </summary>
-        public GameElementCollection Lights
-        {
-            get { return _lights; }
-        }
+        public GameElementCollection Lights => _lights;
 
         /// <summary>
         /// Gets a collection of all <see cref="GameElement"/>s
         /// in the current <see cref="Scene"/> which have a
         /// <see cref="Camera"/> component.
         /// </summary>
-        public GameElementCollection Cameras
-        {
-            get { return _cameras; }
-        }
+        public GameElementCollection Cameras => _cameras;
 
         /// <summary>
         /// Gets a collection of all <see cref="GameElement"/>s
         /// in the current <see cref="Scene"/> which have a
         /// <see cref="AudioSource"/> component.
         /// </summary>
-        public GameElementCollection AudioSources
-        {
-            get { return _audioSources; }
-        }
+        public GameElementCollection AudioSources => _audioSources;
 
         /// <summary>
         /// Gets a collection of all <see cref="GameElement"/>s
         /// in the current <see cref="Scene"/> which have a
         /// <see cref="AudioReverbZone"/> component.
         /// </summary>
-        public GameElementCollection AudioReverbZones
-        {
-            get { return _audioReverbZones; }
-        }
+        public GameElementCollection AudioReverbZones => _audioReverbZones;
 
         /// <summary>
         /// Gets the unique <see cref="GameElement"/> in the
         /// current <see cref="Scene"/> which has a enable
         /// <see cref="AlienEngine.AudioListener"/> component.
         /// </summary>
-        public GameElement AudioListener
-        {
-            get { return _audioListener; }
-        }
+        public GameElement AudioListener => _audioListener;
 
         /// <summary>
         /// Gets the unique <see cref="GameElement"/> in the
         /// current <see cref="Scene"/> which has a enabled
         /// <see cref="Camera"/> component.
         /// </summary>
-        public GameElement PrimaryCamera
-        {
-            get { return _primaryCamera; }
-        }
+        public GameElement PrimaryCamera => _primaryCamera;
 
         /// <summary>
         /// Creates a new scene.
         /// </summary>
-        public Scene()
+        public Scene(string name)
         {
+            _name = name;
+            
+            // Default camera
             GameElement _dummyCamera = new GameElement("_dummy_generated_camera");
             _dummyCamera.AttachComponent(Camera.None);
 
@@ -154,6 +189,8 @@ namespace AlienEngine.Core.Game
             {
                 AddGameElement(child);
             }
+
+            OnAddGameElement();
         }
 
         /// <summary>
@@ -175,27 +212,81 @@ namespace AlienEngine.Core.Game
             if (l.HasComponent<AudioListener>())
                 _audioListener = l;
         }
-        
+
+        /// <summary>
+        /// Initialize the <see cref="Scene"/> when loading it in
+        /// the <see cref="Game"/>.
+        /// </summary>
+        public virtual void Load()
+        { }
+
+        /// <summary>
+        /// Action executed when the <see cref="Scene"/> is unloaded from
+        /// the <see cref="Game"/>.
+        /// </summary>
+        public virtual void Unload()
+        { }
+
+        public virtual void Start()
+        {
+            foreach (GameElement element in _gameElements)
+                element.Start();
+        }
+
+        public virtual void BeforeUpdate()
+        {
+            foreach (GameElement element in _gameElements)
+                element.BeforeUpdate();
+        }
+
+        /// <summary>
+        /// Updates the <see cref="Scene"/> and all attached <see cref="GameElement"/>s.
+        /// </summary>
+        public virtual void Update()
+        {
+            foreach (GameElement element in _gameElements)
+                element.Update();
+        }
+
+        public virtual void AfterUpdate()
+        {
+            foreach (GameElement element in _gameElements)
+                element.AfterUpdate();
+        }
+
+        public virtual void Stop()
+        {
+            foreach (GameElement element in _gameElements)
+                element.Stop();
+        }
+
+        /// <summary>
+        /// Action executed when a <see cref="GameElement"/> is
+        /// added in the <see cref="Scene"/>.
+        /// </summary>
+        protected virtual void OnAddGameElement()
+        { }
+
         /// <summary>
         /// Renders the current scene.
         /// </summary>
-        public void Render()
+        internal void Render()
         {
-
+            RendererManager.RenderAll();
         }
 
         /// <summary>
         /// Process physics simulation for one frame.
         /// </summary>
-        public void SimulatePhysics()
+        internal void SimulatePhysics()
         {
             _space.Update((float)Time.DeltaTime);
         }
 
         /// <summary>
-        /// Process physics simulation for one frame.
+        /// Process physics simulation for many timesteps as necessary.
         /// </summary>
-        public void SimulatePhysics(float dt)
+        internal void SimulatePhysics(float dt)
         {
             _space.Update(dt);
         }

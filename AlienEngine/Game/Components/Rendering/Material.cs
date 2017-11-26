@@ -103,7 +103,7 @@ namespace AlienEngine
         // TODO: Complete this implementation
         public void Use()
         {
-            var _camera = Game.CurrentScene.PrimaryCamera.GetComponent<Camera>();
+            var _camera = Game.Instance.CurrentScene.PrimaryCamera.GetComponent<Camera>();
 
             // Use the current shader program
             ShaderProgram.Bind();
@@ -141,7 +141,7 @@ namespace AlienEngine
             ShaderProgram.SetUniform("i_p_matrix", i_p_matrix);
 
             // Sets lights informations
-            var ligths = Game.CurrentScene.Lights;
+            var ligths = Game.Instance.CurrentScene.Lights;
             var max_nb = ligths.Length;
             ShaderProgram.SetUniform("lights_nb", max_nb);
             for (int i = 0; i < max_nb; i++)
@@ -160,8 +160,8 @@ namespace AlienEngine
             }
 
             // Sets Camera informations
-            ShaderProgram.SetUniform("c_position", Game.CurrentScene.PrimaryCamera.WorldTransform.Translation);
-            ShaderProgram.SetUniform("c_rotation", Game.CurrentScene.PrimaryCamera.WorldTransform.Rotation);
+            ShaderProgram.SetUniform("c_position", Game.Instance.CurrentScene.PrimaryCamera.WorldTransform.Translation);
+            ShaderProgram.SetUniform("c_rotation", Game.Instance.CurrentScene.PrimaryCamera.WorldTransform.Rotation);
             ShaderProgram.SetUniform("c_depthDistances", new Vector2f(_camera.Near, _camera.Far));
 
             // Sets material data

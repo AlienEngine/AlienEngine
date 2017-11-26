@@ -86,7 +86,7 @@ namespace AlienEngine.Core.Graphics.Shaders
         private void _compile()
         {
             // Setting default globals
-            SetGlobal("MAX_NUMBER_OF_LIGHTS", Math.Max(1, Game.Game.CurrentScene.Lights.Length).ToString());
+            SetGlobal("MAX_NUMBER_OF_LIGHTS", Math.Max(1, Game.Game.Instance.CurrentScene.Lights.Length).ToString());
 
             _program = GL.CreateProgram();
 

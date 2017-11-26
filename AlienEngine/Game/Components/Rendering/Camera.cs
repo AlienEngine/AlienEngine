@@ -250,7 +250,7 @@ namespace AlienEngine
                 if (value != _cubemap)
                 {
                     _cubemap = value;
-                    if (Game.HasStarted)
+                    if (Game.Instance.Started)
                         _cubemap.Load();
                 }
             }

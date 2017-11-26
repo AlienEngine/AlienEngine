@@ -51,7 +51,7 @@ namespace AlienEngine
 
             SetProjectionMatrix();
 
-            Renderer.OnViewportChange += (sender, args) =>
+            RendererManager.OnViewportChange += (sender, args) =>
             {
                 SetProjectionMatrix();
             };

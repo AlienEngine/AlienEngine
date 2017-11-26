@@ -418,10 +418,10 @@ namespace AlienEngine
                 _attachedComponents.Add(component);
 
                 if (component is IRenderable)
-                    Renderer.RegisterRenderable(component as IRenderable);
+                    RendererManager.RegisterRenderable(component as IRenderable);
 
                 if (component is IPostRenderable)
-                    Renderer.RegisterPostRenderable(component as IPostRenderable);
+                    RendererManager.RegisterPostRenderable(component as IPostRenderable);
 
                 component.TriggerAttachEvent();
             }
