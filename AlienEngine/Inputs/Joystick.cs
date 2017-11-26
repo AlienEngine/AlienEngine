@@ -50,14 +50,11 @@ namespace AlienEngine.Core.Inputs
         /// </summary>
         /// <param name="joystick">The joystick device.</param>
         /// <param name="button">The button.</param>
-        public static bool GetButton(JoystickDevice joystick, int button)
+        public static bool GetButton(JoystickDevice joystick, JoystickButton button)
         {
-            if (button <= 0)
-                throw new ArgumentOutOfRangeException(nameof(button), "The value must be positive and greater than 0.");
-
             var states = GLFW.GetJoystickButtons(joystick);
 
-            return states[button - 1];
+            return states[(int)button];
         }
 
         /// <summary>
@@ -65,15 +62,12 @@ namespace AlienEngine.Core.Inputs
         /// </summary>
         /// <param name="joystick">The joystick device.</param>
         /// <param name="button">The button.</param>
-        public static bool GetButtonDown(JoystickDevice joystick, int button)
+        public static bool GetButtonDown(JoystickDevice joystick, JoystickButton button)
         {
-            if (button <= 0)
-                throw new ArgumentOutOfRangeException(nameof(button), "The value must be positive and greater than 0.");
-
             return GetButton(joystick, button)
                 && _joystickStates.Count > (int)joystick
                 && _joystickStates[(int)joystick].Buttons != null
-                && _joystickStates[(int)joystick].Buttons[button - 1] == InputState.Released;
+                && _joystickStates[(int)joystick].Buttons[(int)button] == InputState.Released;
         }
 
         /// <summary>
@@ -81,15 +75,12 @@ namespace AlienEngine.Core.Inputs
         /// </summary>
         /// <param name="joystick">The joystick device.</param>
         /// <param name="button">The button.</param>
-        public static bool GetButtonUp(JoystickDevice joystick, int button)
+        public static bool GetButtonUp(JoystickDevice joystick, JoystickButton button)
         {
-            if (button <= 0)
-                throw new ArgumentOutOfRangeException(nameof(button), "The value must be positive and greater than 0.");
-
             return !GetButton(joystick, button)
                 && _joystickStates.Count > (int)joystick
                 && _joystickStates[(int)joystick].Buttons != null
-                && _joystickStates[(int)joystick].Buttons[button - 1] == InputState.Pressed;
+                && _joystickStates[(int)joystick].Buttons[(int)button] == InputState.Pressed;
         }
 
         /// <summary>
@@ -97,21 +88,18 @@ namespace AlienEngine.Core.Inputs
         /// </summary>
         /// <param name="joystick">The joystick device.</param>
         /// <param name="axis">The axis.</param>
-        public static float GetAxis(JoystickDevice joystick, int axis)
+        public static float GetAxis(JoystickDevice joystick, JoystickAxis axis)
         {
-            if (axis <= 0)
-                throw new ArgumentOutOfRangeException(nameof(axis), "The value must be positive and greater than 0.");
-
             var states = GLFW.GetJoystickAxes(joystick);
 
-            return states[axis - 1];
+            return states[(int)axis];
         }
 
         /// <summary>
         /// Returns the state of the given joystick device.
         /// </summary>
         /// <param name="joystick">The joystick device.</param>
-        public static JoystickState GetJoystickState(JoystickDevice joystick)
+        public static JoystickState GetState(JoystickDevice joystick)
         {
             if (_joystickStates.Count <= (int)joystick)
                 return new JoystickState();

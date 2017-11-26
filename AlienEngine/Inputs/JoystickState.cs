@@ -76,5 +76,41 @@
 
             Buttons = state;
         }
+
+        /// <summary>
+        /// Checks if a joystick button is held.
+        /// </summary>
+        /// <param name="button">The joystick button.</param>
+        public bool Holding(JoystickButton button)
+        {
+            return Connected && Input.Holding((JoystickDevice)ID, button);
+        }
+
+        /// <summary>
+        /// Checks if a joystick button is pressed.
+        /// </summary>
+        /// <param name="button">The joystick button.</param>
+        public bool Pressed(JoystickButton button)
+        {
+            return Connected && Input.Pressed((JoystickDevice)ID, button);
+        }
+
+        /// <summary>
+        /// Checks if a joystick button is released.
+        /// </summary>
+        /// <param name="button">The joystick button.</param>
+        public bool Released(JoystickButton button)
+        {
+            return Connected && Input.Released((JoystickDevice)ID, button);
+        }
+
+        /// <summary>
+        /// Returns the value of a joystick axis.
+        /// </summary>
+        /// <param name="axis">The joystick axis.</param>
+        public float Axis(JoystickAxis axis)
+        {
+            return Connected ? Input.Axis((JoystickDevice)ID, axis) : 0f;
+        }
     }
 }
