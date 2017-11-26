@@ -666,7 +666,7 @@
     <Compile Include="Game\PostEffectMode.cs" />
     <Compile Include="Rendering\IPostRenderable.cs" />
     <Compile Include="Rendering\RenderableCollection.cs" />
-    <Compile Include="Rendering\Renderer.cs" />
+    <Compile Include="Rendering\RendererManager.cs" />
     <Compile Include="Game\Scene.cs" />
     <Compile Include="Game\Shaders\BumpedDiffuseShaderProgram.cs" />
     <Compile Include="Game\Shaders\RenderTextureShaderProgram.cs" />
