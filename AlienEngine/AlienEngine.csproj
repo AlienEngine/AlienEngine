@@ -238,6 +238,7 @@
     <Compile Include="Game\Shaders\ColoredUIShaderProgram.cs" />
     <Compile Include="Game\UIComponent.cs" />
     <Compile Include="Inputs\JoystickState.cs" />
+    <Compile Include="IO\FileSystemManager.cs" />
     <Compile Include="Shaders\Samples\Fragment Shaders\FontFragmentShader.cs" />
     <Compile Include="Shaders\Samples\Fragment Shaders\ColoredUIFragmentShader.cs" />
     <Compile Include="Shaders\Samples\Vertex Shaders\FontVertexShader.cs" />
