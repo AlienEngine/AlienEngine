@@ -182,19 +182,18 @@
     </Reference>
     <Reference Include="ZeroFormatter, Version=1.6.4.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\ZeroFormatter.1.6.4\lib\net45\ZeroFormatter.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="ZeroFormatter.Interfaces, Version=1.6.4.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\ZeroFormatter.Interfaces.1.6.4\lib\net45\ZeroFormatter.Interfaces.dll</HintPath>
-      <Private>True</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Application.cs" />
     <Compile Include="Assets\AssetsManager.cs" />
-    <Compile Include="Assets\IAsset.cs" />
     <Compile Include="Assets\AssetTypes.cs" />
+    <Compile Include="Assets\IAsset.cs" />
     <Compile Include="Assets\MeshAsset.cs" />
+    <Compile Include="Assets\Mesh\MeshData.cs" />
     <Compile Include="Audio\AudioCapture.cs" />
     <Compile Include="Audio\AudioContext.cs" />
     <Compile Include="Audio\AudioContextException.cs" />
