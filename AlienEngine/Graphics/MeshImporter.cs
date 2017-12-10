@@ -14,7 +14,7 @@ namespace AlienEngine.Core.Graphics
 {
     public class MeshImporter : IDisposable
     {
-        public GameElement GameElement { get { return _gameMesh; } }
+        public GameElement GameElement => _gameMesh;
 
         private Material[] _materials;
         private MeshEntry[] _entries;
