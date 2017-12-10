@@ -1730,12 +1730,14 @@ namespace AlienEngine
             return !left.Equals(right);
         }
 
+#pragma warning disable CS3002 // Le type de retour de 'Vector4i.explicit operator int*(Vector4i)' n'est pas conforme CLS
         /// <summary>
         /// Returns a pointer to the first element of the specified instance.
         /// </summary>
         /// <param name="v">The instance.</param>
         /// <returns>A pointer to the first element of v.</returns>
         unsafe public static explicit operator int* (Vector4i v)
+#pragma warning restore CS3002 // Le type de retour de 'Vector4i.explicit operator int*(Vector4i)' n'est pas conforme CLS
         {
             return &v.X;
         }
