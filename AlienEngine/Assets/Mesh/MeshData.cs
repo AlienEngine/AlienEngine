@@ -19,19 +19,19 @@ namespace AlienEngine.Core.Assets.Mesh
         /// <remarks>
         /// If this <see cref="MeshData"/> is the root node, then <see cref="Parent"/> = <see cref="null"/>.
         /// </remarks>
-        [Index(1)]
+        [IgnoreFormat]
         public virtual MeshAsset Parent { get; protected set; }
 
         /// <summary>
         /// The list of mesh vertices in this <see cref="MeshData"/>.
         /// </summary>
-        [Index(2)]
+        [Index(1)]
         public virtual List<Vertex> Vertices { get; protected set; }
 
         /// <summary>
         /// The list of mesh indices in this <see cref="MeshData"/>.
         /// </summary>
-        [Index(3)]
+        [Index(2)]
         public virtual List<int> Indices { get; protected set; }
 
         /// <summary>
