@@ -7,15 +7,18 @@ using System.Threading.Tasks;
 
 namespace AlienEngine.Core.Graphics.Shaders
 {
+    [Version("330 core")]
     internal class CubemapFragmentShader : FragmentShader
     {
+        [Out] vec4 FragColor;
+
         [In] vec3 position;
 
         [Uniform] samplerCube textureCubemap;
 
         void main()
         {
-            gl_FragColor = texture(textureCubemap, position);
+            FragColor = texture(textureCubemap, position);
         }
     }
 }

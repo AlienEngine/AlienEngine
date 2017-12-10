@@ -1,15 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using AlienEngine.ASL;
 
 namespace AlienEngine.Core.Graphics.Shaders.Samples
 {
-    [Version(330)]
+    [Version("330 core")]
     internal class BumpedDiffuseFragmentShader : FragmentShader
     {
+        [Out] vec4 FragColor;
+        
         #region Structs
         // --------------------
         // Material state
@@ -284,11 +282,11 @@ namespace AlienEngine.Core.Graphics.Shaders.Samples
             // Diffuse Texture Light Intensity
             if (materialState.hasTextureDiffuse)
             {
-                gl_FragColor = texture(materialState.textureDiffuse, uv) * _totalLight;
+                FragColor = texture(materialState.textureDiffuse, uv) * _totalLight;
             }
             else
             {
-                gl_FragColor = _totalLight;
+                FragColor = _totalLight;
             }
 
             //float Ip = 1 / length(ld);

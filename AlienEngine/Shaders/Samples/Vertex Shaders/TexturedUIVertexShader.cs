@@ -4,7 +4,7 @@ using AlienEngine.Core.Graphics.OpenGL;
 
 namespace AlienEngine.Shaders.Samples
 {
-    [Version(330)]
+    [Version("330 core")]
     public class TexturedUIVertexShader : VertexShader
     {
         [Uniform] vec3 position;

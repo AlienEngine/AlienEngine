@@ -4,7 +4,7 @@ using AlienEngine.Core.Graphics.OpenGL;
 
 namespace AlienEngine.Core.Graphics.Shaders.Samples
 {
-    [Version(330)]
+    [Version("330 core")]
     internal class DiffuseVertexShader : VertexShader
     {
         #region VAO Objects
