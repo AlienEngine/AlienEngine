@@ -100,7 +100,7 @@ namespace AlienEngine.ASL
         {
             _sb.Length = 0;
 
-            if (_shaderSource.Version != 0)
+            if (_shaderSource.Version != string.Empty)
             {
                 _sb.Append("#version ");
                 _sb.AppendLine(_shaderSource.Version.ToString());
