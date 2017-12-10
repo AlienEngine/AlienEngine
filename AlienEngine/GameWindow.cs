@@ -74,6 +74,9 @@ namespace AlienEngine.Core
             // Set default window hints
             GLFW.DefaultWindowHints();
 
+            GLFW.WindowHint(GLFW.Hint.ContextVersionMajor, 3);
+            GLFW.WindowHint(GLFW.Hint.ContextVersionMinor, 3);
+            GLFW.WindowHint(GLFW.Hint.OpenglProfile, GLFW.OpenGLProfile.Core);
 #if APPLE
             // Activate forward compatibility on MacOS/iOS
             GLFW.WindowHint(GLFW.Hint.OpenglForwardCompat, true);
