@@ -1,10 +1,5 @@
-﻿using AlienEngine.ASL;
-using AlienEngine.Core.Graphics.Shaders;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using AlienEngine.Core.Shaders;
+using AlienEngine.Core.Shaders.Samples;
 
 namespace AlienEngine.Shaders
 {

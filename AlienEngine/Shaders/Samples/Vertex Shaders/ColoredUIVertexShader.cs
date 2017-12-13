@@ -1,9 +1,9 @@
 ﻿using AlienEngine.ASL;
 using AlienEngine.Core.Graphics.OpenGL;
 
-namespace AlienEngine.Core.Graphics.Shaders
+namespace AlienEngine.Core.Shaders.Samples
 {
-    [Version(330)]
+    [Version("330 core")]
     public class ColoredUIVertexShader: VertexShader
     {
         [Uniform] vec3 position;

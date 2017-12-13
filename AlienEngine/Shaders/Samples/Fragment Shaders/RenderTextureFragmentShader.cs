@@ -1,7 +1,6 @@
 ﻿using AlienEngine.ASL;
-using System;
 
-namespace AlienEngine.Core.Graphics.Shaders
+namespace AlienEngine.Core.Shaders.Samples
 {
     [Version("330 core")]
     internal class RenderTextureFragmentShader : FragmentShader
@@ -18,28 +17,28 @@ namespace AlienEngine.Core.Graphics.Shaders
         vec4 ApplyPostEffect(vec4 color, [ArraySize(9)] float[] kernel)
         {
             __output(@"
-                float offset_w = 1.0f / width;
-                float offset_h = 1.0f / height;
+            float offset_w = 1.0f / width;
+            float offset_h = 1.0f / height;
 
-                vec2 offsets[9] = vec2[]
-                (
-                    vec2( offset_w,  offset_h),          // top-left
-                    vec2( 0.0f,      offset_h),          // top-center
-                    vec2(-offset_w,  offset_h),          // top-right
-                    vec2( offset_w,  0.0f),              // center-left
-                    vec2( 0.0f,    0.0f),                // center-center
-                    vec2(-offset_w,  0.0f),              // center-right
-                    vec2( offset_w, -offset_h),          // bottom-left
-                    vec2( 0.0f,     -offset_h),          // bottom-center
-                    vec2( offset_w, -offset_h)           // bottom-right
-                );
+            vec2 offsets[9] = vec2[]
+            (
+                vec2( offset_w,  offset_h),          // top-left
+                vec2( 0.0f,      offset_h),          // top-center
+                vec2(-offset_w,  offset_h),          // top-right
+                vec2( offset_w,  0.0f),              // center-left
+                vec2( 0.0f,    0.0f),                // center-center
+                vec2(-offset_w,  0.0f),              // center-right
+                vec2( offset_w, -offset_h),          // bottom-left
+                vec2( 0.0f,     -offset_h),          // bottom-center
+                vec2( offset_w, -offset_h)           // bottom-right
+            );
 
-                vec3 col = vec3(0.0f);
+            vec3 col = vec3(0.0f);
 
-                for (int i = 0; i < 9; i++)
-                    col += vec3(texture(screenTexture, uv.st + offsets[i])) * kernel[i];
+            for (int i = 0; i < 9; i++)
+                col += vec3(texture(screenTexture, uv.st + offsets[i])) * kernel[i];
 
-                color = vec4(col, color.a)");
+            color = vec4(col, color.a)");
 
             return color;
         }

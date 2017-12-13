@@ -1,7 +1,6 @@
-﻿using System;
-using AlienEngine.ASL;
+﻿using AlienEngine.ASL;
 
-namespace AlienEngine.Shaders.Samples
+namespace AlienEngine.Core.Shaders.Samples
 {
     [Version("330 core")]
     public class TexturedUIFragmentShader : FragmentShader

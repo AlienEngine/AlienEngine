@@ -128,11 +128,11 @@ namespace AlienEngine.Imaging
 
             _program.Bind();
             _program.SetUniform("pcm_matrix", _camera.CubemapMatrix * _camera.ProjectionMatrix);
-            _program.SetUniform("textureCubemap", GL.COLOR_TEXTURE_UNIT_INDEX);
+            _program.SetUniform("textureCubemap", GL.DIFFUSE_TEXTURE_UNIT_INDEX);
 
             GL.BindVertexArray(_cube.VAO);
 
-            Bind(GL.COLOR_TEXTURE_UNIT_INDEX);
+            Bind(GL.DIFFUSE_TEXTURE_UNIT_INDEX);
             _cube.Render();
             Unbind();
 

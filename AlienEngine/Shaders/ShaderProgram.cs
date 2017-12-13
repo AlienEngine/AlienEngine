@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace AlienEngine.Core.Graphics.Shaders
+namespace AlienEngine.Core.Shaders
 {
     public class ShaderProgram : IDisposable
     {
@@ -84,7 +84,7 @@ namespace AlienEngine.Core.Graphics.Shaders
         private void _compile()
         {
             // Setting default globals
-            SetGlobal("MAX_NUMBER_OF_LIGHTS", Math.Max(1, Game.Game.Instance.CurrentScene.Lights.Length).ToString());
+            SetGlobal(GL.MAX_NUMBER_OF_LIGHTS, Math.Max(1, Game.Game.Instance.CurrentScene.Lights.Length).ToString());
 
             _program = GL.CreateProgram();
 
