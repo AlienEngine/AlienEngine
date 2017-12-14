@@ -3,9 +3,11 @@ using AlienEngine.ASL;
 
 namespace AlienEngine.Core.Graphics.Shaders.Samples
 {
-    [Version(330)]
+    [Version("330 core")]
     internal class DiffuseFragmentShader : FragmentShader
     {
+        [Out] vec4 FragColor;
+
         #region Structs
         // --------------------
         // Material state
@@ -55,6 +57,16 @@ namespace AlienEngine.Core.Graphics.Shaders.Samples
             public uint shadingMode;
             public float shininess;
             public float shininessStrength;
+            public sampler2D textureAmbient;
+            public sampler2D textureDiffuse;
+            public sampler2D textureDisplacement;
+            public sampler2D textureEmissive;
+            public sampler2D textureHeight;
+            public sampler2D textureLightMap;
+            public sampler2D textureNormal;
+            public sampler2D textureOpacity;
+            public sampler2D textureReflection;
+            public sampler2D textureSpecular;
         }
 
         // --------------------
@@ -98,7 +110,7 @@ namespace AlienEngine.Core.Graphics.Shaders.Samples
         #region Lights
         // Lights
         [Uniform]
-        [ArraySize("MAX_NUMBER_OF_LIGHTS")]
+        [ArraySize(1)]
         LightState[] lights;
         // Number of lights
         [Uniform]
@@ -110,27 +122,6 @@ namespace AlienEngine.Core.Graphics.Shaders.Samples
         [Uniform]
         MaterialState materialState;
         #endregion
-
-        [Uniform]
-        sampler2D textureAmbient;
-        [Uniform]
-        sampler2D textureDiffuse;
-        [Uniform]
-        sampler2D textureDisplacement;
-        [Uniform]
-        sampler2D textureEmissive;
-        [Uniform]
-        sampler2D textureHeight;
-        [Uniform]
-        sampler2D textureLightMap;
-        [Uniform]
-        sampler2D textureNormal;
-        [Uniform]
-        sampler2D textureOpacity;
-        [Uniform]
-        sampler2D textureReflection;
-        [Uniform]
-        sampler2D textureSpecular;
 
         #region Camera informations
         //[Uniform]
@@ -156,12 +147,21 @@ namespace AlienEngine.Core.Graphics.Shaders.Samples
         vec2 c_depthDistances;
         #endregion
 
-        vec4 CalcLightInternal(LightState light, vec3 direction, vec3 normal)
+        vec4 CalcLightInternal(LightState light, vec3 direction, vec3 normal, vec2 uv)
         {
-            vec4 mat = (materialState.hasColorAmbient ? materialState.colorAmbient : new vec4(1));
-            vec4 AmbientColor = new vec4(light.AmbientColor.rgb * mat.rgb, light.AmbientColor.a * mat.a);
-            vec4 DiffuseColor = new vec4(0, 0, 0, 0);
-            vec4 SpecularColor = new vec4(0, 0, 0, 0);
+            vec3 DiffuseColor = new vec3(0);
+            vec3 SpecularColor = new vec3(0);
+
+            vec3 _mat = (materialState.hasColorAmbient ? materialState.colorAmbient.rgb : new vec3(0));
+            vec3 dTex = (materialState.hasTextureDiffuse ? new vec3(texture(materialState.textureDiffuse, uv)) : new vec3(1));
+            vec3 sTex = (materialState.hasTextureSpecular ? new vec3(texture(materialState.textureSpecular, uv)) : new vec3(1));
+
+            vec3 AmbientColor = light.AmbientColor.rgb * _mat;
+
+            if (materialState.hasTextureDiffuse)
+            {
+                AmbientColor = AmbientColor * dTex;
+            }
 
             if (materialState.hasColorDiffuse)
             {
@@ -169,7 +169,12 @@ namespace AlienEngine.Core.Graphics.Shaders.Samples
 
                 if (diffuseFactor > 0)
                 {
-                    DiffuseColor = new vec4(light.DiffuseColor.rgb * materialState.colorDiffuse.rgb * diffuseFactor, light.DiffuseColor.a * materialState.colorDiffuse.a);
+                    DiffuseColor = light.DiffuseColor.rgb * materialState.colorDiffuse.rgb * diffuseFactor;
+
+                    if (materialState.hasTextureDiffuse)
+                    {
+                        DiffuseColor = DiffuseColor * dTex;
+                    }
 
                     if (materialState.hasColorSpecular)
                     {
@@ -182,29 +187,34 @@ namespace AlienEngine.Core.Graphics.Shaders.Samples
                         if (specularFactor > 0)
                         {
                             specularFactor = pow(specularFactor, materialState.shininess);
-                            SpecularColor = new vec4(light.SpecularColor.rgb * materialState.colorSpecular.rgb * materialState.shininessStrength * specularFactor, light.SpecularColor.a * materialState.colorSpecular.a);
+                            SpecularColor = light.SpecularColor.rgb * materialState.colorSpecular.rgb * materialState.shininessStrength * specularFactor;
+
+                            if (materialState.hasTextureSpecular)
+                            {
+                                SpecularColor = SpecularColor * sTex;
+                            }
                         }
                     }
                 }
             }
 
-            vec4 color = (AmbientColor + DiffuseColor + SpecularColor);
+            vec3 color = (AmbientColor + DiffuseColor + SpecularColor) * light.Intensity;
 
-            return new vec4(color.rgb * light.Intensity, color.a);
+            return new vec4(color, 1);
         }
 
-        vec4 CalcDirectionalLight(LightState light, vec3 Normal)
+        vec4 CalcDirectionalLight(LightState light, vec3 normal, vec2 uv)
         {
-            return CalcLightInternal(light, light.Direction, Normal);
+            return CalcLightInternal(light, light.Direction, normal, uv);
         }
 
-        vec4 CalcPointLight(LightState light, vec3 Normal)
+        vec4 CalcPointLight(LightState light, vec3 normal, vec2 uv)
         {
             vec3 LightDirection = position - light.Position;
             float Distance = length(LightDirection);
             LightDirection = normalize(LightDirection);
 
-            vec4 Color = CalcLightInternal(light, LightDirection, Normal);
+            vec4 Color = CalcLightInternal(light, LightDirection, normal, uv);
             float Attenuation = light.AttenuationFactors.x +
                                 light.AttenuationFactors.y * Distance +
                                 light.AttenuationFactors.z * Distance * Distance;
@@ -212,7 +222,7 @@ namespace AlienEngine.Core.Graphics.Shaders.Samples
             return Color / Attenuation;
         }
 
-        vec4 CalcSpotLight(LightState light, vec3 Normal)
+        vec4 CalcSpotLight(LightState light, vec3 normal, vec2 uv)
         {
             vec3 LightToPixel = normalize(position - light.Position);
             float SpotFactor = max(0.0f, dot(LightToPixel, normalize(light.Direction)));
@@ -221,51 +231,52 @@ namespace AlienEngine.Core.Graphics.Shaders.Samples
             {
                 float spotValue = smoothstep(light.CutOff.x, light.CutOff.y, SpotFactor);
                 float spotAttenuation = pow(spotValue, light.FallOffExponent);
-                vec4 Color = CalcPointLight(light, Normal);
+                vec4 Color = CalcPointLight(light, normal, uv);
                 return Color * spotAttenuation;//(1.0f - (1.0f - SpotFactor) * 1.0f / (1.0f - light.CutOff.x));
             }
             else
             {
-                return new vec4(0, 0, 0, 0);
+                return new vec4(0, 0, 0, 1);
             }
         }
 
         void main()
         {
+            if (materialState.hasTextureDiffuse)
+            {
+                vec4 textureDiffuse = texture(materialState.textureDiffuse, uv);
+                if (textureDiffuse.a < 0.1f)
+                {
+                    __output("discard");
+                }
+            }
+
             vec3 _normal = normalize(normal);
             vec2 _uv = uv * materialState.textureTilling;
-            vec4 _totalLight = new vec4(0);
+            vec4 _totalLight = new vec4(0, 0, 0, 1);
 
             for (int i = 0; i < lights_nb; i++)
             {
                 // If it is a spot light
                 if (lights[i].Type == 1)
                 {
-                    _totalLight += CalcSpotLight(lights[i], _normal);
+                    _totalLight += CalcSpotLight(lights[i], _normal, _uv);
                 }
 
                 // If it is a directional light
                 if (lights[i].Type == 2)
                 {
-                    _totalLight += CalcDirectionalLight(lights[i], _normal);
+                    _totalLight += CalcDirectionalLight(lights[i], _normal, _uv);
                 }
 
                 // If it is a point light
                 if (lights[i].Type == 3)
                 {
-                    _totalLight += CalcPointLight(lights[i], _normal);
+                    _totalLight += CalcPointLight(lights[i], _normal, _uv);
                 }
             }
 
-            // Diffuse Texture Light Intensity
-            if (materialState.hasTextureDiffuse)
-            {
-                gl_FragColor = clamp(_totalLight * texture(textureDiffuse, _uv), 0, 1);
-            }
-            else
-            {
-                gl_FragColor = _totalLight;
-            }
+            FragColor = _totalLight;
         }
     }
 }

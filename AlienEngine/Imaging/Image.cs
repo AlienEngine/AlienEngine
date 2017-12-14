@@ -292,7 +292,11 @@ namespace AlienEngine.Imaging
         {
             if (!disposedValue)
             {
-                _i.Dispose();
+                if (_i != null)
+                {
+                    _i.Dispose();
+                }
+
                 disposedValue = true;
             }
         }

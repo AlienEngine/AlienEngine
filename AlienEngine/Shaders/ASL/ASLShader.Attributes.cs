@@ -102,12 +102,12 @@ namespace AlienEngine.ASL
         [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
         public sealed class VersionAttribute : Attribute
         {
-            public VersionAttribute(int version)
+            public VersionAttribute(string version)
             {
                 Version = version;
             }
 
-            public int Version { get; }
+            public string Version { get; }
         }
 
         /// <summary>

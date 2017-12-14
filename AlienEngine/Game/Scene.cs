@@ -267,13 +267,21 @@ namespace AlienEngine.Core.Game
         protected virtual void OnAddGameElement()
         { }
 
+        protected virtual void BeforeRender()
+        { }
+
         /// <summary>
         /// Renders the current scene.
         /// </summary>
         internal void Render()
         {
+            BeforeRender();
             RendererManager.RenderAll();
+            AfterRender();
         }
+
+        protected virtual void AfterRender()
+        { }
 
         /// <summary>
         /// Process physics simulation for one frame.

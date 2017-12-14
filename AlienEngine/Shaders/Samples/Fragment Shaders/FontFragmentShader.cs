@@ -2,6 +2,7 @@
 
 namespace AlienEngine.Shaders.Samples
 {
+    [Version("330 core")]
     public class FontFragmentShader : FragmentShader
     {
         [In] vec2 texCoords;

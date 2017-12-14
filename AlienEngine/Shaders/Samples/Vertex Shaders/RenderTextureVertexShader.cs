@@ -4,7 +4,7 @@ using System;
 
 namespace AlienEngine.Core.Graphics.Shaders
 {
-    [Version(330)]
+    [Version("330 core")]
     internal class RenderTextureVertexShader : VertexShader
     {
         #region VAO Objects

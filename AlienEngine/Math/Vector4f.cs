@@ -20,6 +20,7 @@
 using System;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
+using ZeroFormatter;
 
 namespace AlienEngine
 {
@@ -29,26 +30,31 @@ namespace AlienEngine
     [Serializable]
     [TypeConverter(typeof(StructTypeConverter<Vector4f>))]
     [StructLayout(LayoutKind.Sequential)]
+    [ZeroFormattable]
     public struct Vector4f : IEquatable<Vector4f>, ILoadFromString
     {
         /// <summary>
         /// The X component of the Vector4f.
         /// </summary>
+        [Index(0)]
         public float X;
 
         /// <summary>
         /// The Y component of the Vector4f.
         /// </summary>
+        [Index(1)]
         public float Y;
 
         /// <summary>
         /// The Z component of the Vector4f.
         /// </summary>
+        [Index(2)]
         public float Z;
 
         /// <summary>
         /// The W component of the Vector4f.
         /// </summary>
+        [Index(3)]
         public float W;
 
         /// <summary>

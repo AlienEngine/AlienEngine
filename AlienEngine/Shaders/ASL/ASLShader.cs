@@ -93,11 +93,11 @@ namespace AlienEngine.ASL
 
         private static readonly Dictionary<string, string> _globalNames = new Dictionary<string, string>();
 
-        public static readonly int DefaultShaderVersion = 330;
+        public static readonly string DefaultShaderVersion = "330 core";
 
         public static readonly bool DefaultDebugBehavior = false;
 
-        internal int Version
+        internal string Version
         {
             get
             {

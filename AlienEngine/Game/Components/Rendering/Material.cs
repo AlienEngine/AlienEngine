@@ -32,7 +32,7 @@ namespace AlienEngine
             Fresnel = 10
         }
 
-        public int TextureTilling;
+        public int TextureTilling = 1;
         public MaterialBlendMode BlendMode;
         public float BumpScaling;
         public Color4 ColorAmbient;
@@ -147,16 +147,16 @@ namespace AlienEngine
             for (int i = 0; i < max_nb; i++)
             {
                 var light = ligths[i].GetComponent<Light>();
-                ShaderProgram.SetUniform(string.Format("lights[{0}].Type", i), (int)light.Type);
-                ShaderProgram.SetUniform(string.Format("lights[{0}].AmbientColor", i), light.AmbientColor);
-                ShaderProgram.SetUniform(string.Format("lights[{0}].DiffuseColor", i), light.DiffuseColor);
-                ShaderProgram.SetUniform(string.Format("lights[{0}].SpecularColor", i), light.SpecularColor);
-                ShaderProgram.SetUniform(string.Format("lights[{0}].Intensity", i), light.Intensity);
-                ShaderProgram.SetUniform(string.Format("lights[{0}].Direction", i), light.Direction);
-                ShaderProgram.SetUniform(string.Format("lights[{0}].Position", i), ligths[i].WorldTransform.Translation);
-                ShaderProgram.SetUniform(string.Format("lights[{0}].AttenuationFactors", i), light.AttenuationFactors);
-                ShaderProgram.SetUniform(string.Format("lights[{0}].FallOffExponent", i), light.FallOffExponent);
-                ShaderProgram.SetUniform(string.Format("lights[{0}].CutOff", i), new Vector2f(MathHelper.Cos(light.FallOffAngles.X), MathHelper.Cos(light.FallOffAngles.Y)));
+                ShaderProgram.SetUniform($"lights[{i}].Type", (int)light.Type);
+                ShaderProgram.SetUniform($"lights[{i}].AmbientColor", light.AmbientColor);
+                ShaderProgram.SetUniform($"lights[{i}].DiffuseColor", light.DiffuseColor);
+                ShaderProgram.SetUniform($"lights[{i}].SpecularColor", light.SpecularColor);
+                ShaderProgram.SetUniform($"lights[{i}].Intensity", light.Intensity);
+                ShaderProgram.SetUniform($"lights[{i}].Direction", light.Direction);
+                ShaderProgram.SetUniform($"lights[{i}].Position", ligths[i].WorldTransform.Translation);
+                ShaderProgram.SetUniform($"lights[{i}].AttenuationFactors", light.AttenuationFactors);
+                ShaderProgram.SetUniform($"lights[{i}].FallOffExponent", light.FallOffExponent);
+                ShaderProgram.SetUniform($"lights[{i}].CutOff", new Vector2f(MathHelper.Cos(light.FallOffAngles.X), MathHelper.Cos(light.FallOffAngles.Y)));
             }
 
             // Sets Camera informations
@@ -218,19 +218,19 @@ namespace AlienEngine
 
             if (HasTextureDiffuse)
             {
-                ShaderProgram.SetUniform("textureDiffuse", GL.COLOR_TEXTURE_UNIT_INDEX);
+                ShaderProgram.SetUniform("materialState.textureDiffuse", GL.COLOR_TEXTURE_UNIT_INDEX);
                 TextureDiffuse.Bind(GL.COLOR_TEXTURE_UNIT_INDEX);
             }
 
             if (HasTextureNormal)
             {
-                ShaderProgram.SetUniform("textureNormal", GL.NORMAL_TEXTURE_UNIT_INDEX);
+                ShaderProgram.SetUniform("materialState.textureNormal", GL.NORMAL_TEXTURE_UNIT_INDEX);
                 TextureNormal.Bind(GL.NORMAL_TEXTURE_UNIT_INDEX);
             }
 
             if (HasTextureDisplacement)
             {
-                ShaderProgram.SetUniform("textureDisplacement", GL.DISPLACEMENT_TEXTURE_UNIT_INDEX);
+                ShaderProgram.SetUniform("materialState.textureDisplacement", GL.DISPLACEMENT_TEXTURE_UNIT_INDEX);
                 TextureDisplacement.Bind(GL.DISPLACEMENT_TEXTURE_UNIT_INDEX);
             }
         }

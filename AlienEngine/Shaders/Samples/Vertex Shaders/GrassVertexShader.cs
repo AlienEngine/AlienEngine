@@ -4,7 +4,7 @@ using System;
 
 namespace AlienEngine.Core.Graphics.Shaders.Samples
 {
-    [Version(330)]
+    [Version("330 core")]
     internal class GrassVertexShader : VertexShader
     {
         #region VAO Objects

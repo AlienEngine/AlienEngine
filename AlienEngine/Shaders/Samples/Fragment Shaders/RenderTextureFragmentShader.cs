@@ -3,12 +3,14 @@ using System;
 
 namespace AlienEngine.Core.Graphics.Shaders
 {
-    [Version(330)]
+    [Version("330 core")]
     internal class RenderTextureFragmentShader : FragmentShader
     {
+        [Out] vec4 FragColor;
+
         [In] vec2 uv;
 
-        [Uniform] sampler2D texture;
+        [Uniform] sampler2D screenTexture;
         [Uniform] int postEffectMode;
         [Uniform] int width;
         [Uniform] int height;
@@ -35,7 +37,7 @@ namespace AlienEngine.Core.Graphics.Shaders
                 vec3 col = vec3(0.0f);
 
                 for (int i = 0; i < 9; i++)
-                    col += vec3(texture(texture, uv.st + offsets[i])) * kernel[i];
+                    col += vec3(texture(screenTexture, uv.st + offsets[i])) * kernel[i];
 
                 color = vec4(col, color.a)");
 
@@ -44,7 +46,7 @@ namespace AlienEngine.Core.Graphics.Shaders
 
         void main()
         {
-            vec4 color = texture(texture, uv);
+            vec4 color = texture(screenTexture, uv);
 
             switch (postEffectMode)
             {
@@ -84,7 +86,7 @@ namespace AlienEngine.Core.Graphics.Shaders
                     break;
             }
 
-            gl_FragColor = new vec4(color.rgb, 1.0f);
+            FragColor = new vec4(color.rgb, 1.0f);
         }
     }
 }

@@ -63,9 +63,7 @@ namespace AlienEngine.Core.Graphics.Shaders
 
             StringBuilder globalsString = new StringBuilder();
             foreach (var g in _globals)
-            {
                 globalsString.AppendLine("#define " + g.Key + " " + g.Value);
-            }
 
             string fullsrc = Regex.Replace(source, @"\#version (.+)\r\n", "#version $1\r\n" + globalsString);
 

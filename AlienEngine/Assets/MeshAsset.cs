@@ -1,4 +1,5 @@
-﻿using AlienEngine.Core.Graphics;
+﻿using AlienEngine.Core.Assets.Mesh;
+using AlienEngine.Core.Graphics;
 using Assimp;
 using System;
 using System.Collections.Generic;
@@ -20,40 +21,19 @@ namespace AlienEngine.Core.Assets
         /// The source file of this <see cref="MeshAsset"/>.
         /// </summary>
         [Index(0)]
-        private string _sourceMesh;
+        public virtual string Source { get; protected set; }
 
         /// <summary>
         /// The file extension handled by this asset.
         /// </summary>
-        [Index(1)]
-        private string _extension = "aemesh";
-
-        /// <summary>
-        /// Gets the parent <see cref="MeshAsset"/> of this one.
-        /// </summary>
-        /// <remarks>
-        /// If this <see cref="MeshAsset"/> is the root node, <see cref="Parent"/> = <see cref="null"/>.
-        /// </remarks>
-        [Index(2)]
-        private MeshAsset _parent;
+        [IgnoreFormat]
+        public string Extension => "aemesh";
 
         /// <summary>
         /// The list of childs in this <see cref="MeshAsset"/>.
         /// </summary>
-        [Index(3)]
-        private List<MeshAsset> _childs;
-
-        /// <summary>
-        /// The list of mesh vertices in this <see cref="MeshAsset"/>.
-        /// </summary>
-        [Index(4)]
-        private List<Vertex> _vertices;
-
-        /// <summary>
-        /// The list of mesh indices in this <see cref="MeshAsset"/>.
-        /// </summary>
-        [Index(5)]
-        private List<int> _indices;
+        [Index(1)]
+        public virtual List<MeshData> Childs { get; protected set; }
 
         /// <summary>
         /// The type of data handled by this asset.
@@ -62,40 +42,18 @@ namespace AlienEngine.Core.Assets
         public AssetTypes Type => AssetTypes.Mesh;
 
         /// <summary>
-        /// The source file of this <see cref="MeshAsset"/>.
+        /// Gets the merged <see cref="MeshData"/>.
         /// </summary>
-        public string Source => _sourceMesh;
-
-        /// <summary>
-        /// The file extension handled by this asset.
-        /// </summary>
-        public string Extension => _extension;
-
-        /// <summary>
-        /// Gets the parent <see cref="MeshAsset"/> of this one.
-        /// </summary>
-        /// <remarks>
-        /// If this <see cref="MeshAsset"/> is the root node, <see cref="Parent"/> = <see cref="null"/>.
-        /// </remarks>
-        public MeshAsset Parent => _parent;
-
-        /// <summary>
-        /// The list of childs in this <see cref="MeshAsset"/>.
-        /// </summary>
-        public MeshAsset[] Childs => _childs.ToArray();
-
-        /// <summary>
-        /// Gets the merged <see cref="MeshAsset"/> data.
-        /// </summary>
-        public MeshAsset Merged
+        [IgnoreFormat]
+        public MeshData Merged
         {
             get
             {
-                MeshAsset result = new MeshAsset(Source);
-                foreach (var mesh in _childs)
+                MeshData result = new MeshData(Source);
+                foreach (var mesh in Childs)
                 {
-                    result._vertices.AddRange(mesh.Vertices);
-                    result._indices.AddRange(mesh.Indices);
+                    result.Vertices.AddRange(mesh.Vertices);
+                    result.Indices.AddRange(mesh.Indices);
                 }
 
                 return result;
@@ -103,91 +61,36 @@ namespace AlienEngine.Core.Assets
         }
 
         /// <summary>
-        /// The list of vertices.
+        /// Creates a new <see cref="MeshAsset"/> instance.
         /// </summary>
-        public Vertex[] Vertices => _vertices.ToArray();
-
-        /// <summary>
-        /// The list of indices.
-        /// </summary>
-        public int[] Indices => _indices.ToArray();
-
-        /// <summary>
-        /// Gets a list of vertices positions in this <see cref="MeshAsset"/>.
-        /// </summary>
-        public Vector3f[] VerticesPositions
+        public MeshAsset()
         {
-            get
-            {
-                List<Vector3f> collection = new List<Vector3f>();
-                foreach (var vertice in Vertices)
-                {
-                    collection.Add(vertice.Position);
-                }
+            Childs = new List<MeshData>();
 
-                return collection.ToArray();
-            }
-        }
-
-        /// <summary>
-        /// Gets a list of vertices normals in this <see cref="MeshAsset"/>.
-        /// </summary>
-        public Vector3f[] VerticesNormals
-        {
-            get
-            {
-                List<Vector3f> collection = new List<Vector3f>();
-                foreach (var vertice in Vertices)
-                {
-                    collection.Add(vertice.Normal);
-                }
-
-                return collection.ToArray();
-            }
-        }
-
-        /// <summary>
-        /// Gets a list of vertices texture coordinates in this <see cref="MeshAsset"/>.
-        /// </summary>
-        public Vector2f[] VerticesUvs
-        {
-            get
-            {
-                List<Vector2f> collection = new List<Vector2f>();
-                foreach (var vertice in Vertices)
-                {
-                    collection.Add(vertice.UV);
-                }
-
-                return collection.ToArray();
-            }
+            Source = string.Empty;
         }
 
         /// <summary>
         /// Creates a new <see cref="MeshAsset"/> instance.
         /// </summary>
-        private MeshAsset(string source)
+        private MeshAsset(string source): this()
         {
-            _vertices = new List<Vertex>();
-            _indices = new List<int>();
-
-            _sourceMesh = source;
-            _childs = new List<MeshAsset>();
-            _parent = null;
+            Source = source;
         }
 
         /// <summary>
         /// Add a new child in the list.
         /// </summary>
         /// <param name="child">The child to add.</param>
-        private void AddChild(MeshAsset child)
+        private void AddChild(MeshData child)
         {
-            _childs.Add(child);
+            child.SetParent(this);
+            Childs.Add(child);
         }
 
-        private static MeshAsset ComputeAssetChildrens(ref Scene scene, MeshAsset element, Node node)
+        private static MeshAsset ComputeAssetChildrens(ref Scene scene, ref MeshAsset element, Node node)
         {
-            var _tempAsset = new MeshAsset(node.Name);
+            var _tempAsset = new MeshData(node.Name);
 
             if (node.HasMeshes)
             {
@@ -209,7 +112,7 @@ namespace AlienEngine.Core.Assets
                             Vector3f tn = (Vector3f)(mesh.HasTangentBasis ? mesh.Tangents[j] : Zero3D);
                             Vector3f btn = (Vector3f)(mesh.HasTangentBasis ? mesh.BiTangents[j] : Zero3D);
 
-                            _tempAsset._vertices.Add(new Vertex(pos, new Vector2f(uv), normal));
+                            _tempAsset.Vertices.Add(new Vertex(pos, new Vector2f(uv), normal));
                         }
 
                         // Populate the index buffer
@@ -218,9 +121,9 @@ namespace AlienEngine.Core.Assets
                             Assimp.Face face = mesh.Faces[j];
                             // TODO: Find a suitable way to draw vertices...
                             // Now only support triangulated faces
-                            _tempAsset._indices.Add(face.Indices[0]);
-                            _tempAsset._indices.Add(face.Indices[1]);
-                            _tempAsset._indices.Add(face.Indices[2]);
+                            _tempAsset.Indices.Add(face.Indices[0]);
+                            _tempAsset.Indices.Add(face.Indices[1]);
+                            _tempAsset.Indices.Add(face.Indices[2]);
                         }
                     }
                 }
@@ -228,12 +131,12 @@ namespace AlienEngine.Core.Assets
 
             if (node.HasChildren)
                 for (int i = 0; i < node.ChildCount; i++)
-                    ComputeAssetChildrens(ref scene, _tempAsset, node.Children[i]);
+                    if (node.Children[i].HasMeshes) ComputeAssetChildrens(ref scene, ref element, node.Children[i]);
 
             if (element != null)
                 element.AddChild(_tempAsset);
 
-            return _tempAsset;
+            return element;
         }
 
         /// <summary>
@@ -265,10 +168,10 @@ namespace AlienEngine.Core.Assets
 
             try
             {
-                Scene scene = importer.ImportFile(meshFile, PostProcessSteps.Triangulate | PostProcessSteps.SortByPrimitiveType);
+                Scene scene = importer.ImportFile(meshFile, PostProcessSteps.Triangulate | PostProcessSteps.SortByPrimitiveType | PostProcessSteps.CalculateTangentSpace | PostProcessSteps.Debone);
 
-                MeshAsset asset = ComputeAssetChildrens(ref scene, null, scene.RootNode);
-                asset._sourceMesh = meshFile;
+                MeshAsset asset = new MeshAsset(meshFile);
+                asset = ComputeAssetChildrens(ref scene, ref asset, scene.RootNode);
 
                 return asset;
             }
@@ -285,8 +188,11 @@ namespace AlienEngine.Core.Assets
                 filePath = filePath + $".{Extension}";
 
             StringBuilder file = new StringBuilder();
-            var data = ZeroFormatterSerializer.Serialize<IAsset>(this);
-            
+
+            var data = ZeroFormatterSerializer.Serialize(this);
+
+            var test = ZeroFormatterSerializer.Deserialize<MeshAsset>(data);
+
             if (!File.Exists(filePath) || force)
             {
                 File.WriteAllBytes(filePath, data);
@@ -296,5 +202,24 @@ namespace AlienEngine.Core.Assets
                 throw new Exception($"The file at \"{filePath}\" already exists");
             }
         }
+
+        //private List<Tuple<int, MeshAsset>> _computeSerializableAsset(int p, int o)
+        //{
+        //    var result = new List<Tuple<int, MeshAsset>>();
+
+        //    result.Add(new Tuple<int, MeshAsset>(o, this));
+
+        //    for (int i = 0, l = Childs.Count; i < l; i++)
+        //    {
+        //        var child = Childs[i];
+
+        //        if (child.Childs.Count > 0)
+        //            result.AddRange(child._computeSerializableAsset(i, p + 1));
+        //        else
+        //            result.Add(new Tuple<int, MeshAsset>(p + 1, child));
+        //    }
+
+        //    return result;
+        //}
     }
 }
