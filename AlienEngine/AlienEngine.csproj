@@ -248,6 +248,7 @@
     <Compile Include="Inputs\JoystickAxis.cs" />
     <Compile Include="Inputs\JoystickButton.cs" />
     <Compile Include="Inputs\JoystickState.cs" />
+    <Compile Include="IO\FileSystemManager.cs" />
     <Compile Include="Rendering\MaterialBlendMode.cs" />
     <Compile Include="Rendering\MaterialShadingMode.cs" />
     <Compile Include="Shaders\Samples\Fragment Shaders\DiffuseFragmentShader.cs" />
