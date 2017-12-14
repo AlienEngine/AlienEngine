@@ -1,12 +1,14 @@
 ﻿using AlienEngine.Core.Assets.Mesh;
+using AlienEngine.Core.Assets.Material;
 using AlienEngine.Core.Graphics;
 using Assimp;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using AlienEngine.ASL;
+using AlienEngine.Core.Rendering;
+using AlienEngine.Core.Shaders.Samples;
 using ZeroFormatter;
 
 namespace AlienEngine.Core.Assets
@@ -17,6 +19,8 @@ namespace AlienEngine.Core.Assets
     [ZeroFormattable]
     public class MeshAsset : IAsset
     {
+        private static List<string> _loadedTextures;
+
         /// <summary>
         /// The source file of this <see cref="MeshAsset"/>.
         /// </summary>
@@ -65,6 +69,8 @@ namespace AlienEngine.Core.Assets
         /// </summary>
         public MeshAsset()
         {
+            _loadedTextures = new List<string>();
+
             Childs = new List<MeshData>();
 
             Source = string.Empty;
@@ -90,7 +96,7 @@ namespace AlienEngine.Core.Assets
 
         private static MeshAsset ComputeAssetChildrens(ref Scene scene, ref MeshAsset element, Node node)
         {
-            var _tempAsset = new MeshData(node.Name);
+            var tempAsset = new MeshData(node.Name);
 
             if (node.HasMeshes)
             {
@@ -98,6 +104,7 @@ namespace AlienEngine.Core.Assets
                 {
                     // Initialize assets
                     Assimp.Mesh mesh = scene.Meshes[node.MeshIndices[i]];
+                    Assimp.Material material = scene.Materials[mesh.MaterialIndex];
 
                     Assimp.Vector3D Zero3D = new Assimp.Vector3D(0f);
 
@@ -106,13 +113,13 @@ namespace AlienEngine.Core.Assets
                         // Populate the vertex attribute vectors
                         for (int j = 0; j < mesh.VertexCount; j++)
                         {
-                            Vector3f pos = (Vector3f)mesh.Vertices[j];
-                            Vector3f normal = (Vector3f)mesh.Normals[j];
+                            Vector3f pos = (Vector3f)(mesh.HasVertices ? mesh.Vertices[j] : Zero3D);
+                            Vector3f normal = (Vector3f)(mesh.HasNormals ? mesh.Normals[j] : Zero3D);
                             Vector3f uv = (Vector3f)(mesh.HasTextureCoords(0) ? mesh.TextureCoordinateChannels[0][j] : Zero3D);
                             Vector3f tn = (Vector3f)(mesh.HasTangentBasis ? mesh.Tangents[j] : Zero3D);
                             Vector3f btn = (Vector3f)(mesh.HasTangentBasis ? mesh.BiTangents[j] : Zero3D);
 
-                            _tempAsset.Vertices.Add(new Vertex(pos, new Vector2f(uv), normal));
+                            tempAsset.Vertices.Add(new Vertex(pos, new Vector2f(uv), normal));
                         }
 
                         // Populate the index buffer
@@ -121,10 +128,12 @@ namespace AlienEngine.Core.Assets
                             Assimp.Face face = mesh.Faces[j];
                             // TODO: Find a suitable way to draw vertices...
                             // Now only support triangulated faces
-                            _tempAsset.Indices.Add(face.Indices[0]);
-                            _tempAsset.Indices.Add(face.Indices[1]);
-                            _tempAsset.Indices.Add(face.Indices[2]);
+                            tempAsset.Indices.Add(face.Indices[0]);
+                            tempAsset.Indices.Add(face.Indices[1]);
+                            tempAsset.Indices.Add(face.Indices[2]);
                         }
+                        
+                        _initMaterials(material);
                     }
                 }
             }
@@ -134,9 +143,270 @@ namespace AlienEngine.Core.Assets
                     if (node.Children[i].HasMeshes) ComputeAssetChildrens(ref scene, ref element, node.Children[i]);
 
             if (element != null)
-                element.AddChild(_tempAsset);
+                element.AddChild(tempAsset);
 
             return element;
+        }
+
+        private static void _initMaterials(Assimp.Material material)
+        {
+            var materialData = new MaterialData();
+
+            if (material.HasBlendMode)
+            {
+                materialData.HasBlendMode = true;
+                materialData.BlendMode = (MaterialBlendMode)material.BlendMode;
+            }
+
+            if (material.HasBumpScaling)
+            {
+                materialData.HasBumpScaling = true;
+                materialData.BumpScaling = material.BumpScaling;
+            }
+
+            if (material.HasColorAmbient)
+            {
+                materialData.HasColorAmbient = true;
+                materialData.ColorAmbient = new Color4(material.ColorAmbient.R, material.ColorAmbient.G, material.ColorAmbient.B, material.ColorAmbient.A);
+            }
+
+            if (material.HasColorDiffuse)
+            {
+                materialData.HasColorDiffuse = true;
+                materialData.ColorDiffuse = new Color4(material.ColorDiffuse.R, material.ColorDiffuse.G, material.ColorDiffuse.B, material.ColorDiffuse.A);
+            }
+
+            if (material.HasColorEmissive)
+            {
+                materialData.HasColorEmissive = true;
+                materialData.ColorEmissive = new Color4(material.ColorEmissive.R, material.ColorEmissive.G, material.ColorEmissive.B, material.ColorEmissive.A);
+            }
+
+            if (material.HasColorReflective)
+            {
+                materialData.HasColorReflective = true;
+                materialData.ColorReflective = new Color4(material.ColorReflective.R, material.ColorReflective.G, material.ColorReflective.B, material.ColorReflective.A);
+            }
+
+            if (material.HasColorSpecular)
+            {
+                materialData.HasColorSpecular = true;
+                materialData.ColorSpecular = new Color4(material.ColorSpecular.R, material.ColorSpecular.G, material.ColorSpecular.B, material.ColorSpecular.A);
+            }
+
+            if (material.HasColorTransparent)
+            {
+                materialData.HasColorTransparent = true;
+                materialData.ColorTransparent = new Color4(material.ColorTransparent.R, material.ColorTransparent.G, material.ColorTransparent.B, material.ColorTransparent.A);
+            }
+
+            if (material.HasTextureAmbient)
+            {
+                materialData.HasTextureAmbient = true;
+                if (!_loadedTextures.Contains(material.TextureAmbient.FilePath))
+                {
+                    TextureAsset.From(material.TextureAmbient.FilePath).Serialize(material.TextureAmbient.FilePath, false);
+                    materialData.TextureAmbient = material.TextureAmbient.FilePath;
+                    _loadedTextures.Add(material.TextureAmbient.FilePath);
+                }
+                else
+                {
+                    materialData.TextureAmbient = material.TextureAmbient.FilePath;
+                }
+            }
+
+            if (material.HasTextureDiffuse)
+            {
+                materialData.HasTextureDiffuse = true;
+                if (!_loadedTextures.Contains(material.TextureDiffuse.FilePath))
+                {
+                    TextureAsset.From(material.TextureDiffuse.FilePath).Serialize(material.TextureDiffuse.FilePath, false);
+                    materialData.TextureDiffuse = material.TextureDiffuse.FilePath;
+                    _loadedTextures.Add(material.TextureDiffuse.FilePath);
+                }
+                else
+                {
+                    materialData.TextureDiffuse = material.TextureDiffuse.FilePath;
+                }
+            }
+
+            if (material.HasTextureDisplacement)
+            {
+                materialData.HasTextureDisplacement = true;
+                if (!_loadedTextures.Contains(material.TextureDisplacement.FilePath))
+                {
+                    TextureAsset.From(material.TextureDisplacement.FilePath).Serialize(material.TextureDisplacement.FilePath, false);
+                    materialData.TextureDisplacement = material.TextureDisplacement.FilePath;
+                    _loadedTextures.Add(material.TextureDisplacement.FilePath);
+                }
+                else
+                {
+                    materialData.TextureDisplacement = material.TextureDisplacement.FilePath;
+                }
+            }
+
+            if (material.HasTextureEmissive)
+            {
+                materialData.HasTextureEmissive = true;
+                if (!_loadedTextures.Contains(material.TextureEmissive.FilePath))
+                {
+                    TextureAsset.From(material.TextureEmissive.FilePath).Serialize(material.TextureEmissive.FilePath, false);
+                    materialData.TextureEmissive = material.TextureEmissive.FilePath;
+                    _loadedTextures.Add(material.TextureEmissive.FilePath);
+                }
+                else
+                {
+                    materialData.TextureEmissive = material.TextureEmissive.FilePath;
+                }
+            }
+
+            if (material.HasTextureHeight)
+            {
+                materialData.HasTextureHeight = true;
+                if (!_loadedTextures.Contains(material.TextureHeight.FilePath))
+                {
+                    TextureAsset.From(material.TextureHeight.FilePath).Serialize(material.TextureHeight.FilePath, false);
+                    materialData.TextureEmissive = material.TextureHeight.FilePath;
+                    _loadedTextures.Add(material.TextureHeight.FilePath);
+                }
+                else
+                {
+                    materialData.TextureHeight = material.TextureHeight.FilePath;
+                }
+            }
+
+            if (material.HasTextureLightMap)
+            {
+                materialData.HasTextureLightMap = true;
+                if (!_loadedTextures.Contains(material.TextureLightMap.FilePath))
+                {
+                    TextureAsset.From(material.TextureLightMap.FilePath).Serialize(material.TextureLightMap.FilePath, false);
+                    materialData.TextureLightMap = material.TextureLightMap.FilePath;
+                    _loadedTextures.Add(material.TextureLightMap.FilePath);
+                }
+                else
+                {
+                    materialData.TextureLightMap = material.TextureLightMap.FilePath;
+                }
+            }
+
+            if (material.HasTextureNormal)
+            {
+                materialData.HasTextureNormal = true;
+                if (!_loadedTextures.Contains(material.TextureNormal.FilePath))
+                {
+                    TextureAsset.From(material.TextureNormal.FilePath).Serialize(material.TextureNormal.FilePath, false);
+                    materialData.TextureNormal = material.TextureNormal.FilePath;
+                    _loadedTextures.Add(material.TextureNormal.FilePath);
+                }
+                else
+                {
+                    materialData.TextureNormal = material.TextureNormal.FilePath;
+                }
+            }
+
+            if (material.HasTextureOpacity)
+            {
+                materialData.HasTextureOpacity = true;
+                if (!_loadedTextures.Contains(material.TextureOpacity.FilePath))
+                {
+                    TextureAsset.From(material.TextureOpacity.FilePath).Serialize(material.TextureOpacity.FilePath, false);
+                    materialData.TextureOpacity = material.TextureOpacity.FilePath;
+                    _loadedTextures.Add(material.TextureOpacity.FilePath);
+                }
+                else
+                {
+                    materialData.TextureOpacity = material.TextureOpacity.FilePath;
+                }
+            }
+
+            if (material.HasTextureReflection)
+            {
+                materialData.HasTextureReflection = true;
+                if (!_loadedTextures.Contains(material.TextureReflection.FilePath))
+                {
+                    TextureAsset.From(material.TextureReflection.FilePath).Serialize(material.TextureReflection.FilePath, false);
+                    materialData.TextureReflection = material.TextureReflection.FilePath;
+                    _loadedTextures.Add(material.TextureReflection.FilePath);
+                }
+                else
+                {
+                    materialData.TextureReflection = material.TextureReflection.FilePath;
+                }
+            }
+
+            if (material.HasTextureSpecular)
+            {
+                materialData.HasTextureSpecular = true;
+                if (!_loadedTextures.Contains(material.TextureSpecular.FilePath))
+                {
+                    TextureAsset.From(material.TextureSpecular.FilePath).Serialize(material.TextureSpecular.FilePath, false);
+                    materialData.TextureSpecular = material.TextureSpecular.FilePath;
+                    _loadedTextures.Add(material.TextureSpecular.FilePath);
+                }
+                else
+                {
+                    materialData.TextureSpecular = material.TextureSpecular.FilePath;
+                }
+            }
+
+            if (material.HasName)
+            {
+                materialData.HasName = true;
+                materialData.Name = material.Name;
+            }
+
+            if (material.HasOpacity)
+            {
+                materialData.HasOpacity = true;
+                materialData.Opacity = material.Opacity;
+            }
+
+            if (material.HasReflectivity)
+            {
+                materialData.HasReflectivity = true;
+                materialData.Reflectivity = material.Reflectivity;
+            }
+
+            if (material.HasShadingMode)
+            {
+                materialData.HasShadingMode = true;
+                materialData.ShadingMode = (MaterialShadingMode)material.ShadingMode;
+            }
+
+            if (material.HasShininess)
+            {
+                materialData.HasShininess = true;
+                materialData.Shininess = material.Shininess;
+            }
+
+            if (material.HasShininessStrength)
+            {
+                materialData.HasShininessStrength = true;
+                materialData.ShininessStrength = material.ShininessStrength;
+            }
+
+            if (material.HasTwoSided)
+            {
+                materialData.HasTwoSided = true;
+                materialData.IsTwoSided = material.IsTwoSided;
+            }
+
+            if (material.HasWireFrame)
+            {
+                materialData.HasWireFrame = true;
+                materialData.IsWireFrameEnabled = material.IsWireFrameEnabled;
+            }
+
+            materialData.PropertyCount = material.PropertyCount;
+
+            materialData.ShaderData = new ShaderData()
+            {
+                VertexShader = new ASLShaderCompiler(new DiffuseVertexShader()).Shader,
+                FragmentShader = new ASLShaderCompiler(new DiffuseFragmentShader()).Shader
+            };
+
+
         }
 
         /// <summary>

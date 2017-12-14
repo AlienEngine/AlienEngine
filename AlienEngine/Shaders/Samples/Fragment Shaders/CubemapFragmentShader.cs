@@ -1,11 +1,6 @@
 ﻿using AlienEngine.ASL;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace AlienEngine.Core.Graphics.Shaders
+namespace AlienEngine.Core.Shaders.Samples
 {
     [Version("330 core")]
     internal class CubemapFragmentShader : FragmentShader

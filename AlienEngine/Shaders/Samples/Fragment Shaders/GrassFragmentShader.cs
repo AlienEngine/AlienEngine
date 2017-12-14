@@ -1,11 +1,6 @@
 ﻿using AlienEngine.ASL;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace AlienEngine.Core.Graphics.Shaders.Samples
+namespace AlienEngine.Core.Shaders.Samples
 {
     [Version("330 core")]
     public class GrassFragmentShader : FragmentShader
@@ -17,7 +12,7 @@ namespace AlienEngine.Core.Graphics.Shaders.Samples
         void main()
         {
             vec4 texColor = texture(grassTexture, uv);
-            if (texColor.a < 0.1)
+            if (texColor.a < 0.1f)
             {
                 __output("discard");
             }

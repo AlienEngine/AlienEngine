@@ -5,7 +5,7 @@ using AlienEngine.Core.Graphics.OpenGL;
 namespace AlienEngine.Core.Shaders.Samples
 {
     [Version("330 core")]
-    internal class DiffuseFragmentShader : FragmentShader
+    internal class DiffuseSpecularEmissiveFragmentShader : FragmentShader
     {
         [Out] vec4 FragColor;
 
@@ -152,9 +152,13 @@ namespace AlienEngine.Core.Shaders.Samples
         {
             vec3 AmbientColor = new vec3(0);
             vec3 DiffuseColor = new vec3(0);
+            vec3 SpecularColor = new vec3(0);
+            vec3 EmissiveColor = new vec3(0);
 
             vec3 aTex = (materialState.hasTextureAmbient ? new vec3(texture(materialState.textureAmbient, uv)) : new vec3(1));
             vec3 dTex = (materialState.hasTextureDiffuse ? new vec3(texture(materialState.textureDiffuse, uv)) : new vec3(1));
+            vec3 sTex = (materialState.hasTextureSpecular ? new vec3(texture(materialState.textureSpecular, uv)) : new vec3(1));
+            vec3 eTex = (materialState.hasTextureEmissive ? new vec3(texture(materialState.textureEmissive, uv)) : new vec3(1));
 
             if (materialState.hasColorAmbient)
             {
@@ -181,7 +185,37 @@ namespace AlienEngine.Core.Shaders.Samples
                 }
             }
 
-            vec3 color = (AmbientColor + DiffuseColor) * light.Intensity;
+            if (materialState.hasColorSpecular)
+            {
+                vec3 vertexToEye = normalize(c_position - position);
+                vec3 lv = -direction + vertexToEye;
+                vec3 halfway = lv / length(lv);
+                //vec3 lightReflect = normalize(reflect(direction, normal));
+                float specularFactor = max(0.0f, dot(normal, halfway));
+
+                if (specularFactor > 0)
+                {
+                    specularFactor = pow(specularFactor, materialState.shininess);
+                    SpecularColor = light.SpecularColor.rgb * materialState.colorSpecular.rgb * materialState.shininessStrength * specularFactor;
+
+                    if (materialState.hasTextureSpecular)
+                    {
+                        SpecularColor = SpecularColor * sTex;
+                    }
+                }
+            }
+
+            if (materialState.hasColorEmissive)
+            {
+                EmissiveColor = materialState.colorEmissive.rgb;
+
+                if (materialState.hasTextureEmissive)
+                {
+                    EmissiveColor = EmissiveColor * eTex;
+                }
+            }
+
+            vec3 color = (AmbientColor + DiffuseColor + SpecularColor + EmissiveColor) * light.Intensity;
 
             return color;
         }

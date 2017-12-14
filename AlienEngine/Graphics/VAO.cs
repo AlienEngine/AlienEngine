@@ -1,5 +1,5 @@
 ﻿using System;
-using AlienEngine.Core.Graphics.Shaders;
+using AlienEngine.Core.Shaders;
 using AlienEngine.Core.Graphics.OpenGL;
 using AlienEngine.Core.Resources;
 

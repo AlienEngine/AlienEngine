@@ -1,7 +1,7 @@
 ﻿using AlienEngine.ASL;
 using AlienEngine.Core.Graphics.OpenGL;
 
-namespace AlienEngine.Core.Graphics.Shaders
+namespace AlienEngine.Core.Shaders.Samples
 {
     internal class CubemapVertexShader : VertexShader
     {

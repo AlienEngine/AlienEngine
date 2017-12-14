@@ -131,11 +131,11 @@ namespace AlienEngine
 
             RendererManager.BackupState(RendererBackupMode.Blending);
             RendererManager.Blending();
-            texture.Bind(GL.COLOR_TEXTURE_UNIT_INDEX);
+            texture.Bind(GL.DIFFUSE_TEXTURE_UNIT_INDEX);
 
             _texturedUIShader.Bind();
             _texturedUIShader.SetPosition(new Vector3f(CorrectedPosition.X, CorrectedPosition.Y, 0));
-            _texturedUIShader.SetTexture(GL.COLOR_TEXTURE_UNIT_INDEX);
+            _texturedUIShader.SetTexture(GL.DIFFUSE_TEXTURE_UNIT_INDEX);
             _texturedUIShader.SetProjectionMatrix(_projectionMatrix);
 
             _quad.Render();

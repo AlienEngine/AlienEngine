@@ -1,8 +1,7 @@
-﻿using System;
-using AlienEngine.ASL;
+﻿using AlienEngine.ASL;
 using AlienEngine.Core.Graphics.OpenGL;
 
-namespace AlienEngine.Shaders.Samples
+namespace AlienEngine.Core.Shaders.Samples
 {
     [Version("330 core")]
     public class TexturedUIVertexShader : VertexShader

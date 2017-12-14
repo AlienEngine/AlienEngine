@@ -152,45 +152,48 @@ namespace AlienEngine.Core.Game
         /// <param name="gameElement">The <see cref="GameElement"/> to add.</param>
         public void AddGameElement(GameElement gameElement)
         {
-            gameElement.SetParentScene(this);
-
-            _gameElements.Add(gameElement);
-
-            if (gameElement.HasComponent<Light>())
+            if (!_gameElements.Contains(gameElement))
             {
-                _lights.Add(gameElement);
+                gameElement.SetParentScene(this);
+
+                _gameElements.Add(gameElement);
+
+                if (gameElement.HasComponent<Light>())
+                {
+                    _lights.Add(gameElement);
+                }
+
+                if (gameElement.HasComponent<Camera>())
+                {
+                    Camera cm = gameElement.GetComponent<Camera>();
+                    _cameras.Add(gameElement);
+
+                    if (cm.IsPrimary)
+                        _primaryCamera = gameElement;
+                }
+
+                if (gameElement.HasComponent<AudioSource>())
+                {
+                    _audioSources.Add(gameElement);
+                }
+
+                if (gameElement.HasComponent<AudioReverbZone>())
+                {
+                    _audioReverbZones.Add(gameElement);
+                }
+
+                if (gameElement.HasComponent<AudioListener>())
+                {
+                    _audioListener = gameElement;
+                }
+
+                foreach (GameElement child in gameElement.Childs)
+                {
+                    AddGameElement(child);
+                }
+
+                OnAddGameElement();
             }
-
-            if (gameElement.HasComponent<Camera>())
-            {
-                Camera cm = gameElement.GetComponent<Camera>();
-                _cameras.Add(gameElement);
-
-                if (cm.IsPrimary)
-                    _primaryCamera = gameElement;
-            }
-
-            if (gameElement.HasComponent<AudioSource>())
-            {
-                _audioSources.Add(gameElement);
-            }
-
-            if (gameElement.HasComponent<AudioReverbZone>())
-            {
-                _audioReverbZones.Add(gameElement);
-            }
-
-            if (gameElement.HasComponent<AudioListener>())
-            {
-                _audioListener = gameElement;
-            }
-
-            foreach (GameElement child in gameElement.Childs)
-            {
-                AddGameElement(child);
-            }
-
-            OnAddGameElement();
         }
 
         /// <summary>
