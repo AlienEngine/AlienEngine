@@ -49,7 +49,7 @@ namespace AlienEngine.Core.Game
         /// <summary>
         /// Defines if the <see cref="Game"/> has already started.
         /// </summary>
-        public bool Started => _hasStarted;
+        public bool Running => _hasStarted;
 
         /// <summary>
         /// Defines if the <see cref="Game"/> is paused.
@@ -144,9 +144,9 @@ namespace AlienEngine.Core.Game
         /// <summary>
         /// Pauses the <see cref="Game"/>.
         /// </summary>
-        public void Pause()
+        public void Pause(bool state = true)
         {
-            _isPaused = true;
+            _isPaused = state;
         }
 
         /// <summary>
