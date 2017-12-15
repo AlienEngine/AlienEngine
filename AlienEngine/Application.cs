@@ -122,7 +122,7 @@ namespace AlienEngine
                     rend = true;
 
                     // Sets the delta time
-                    Time.SetDelta(Game.Instance.Paused ? 0 : unprocessedTime / frameTime);
+                    Time.SetDelta(Game.Instance.Paused ? 0 : deltaTime);
 
                     // Update all game elements and components
                     Game.Instance.Update();
