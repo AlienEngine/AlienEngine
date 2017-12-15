@@ -21,9 +21,13 @@ namespace AlienEngine
 
         private FBO _screenFBO;
 
+        private static Application _instance;
+
         #endregion
 
         #region Properties
+
+        public static Application Instance => _instance;
 
         /// <summary>
         /// The game window.
@@ -37,8 +41,13 @@ namespace AlienEngine
         /// </summary>
         public Application()
         {
-            // Create the game window
-            _window = new GameWindow(GameSettings.GameWindowSize, GameSettings.GameWindowTitle);
+            if (_instance == null)
+            {
+                // Create the game window
+                _window = new GameWindow(GameSettings.GameWindowSize, GameSettings.GameWindowTitle);
+
+                _instance = this;
+            }
         }
 
         /// <summary>
@@ -47,19 +56,12 @@ namespace AlienEngine
         /// </summary>
         public static void Quit()
         {
-            // Stop the game
-            Game.Instance.Stop();
-
-            // Close the game window
-            Game.Instance.Window.Destroy();
-
-            // Stop the engine
-            Engine.Stop();
+            _instance._stop();
         }
 
         public void Start()
         {
-            if (Game.Instance.Started) return;
+            if (Game.Instance.Running) return;
             else _run();
         }
 
@@ -97,7 +99,7 @@ namespace AlienEngine
             Game.Instance.Start();
 
             // Run the rendering loop until the user has attempted to close the window.
-            while (Game.Instance.Started)
+            while (Game.Instance.Running)
             {
                 bool rend = false;
 
@@ -167,7 +169,7 @@ namespace AlienEngine
 
         private void _stop()
         {
-            if (!Game.Instance.Started) return;
+            if (!Game.Instance.Running) return;
             else Game.Instance.Stop();
         }
 
