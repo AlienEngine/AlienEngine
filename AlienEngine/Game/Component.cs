@@ -1,4 +1,6 @@
-﻿namespace AlienEngine
+﻿using System;
+
+namespace AlienEngine
 {
     /// <summary>
     /// Base class of all built-in and user defined
@@ -106,7 +108,7 @@
         /// </remarks>
         protected T GetComponent<T>() where T : Component
         {
-            return _gameElement?.GetComponent<T>();
+            return _gameElement != null ? _gameElement.GetComponent<T>() : null;
         }
 
         /// <summary>
@@ -116,7 +118,7 @@
         /// <typeparam name="T">The type of <see cref="Component"/> to return.</typeparam>
         protected T[] GetComponents<T>() where T : Component
         {
-            return _gameElement?.GetComponents<T>();
+            return _gameElement != null ? _gameElement.GetComponents<T>() : null;
         }
 
         /// <summary>
@@ -126,7 +128,7 @@
         /// <typeparam name="T">The type of <see cref="Component"/>.</typeparam>
         protected bool HasComponent<T>() where T : Component
         {
-            return _gameElement != null && _gameElement.HasComponent<T>();
+            return _gameElement != null ? _gameElement.HasComponent<T>() : false;
         }
 
         /// <summary>
@@ -138,7 +140,14 @@
         /// <param name="component">The instance of <typeparamref name="T"/> to find.</param>
         protected bool HasComponent<T>(T component) where T : Component
         {
-            return _gameElement != null && _gameElement.HasComponent(component);
+            return _gameElement != null ? _gameElement.HasComponent(component) : false;
+        }
+
+        protected event Action OnAttach;
+
+        internal void TriggerAttachEvent()
+        {
+            OnAttach?.Invoke();
         }
 
         internal void SetGameElement(GameElement gameElement)
@@ -207,9 +216,6 @@
         }
 
         #endregion
-
-        public virtual void OnAttach()
-        { }
 
         #endregion
     }
