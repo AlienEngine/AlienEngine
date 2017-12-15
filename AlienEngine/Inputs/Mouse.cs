@@ -58,6 +58,10 @@ namespace AlienEngine.Core.Inputs
             _currentButtons = new List<MouseButton>();
         }
 
+        public static void Init()
+        {
+        }
+
         public static void Update()
         {
             Point2d pos;

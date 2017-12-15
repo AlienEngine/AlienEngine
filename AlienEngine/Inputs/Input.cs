@@ -641,6 +641,11 @@ namespace AlienEngine
             });
         }
 
+        internal static void Init()
+        {
+            Mouse.Init();
+        }
+
         public static void Update()
         {
             Keyboard.Update();

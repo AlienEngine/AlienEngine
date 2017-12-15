@@ -214,7 +214,11 @@ namespace AlienEngine
             // Enable Multi Samples
             RendererManager.MultiSample();
 
+            // Enable depth mask
             RendererManager.DepthMask();
+
+            // Initialize inputs
+            Input.Init();
         }
 
         public void Render()
