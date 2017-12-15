@@ -57,7 +57,6 @@ namespace AlienEngine.Imaging
             _image = image;
             TextureID = 0;
             TextureTarget = target;
-            FlipY = flipY;
 
             LoadImage(image);
 
