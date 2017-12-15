@@ -1,9 +1,9 @@
 ﻿using AlienEngine.Core.Game;
 using AlienEngine.Core.Graphics.OpenGL;
-using AlienEngine.Core.Graphics.Shaders;
+using AlienEngine.Core.Rendering;
+using AlienEngine.Core.Shaders;
 using AlienEngine.Imaging;
 using System;
-using System.Runtime.InteropServices;
 
 namespace AlienEngine
 {
@@ -11,28 +11,7 @@ namespace AlienEngine
     {
         private ShaderProgram _shader;
 
-        public enum MaterialBlendMode : int
-        {
-            Default = 0,
-            Additive = 1
-        }
-
-        public enum MaterialShadingMode : int
-        {
-            None = 0,
-            Flat = 1,
-            Gouraud = 2,
-            Phong = 3,
-            Blinn = 4,
-            Toon = 5,
-            OrenNayar = 6,
-            Minnaert = 7,
-            CookTorrance = 8,
-            NoShading = 9,
-            Fresnel = 10
-        }
-
-        public int TextureTilling;
+        public int TextureTilling = 1;
         public MaterialBlendMode BlendMode;
         public float BumpScaling;
         public Color4 ColorAmbient;
@@ -103,7 +82,7 @@ namespace AlienEngine
         // TODO: Complete this implementation
         public void Use()
         {
-            var _camera = Game.CurrentScene.PrimaryCamera.GetComponent<Camera>();
+            var _camera = Game.Instance.CurrentScene.PrimaryCamera.GetComponent<Camera>();
 
             // Use the current shader program
             ShaderProgram.Bind();
@@ -141,27 +120,27 @@ namespace AlienEngine
             ShaderProgram.SetUniform("i_p_matrix", i_p_matrix);
 
             // Sets lights informations
-            var ligths = Game.CurrentScene.Lights;
+            var ligths = Game.Instance.CurrentScene.Lights;
             var max_nb = ligths.Length;
             ShaderProgram.SetUniform("lights_nb", max_nb);
             for (int i = 0; i < max_nb; i++)
             {
                 var light = ligths[i].GetComponent<Light>();
-                ShaderProgram.SetUniform(string.Format("lights[{0}].Type", i), (int)light.Type);
-                ShaderProgram.SetUniform(string.Format("lights[{0}].AmbientColor", i), light.AmbientColor);
-                ShaderProgram.SetUniform(string.Format("lights[{0}].DiffuseColor", i), light.DiffuseColor);
-                ShaderProgram.SetUniform(string.Format("lights[{0}].SpecularColor", i), light.SpecularColor);
-                ShaderProgram.SetUniform(string.Format("lights[{0}].Intensity", i), light.Intensity);
-                ShaderProgram.SetUniform(string.Format("lights[{0}].Direction", i), light.Direction);
-                ShaderProgram.SetUniform(string.Format("lights[{0}].Position", i), ligths[i].WorldTransform.Translation);
-                ShaderProgram.SetUniform(string.Format("lights[{0}].AttenuationFactors", i), light.AttenuationFactors);
-                ShaderProgram.SetUniform(string.Format("lights[{0}].FallOffExponent", i), light.FallOffExponent);
-                ShaderProgram.SetUniform(string.Format("lights[{0}].CutOff", i), new Vector2f(MathHelper.Cos(light.FallOffAngles.X), MathHelper.Cos(light.FallOffAngles.Y)));
+                ShaderProgram.SetUniform($"lights[{i}].Type", (int)light.Type);
+                ShaderProgram.SetUniform($"lights[{i}].AmbientColor", light.AmbientColor);
+                ShaderProgram.SetUniform($"lights[{i}].DiffuseColor", light.DiffuseColor);
+                ShaderProgram.SetUniform($"lights[{i}].SpecularColor", light.SpecularColor);
+                ShaderProgram.SetUniform($"lights[{i}].Intensity", light.Intensity);
+                ShaderProgram.SetUniform($"lights[{i}].Direction", light.Direction);
+                ShaderProgram.SetUniform($"lights[{i}].Position", ligths[i].WorldTransform.Translation);
+                ShaderProgram.SetUniform($"lights[{i}].AttenuationFactors", light.AttenuationFactors);
+                ShaderProgram.SetUniform($"lights[{i}].FallOffExponent", light.FallOffExponent);
+                ShaderProgram.SetUniform($"lights[{i}].CutOff", new Vector2f(MathHelper.Cos(MathHelper.Deg2Rad(light.FallOffAngles.X)), MathHelper.Cos(MathHelper.Deg2Rad(light.FallOffAngles.Y))));
             }
 
             // Sets Camera informations
-            ShaderProgram.SetUniform("c_position", Game.CurrentScene.PrimaryCamera.WorldTransform.Translation);
-            ShaderProgram.SetUniform("c_rotation", Game.CurrentScene.PrimaryCamera.WorldTransform.Rotation);
+            ShaderProgram.SetUniform("c_position", Game.Instance.CurrentScene.PrimaryCamera.WorldTransform.Translation);
+            ShaderProgram.SetUniform("c_rotation", Game.Instance.CurrentScene.PrimaryCamera.WorldTransform.Rotation);
             ShaderProgram.SetUniform("c_depthDistances", new Vector2f(_camera.Near, _camera.Far));
 
             // Sets material data
@@ -170,15 +149,20 @@ namespace AlienEngine
             // Sets material data disponibility informations
             ShaderProgram.SetUniform("materialState.hasColorAmbient", HasColorAmbient);
             ShaderProgram.SetUniform("materialState.hasColorDiffuse", HasColorDiffuse);
-            ShaderProgram.SetUniform("materialState.hasReflectivity", HasReflectivity);
-            ShaderProgram.SetUniform("materialState.hasShininessStrength", HasShininessStrength);
-            ShaderProgram.SetUniform("materialState.hasShininess", HasShininess);
-            ShaderProgram.SetUniform("materialState.hasOpacity", HasOpacity);
             ShaderProgram.SetUniform("materialState.hasColorSpecular", HasColorSpecular);
+            ShaderProgram.SetUniform("materialState.hasColorEmissive", HasColorEmissive);
+            ShaderProgram.SetUniform("materialState.hasShininess", HasShininess);
+            ShaderProgram.SetUniform("materialState.hasShininessStrength", HasShininessStrength);
+
+            ShaderProgram.SetUniform("materialState.hasTextureAmbient", HasTextureAmbient);
             ShaderProgram.SetUniform("materialState.hasTextureDiffuse", HasTextureDiffuse);
-            ShaderProgram.SetUniform("materialState.hasTextureNormal", HasTextureNormal);
             ShaderProgram.SetUniform("materialState.hasTextureSpecular", HasTextureSpecular);
+            ShaderProgram.SetUniform("materialState.hasTextureEmissive", HasTextureEmissive);
+            ShaderProgram.SetUniform("materialState.hasTextureNormal", HasTextureNormal);
             ShaderProgram.SetUniform("materialState.hasTextureDisplacement", HasTextureDisplacement);
+
+            ShaderProgram.SetUniform("materialState.hasReflectivity", HasReflectivity);
+            ShaderProgram.SetUniform("materialState.hasOpacity", HasOpacity);
 
             // Sets material data if disponible
             if (HasOpacity)
@@ -201,14 +185,14 @@ namespace AlienEngine
                 ShaderProgram.SetUniform("materialState.reflectivity", Reflectivity);
             }
 
-            if (HasColorDiffuse)
-            {
-                ShaderProgram.SetUniform("materialState.colorDiffuse", ColorDiffuse);
-            }
-
             if (HasColorAmbient)
             {
                 ShaderProgram.SetUniform("materialState.colorAmbient", ColorAmbient);
+            }
+
+            if (HasColorDiffuse)
+            {
+                ShaderProgram.SetUniform("materialState.colorDiffuse", ColorDiffuse);
             }
 
             if (HasColorSpecular)
@@ -216,23 +200,47 @@ namespace AlienEngine
                 ShaderProgram.SetUniform("materialState.colorSpecular", ColorSpecular);
             }
 
+            if (HasColorEmissive)
+            {
+                ShaderProgram.SetUniform("materialState.colorEmissive", ColorEmissive);
+            }
+
+            if (HasTextureAmbient)
+            {
+                ShaderProgram.SetUniform("materialState.textureAmbient", GL.AMBIENT_TEXTURE_UNIT_INDEX);
+                TextureDiffuse.Bind(GL.AMBIENT_TEXTURE_UNIT_INDEX);
+            }
+
             if (HasTextureDiffuse)
             {
-                ShaderProgram.SetUniform("textureDiffuse", GL.COLOR_TEXTURE_UNIT_INDEX);
-                TextureDiffuse.Bind(GL.COLOR_TEXTURE_UNIT_INDEX);
+                ShaderProgram.SetUniform("materialState.textureDiffuse", GL.DIFFUSE_TEXTURE_UNIT_INDEX);
+                TextureDiffuse.Bind(GL.DIFFUSE_TEXTURE_UNIT_INDEX);
+            }
+
+            if (HasTextureSpecular)
+            {
+                ShaderProgram.SetUniform("materialState.textureSpecular", GL.SPECULAR_TEXTURE_UNIT_INDEX);
+                TextureSpecular.Bind(GL.SPECULAR_TEXTURE_UNIT_INDEX);
+            }
+
+            if (HasTextureEmissive)
+            {
+                ShaderProgram.SetUniform("materialState.textureEmissive", GL.EMISSIVE_TEXTURE_UNIT_INDEX);
+                TextureEmissive.Bind(GL.EMISSIVE_TEXTURE_UNIT_INDEX);
             }
 
             if (HasTextureNormal)
             {
-                ShaderProgram.SetUniform("textureNormal", GL.NORMAL_TEXTURE_UNIT_INDEX);
+                ShaderProgram.SetUniform("materialState.textureNormal", GL.NORMAL_TEXTURE_UNIT_INDEX);
                 TextureNormal.Bind(GL.NORMAL_TEXTURE_UNIT_INDEX);
             }
 
             if (HasTextureDisplacement)
             {
-                ShaderProgram.SetUniform("textureDisplacement", GL.DISPLACEMENT_TEXTURE_UNIT_INDEX);
+                ShaderProgram.SetUniform("materialState.textureDisplacement", GL.DISPLACEMENT_TEXTURE_UNIT_INDEX);
                 TextureDisplacement.Bind(GL.DISPLACEMENT_TEXTURE_UNIT_INDEX);
             }
+
         }
     }
 }

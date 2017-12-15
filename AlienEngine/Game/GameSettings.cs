@@ -57,21 +57,42 @@ namespace AlienEngine.Core.Game
         // ----------
         // Aspect ratio
         // ----------
+        /// <summary>
+        /// Defines the aspect ratio of the game window.
+        /// </summary>
         public static readonly int[] GameWindowAspectRatio;
         // ----------
         // Fullscreen mode
         // ----------
         /// <summary>
-        /// Define if the game window is in fullscreen mode.
+        /// Defines if the game window is in fullscreen mode.
         /// </summary>
         public static readonly bool GameWindowFullscreenMode;
         // ----------
         // Resizable
         // ----------
         /// <summary>
-        /// Define if the game window is resizable or not.
+        /// Defines if the game window is resizable or not.
         /// </summary>
         public static readonly bool GameWindowResizable;
+        // ----------
+        // Title
+        // ----------
+        /// <summary>
+        /// The game window's title.
+        /// </summary>
+        public static readonly string GameWindowTitle;
+        // --------------------
+
+        // --------------------
+        // Game
+        // --------------------
+        // Frames Per Secons
+        // ----------
+        /// <summary>
+        /// The game FPS.
+        /// </summary>
+        public static readonly int GameFPS;
         // --------------------
 
         /// <summary>
@@ -85,34 +106,34 @@ namespace AlienEngine.Core.Game
             IniParser config = new IniParser("game.ini");
 
             // Get parsed values
-            if (int.TryParse(config.RawResult["MultisampleEnabled"], out _int1))
+            if (int.TryParse(config.SectionedResult["Multisample"]["MultisampleEnabled"], out _int1))
                 MultisampleEnabled = _int1 == 1;
             else
                 MultisampleEnabled = false;
 
-            if (int.TryParse(config.RawResult["MultisampleLevel"], out _int1))
+            if (int.TryParse(config.SectionedResult["Multisample"]["MultisampleLevel"], out _int1))
                 MultisampleLevel = _int1;
             else
                 MultisampleLevel = 0;
 
-            if (int.TryParse(config.RawResult["VSyncEnabled"], out _int1))
+            if (int.TryParse(config.SectionedResult["VSync"]["VSyncEnabled"], out _int1))
                 VSyncEnabled = _int1 == 1;
             else
                 VSyncEnabled = false;
 
-            if (int.TryParse(config.RawResult["VSyncInterval"], out _int1))
+            if (int.TryParse(config.SectionedResult["VSync"]["VSyncInterval"], out _int1))
                 VSyncInterval = _int1;
             else
                 VSyncInterval = 0;
 
-            if (int.TryParse(config.RawResult["Width"], out _int1) && int.TryParse(config.RawResult["Height"], out _int2))
+            if (int.TryParse(config.SectionedResult["Window"]["Width"], out _int1) && int.TryParse(config.SectionedResult["Window"]["Height"], out _int2))
                 GameWindowSize = new Sizei(_int1, _int2);
             else
                 GameWindowSize = Sizei.Zero;
 
-            if (config.RawResult["AspectRatio"].Length > 0)
+            if (config.SectionedResult["Window"]["AspectRatio"].Length > 0)
             {
-                var ratio = config.RawResult["AspectRatio"].Split(':');
+                var ratio = config.SectionedResult["Window"]["AspectRatio"].Split(':');
                 if (int.TryParse(ratio[0].Trim(), out _int1) && int.TryParse(ratio[1].Trim(), out _int2))
                     GameWindowAspectRatio = new int[] { _int1, _int2 };
                 else
@@ -121,15 +142,26 @@ namespace AlienEngine.Core.Game
             else
                 GameWindowAspectRatio = new int[] { 16, 9 };
 
-            if (int.TryParse(config.RawResult["FullscreenMode"], out _int1))
+            if (int.TryParse(config.SectionedResult["Window"]["FullscreenMode"], out _int1))
                 GameWindowFullscreenMode = _int1 == 1;
             else
                 GameWindowFullscreenMode = false;
 
-            if (int.TryParse(config.RawResult["Resizable"], out _int1))
+            if (int.TryParse(config.SectionedResult["Window"]["Resizable"], out _int1))
                 GameWindowResizable = _int1 == 1;
             else
                 GameWindowResizable = true;
+
+            if (config.SectionedResult["Window"]["Title"].Length > 0)
+                GameWindowTitle = config.SectionedResult["Window"]["Title"];
+            else
+                GameWindowTitle = "AlienEngine Game";
+
+            if (int.TryParse(config.SectionedResult["Game"]["FPS"], out _int1))
+                GameFPS = _int1;
+            else
+                GameFPS = 60;
+
         }
     }
 }

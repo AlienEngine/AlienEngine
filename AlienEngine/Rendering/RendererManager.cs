@@ -1,13 +1,13 @@
 ﻿using AlienEngine.Core.Graphics;
 using AlienEngine.Core.Graphics.OpenGL;
-using AlienEngine.Core.Graphics.Shaders;
+using AlienEngine.Core.Shaders;
 using AlienEngine.Shaders;
 using System;
 using System.Collections.Generic;
 
 namespace AlienEngine.Core.Rendering
 {
-    public static class Renderer
+    public static class RendererManager
     {
         private static List<IRenderable> _renderables;
         private static List<IPostRenderable> _postRenderables;
@@ -57,7 +57,7 @@ namespace AlienEngine.Core.Rendering
 
         public static event ViewportChanged OnViewportChange;
 
-        static Renderer()
+        static RendererManager()
         {
             // Renderables
             _renderables = new List<IRenderable>();
@@ -318,11 +318,14 @@ namespace AlienEngine.Core.Rendering
             FaceCulling(false);
 
             // Bind the texture
-            GL.ActiveTexture(GL.COLOR_TEXTURE_UNIT_INDEX);
+            GL.ActiveTexture(GL.DIFFUSE_TEXTURE_UNIT_INDEX);
             GL.BindTexture(TextureTarget.Texture2D, fbo.GetTextureID(FramebufferAttachment.ColorAttachment0));
 
             // Draw the screen
             GL.DrawArrays(BeginMode.Triangles, 0, 6);
+
+            // Make sure this texture don't change from the outside
+            GL.BindTexture(TextureTarget.Texture2D, 0);
 
             // Make sure this VAO don't change from the outside
             GL.BindVertexArray(0);
@@ -342,7 +345,7 @@ namespace AlienEngine.Core.Rendering
             DepthTest(true, DepthFunction.Lequal);
 
             // Render the skybox
-            Camera _camera = Game.Game.CurrentScene.PrimaryCamera.GetComponent<Camera>();
+            Camera _camera = Game.Game.Instance.CurrentScene.PrimaryCamera.GetComponent<Camera>();
 
             switch (_camera.ClearScreenType)
             {

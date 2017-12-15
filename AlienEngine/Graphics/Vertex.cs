@@ -1,19 +1,26 @@
-﻿namespace AlienEngine.Core.Graphics
+﻿using ZeroFormatter;
+
+namespace AlienEngine.Core.Graphics
 {
+    [ZeroFormattable]
     public struct Vertex
     {
         // Position of the vertex
+        [Index(0)]
         private Vector3f _pos;
 
         // Texture coordinates of the vertex
+        [Index(1)]
         private Vector2f _tex;
 
         // Normal vector of the vertex
+        [Index(2)]
         private Vector3f _normal;
 
         /// <summary>
         /// Gets the position of this vertex.
         /// </summary>
+        [IgnoreFormat]
         public Vector3f Position
         {
             get { return _pos; }
@@ -23,6 +30,7 @@
         /// <summary>
         /// Gets the UV coordinates of this vertex.
         /// </summary>
+        [IgnoreFormat]
         public Vector2f UV
         {
             get { return _tex; }
@@ -32,6 +40,7 @@
         /// <summary>
         /// Gets the normal (vector) orientation of this vertex.
         /// </summary>
+        [IgnoreFormat]
         public Vector3f Normal
         {
             get { return _normal; }

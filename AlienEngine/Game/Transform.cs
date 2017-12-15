@@ -227,7 +227,7 @@ namespace AlienEngine
         /// <returns></returns>
         public Matrix4f GetProjectedTransformation()
         {
-            Camera _camera = Game.CurrentScene.PrimaryCamera.GetComponent<Camera>();
+            Camera _camera = Game.Instance.CurrentScene.PrimaryCamera.GetComponent<Camera>();
 
             Matrix4f f = GetTransformation();
             Matrix4f v = _camera.ViewMatrix;

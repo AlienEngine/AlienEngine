@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using AlienEngine.UI;
 using AlienEngine.Core.Graphics.OpenGL;
-using AlienEngine.Core.Graphics.Shaders;
+using AlienEngine.Core.Shaders;
 using AlienEngine.Core.Resources;
 using AlienEngine.Imaging;
 using AlienEngine.Shaders;
@@ -221,14 +221,14 @@ namespace AlienEngine.Core.Rendering.Fonts
         public void RenderText(string text)
         {
             // Change the renderer behaviour
-            Renderer.BackupState(RendererBackupMode.Blending);
-            Renderer.Blending();
+            RendererManager.BackupState(RendererBackupMode.Blending);
+            RendererManager.Blending();
 
             _shaderProgram.Bind();
             _shaderProgram.SetUniform("textColor", _config.Color);
             _shaderProgram.SetUniform("projection", ProjectionMatrix);
 
-            GL.ActiveTexture(GL.COLOR_TEXTURE_UNIT_INDEX);
+            GL.ActiveTexture(GL.DIFFUSE_TEXTURE_UNIT_INDEX);
 
             GL.BindVertexArray(_vao);
 
@@ -372,7 +372,7 @@ namespace AlienEngine.Core.Rendering.Fonts
 
             GL.BindTexture(TextureTarget.Texture2D, 0);
 
-            Renderer.RestoreState(RendererBackupMode.Blending);
+            RendererManager.RestoreState(RendererBackupMode.Blending);
         }
 
         private void DrawCharacter(float xpos, float ypos, float h, float w, Character ch)
@@ -387,7 +387,7 @@ namespace AlienEngine.Core.Rendering.Fonts
                 {xpos + w, ypos + h, 1.0f, 0.0f}
             };
 
-            ch.Texture.Bind(GL.COLOR_TEXTURE_UNIT_INDEX);
+            ch.Texture.Bind(GL.DIFFUSE_TEXTURE_UNIT_INDEX);
 
             GL.BindBuffer(BufferTarget.ArrayBuffer, _vbo);
 

@@ -57,9 +57,9 @@ namespace AlienEngine.Core.Game
             _list.Add(gameElement);
         }
 
-        public void Remove(GameElement gameElement)
+        public bool Remove(GameElement gameElement)
         {
-            _list.Remove(gameElement);
+            return _list.Remove(gameElement);
         }
 
         public bool Contains(GameElement gameElement)

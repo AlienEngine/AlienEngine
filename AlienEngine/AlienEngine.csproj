@@ -182,19 +182,25 @@
     </Reference>
     <Reference Include="ZeroFormatter, Version=1.6.4.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\ZeroFormatter.1.6.4\lib\net45\ZeroFormatter.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="ZeroFormatter.Interfaces, Version=1.6.4.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\ZeroFormatter.Interfaces.1.6.4\lib\net45\ZeroFormatter.Interfaces.dll</HintPath>
-      <Private>True</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Application.cs" />
     <Compile Include="Assets\AssetsManager.cs" />
-    <Compile Include="Assets\IAsset.cs" />
     <Compile Include="Assets\AssetTypes.cs" />
+    <Compile Include="Assets\IAsset.cs" />
+    <Compile Include="Assets\Material\MaterialData.cs" />
+    <Compile Include="Assets\Material\ShaderData.cs" />
     <Compile Include="Assets\MeshAsset.cs" />
+    <Compile Include="Assets\Mesh\MeshData.cs" />
+    <Compile Include="Assets\TextureAsset.cs" />
+    <Compile Include="Assets\Texture\TextureData.cs" />
+    <Compile Include="Assets\Texture\TextureFilterMode.cs" />
+    <Compile Include="Assets\Texture\TextureType.cs" />
+    <Compile Include="Assets\Texture\TextureWrapMode.cs" />
     <Compile Include="Audio\AudioCapture.cs" />
     <Compile Include="Audio\AudioContext.cs" />
     <Compile Include="Audio\AudioContextException.cs" />
@@ -233,15 +239,20 @@
     <Compile Include="Game\Components\Rendering\MeshRenderer.cs" />
     <Compile Include="Game\Components\UI\Button.cs" />
     <Compile Include="Game\Components\UI\Checkbox.cs" />
-    <Compile Include="Game\Components\UI\TextInput.cs" />
-    <Compile Include="Game\Components\UI\Text.cs" />
-    <Compile Include="Game\Components\UI\ListBox.cs" />
+    <Compile Include="Game\Components\UI\Label2D.cs" />
+    <Compile Include="Game\Shaders\DiffuseShaderProgram.cs" />
+    <Compile Include="Game\Shaders\DiffuseSpecularEmissiveShaderProgram.cs" />
     <Compile Include="Game\Shaders\FontShaderProgram.cs" />
     <Compile Include="Game\Shaders\ColoredUIShaderProgram.cs" />
     <Compile Include="Game\UIComponent.cs" />
     <Compile Include="Inputs\JoystickAxis.cs" />
     <Compile Include="Inputs\JoystickButton.cs" />
     <Compile Include="Inputs\JoystickState.cs" />
+    <Compile Include="IO\FileSystemManager.cs" />
+    <Compile Include="Rendering\MaterialBlendMode.cs" />
+    <Compile Include="Rendering\MaterialShadingMode.cs" />
+    <Compile Include="Shaders\Samples\Fragment Shaders\DiffuseFragmentShader.cs" />
+    <Compile Include="Shaders\Samples\Fragment Shaders\DiffuseSpecularEmissiveFragmentShader.cs" />
     <Compile Include="Shaders\Samples\Fragment Shaders\FontFragmentShader.cs" />
     <Compile Include="Shaders\Samples\Fragment Shaders\ColoredUIFragmentShader.cs" />
     <Compile Include="Shaders\Samples\Vertex Shaders\FontVertexShader.cs" />
@@ -655,8 +666,6 @@
     <Compile Include="Physics\Vehicle\WheelSlidingFriction.cs" />
     <Compile Include="Physics\Vehicle\WheelSuspension.cs" />
     <Compile Include="Shaders\Samples\Vertex Shaders\ColoredUIVertexShader.cs" />
-    <Compile Include="UI\TextChangeEventArgs.cs" />
-    <Compile Include="UI\ListBoxChangeEventArgs.cs" />
     <Compile Include="UI\Origin.cs" />
     <Compile Include="Rendering\Fonts\Character.cs" />
     <Compile Include="Rendering\Fonts\FontRendererConfiguration.cs" />
@@ -672,11 +681,10 @@
     <Compile Include="Game\PostEffectMode.cs" />
     <Compile Include="Rendering\IPostRenderable.cs" />
     <Compile Include="Rendering\RenderableCollection.cs" />
-    <Compile Include="Rendering\Renderer.cs" />
+    <Compile Include="Rendering\RendererManager.cs" />
     <Compile Include="Game\Scene.cs" />
     <Compile Include="Game\Shaders\BumpedDiffuseShaderProgram.cs" />
     <Compile Include="Game\Shaders\RenderTextureShaderProgram.cs" />
-    <Compile Include="Game\ShadowMap.cs" />
     <Compile Include="Graphics\Color3.cs" />
     <Compile Include="Graphics\Cursor.cs" />
     <Compile Include="BlittableValueType.cs" />
@@ -717,8 +725,6 @@
     <Compile Include="Shaders\Samples\Vertex Shaders\GrassVertexShader.cs" />
     <Compile Include="Shaders\Samples\Vertex Shaders\RenderTextureVertexShader.cs" />
     <Compile Include="Imaging\Texture.cs" />
-    <Compile Include="Graphics\UBO.cs" />
-    <Compile Include="Graphics\UBOData.cs" />
     <Compile Include="Inputs\CursorState.cs" />
     <Compile Include="Inputs\InputState.cs" />
     <Compile Include="Inputs\JoystickDevice.cs" />
@@ -796,12 +802,12 @@
     <Compile Include="Graphics\OpenGL\Structs\SingleUInt32Union.cs" />
     <Compile Include="Graphics\OpenGL\Structs\UFloat10.cs" />
     <Compile Include="Graphics\OpenGL\Structs\UFloat11.cs" />
-    <Compile Include="Game\Shaders\DiffuseShaderProgram.cs" />
+    <Compile Include="Game\Shaders\DiffuseSpecularShaderProgram.cs" />
     <Compile Include="Game\Shaders\TexturedUIShaderProgram.cs" />
     <Compile Include="Shaders\Samples\Fragment Shaders\TexturedUIFragmentShader.cs" />
     <Compile Include="Shaders\Samples\Vertex Shaders\TexturedUIVertexShader.cs" />
     <Compile Include="Graphics\Mesh.cs" />
-    <Compile Include="Shaders\Samples\Fragment Shaders\DiffuseFragmentShader.cs" />
+    <Compile Include="Shaders\Samples\Fragment Shaders\DiffuseSpecularFragmentShader.cs" />
     <Compile Include="Shaders\Samples\Vertex Shaders\DiffuseVertexShader.cs" />
     <Compile Include="Shaders\Samples\Fragment Shaders\DualDiffuseBlendFragmentShader.cs" />
     <Compile Include="Shaders\ShaderProgram.cs" />

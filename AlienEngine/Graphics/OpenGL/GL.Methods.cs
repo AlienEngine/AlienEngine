@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using AlienEngine.Core.Graphics.Shaders;
+using AlienEngine.Core.Shaders;
 using AlienEngine.Imaging;
 
 namespace AlienEngine.Core.Graphics.OpenGL

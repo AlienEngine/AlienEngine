@@ -74,6 +74,9 @@ namespace AlienEngine.Core
             // Set default window hints
             GLFW.DefaultWindowHints();
 
+            GLFW.WindowHint(GLFW.Hint.ContextVersionMajor, 3);
+            GLFW.WindowHint(GLFW.Hint.ContextVersionMinor, 3);
+            GLFW.WindowHint(GLFW.Hint.OpenglProfile, GLFW.OpenGLProfile.Core);
 #if APPLE
             // Activate forward compatibility on MacOS/iOS
             GLFW.WindowHint(GLFW.Hint.OpenglForwardCompat, true);
@@ -372,7 +375,7 @@ namespace AlienEngine.Core
         private void OnFramebufferSizeChange(Window window, int width, int height)
         {
             var size = new Sizei(width, height);
-            Renderer.SetViewport(Point2i.Zero, size);
+            RendererManager.SetViewport(Point2i.Zero, size);
             FramebufferSizeChange?.Invoke(this, new ResizeEventArgs(size, FramebufferSize));
             _framebufferSize = size;
         }
@@ -647,14 +650,14 @@ namespace AlienEngine.Core
         /// </summary>
         public void SetCurrent()
         {
-            Game.Game.SetGameWindow(this);
+            Game.Game.Instance.SetGameWindow(this);
             
             // Apply callbacks
-            GLFW.SetWindowSizeCallback(Handle, (window, width, height) => Game.Game.Window.OnResize(window, width, height));
-            GLFW.SetCursorEnterCallback(Handle, (window, entered) => Game.Game.Window.OnMouseLeaveEnter(window, entered));
-            GLFW.SetFramebufferSizeCallback(Handle, (window, width, height) => Game.Game.Window.OnFramebufferSizeChange(window, width, height));
-            GLFW.SetWindowCloseCallback(Handle, (window) => Game.Game.Window.OnClose(window));
-            GLFW.SetWindowFocusCallback(Handle, (window, focused) => Game.Game.Window.OnFocusChange(window, focused));
+            GLFW.SetWindowSizeCallback(Handle, (window, width, height) => Game.Game.Instance.Window.OnResize(window, width, height));
+            GLFW.SetCursorEnterCallback(Handle, (window, entered) => Game.Game.Instance.Window.OnMouseLeaveEnter(window, entered));
+            GLFW.SetFramebufferSizeCallback(Handle, (window, width, height) => Game.Game.Instance.Window.OnFramebufferSizeChange(window, width, height));
+            GLFW.SetWindowCloseCallback(Handle, (window) => Game.Game.Instance.Window.OnClose(window));
+            GLFW.SetWindowFocusCallback(Handle, (window, focused) => Game.Game.Instance.Window.OnFocusChange(window, focused));
         }
 
         #endregion

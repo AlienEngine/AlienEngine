@@ -1,7 +1,8 @@
 ﻿using AlienEngine.ASL;
 
-namespace AlienEngine.Core.Graphics.Shaders
+namespace AlienEngine.Core.Shaders.Samples
 {
+    [Version("330 core")]
     public class ColoredUIFragmentShader: FragmentShader
     {
         [Uniform] vec4 color;

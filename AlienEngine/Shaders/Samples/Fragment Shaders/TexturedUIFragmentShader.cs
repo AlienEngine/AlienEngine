@@ -1,18 +1,19 @@
-﻿using System;
-using AlienEngine.ASL;
+﻿using AlienEngine.ASL;
 
-namespace AlienEngine.Shaders.Samples
+namespace AlienEngine.Core.Shaders.Samples
 {
-    [Version(330)]
+    [Version("330 core")]
     public class TexturedUIFragmentShader : FragmentShader
     {
+        [Out] vec4 FragColor;
+
         [Uniform] sampler2D active_texture;
 
         [In] vec2 uv;
 
         void main()
         {
-            gl_FragColor = texture(active_texture, uv);
+            FragColor = texture(active_texture, uv);
         }
     }
 }

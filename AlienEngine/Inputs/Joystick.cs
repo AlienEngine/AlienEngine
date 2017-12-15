@@ -30,18 +30,21 @@ namespace AlienEngine.Core.Inputs
         /// </summary>
         public static void Update()
         {
-            _joystickStates.Clear();
-            foreach (JoystickDevice i in _allJoysticks)
+            if (IsPresent(JoystickDevice.Joystick01))
             {
-                JoystickState state = new JoystickState(
-                    IsPresent(i),
-                    i,
-                    GetName(i),
-                    GLFW.GetJoystickButtons(i),
-                    GLFW.GetJoystickAxes(i)
-                );
+                _joystickStates.Clear();
+                foreach (JoystickDevice i in _allJoysticks)
+                {
+                    JoystickState state = new JoystickState(
+                        IsPresent(i),
+                        i,
+                        GetName(i),
+                        GLFW.GetJoystickButtons(i),
+                        GLFW.GetJoystickAxes(i)
+                    );
 
-                _joystickStates.Add(state);
+                    _joystickStates.Add(state);
+                }
             }
         }
 
@@ -54,7 +57,7 @@ namespace AlienEngine.Core.Inputs
         {
             var states = GLFW.GetJoystickButtons(joystick);
 
-            return states[(int)button];
+            return states != null && states[(int)button];
         }
 
         /// <summary>
@@ -92,7 +95,7 @@ namespace AlienEngine.Core.Inputs
         {
             var states = GLFW.GetJoystickAxes(joystick);
 
-            return states[(int)axis];
+            return states != null ? states[(int)axis] : 0;
         }
 
         /// <summary>

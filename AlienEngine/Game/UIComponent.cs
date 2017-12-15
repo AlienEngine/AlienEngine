@@ -142,8 +142,8 @@ namespace AlienEngine
         {
             if (_quad == null) _quad = MeshFactory.CreateQuad(Point2f.Zero, Size, Point2f.Zero, Sizef.One);
 
-            Renderer.BackupState(RendererBackupMode.Blending);
-            Renderer.Blending();
+            RendererManager.BackupState(RendererBackupMode.Blending);
+            RendererManager.Blending();
 
             _coloredUIShader.Bind();
             _coloredUIShader.SetPosition(new Vector3f(CorrectedPosition.X, CorrectedPosition.Y, 0));
@@ -152,7 +152,7 @@ namespace AlienEngine
 
             _quad.Render();
 
-            Renderer.RestoreState(RendererBackupMode.Blending);
+            RendererManager.RestoreState(RendererBackupMode.Blending);
         }
 
         public void RenderTexturedQuad()
@@ -168,25 +168,25 @@ namespace AlienEngine
         {
             if (_quad == null) _quad = MeshFactory.CreateQuad(Point2f.Zero, Size, Point2f.Zero, Sizef.One);
 
-            Renderer.BackupState(RendererBackupMode.Blending);
-            Renderer.Blending();
-            texture.Bind(GL.COLOR_TEXTURE_UNIT_INDEX);
+            RendererManager.BackupState(RendererBackupMode.Blending);
+            RendererManager.Blending();
+            texture.Bind(GL.DIFFUSE_TEXTURE_UNIT_INDEX);
 
             _texturedUIShader.Bind();
             _texturedUIShader.SetPosition(new Vector3f(CorrectedPosition.X, CorrectedPosition.Y, 0));
-            _texturedUIShader.SetTexture(GL.COLOR_TEXTURE_UNIT_INDEX);
-            _texturedUIShader.SetProjectionMatrix(ProjectionMatrix);
+            _texturedUIShader.SetTexture(GL.DIFFUSE_TEXTURE_UNIT_INDEX);
+            _texturedUIShader.SetProjectionMatrix(_projectionMatrix);
 
             _quad.Render();
 
-            Renderer.RestoreState(RendererBackupMode.Blending);
+            RendererManager.RestoreState(RendererBackupMode.Blending);
         }
 
         protected void InitUI()
         {
             CorrectedPosition = Position;
 
-            Camera = Core.Game.Game.CurrentScene.PrimaryCamera.GetComponent<Camera>();
+            Camera = Core.Game.Game.Instance.CurrentScene.PrimaryCamera.GetComponent<Camera>();
 
             Matrix4f projection = Matrix4f.CreateOrthographicOffCenter(0.0f, Camera.Viewport.Width, 0.0f, Camera.Viewport.Height, 0.0f, 1.0f);
 

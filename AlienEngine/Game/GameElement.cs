@@ -417,7 +417,13 @@ namespace AlienEngine
                 component.SetGameElement(this);
                 _attachedComponents.Add(component);
 
-                component.OnAttach();
+                if (component is IRenderable)
+                    RendererManager.RegisterRenderable(component as IRenderable);
+
+                if (component is IPostRenderable)
+                    RendererManager.RegisterPostRenderable(component as IPostRenderable);
+
+                component.TriggerAttachEvent();
             }
         }
 

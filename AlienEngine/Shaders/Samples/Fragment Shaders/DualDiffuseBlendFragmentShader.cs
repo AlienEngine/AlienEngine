@@ -1,9 +1,8 @@
-﻿using System;
-using AlienEngine.ASL;
+﻿using AlienEngine.ASL;
 
-namespace AlienEngine.Core.Graphics.Shaders.Samples
+namespace AlienEngine.Core.Shaders.Samples
 {
-    [Version(330)]
+    [Version("330 core")]
     internal class DualDiffuseBlendFragmentShader : FragmentShader
     {
         const int MAX_POINT_LIGHTS = 2;

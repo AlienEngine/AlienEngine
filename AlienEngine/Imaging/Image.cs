@@ -54,6 +54,11 @@ namespace AlienEngine.Imaging
         #endregion
 
         /// <summary>
+        /// The inner DEVIL image wrapper.
+        /// </summary>
+        internal DevILImage DevilImage => _i;
+        
+        /// <summary>
         /// The width of the <see cref="Image"/>.
         /// </summary>
         public int Width => _i.Width;
@@ -82,6 +87,11 @@ namespace AlienEngine.Imaging
                 return pixels;
             }
         }
+
+        /// <summary>
+        /// The origin of the <see cref="Image"/>.
+        /// </summary>
+        public OriginLocation Origin => _i.Origin;
 
         /// <summary>
         /// Load and create a new image.
@@ -292,7 +302,11 @@ namespace AlienEngine.Imaging
         {
             if (!disposedValue)
             {
-                _i.Dispose();
+                if (_i != null)
+                {
+                    _i.Dispose();
+                }
+
                 disposedValue = true;
             }
         }

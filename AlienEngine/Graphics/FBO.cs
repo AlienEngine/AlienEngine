@@ -263,9 +263,9 @@ namespace AlienEngine.Core.Graphics
             if (clear)
             {
                 if (Attachments.Length == 1 && Attachments[0] == FramebufferAttachment.DepthAttachment)
-                    Renderer.ClearScreen(ClearBufferMask.DepthBufferBit);
+                    RendererManager.ClearScreen(ClearBufferMask.DepthBufferBit);
                 else
-                    Renderer.ClearScreen(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit | ClearBufferMask.StencilBufferBit);
+                    RendererManager.ClearScreen(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit | ClearBufferMask.StencilBufferBit);
             }
         }
 

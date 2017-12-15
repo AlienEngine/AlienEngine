@@ -1,10 +1,9 @@
 ﻿using AlienEngine.ASL;
 using AlienEngine.Core.Graphics.OpenGL;
-using System;
 
-namespace AlienEngine.Core.Graphics.Shaders
+namespace AlienEngine.Core.Shaders.Samples
 {
-    [Version(330)]
+    [Version("330 core")]
     internal class RenderTextureVertexShader : VertexShader
     {
         #region VAO Objects

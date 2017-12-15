@@ -15,18 +15,12 @@ namespace AlienEngine.Core.Utils
         /// <summary>
         /// The parsed result with sections.
         /// </summary>
-        public Dictionary<string, Dictionary<string, string>> SectionedResult
-        {
-            get { return _sectionedResult; }
-        }
+        public Dictionary<string, Dictionary<string, string>> SectionedResult => _sectionedResult;
 
         /// <summary>
         /// The parsed result.
         /// </summary>
-        public Dictionary<string, string> RawResult
-        {
-            get { return _rawResult; }
-        }
+        public Dictionary<string, string> RawResult => _rawResult;
 
         /// <summary>
         /// Parse an .ini file.
@@ -51,21 +45,28 @@ namespace AlienEngine.Core.Utils
 
                 while ((line = sr.ReadLine()) != null)
                 {
+                    // Trim line
+                    line = line.Trim();
+
                     // Skip comments
                     if (line.StartsWith("#"))
                         continue;
                     // Detect sections title
                     else if (line.StartsWith("[") && line.EndsWith("]"))
                     {
-                        section = line.Trim('[', ']');
+                        section = line.Trim('[', ']', ' ');
                         if (!_sectionedResult.ContainsKey(section))
                             _sectionedResult.Add(section, new Dictionary<string, string>());
                         continue;
                     }
                     // Parse values
-                    else if (!string.IsNullOrEmpty(line.Trim()))
+                    else if (!string.IsNullOrEmpty(line))
                     {
-                        string[] parts = line.Split(new char[] { ' ', '=' }, StringSplitOptions.RemoveEmptyEntries);
+                        string[] parts = line.Split(new char[] { '=' }, StringSplitOptions.RemoveEmptyEntries);
+
+                        parts[0] = parts[0].Trim();
+                        parts[1] = parts[1].Trim('"', '\'', ' ');
+
                         _rawResult.Add(parts[0], parts[1]);
                         if (!string.IsNullOrEmpty(section) && _sectionedResult.ContainsKey(section))
                             _sectionedResult[section].Add(parts[0], parts[1]);

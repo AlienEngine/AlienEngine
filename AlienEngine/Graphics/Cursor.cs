@@ -205,7 +205,7 @@ namespace AlienEngine.Core.Graphics
         /// </summary>
         public void Use()
         {
-            Game.Game.Window.SetCursor(this);
+            Game.Game.Instance.Window.SetCursor(this);
         }
 
         /// <summary>
@@ -213,7 +213,7 @@ namespace AlienEngine.Core.Graphics
         /// </summary>
         public void Unuse()
         {
-            Game.Game.Window.SetCursor(None);
+            Game.Game.Instance.Window.SetCursor(None);
         }
 
         /// <summary>
@@ -242,7 +242,7 @@ namespace AlienEngine.Core.Graphics
         /// <param name="type">The cursor type.</param>
         public static void SetCursor(CursorType type)
         {
-            Game.Game.Window.SetCursor(new Cursor(type));
+            Game.Game.Instance.Window.SetCursor(new Cursor(type));
         }
 
         /// <summary>

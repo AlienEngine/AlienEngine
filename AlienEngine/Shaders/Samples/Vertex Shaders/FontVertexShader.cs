@@ -1,9 +1,9 @@
 ﻿using AlienEngine.ASL;
 using AlienEngine.Core.Graphics.OpenGL;
 
-namespace AlienEngine.Shaders.Samples
+namespace AlienEngine.Core.Shaders.Samples
 {
-    [Version(330)]
+    [Version("330 core")]
     public class FontVertexShader : VertexShader
     {
         [Layout(Location = GL.VERTEX_POSITION_LOCATION)] [In] vec4 vertex;

@@ -17,10 +17,7 @@ namespace AlienEngine.Core
         /// <summary>
         /// Checks if the engine has already started.
         /// </summary>
-        public static bool HasStarted
-        {
-            get { return _started; }
-        }
+        public static bool HasStarted => _started;
 
         /// <summary>
         /// Initialize the manager.

@@ -77,7 +77,7 @@ namespace AlienEngine.Imaging
         {
             if (!_loaded)
             {
-                _camera = Game.CurrentScene.PrimaryCamera.GetComponent<Camera>();
+                _camera = Game.Instance.CurrentScene.PrimaryCamera.GetComponent<Camera>();
                 _program = new CubemapShaderProgram();
                 _cube = MeshFactory.CreateCube(Vector3f.One * -_camera.Far / 2, Vector3f.One * _camera.Far / 2);
 
@@ -120,27 +120,27 @@ namespace AlienEngine.Imaging
 
         public void Render()
         {
-            Renderer.BackupState(RendererBackupMode.FaceCulling);
-            Renderer.FaceCulling(false);
+            RendererManager.BackupState(RendererBackupMode.FaceCulling);
+            RendererManager.FaceCulling(false);
 
-            Renderer.BackupState(RendererBackupMode.DepthMask);
-            Renderer.DepthMask(false);
+            RendererManager.BackupState(RendererBackupMode.DepthMask);
+            RendererManager.DepthMask(false);
 
             _program.Bind();
             _program.SetUniform("pcm_matrix", _camera.CubemapMatrix * _camera.ProjectionMatrix);
-            _program.SetUniform("textureCubemap", GL.COLOR_TEXTURE_UNIT_INDEX);
+            _program.SetUniform("textureCubemap", GL.DIFFUSE_TEXTURE_UNIT_INDEX);
 
             GL.BindVertexArray(_cube.VAO);
 
-            Bind(GL.COLOR_TEXTURE_UNIT_INDEX);
+            Bind(GL.DIFFUSE_TEXTURE_UNIT_INDEX);
             _cube.Render();
             Unbind();
 
             GL.BindVertexArray(0);
 
-            Renderer.RestoreState(RendererBackupMode.DepthMask);
+            RendererManager.RestoreState(RendererBackupMode.DepthMask);
 
-            Renderer.RestoreState(RendererBackupMode.FaceCulling);
+            RendererManager.RestoreState(RendererBackupMode.FaceCulling);
         }
 
         #endregion

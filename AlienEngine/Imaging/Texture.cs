@@ -25,8 +25,6 @@ namespace AlienEngine.Imaging
 
         public TextureTarget TextureTarget { get; private set; }
 
-        public bool FlipY { get; private set; }
-
         public Image Image => _image;
 
         #endregion
@@ -36,18 +34,16 @@ namespace AlienEngine.Imaging
             _image = null;
             TextureID = 0;
             TextureTarget = TextureTarget.Texture2D;
-            FlipY = true;
 
             // Register this resource as a disposable resource
             ResourcesManager.AddDisposableResource(this);
         }
 
-        public Texture(string filename, TextureTarget target = TextureTarget.Texture2D, bool flipY = true)
+        public Texture(string filename, TextureTarget target = TextureTarget.Texture2D)
         {
             _image = null;
             TextureID = 0;
             TextureTarget = target;
-            FlipY = flipY;
 
             if (!string.IsNullOrEmpty(filename))
                 LoadImage(filename);
@@ -56,12 +52,11 @@ namespace AlienEngine.Imaging
             ResourcesManager.AddDisposableResource(this);
         }
 
-        public Texture(Image image, TextureTarget target = TextureTarget.Texture2D, bool flipY = true)
+        public Texture(Image image, TextureTarget target = TextureTarget.Texture2D)
         {
             _image = image;
             TextureID = 0;
             TextureTarget = target;
-            FlipY = flipY;
 
             LoadImage(image);
 
@@ -76,7 +71,6 @@ namespace AlienEngine.Imaging
 
             // These parameters are always the same
             TextureTarget = TextureTarget.Texture2D;
-            FlipY = false;
             
             // Generate a texture
             TextureID = GL.GenTexture();
@@ -118,7 +112,7 @@ namespace AlienEngine.Imaging
                 // Generate OpenGL texture
                 TextureID = GL.GenTexture();
 
-                if (FlipY) _image.Flip();
+                if (_image.Origin == OriginLocation.UpperLeft) _image.Flip();
 
                 // Set pixel alignment
                 GL.PixelStorei(PixelStoreParameter.UnpackAlignment, 1);

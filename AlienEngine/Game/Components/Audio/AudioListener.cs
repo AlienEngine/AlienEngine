@@ -79,8 +79,9 @@ namespace AlienEngine
 
             gameElement.LocalTransform.OnRotationChange += ((_old, _new) =>
             {
-                Vector3f _forward = gameElement.WorldTransform.ForwardVector,
-                         _up = gameElement.WorldTransform.UpVector;
+                Transform transform = gameElement.WorldTransform;
+                Vector3f _forward = transform.ForwardVector,
+                         _up = transform.UpVector;
 
                 AL.Listener(ALListenerfv.Orientation, ref _forward, ref _up);
             });
