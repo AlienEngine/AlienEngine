@@ -175,7 +175,7 @@ namespace AlienEngine
             _texturedUIShader.Bind();
             _texturedUIShader.SetPosition(new Vector3f(CorrectedPosition.X, CorrectedPosition.Y, 0));
             _texturedUIShader.SetTexture(GL.DIFFUSE_TEXTURE_UNIT_INDEX);
-            _texturedUIShader.SetProjectionMatrix(_projectionMatrix);
+            _texturedUIShader.SetProjectionMatrix(ProjectionMatrix);
 
             _quad.Render();
 

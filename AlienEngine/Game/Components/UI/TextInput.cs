@@ -3,7 +3,7 @@ using AlienEngine.Core.Graphics;
 using AlienEngine.Core.Rendering.Fonts;
 using AlienEngine.Imaging;
 using AlienEngine.UI;
-using AlienEngine.Core.Graphics.Shaders;
+using AlienEngine.Core.Shaders;
 using AlienEngine.Shaders;
 using AlienEngine.Core.Rendering;
 using AlienEngine.Core.Game;
@@ -171,12 +171,12 @@ namespace AlienEngine
 
             if (IsHover && _default == null)
             {
-                _default = Game.Window.Cursor;
-                Game.Window.SetCursor(_Ibeam);
+                _default = Game.Instance.Window.Cursor;
+                Game.Instance.Window.SetCursor(_Ibeam);
             }
             else if (!IsHover && _default != null)
             {
-                Game.Window.SetCursor(_default);
+                Game.Instance.Window.SetCursor(_default);
                 _default = null;
             }
 
@@ -191,8 +191,8 @@ namespace AlienEngine
                 {
                     // var caretPosition = CorrectedPosition + _cursorPosition;
 
-                    Renderer.BackupState(RendererBackupMode.Blending);
-                    Renderer.Blending();
+                    RendererManager.BackupState(RendererBackupMode.Blending);
+                    RendererManager.Blending();
 
                     _caretShaderProgram.Bind();
                     _caretShaderProgram.SetPosition(new Vector3f((float)_cursorPosition.X, (float)_cursorPosition.Y, 0));
@@ -201,7 +201,7 @@ namespace AlienEngine
 
                     _caret.Render();
 
-                    Renderer.RestoreState(RendererBackupMode.Blending);
+                    RendererManager.RestoreState(RendererBackupMode.Blending);
                 }
                 else if (_caretBlinkTimer > CaretBlinkInterval * 2.0)
                     _caretBlinkTimer -= CaretBlinkInterval * 2.0;
