@@ -5,6 +5,7 @@ using Assimp;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using AlienEngine.Core.Graphics.Buffers;
 using AlienEngine.Core.Rendering;
 
 namespace AlienEngine.Core.Graphics

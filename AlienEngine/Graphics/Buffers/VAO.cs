@@ -3,7 +3,7 @@ using AlienEngine.Core.Shaders;
 using AlienEngine.Core.Graphics.OpenGL;
 using AlienEngine.Core.Resources;
 
-namespace AlienEngine.Core.Graphics
+namespace AlienEngine.Core.Graphics.Buffers
 {
     public class VAO<T1> : GenericVAO
         where T1 : struct
@@ -306,7 +306,7 @@ namespace AlienEngine.Core.Graphics
         [CLSCompliant(false)]
         public uint vaoID
         {
-             get { return ID; }
+            get { return ID; }
             private set { ID = value; }
         }
 #pragma warning restore

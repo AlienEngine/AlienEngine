@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 using AlienEngine.Core.Graphics.OpenGL;
 using AlienEngine.Core.Resources;
 
-namespace AlienEngine.Core.Graphics
+namespace AlienEngine.Core.Graphics.Buffers
 {
     public class VBO<T> : IDisposable
         where T : struct

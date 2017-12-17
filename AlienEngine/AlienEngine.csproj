@@ -244,6 +244,9 @@
     <Compile Include="Game\Shaders\FontShaderProgram.cs" />
     <Compile Include="Game\Shaders\ColoredUIShaderProgram.cs" />
     <Compile Include="Game\UIComponent.cs" />
+    <Compile Include="Graphics\Buffers\FBO.cs" />
+    <Compile Include="Graphics\Buffers\VAO.cs" />
+    <Compile Include="Graphics\Buffers\VBO.cs" />
     <Compile Include="Imaging\DevIL\Collections.cs" />
     <Compile Include="Imaging\DevIL\FilterEngine.cs" />
     <Compile Include="Imaging\DevIL\Image.cs" />
@@ -709,7 +712,6 @@
     <Compile Include="Game\GameElement.cs" />
     <Compile Include="Graphics\Color4.cs" />
     <Compile Include="Imaging\Cubemap.cs" />
-    <Compile Include="Graphics\FBO.cs" />
     <Compile Include="Graphics\Geometry.cs" />
     <Compile Include="Graphics\MeshEntry.cs" />
     <Compile Include="Graphics\MeshFactory.cs" />
@@ -810,8 +812,6 @@
     <Compile Include="Shaders\Samples\Vertex Shaders\DiffuseVertexShader.cs" />
     <Compile Include="Shaders\Samples\Fragment Shaders\DualDiffuseBlendFragmentShader.cs" />
     <Compile Include="Shaders\ShaderProgram.cs" />
-    <Compile Include="Graphics\VAO.cs" />
-    <Compile Include="Graphics\VBO.cs" />
     <Compile Include="Graphics\Vertex.cs" />
     <Compile Include="Inputs\Input.cs" />
     <Compile Include="Inputs\Joystick.cs" />

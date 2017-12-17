@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using AlienEngine.Core.Graphics.Buffers;
 using AlienEngine.Core.Shaders;
 using AlienEngine.Imaging;
 

@@ -5,7 +5,7 @@ using AlienEngine.Core.Resources;
 using System;
 using System.Collections.Generic;
 
-namespace AlienEngine.Core.Graphics
+namespace AlienEngine.Core.Graphics.Buffers
 {
     /// <summary>
     /// Encapsulates a frame buffer and its associated depth buffer (if applicable).
