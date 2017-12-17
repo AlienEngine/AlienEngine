@@ -278,6 +278,7 @@
     <Compile Include="Shaders\Samples\Fragment Shaders\DiffuseSpecularEmissiveFragmentShader.cs" />
     <Compile Include="Shaders\Samples\Fragment Shaders\FontFragmentShader.cs" />
     <Compile Include="Shaders\Samples\Fragment Shaders\ColoredUIFragmentShader.cs" />
+    <Compile Include="Shaders\Samples\Geometry Shaders\ObjectExploderGeometryShader.cs" />
     <Compile Include="Shaders\Samples\Vertex Shaders\FontVertexShader.cs" />
     <Compile Include="Imaging\Enums.cs" />
     <Compile Include="Imaging\Image.cs" />
