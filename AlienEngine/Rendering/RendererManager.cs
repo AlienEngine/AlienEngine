@@ -1,10 +1,10 @@
-﻿using AlienEngine.Core.Graphics;
-using AlienEngine.Core.Graphics.OpenGL;
+﻿using AlienEngine.Core.Graphics.OpenGL;
 using AlienEngine.Core.Shaders;
 using AlienEngine.Shaders;
 using System;
 using System.Collections.Generic;
 using AlienEngine.Core.Graphics.Buffers;
+using AlienEngine.Core.Graphics.Buffers.Data;
 
 namespace AlienEngine.Core.Rendering
 {
@@ -19,8 +19,10 @@ namespace AlienEngine.Core.Rendering
         private static bool _multisampleEnabled;
         private static uint _screenVAO;
         private static uint _screenVBO;
-        private static ShaderProgram screenShaderProgram;
+        private static ShaderProgram _screenShaderProgram;
         private static Rectangle _viewport;
+
+        private static UBO _matricesUBO;
 
         // Depth test
         private static DepthFunction _depthTestFunction;
@@ -53,7 +55,11 @@ namespace AlienEngine.Core.Rendering
         public static bool IsDepthMaskEnabled => _depthMaskEnabled;
 
         public static bool IsBlendingEnabled => _blendingEnabled;
+        
+        internal static readonly MatricesBufferData MatricesData;
 
+        public static UBO MatricesUBO => _matricesUBO;
+        
         public delegate void ViewportChanged(object sender, ViewportChangedEventArgs e);
 
         public static event ViewportChanged OnViewportChange;
@@ -82,6 +88,13 @@ namespace AlienEngine.Core.Rendering
             // Screen
             _screenVAO = 0;
             _screenVBO = 0;
+            
+            // UBOs
+            _matricesUBO = new UBO("Matrices", UniformBufferObjectIndex.Matrices, MatricesBufferData.Size);
+            
+            // UBOs data
+            MatricesData = new MatricesBufferData();
+            MatricesData.RegisterUBO(_matricesUBO);
         }
 
         public static void BackupState(RendererBackupMode mode)
@@ -298,7 +311,7 @@ namespace AlienEngine.Core.Rendering
                 GL.VertexAttribPointer(GL.VERTEX_TEXTURE_COORD_LOCATION, 2, VertexAttribPointerType.Float, false,
                     4 * sizeof(float), 2 * sizeof(float));
 
-                screenShaderProgram = new RenderTextureShaderProgram()
+                _screenShaderProgram = new RenderTextureShaderProgram()
                 {
                     PostEffectMode = PostEffectMode.None,
                     Width = fbo.Size.Width,
@@ -307,7 +320,7 @@ namespace AlienEngine.Core.Rendering
             }
 
             // Bind the shader
-            screenShaderProgram.Bind();
+            _screenShaderProgram.Bind();
 
             // Bind the vertex array
             GL.BindVertexArray(_screenVAO);
