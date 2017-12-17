@@ -244,6 +244,7 @@
     <Compile Include="Game\Shaders\FontShaderProgram.cs" />
     <Compile Include="Game\Shaders\ColoredUIShaderProgram.cs" />
     <Compile Include="Game\UIComponent.cs" />
+    <Compile Include="Graphics\Buffers\Data\MatricesBufferData.cs" />
     <Compile Include="Graphics\Buffers\FBO.cs" />
     <Compile Include="Graphics\Buffers\UBO.cs" />
     <Compile Include="Graphics\Buffers\VAO.cs" />
