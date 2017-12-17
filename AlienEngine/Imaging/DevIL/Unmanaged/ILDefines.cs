@@ -21,7 +21,7 @@
 */
 
 
-namespace AlienEngine.Core.Graphics.DevIL.Unmanaged
+namespace AlienEngine.Core.Imaging.DevIL.Unmanaged
 {
     /// <summary>
     /// IL Defines taken directly from the IL header. These are public, but shouldn't be used

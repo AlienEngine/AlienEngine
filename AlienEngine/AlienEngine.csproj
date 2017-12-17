@@ -132,7 +132,6 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
@@ -245,10 +244,25 @@
     <Compile Include="Game\Shaders\FontShaderProgram.cs" />
     <Compile Include="Game\Shaders\ColoredUIShaderProgram.cs" />
     <Compile Include="Game\UIComponent.cs" />
+    <Compile Include="Imaging\DevIL\Collections.cs" />
+    <Compile Include="Imaging\DevIL\FilterEngine.cs" />
+    <Compile Include="Imaging\DevIL\Image.cs" />
+    <Compile Include="Imaging\DevIL\ImageData.cs" />
+    <Compile Include="Imaging\DevIL\ImageExporter.cs" />
+    <Compile Include="Imaging\DevIL\ImageImporter.cs" />
+    <Compile Include="Imaging\DevIL\ImageStates.cs" />
+    <Compile Include="Imaging\DevIL\ManagedImage.cs" />
+    <Compile Include="Imaging\DevIL\MemoryHelper.cs" />
+    <Compile Include="Imaging\DevIL\TransformEngine.cs" />
+    <Compile Include="Imaging\DevIL\Unmanaged\Enums.cs" />
+    <Compile Include="Imaging\DevIL\Unmanaged\IL.cs" />
+    <Compile Include="Imaging\DevIL\Unmanaged\ILDefines.cs" />
+    <Compile Include="Imaging\DevIL\Unmanaged\ILU.cs" />
+    <Compile Include="Imaging\DevIL\Unmanaged\ILUDefines.cs" />
+    <Compile Include="Imaging\DevIL\Unmanaged\Structures.cs" />
     <Compile Include="Inputs\JoystickAxis.cs" />
     <Compile Include="Inputs\JoystickButton.cs" />
     <Compile Include="Inputs\JoystickState.cs" />
-    <Compile Include="IO\FileSystemManager.cs" />
     <Compile Include="Rendering\MaterialBlendMode.cs" />
     <Compile Include="Rendering\MaterialShadingMode.cs" />
     <Compile Include="Shaders\Samples\Fragment Shaders\DiffuseFragmentShader.cs" />
@@ -694,22 +708,6 @@
     <Compile Include="Game\GameElement.cs" />
     <Compile Include="Graphics\Color4.cs" />
     <Compile Include="Imaging\Cubemap.cs" />
-    <Compile Include="Graphics\DevIL\Collections.cs" />
-    <Compile Include="Graphics\DevIL\FilterEngine.cs" />
-    <Compile Include="Graphics\DevIL\Image.cs" />
-    <Compile Include="Graphics\DevIL\ImageData.cs" />
-    <Compile Include="Graphics\DevIL\ImageExporter.cs" />
-    <Compile Include="Graphics\DevIL\ImageImporter.cs" />
-    <Compile Include="Graphics\DevIL\ImageStates.cs" />
-    <Compile Include="Graphics\DevIL\ManagedImage.cs" />
-    <Compile Include="Graphics\DevIL\MemoryHelper.cs" />
-    <Compile Include="Graphics\DevIL\TransformEngine.cs" />
-    <Compile Include="Graphics\DevIL\Unmanaged\Enums.cs" />
-    <Compile Include="Graphics\DevIL\Unmanaged\IL.cs" />
-    <Compile Include="Graphics\DevIL\Unmanaged\ILDefines.cs" />
-    <Compile Include="Graphics\DevIL\Unmanaged\ILU.cs" />
-    <Compile Include="Graphics\DevIL\Unmanaged\ILUDefines.cs" />
-    <Compile Include="Graphics\DevIL\Unmanaged\Structures.cs" />
     <Compile Include="Graphics\FBO.cs" />
     <Compile Include="Graphics\Geometry.cs" />
     <Compile Include="Graphics\MeshEntry.cs" />
@@ -898,6 +896,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Compute\OpenCL\" />
+    <Folder Include="Graphics\Buffers\" />
     <Folder Include="Graphics\DirectX\" />
     <Folder Include="Graphics\Vulkan\" />
     <Folder Include="Shaders\Samples\Geometry Shaders\" />

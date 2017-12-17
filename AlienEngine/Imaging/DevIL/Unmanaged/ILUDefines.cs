@@ -21,7 +21,7 @@
 */
 
 
-namespace AlienEngine.Core.Graphics.DevIL.Unmanaged
+namespace AlienEngine.Core.Imaging.DevIL.Unmanaged
 {
     internal static class ILUDefines
     {

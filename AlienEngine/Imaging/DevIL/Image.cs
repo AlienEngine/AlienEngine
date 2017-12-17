@@ -21,11 +21,11 @@
 */
 
 using System;
-using AlienEngine.Core.Graphics.DevIL.Unmanaged;
 using System.Drawing;
+using AlienEngine.Core.Imaging.DevIL.Unmanaged;
 using AlienEngine.Imaging;
 
-namespace AlienEngine.Core.Graphics.DevIL
+namespace AlienEngine.Core.Imaging.DevIL
 {
     /// <summary>
     /// Represents a "root" image that is currently valid in DevIL. The root image may be the first image in an image array (e.g. animation), 

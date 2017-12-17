@@ -2,7 +2,7 @@
 using System;
 using System.IO;
 using System.Text;
-using AlienEngine.Core.Graphics.DevIL;
+using AlienEngine.Core.Imaging.DevIL;
 using ZeroFormatter;
 using Image = AlienEngine.Imaging.Image;
 

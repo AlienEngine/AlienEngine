@@ -22,10 +22,10 @@
 
 using System;
 using System.IO;
-using AlienEngine.Core.Graphics.DevIL.Unmanaged;
+using AlienEngine.Core.Imaging.DevIL.Unmanaged;
 using AlienEngine.Imaging;
 
-namespace AlienEngine.Core.Graphics.DevIL
+namespace AlienEngine.Core.Imaging.DevIL
 {
     internal sealed class ImageImporter : IDisposable
     {

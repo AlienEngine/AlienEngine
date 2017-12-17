@@ -24,7 +24,7 @@ using System;
 using System.Runtime.InteropServices;
 using AlienEngine.Imaging;
 
-namespace AlienEngine.Core.Graphics.DevIL.Unmanaged
+namespace AlienEngine.Core.Imaging.DevIL.Unmanaged
 {
     internal static class ILU
     {

@@ -1,4 +1,4 @@
-﻿using AlienEngine.Core.Graphics.DevIL;
+﻿using AlienEngine.Core.Imaging.DevIL;
 using AlienEngine.Imaging;
 using ZeroFormatter;
 

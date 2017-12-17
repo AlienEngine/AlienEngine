@@ -25,7 +25,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using AlienEngine.Imaging;
 
-namespace AlienEngine.Core.Graphics.DevIL
+namespace AlienEngine.Core.Imaging.DevIL
 {
     /// <summary>
     /// Helper static class containing functions that aid dealing with unmanaged memory to managed memory conversions.

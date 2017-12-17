@@ -1,6 +1,6 @@
 ﻿using AlienEngine.Core.Game;
 using AlienEngine.Core.Graphics;
-using AlienEngine.Core.Graphics.DevIL;
+using AlienEngine.Core.Imaging.DevIL;
 using AlienEngine.Core.Graphics.OpenGL;
 using AlienEngine.Core.Rendering;
 using AlienEngine.Core.Resources;

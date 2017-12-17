@@ -24,7 +24,7 @@ using System;
 using System.Runtime.InteropServices;
 using AlienEngine.Imaging;
 
-namespace AlienEngine.Core.Graphics.DevIL.Unmanaged
+namespace AlienEngine.Core.Imaging.DevIL.Unmanaged
 {
     /// <summary>
     /// Represents a specific image surface - e.g. a mipmap, another image in the image array, a face in a cubemap, etc. All surface
@@ -204,7 +204,7 @@ namespace AlienEngine.Core.Graphics.DevIL.Unmanaged
         }
     }
 
-    [StructLayoutAttribute(LayoutKind.Sequential)]
+    [StructLayout(LayoutKind.Sequential)]
     internal struct ImageInfo
     {
         public DataFormat Format;
@@ -253,7 +253,7 @@ namespace AlienEngine.Core.Graphics.DevIL.Unmanaged
         }
     }
 
-    [StructLayoutAttribute(LayoutKind.Sequential)]
+    [StructLayout(LayoutKind.Sequential)]
     internal struct PointF
     {
         float X;
@@ -266,7 +266,7 @@ namespace AlienEngine.Core.Graphics.DevIL.Unmanaged
         }
     }
 
-    [StructLayoutAttribute(LayoutKind.Sequential)]
+    [StructLayout(LayoutKind.Sequential)]
     internal struct PointI
     {
         int X;

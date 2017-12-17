@@ -22,7 +22,7 @@
 
 using System.Collections.Generic;
 
-namespace AlienEngine.Core.Graphics.DevIL
+namespace AlienEngine.Core.Imaging.DevIL
 {
     internal class MipMapChain : List<ImageData>
     {
