@@ -215,7 +215,7 @@ namespace AlienEngine.ASL
                 var isInterfaceBlock = structure.HasCustomAttributes && structure.HasAttribute<InterfaceBlockAttribute>();
                 TypeReference interfaceBlockType = null;
                 var interfaceBlockAttribute = isInterfaceBlock ? structure.CustomAttributes.Where(a => a.AttributeType.Is<InterfaceBlockAttribute>()).First() : null;
-                var interfaceBlockNamespace = isInterfaceBlock ? interfaceBlockAttribute.ConstructorArguments.First().Value.ToString() : string.Empty;
+                var interfaceBlockNamespace = isInterfaceBlock && interfaceBlockAttribute.ConstructorArguments.Count > 0 ? interfaceBlockAttribute.ConstructorArguments.First().Value.ToString() : string.Empty;
 
                 if (isInterfaceBlock)
                 {
