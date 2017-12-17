@@ -263,6 +263,7 @@
     <Compile Include="Inputs\JoystickAxis.cs" />
     <Compile Include="Inputs\JoystickButton.cs" />
     <Compile Include="Inputs\JoystickState.cs" />
+    <Compile Include="IO\FileSystemManager.cs" />
     <Compile Include="Rendering\MaterialBlendMode.cs" />
     <Compile Include="Rendering\MaterialShadingMode.cs" />
     <Compile Include="Shaders\Samples\Fragment Shaders\DiffuseFragmentShader.cs" />
@@ -897,8 +898,6 @@
   <ItemGroup>
     <Folder Include="Compute\OpenCL\" />
     <Folder Include="Graphics\Buffers\" />
-    <Folder Include="Graphics\DirectX\" />
-    <Folder Include="Graphics\Vulkan\" />
     <Folder Include="Shaders\Samples\Geometry Shaders\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
