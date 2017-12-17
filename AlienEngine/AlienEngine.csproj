@@ -244,7 +244,7 @@
     <Compile Include="Game\Shaders\FontShaderProgram.cs" />
     <Compile Include="Game\Shaders\ColoredUIShaderProgram.cs" />
     <Compile Include="Game\UIComponent.cs" />
-    <Compile Include="Graphics\Buffers\Data\IUBOData.cs" />
+    <Compile Include="Graphics\Buffers\Data\UBOData.cs" />
     <Compile Include="Graphics\Buffers\Data\MatricesBufferData.cs" />
     <Compile Include="Graphics\Buffers\FBO.cs" />
     <Compile Include="Graphics\Buffers\UBO.cs" />
@@ -273,6 +273,7 @@
     <Compile Include="IO\FileSystemManager.cs" />
     <Compile Include="Rendering\MaterialBlendMode.cs" />
     <Compile Include="Rendering\MaterialShadingMode.cs" />
+    <Compile Include="Rendering\UniformBufferObjectIndex.cs" />
     <Compile Include="Shaders\Samples\Fragment Shaders\DiffuseFragmentShader.cs" />
     <Compile Include="Shaders\Samples\Fragment Shaders\DiffuseSpecularEmissiveFragmentShader.cs" />
     <Compile Include="Shaders\Samples\Fragment Shaders\FontFragmentShader.cs" />
