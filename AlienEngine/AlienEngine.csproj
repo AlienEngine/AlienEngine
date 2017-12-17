@@ -245,6 +245,7 @@
     <Compile Include="Game\Shaders\ColoredUIShaderProgram.cs" />
     <Compile Include="Game\UIComponent.cs" />
     <Compile Include="Graphics\Buffers\FBO.cs" />
+    <Compile Include="Graphics\Buffers\UBO.cs" />
     <Compile Include="Graphics\Buffers\VAO.cs" />
     <Compile Include="Graphics\Buffers\VBO.cs" />
     <Compile Include="Imaging\DevIL\Collections.cs" />
