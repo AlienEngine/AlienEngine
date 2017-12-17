@@ -7,15 +7,20 @@ namespace AlienEngine.Core.Shaders.Samples
     internal class DiffuseVertexShader : VertexShader
     {
         #region VAO Objects
+
         [Layout(Location = GL.VERTEX_POSITION_LOCATION)] [In] vec3 in_position;
+
         //[Layout(Location = GL.VERTEX_COLOR_LOCATION)] [In] vec4 in_color;
         [Layout(Location = GL.VERTEX_TEXTURE_COORD_LOCATION)] [In] vec2 in_uv;
+
         [Layout(Location = GL.VERTEX_NORMAL_LOCATION)] [In] vec3 in_normal;
         //[Layout(Location = GL.VERTEX_TANGENT_LOCATION)] [In] vec3 in_tangent;
         //[Layout(Location = GL.VERTEX_BITANGENT_LOCATION)] [In] vec3 in_bitangent;
+
         #endregion
 
         #region Fragment shader inputs
+
         [InterfaceBlock("vs_out")]
         [Out]
         struct VS_OUT
@@ -26,31 +31,44 @@ namespace AlienEngine.Core.Shaders.Samples
         };
 
         VS_OUT vs_out;
+
         #endregion
 
+        #region Uniform blocks
+
+        [InterfaceBlock("matrices")]
+        [Layout(UniformLayout.STD140)]
+        [Uniform]
+        struct Matrices
+        {
+            // Projection matrix
+            public mat4 p;
+
+            // Inversed Projection matrix
+            public mat4 i_p;
+
+            // Camera (view) matrix
+            public mat4 v;
+
+            // Inversed Camera (view) matrix
+            public mat4 i_v;
+            
+            // Cubemap matrix
+            public mat4 cm;
+        }
+
+        private Matrices matrices;
+        
+        #endregion
+        
         #region Transformation matrices
+
         // Normal matrix
         [Uniform] mat3 n_matrix;
+
         // World (model) matrix
         [Uniform] mat4 w_matrix;
-        // Camera (view) matrix
-        //[Uniform] mat4 v_matrix;
-        // Model-View matrix
-        //[Uniform] mat4 wv_matrix;
-        // Projection matrix
-        //[Uniform] mat4 p_matrix;
-        // Transformation (model-view-projection) matrix
-        [Uniform] mat4 wvp_matrix;
-        // Inversed World (model) matrix
-        //[Uniform] mat4 i_w_matrix;
-        // Inversed Camera (view) matrix
-        //[Uniform] mat4 i_v_matrix;
-        // Inversed Model-View matrix
-        //[Uniform] mat4 i_wv_matrix;
-        // Inversed Projection matrix
-        //[Uniform] mat4 i_p_matrix;
-        // Inversed Transformation (model-view-projection) matrix
-        //[Uniform] mat4 i_wvp_matrix;
+
         #endregion
 
         void main()
@@ -76,7 +94,7 @@ namespace AlienEngine.Core.Shaders.Samples
             //// tbnT = normalize(tbnT - dot(tbnT, tbnN) * tbnN);
             //tbn = new mat3(tbnT, tbnB, tbnN);
 
-            gl_Position = wvp_matrix * new vec4(in_position, 1);
+            gl_Position = matrices.p * matrices.v * w_matrix * new vec4(in_position, 1);
         }
     }
 }
