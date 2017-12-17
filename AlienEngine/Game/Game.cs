@@ -126,10 +126,10 @@ namespace AlienEngine.Core.Game
             {
                 _loadScene(_registeredScenes[index]);
             }
-            catch (System.Exception)
+            catch (System.Exception e)
             {
                 // TODO: Create a GameException class.
-                throw new System.Exception("Can't load an unregistered scene.");
+                throw new System.Exception("An error occured when loading the scene.", e);
             }
         }
 
