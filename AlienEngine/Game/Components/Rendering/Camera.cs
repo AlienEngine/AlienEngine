@@ -1,4 +1,5 @@
 ﻿using AlienEngine.Core.Game;
+using AlienEngine.Core.Rendering;
 using AlienEngine.Imaging;
 
 namespace AlienEngine
@@ -163,42 +164,27 @@ namespace AlienEngine
         /// <summary>
         /// Gets the projection matrix.
         /// </summary>
-        public Matrix4f ProjectionMatrix
-        {
-            get { return _projectionMatrix; }
-        }
+        public Matrix4f ProjectionMatrix => _projectionMatrix;
 
         /// <summary>
         /// Gets the view matrix.
         /// </summary>
-        public Matrix4f ViewMatrix
-        {
-            get { return _viewMatrix; }
-        }
+        public Matrix4f ViewMatrix => _viewMatrix;
 
         /// <summary>
         /// Gets the cubemap matrix.
         /// </summary>
-        public Matrix4f CubemapMatrix
-        {
-            get { return _cubemapMatrix; }
-        }
+        public Matrix4f CubemapMatrix => _cubemapMatrix;
 
         /// <summary>
         /// Gets the backward vector.
         /// </summary>
-        public Vector3f Backward
-        {
-            get { return -Forward; }
-        }
+        public Vector3f Backward => -Forward;
 
         /// <summary>
         /// Gets the down vector.
         /// </summary>
-        public Vector3f Down
-        {
-            get { return -Up; }
-        }
+        public Vector3f Down => -Up;
 
         /// <summary>
         /// Gets the left vector.
@@ -484,6 +470,15 @@ namespace AlienEngine
                 _setProjectionMatrix();
                 _setViewMatrix();
                 _setCubemapMatrix();
+
+                if (IsPrimary)
+                {
+                    RendererManager.MatricesData.Projection = ProjectionMatrix;
+                    RendererManager.MatricesData.InversedProjection = ProjectionMatrix.Inversed;
+                    RendererManager.MatricesData.View = ViewMatrix;
+                    RendererManager.MatricesData.InversedView = ViewMatrix.Inversed;
+                    RendererManager.MatricesData.Cubemap = CubemapMatrix;
+                }
 
                 _shouldUpdate = false;
             }

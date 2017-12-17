@@ -88,37 +88,14 @@ namespace AlienEngine
             ShaderProgram.Bind();
 
             // Pre calculate all matrices
-            Matrix4f
-                w_matrix = gameElement.WorldTransform.GetTransformation(),
-                v_matrix = _camera.ViewMatrix,
-                p_matrix = _camera.ProjectionMatrix,
-                cm_matrix = _camera.CubemapMatrix,
-                pcm_matrix = p_matrix * cm_matrix,
-                wv_matrix = w_matrix * v_matrix,
-                wvp_matrix = wv_matrix * p_matrix,
-                i_w_matrix = w_matrix.Inversed,
-                i_v_matrix = v_matrix.Inversed,
-                i_p_matrix = p_matrix.Inversed,
-                i_wv_matrix = wv_matrix.Inversed,
-                i_wvp_matrix = wvp_matrix.Inversed;
+            Matrix4f w_matrix = gameElement.WorldTransform.GetTransformation();
 
             Matrix3f n_matrix = w_matrix.ToMatrix3f().Inversed.Transposed;
 
             // Sets projection matrices uniforms values
-            ShaderProgram.SetUniform("wvp_matrix", wvp_matrix);
-            ShaderProgram.SetUniform("wv_matrix", wv_matrix);
             ShaderProgram.SetUniform("w_matrix", w_matrix);
-            ShaderProgram.SetUniform("v_matrix", v_matrix);
-            ShaderProgram.SetUniform("p_matrix", p_matrix);
             ShaderProgram.SetUniform("n_matrix", n_matrix);
-            ShaderProgram.SetUniform("cm_matrix", cm_matrix);
-            ShaderProgram.SetUniform("pcm_matrix", pcm_matrix);
-            ShaderProgram.SetUniform("i_wvp_matrix", i_wvp_matrix);
-            ShaderProgram.SetUniform("i_wv_matrix", i_wv_matrix);
-            ShaderProgram.SetUniform("i_w_matrix", i_w_matrix);
-            ShaderProgram.SetUniform("i_v_matrix", i_v_matrix);
-            ShaderProgram.SetUniform("i_p_matrix", i_p_matrix);
-
+    
             // Sets lights informations
             var ligths = Game.Instance.CurrentScene.Lights;
             var max_nb = ligths.Length;
