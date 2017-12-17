@@ -5,6 +5,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
+using AlienEngine.Core.Graphics.Buffers;
+using AlienEngine.Core.Graphics.Buffers.Data;
+using AlienEngine.Core.Rendering;
 
 namespace AlienEngine.Core.Shaders
 {
@@ -152,7 +155,14 @@ namespace AlienEngine.Core.Shaders
             _uniformLocationsCache = new Dictionary<string, int>();
             _valuesMap = new Dictionary<string, object>();
 
+            OnCompile += _onCompile;
+            
             ResourcesManager.AddDisposableResource(this);
+        }
+
+        private void _onCompile()
+        {
+            RendererManager.MatricesUBO.Bind(this);
         }
 
         #endregion
