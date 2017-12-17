@@ -16,8 +16,8 @@ namespace AlienEngine.Core.Rendering
         private static bool _depthMaskEnabled;
         private static bool _blendingEnabled;
         private static bool _multisampleEnabled;
-        private static uint screenVAO;
-        private static uint screenVBO;
+        private static uint _screenVAO;
+        private static uint _screenVBO;
         private static ShaderProgram screenShaderProgram;
         private static Rectangle _viewport;
 
@@ -79,8 +79,8 @@ namespace AlienEngine.Core.Rendering
             _viewport = Rectangle.Empty;
 
             // Screen
-            screenVAO = 0;
-            screenVBO = 0;
+            _screenVAO = 0;
+            _screenVBO = 0;
         }
 
         public static void BackupState(RendererBackupMode mode)
@@ -270,7 +270,7 @@ namespace AlienEngine.Core.Rendering
         public static void RenderScreen(FBO fbo)
         {
             // Create the screen if it's not exist
-            if (screenVAO == 0)
+            if (_screenVAO == 0)
             {
                 float[] indArray = new float[]
                 {
@@ -283,11 +283,11 @@ namespace AlienEngine.Core.Rendering
                     -1.0f, 1.0f, 0.0f, 1.0f
                 };
 
-                screenVAO = GL.GenVertexArray();
-                screenVBO = GL.GenBuffer();
+                _screenVAO = GL.GenVertexArray();
+                _screenVBO = GL.GenBuffer();
 
-                GL.BindVertexArray(screenVAO);
-                GL.BindBuffer(BufferTarget.ArrayBuffer, screenVBO);
+                GL.BindVertexArray(_screenVAO);
+                GL.BindBuffer(BufferTarget.ArrayBuffer, _screenVBO);
                 GL.BufferData(BufferTarget.ArrayBuffer, sizeof(float) * indArray.Length, indArray,
                     BufferUsageHint.StaticDraw);
                 GL.EnableVertexAttribArray(GL.VERTEX_POSITION_LOCATION);
@@ -309,7 +309,7 @@ namespace AlienEngine.Core.Rendering
             screenShaderProgram.Bind();
 
             // Bind the vertex array
-            GL.BindVertexArray(screenVAO);
+            GL.BindVertexArray(_screenVAO);
 
             // Depth test settings
             BackupState(RendererBackupMode.DepthTest);
