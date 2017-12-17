@@ -69,7 +69,7 @@ namespace AlienEngine.Core.Graphics.Buffers
         /// <param name="format">Specifies the internal pixel format for the frame buffer.</param>
         /// <param name="mipmaps">Specifies whether to build mipmaps after the frame buffer is unbound.</param>
         public FBO(int width, int height, FramebufferAttachment attachment = FramebufferAttachment.ColorAttachment0, PixelInternalFormat format = PixelInternalFormat.Rgba8, bool mipmaps = true, bool renderbuffer = true, bool multisampled = false)
-            : this(new Sizei(width, height), new FramebufferAttachment[] { attachment }, format, mipmaps)
+            : this(new Sizei(width, height), new FramebufferAttachment[] { attachment }, format, mipmaps, renderbuffer: renderbuffer, multisampled: multisampled)
         {
         }
 
@@ -81,7 +81,7 @@ namespace AlienEngine.Core.Graphics.Buffers
         /// <param name="format">Specifies the internal pixel format for the frame buffer.</param>
         /// <param name="mipmaps">Specifies whether to build mipmaps after the frame buffer is unbound.</param>
         public FBO(Sizei size, FramebufferAttachment attachment = FramebufferAttachment.ColorAttachment0, PixelInternalFormat format = PixelInternalFormat.Rgba8, bool mipmaps = true, bool renderbuffer = true, bool multisampled = false)
-            : this(size, new FramebufferAttachment[] { attachment }, format, mipmaps)
+            : this(size, new FramebufferAttachment[] { attachment }, format, mipmaps, renderbuffer: renderbuffer, multisampled: multisampled)
         {
         }
 
@@ -272,14 +272,14 @@ namespace AlienEngine.Core.Graphics.Buffers
         /// <summary>
         /// Unbinds the framebuffer and then generates the mipmaps of each renderbuffer.
         /// </summary>
-        public void Disable(FBO screenFBO = null)
+        public void Disable(ref FBO screenFBO)
         {
-            // Copy framebuffer texture to a not multisampled FBO if this one is.
-            if (Multisampled)
+            // Copy framebuffer texture to a non multisampled FBO if this one is.
+            if (Multisampled && screenFBO != null)
             {
                 GL.BindFramebuffer(FramebufferTarget.ReadFramebuffer, BufferID);
-                GL.BindFramebuffer(FramebufferTarget.DrawFramebuffer, (screenFBO != null) ? screenFBO.BufferID : 0);
-                GL.BlitFramebuffer(0, 0, Size.Width, Size.Height, 0, 0, Size.Width, Size.Height, ClearBufferMask.ColorBufferBit, BlitFramebufferFilter.Nearest);
+                GL.BindFramebuffer(FramebufferTarget.DrawFramebuffer, screenFBO.BufferID);
+                GL.BlitFramebuffer(0, 0, Size.Width, Size.Height, 0, 0, screenFBO.Size.Width, screenFBO.Size.Height, ClearBufferMask.ColorBufferBit, BlitFramebufferFilter.Nearest);
             }
 
             // Unbind this framebuffer (does not guarantee the correct framebuffer is bound)

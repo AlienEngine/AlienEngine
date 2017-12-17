@@ -196,7 +196,7 @@ namespace AlienEngine
 
             // Create framebuffer objects
             _renderFBO = new FBO(GameSettings.GameWindowSize, mipmaps: false, multisampled: GameSettings.MultisampleEnabled);
-            _screenFBO = new FBO(_renderFBO.Size, mipmaps: false);
+            _screenFBO = new FBO(_renderFBO.Size, mipmaps: false, multisampled: false);
 
             // Set the renderer viewport
             int wi, he;
@@ -230,7 +230,7 @@ namespace AlienEngine
             Game.Instance.CurrentScene.Render();
 
             // Disable framebufer
-            _renderFBO.Disable(_screenFBO);
+            _renderFBO.Disable(ref _screenFBO);
 
             // Render the screen (output of the frame buffer)
             RendererManager.RenderScreen(GameSettings.MultisampleEnabled ? _screenFBO : _renderFBO);
