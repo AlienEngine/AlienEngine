@@ -16,9 +16,16 @@ namespace AlienEngine.Core.Shaders.Samples
         #endregion
 
         #region Fragment shader inputs
-        [Out] vec3 normal;
-        [Out] vec2 uv;
-        [Out] vec3 position;
+        [InterfaceBlock("vs_out")]
+        [Out]
+        struct VS_OUT
+        {
+            public vec3 normal;
+            public vec2 uv;
+            public vec3 position;
+        };
+
+        VS_OUT vs_out;
         #endregion
 
         #region Transformation matrices
@@ -50,13 +57,13 @@ namespace AlienEngine.Core.Shaders.Samples
         {
             // Setting normals
             vec3 normalView = (length(in_normal) == 0 ? new vec3(0) : n_matrix * in_normal);
-            normal = normalView;
+            vs_out.normal = normalView;
 
             // Setting texture coordinates
-            uv = in_uv;
+            vs_out.uv = in_uv;
 
             // Setting vertices position
-            position = (w_matrix * new vec4(in_position, 1)).xyz;
+            vs_out.position = (w_matrix * new vec4(in_position, 1)).xyz;
 
             //// Setting tangents
             //vec3 vTangent = normalize(in_tangent);

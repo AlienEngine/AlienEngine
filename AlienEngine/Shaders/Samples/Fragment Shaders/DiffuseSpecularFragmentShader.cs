@@ -104,9 +104,18 @@ namespace AlienEngine.Core.Shaders.Samples
         // --------------------
         #endregion
 
-        [In] vec3 normal;
-        [In] vec2 uv;
-        [In] vec3 position;
+        #region Fragment shader inputs
+        [InterfaceBlock("fs_in")]
+        [In]
+        struct VS_OUT
+        {
+            public vec3 normal;
+            public vec2 uv;
+            public vec3 position;
+        };
+
+        VS_OUT fs_in;
+        #endregion
 
         #region Lights
         // Lights
@@ -185,7 +194,7 @@ namespace AlienEngine.Core.Shaders.Samples
 
             if (materialState.hasColorSpecular)
             {
-                vec3 vertexToEye = normalize(c_position - position);
+                vec3 vertexToEye = normalize(c_position - fs_in.position);
                 vec3 lv = -direction + vertexToEye;
                 vec3 halfway = lv / length(lv);
                 //vec3 lightReflect = normalize(reflect(direction, normal));
@@ -215,7 +224,7 @@ namespace AlienEngine.Core.Shaders.Samples
 
         vec3 CalcPointLight(LightState light, vec3 normal, vec2 uv)
         {
-            vec3 LightDirection = position - light.Position;
+            vec3 LightDirection = fs_in.position - light.Position;
             float Distance = length(LightDirection);
             LightDirection = normalize(LightDirection);
 
@@ -229,7 +238,7 @@ namespace AlienEngine.Core.Shaders.Samples
 
         vec3 CalcSpotLight(LightState light, vec3 normal, vec2 uv)
         {
-            vec3 LightToPixel = normalize(position - light.Position);
+            vec3 LightToPixel = normalize(fs_in.position - light.Position);
             float SpotFactor = max(0.0f, dot(LightToPixel, normalize(light.Direction)));
 
             float SpotAttenuation = pow(SpotFactor, light.FallOffExponent);
@@ -243,15 +252,15 @@ namespace AlienEngine.Core.Shaders.Samples
         {
             if (materialState.hasTextureDiffuse)
             {
-                vec4 textureDiffuse = texture(materialState.textureDiffuse, uv);
+                vec4 textureDiffuse = texture(materialState.textureDiffuse, fs_in.uv);
                 if (textureDiffuse.a < 0.1f)
                 {
                     __output("discard");
                 }
             }
 
-            vec3 _normal = normalize(normal);
-            vec2 _uv = uv * materialState.textureTilling;
+            vec3 _normal = normalize(fs_in.normal);
+            vec2 _uv = fs_in.uv * materialState.textureTilling;
             vec3 _totalLight = new vec3(0);
 
             for (int i = 0; i < lights_nb; i++)
