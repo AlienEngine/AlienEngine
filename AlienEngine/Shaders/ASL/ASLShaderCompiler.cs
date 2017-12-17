@@ -196,7 +196,7 @@ namespace AlienEngine.ASL
                     _emitField(field, true);
 
                 _indent--;
-                _sb.AppendLine("};");
+                _sb.AppendLine($"}} {type.InterfaceBlockNamespace};");
                 _emitedStructures.Add(type);
             }
         }
