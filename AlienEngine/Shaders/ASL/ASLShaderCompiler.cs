@@ -112,6 +112,50 @@ namespace AlienEngine.ASL
                 _sb.AppendLine(ext);
             }
 
+            if (_shaderSource is GeometryShader)
+            {
+                _sb.AppendLine();
+                var input = _shaderSource.GetType().GetCustomAttributes(typeof(GeometryShader.LayoutInAttribute), true).Select(a => a as GeometryShader.LayoutInAttribute).ToList();
+                if (input.Count > 0)
+                {
+                    switch (input.First().InputID)
+                    {
+                        case GeometryShader.InputLayout.Points:
+                            _sb.AppendLine("layout(points) in;");
+                            break;
+                        case GeometryShader.InputLayout.Lines:
+                            _sb.AppendLine("layout(lines) in;");
+                            break;
+                        case GeometryShader.InputLayout.LinesAdjacency:
+                            _sb.AppendLine("layout(lines_adjacency) in;");
+                            break;
+                        case GeometryShader.InputLayout.Triangles:
+                            _sb.AppendLine("layout(triangles) in;");
+                            break;
+                        case GeometryShader.InputLayout.TrianglesAdjacency:
+                            _sb.AppendLine("layout(triangles_adjacency) in;");
+                            break;
+                    }
+                }
+                
+                var output = _shaderSource.GetType().GetCustomAttributes(typeof(GeometryShader.LayoutOutAttribute), true).Select(a => a as GeometryShader.LayoutOutAttribute).ToList();
+                if (output.Count > 0)
+                {
+                    switch (output.First().OutputID)
+                    {
+                        case GeometryShader.OutputLayout.Points:
+                            _sb.AppendLine("layout(points) out;");
+                            break;
+                        case GeometryShader.OutputLayout.LineStrip:
+                            _sb.AppendLine("layout(line_strip) out;");
+                            break;
+                        case GeometryShader.OutputLayout.TriangleStrip:
+                            _sb.AppendLine("layout(triangle_strip) out;");
+                            break;
+                    }
+                }
+            }
+
             _emitStructures();
             _emitUniforms();
             _emitInputs();
@@ -180,7 +224,7 @@ namespace AlienEngine.ASL
                                     }
                                 }
                             }
-                            _sb.Append(string.Format("layout({0}) ", string.Join(", ", parameters.ToArray())));
+                            _sb.Append($"layout({string.Join(", ", parameters.ToArray())}) ");
                         }
                     }
                     _sb.Append("uniform ");
@@ -283,7 +327,7 @@ namespace AlienEngine.ASL
                             }
                         }
                     }
-                    _sb.Append(string.Format("layout({0}) ", string.Join(", ", parameters.ToArray())));
+                    _sb.Append($"layout({string.Join(", ", parameters.ToArray())}) ");
                 }
             }
 
@@ -297,8 +341,8 @@ namespace AlienEngine.ASL
                 {
                     if (_shaderSource is VertexShader)
                     {
-                        var location = (int)field.LayoutAttribute.Properties.Where(p => p.Name == "Location").First().Argument.Value;
-                        _sb.Append(string.Format("layout(location = {0}) ", location));
+                        var location = (int)field.LayoutAttribute.Properties.First(p => p.Name == "Location").Argument.Value;
+                        _sb.Append($"layout(location = {location}) ");
                     }
                     else if (_shaderSource is FragmentShader)
                     {
@@ -321,37 +365,7 @@ namespace AlienEngine.ASL
                                     }
                                 }
                             }
-                            _sb.Append(string.Format("layout({0}) ", string.Join(", ", parameters.ToArray())));
-                        }
-                    }
-                    else if (_shaderSource is GeometryShader)
-                    {
-                        if (field.LayoutAttribute.HasConstructorArguments)
-                        {
-                            var input = field.LayoutAttribute.ConstructorArguments.First();
-                            if (input.Type.Is<GeometryShader.InputLayout>())
-                            {
-                                switch ((GeometryShader.InputLayout)input.Value)
-                                {
-                                    case GeometryShader.InputLayout.Points:
-                                        _sb.Append("layout(points) in;");
-                                        break;
-                                    case GeometryShader.InputLayout.Lines:
-                                        _sb.Append("layout(lines) in;");
-                                        break;
-                                    case GeometryShader.InputLayout.LinesAdjacency:
-                                        _sb.Append("layout(lines_adjacency) in;");
-                                        break;
-                                    case GeometryShader.InputLayout.Triangles:
-                                        _sb.Append("layout(triangles) in;");
-                                        break;
-                                    case GeometryShader.InputLayout.TrianglesAdjacency:
-                                        _sb.Append("layout(triangles_adjacency) in;");
-                                        break;
-                                }
-                                _sb.AppendLine();
-                                return;
-                            }
+                            _sb.Append($"layout({string.Join(", ", parameters.ToArray())}) ");
                         }
                     }
                 }
@@ -366,35 +380,11 @@ namespace AlienEngine.ASL
                         var layouts = new List<string>();
                         var locationProp = field.LayoutAttribute.Properties.Where(p => p.Name == "Location");
                         var indexProp = field.LayoutAttribute.Properties.Where(p => p.Name == "Index");
-                        if (locationProp.Count() > 0)
+                        if (locationProp.Any())
                             layouts.Add("location = " + (int)locationProp.First().Argument.Value);
-                        if (indexProp.Count() > 0)
+                        if (indexProp.Any())
                             layouts.Add("index = " + (int)indexProp.First().Argument.Value);
-                        _sb.Append(string.Format("layout({0}) ", string.Join(", ", layouts.ToArray())));
-                    }
-                    else if (_shaderSource is GeometryShader)
-                    {
-                        if (field.LayoutAttribute.HasConstructorArguments)
-                        {
-                            var input = field.LayoutAttribute.ConstructorArguments.First();
-                            if (input.Type.Is<GeometryShader.OutputLayout>())
-                            {
-                                switch ((GeometryShader.OutputLayout)input.Value)
-                                {
-                                    case GeometryShader.OutputLayout.Points:
-                                        _sb.Append("layout(points) out;");
-                                        break;
-                                    case GeometryShader.OutputLayout.LineStrip:
-                                        _sb.Append("layout(line_strip) out;");
-                                        break;
-                                    case GeometryShader.OutputLayout.TriangleStrip:
-                                        _sb.Append("layout(triangle_strip) out;");
-                                        break;
-                                }
-                                _sb.AppendLine();
-                                return;
-                            }
-                        }
+                        _sb.Append($"layout({string.Join(", ", layouts.ToArray())}) ");
                     }
                 }
                 _sb.Append("out ");
@@ -431,7 +421,7 @@ namespace AlienEngine.ASL
                                 }
                             }
                         }
-                        _sb.AppendLine(string.Format("layout({0}) uniform;", string.Join(", ", parameters.ToArray())));
+                        _sb.AppendLine($"layout({string.Join(", ", parameters.ToArray())}) uniform;");
                         return;
                     }
                 }
@@ -439,7 +429,7 @@ namespace AlienEngine.ASL
             }
             else
             {
-                throw new ASLException("ASL Error: An error occured when evaluating the qualifier of the variable \"" + field.Name + "\".");
+                throw new ASLException($"ASL Error: An error occured when evaluating the qualifier of the variable \"{field.Name}\".");
             }
 
             _sb.Append(field.Type);
