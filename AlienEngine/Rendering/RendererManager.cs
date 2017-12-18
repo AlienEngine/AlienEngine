@@ -3,6 +3,7 @@ using AlienEngine.Core.Shaders;
 using AlienEngine.Shaders;
 using System;
 using System.Collections.Generic;
+using AlienEngine.Core.Game;
 using AlienEngine.Core.Graphics.Buffers;
 using AlienEngine.Core.Graphics.Buffers.Data;
 
@@ -17,6 +18,7 @@ namespace AlienEngine.Core.Rendering
         private static bool _depthMaskEnabled;
         private static bool _blendingEnabled;
         private static bool _multisampleEnabled;
+        private static bool _gammaCorrectionEnabled;
         private static uint _screenVAO;
         private static uint _screenVBO;
         private static ShaderProgram _screenShaderProgram;
@@ -29,20 +31,20 @@ namespace AlienEngine.Core.Rendering
 
         // Face culling
         private static CullFaceMode _faceCullingMode;
-
         private static FrontFaceDirection _faceCullingFrontFaceDirection;
 
         // Blending
         private static BlendingFactorSrc _blendingFactorSrc;
-
         private static BlendingFactorDest _blendingFactorDest;
-
+        
         // Backup
         private static Tuple<bool, CullFaceMode, FrontFaceDirection> _faceCullingBackup;
 
         private static Tuple<bool, DepthFunction> _depthTestBackup;
 
         private static Tuple<bool> _depthMaskBackup;
+
+        private static Tuple<bool> _gammaCorrectionBackup;
 
         private static Tuple<bool, BlendingFactorSrc, BlendingFactorDest> _blendingBackup;
 
@@ -75,12 +77,15 @@ namespace AlienEngine.Core.Rendering
             _depthMaskEnabled = true;
             _blendingEnabled = false;
             _faceCullingEnabled = false;
+            _multisampleEnabled = false;
+            _gammaCorrectionEnabled = false;
 
             // Backups
             _faceCullingBackup = null;
             _depthTestBackup = null;
             _depthMaskBackup = null;
             _blendingBackup = null;
+            _gammaCorrectionBackup = null;
 
             // Viewport
             _viewport = Rectangle.Empty;
@@ -115,6 +120,9 @@ namespace AlienEngine.Core.Rendering
                     _faceCullingBackup = new Tuple<bool, CullFaceMode, FrontFaceDirection>(_faceCullingEnabled,
                         _faceCullingMode, _faceCullingFrontFaceDirection);
                     break;
+                case RendererBackupMode.GammaCorrection:
+                    _gammaCorrectionBackup = new Tuple<bool>(_gammaCorrectionEnabled);
+                    break;
             }
         }
 
@@ -148,6 +156,13 @@ namespace AlienEngine.Core.Rendering
                     {
                         FaceCulling(_faceCullingBackup.Item1, _faceCullingBackup.Item2, _faceCullingBackup.Item3);
                         _faceCullingBackup = null;
+                    }
+                    break;
+                case RendererBackupMode.GammaCorrection:
+                    if (_gammaCorrectionBackup != null)
+                    {
+                        GammaCorrection(_gammaCorrectionBackup.Item1);
+                        _gammaCorrectionBackup = null;
                     }
                     break;
             }
@@ -281,6 +296,16 @@ namespace AlienEngine.Core.Rendering
             _multisampleEnabled = enable;
         }
 
+        public static void GammaCorrection(bool enable = true)
+        {
+            if (enable)
+                GL.Enable(EnableCap.FramebufferSrgb);
+            else
+                GL.Disable(EnableCap.FramebufferSrgb);
+
+            _gammaCorrectionEnabled = enable;
+        }
+
         public static void RenderScreen(FBO fbo)
         {
             // Create the screen if it's not exist
@@ -318,18 +343,21 @@ namespace AlienEngine.Core.Rendering
                     Height = fbo.Size.Height
                 };
             }
+            
+            // Save states
+            BackupState(RendererBackupMode.GammaCorrection);
+            BackupState(RendererBackupMode.DepthTest);
+            BackupState(RendererBackupMode.FaceCulling);
+
+            DepthTest(false);
+            FaceCulling(false);
+            GammaCorrection(GameSettings.GammaCorrectionEnabled);
 
             // Bind the shader
             _screenShaderProgram.Bind();
 
             // Bind the vertex array
             GL.BindVertexArray(_screenVAO);
-
-            // Depth test settings
-            BackupState(RendererBackupMode.DepthTest);
-            BackupState(RendererBackupMode.FaceCulling);
-            DepthTest(false);
-            FaceCulling(false);
 
             // Bind the texture
             GL.ActiveTexture(GL.DIFFUSE_TEXTURE_UNIT_INDEX);
@@ -345,6 +373,7 @@ namespace AlienEngine.Core.Rendering
             GL.BindVertexArray(0);
 
             // Restore states
+            RestoreState(RendererBackupMode.GammaCorrection);
             RestoreState(RendererBackupMode.DepthTest);
             RestoreState(RendererBackupMode.FaceCulling);
         }

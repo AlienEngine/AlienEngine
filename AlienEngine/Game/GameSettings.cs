@@ -9,6 +9,17 @@ namespace AlienEngine.Core.Game
     public static class GameSettings
     {
         // --------------------
+        // Rendering
+        // --------------------
+        // Enabled/Disabled state
+        // ----------
+        /// <summary>
+        /// Define if the <see cref="Game"/> uses gamma correction.
+        /// </summary>
+        public static readonly bool GammaCorrectionEnabled;
+        // ----------
+
+        // --------------------
         // Multisample
         // --------------------
         // Enabled/Disabled state
@@ -92,7 +103,7 @@ namespace AlienEngine.Core.Game
         /// <summary>
         /// The game FPS.
         /// </summary>
-        public static readonly int GameFPS;
+        public static readonly int GameFps;
         // --------------------
 
         /// <summary>
@@ -106,6 +117,11 @@ namespace AlienEngine.Core.Game
             IniParser config = new IniParser("game.ini");
 
             // Get parsed values
+            if (int.TryParse(config.SectionedResult["Rendering"]["GammaCorrection"], out _int1))
+                GammaCorrectionEnabled = _int1 == 1;
+            else
+                GammaCorrectionEnabled = false;
+            
             if (int.TryParse(config.SectionedResult["Multisample"]["MultisampleEnabled"], out _int1))
                 MultisampleEnabled = _int1 == 1;
             else
@@ -158,9 +174,9 @@ namespace AlienEngine.Core.Game
                 GameWindowTitle = "AlienEngine Game";
 
             if (int.TryParse(config.SectionedResult["Game"]["FPS"], out _int1))
-                GameFPS = _int1;
+                GameFps = _int1;
             else
-                GameFPS = 60;
+                GameFps = 60;
 
         }
     }

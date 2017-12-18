@@ -90,7 +90,7 @@ namespace AlienEngine
             int frames = 0;
             int frameCounter = 0;
 
-            double frameTime = Time.SECOND / GameSettings.GameFPS;
+            double frameTime = Time.SECOND / GameSettings.GameFps;
 
             // Save the last frame time
             double lastTime = Time.GetTime();
