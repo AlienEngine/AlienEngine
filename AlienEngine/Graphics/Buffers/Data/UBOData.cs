@@ -57,7 +57,8 @@ namespace AlienEngine.Core.Graphics.Buffers.Data
         protected void SetVariableValue(string name, ref Matrix4f value)
         {
             UBV variable;
-            if (!_variablesCollection.TryGetValue(name, out variable)) return;
+            if (!_variablesCollection.TryGetValue(name, out variable))
+                throw new KeyNotFoundException($"Unable to find the uniform buffer variable with name \"{name}\"");
             
             variable.CheckType(ShaderUniformType.FloatMat4);
 
