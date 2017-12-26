@@ -1079,9 +1079,9 @@ namespace AlienEngine
         /// <summary>
         /// Builds a rotation matrix for a rotation.
         /// </summary>
-        /// <param name="angleX">X rotation.</param>
-        /// <param name="angleY">Y rotation.</param>
-        /// <param name="angleZ">Z rotation.</param>
+        /// <param name="angleX">X rotation in radians.</param>
+        /// <param name="angleY">Y rotation in radians.</param>
+        /// <param name="angleZ">Z rotation in radians.</param>
         /// <returns>The resulting Matrix4f instance.</returns>
         public static Matrix4f CreateRotation(float angleX, float angleY, float angleZ)
         {
