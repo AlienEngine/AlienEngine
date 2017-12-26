@@ -274,6 +274,7 @@
     <Compile Include="IO\FileSystemManager.cs" />
     <Compile Include="Rendering\MaterialBlendMode.cs" />
     <Compile Include="Rendering\MaterialShadingMode.cs" />
+    <Compile Include="Rendering\DirectionalShadowMap.cs" />
     <Compile Include="Rendering\IShadowMap.cs" />
     <Compile Include="Rendering\UniformBufferObjectIndex.cs" />
     <Compile Include="Shaders\Samples\Fragment Shaders\DiffuseFragmentShader.cs" />
