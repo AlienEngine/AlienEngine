@@ -14,8 +14,10 @@ namespace AlienEngine.Core.Shaders.Samples
         [Layout(Location = GL.VERTEX_TEXTURE_COORD_LOCATION)] [In] vec2 in_uv;
 
         [Layout(Location = GL.VERTEX_NORMAL_LOCATION)] [In] vec3 in_normal;
-        //[Layout(Location = GL.VERTEX_TANGENT_LOCATION)] [In] vec3 in_tangent;
-        //[Layout(Location = GL.VERTEX_BITANGENT_LOCATION)] [In] vec3 in_bitangent;
+
+        [Layout(Location = GL.VERTEX_TANGENT_LOCATION)] [In] vec3 in_tangent;
+
+        [Layout(Location = GL.VERTEX_BITANGENT_LOCATION)] [In] vec3 in_bitangent;
 
         #endregion
 
@@ -29,6 +31,7 @@ namespace AlienEngine.Core.Shaders.Samples
             public vec2 uv;
             public vec3 position;
             public vec4 fragPosLightSpace;
+            public mat3 tbn;
         };
 
         VS_OUT vs_out;
@@ -90,11 +93,18 @@ namespace AlienEngine.Core.Shaders.Samples
 
             // Setting shadow map
             vs_out.fragPosLightSpace = matrices.lm * worldPosition;
-            
+
             //// Setting tangents
             //vec3 vTangent = normalize(in_tangent);
 
             //// Tangent to view
+            vec3 T = normalize(new vec3(w_matrix * new vec4(in_tangent, 0.0f)));
+            // vec3 B = normalize(new vec3(w_matrix * new vec4(in_bitangent, 0.0f)));
+            vec3 N = normalize(new vec3(w_matrix * new vec4(in_normal, 0.0f)));
+            T = normalize(T - dot(T, N) * N);
+            // then retrieve perpendicular vector B with the cross product of T and N
+            vec3 B = cross(N, T);
+            vs_out.tbn = transpose(new mat3(T, B, N));
             //vec3 tbnT = normalize(n_matrix * vTangent);
             //vec3 tbnB = normalize(n_matrix * in_bitangent);
             //vec3 tbnN = normalView;

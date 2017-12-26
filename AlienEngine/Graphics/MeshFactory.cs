@@ -66,6 +66,42 @@ namespace AlienEngine.Core.Graphics
 
             Vector3f[] normals = CalculateNormals(vertices, indices);
 
+            Vector3f[] tangents = new Vector3f[indices.Length];
+            Vector3f[] bitangents = new Vector3f[indices.Length];
+
+            for (int i = 0, l = vertices.Length; i < 2; i += 3)
+            {
+                Vector3f e1 = vertices[i + 1] - vertices[i];
+                Vector3f e2 = vertices[i + 2] - vertices[i];
+
+                Vector2f u1 = uvs[i + 1] - uvs[i];
+                Vector2f u2 = uvs[i + 2] - uvs[i];
+
+                float f = 1.0f / (u1.X * u2.Y - u2.X * u1.Y);
+
+                var t = new Vector3f()
+                {
+                    X = f * (u2.Y * e1.X - u1.Y * e2.X),
+                    Y = f * (u2.Y * e1.Y - u1.Y * e2.Y),
+                    Z = f * (u2.Y * e1.Z - u1.Y * e2.Z)
+                };
+
+                tangents[i + 0] = Vector3f.Normalize(t);
+                tangents[i + 1] = Vector3f.Normalize(t);
+                tangents[i + 2] = Vector3f.Normalize(t);
+
+                var b = new Vector3f()
+                {
+                    X = f * (-u2.X * e1.X + u1.X * e2.X),
+                    Y = f * (-u2.X * e1.Y + u1.X * e2.Y),
+                    Z = f * (-u2.X * e1.Z + u1.X * e2.Z)
+                };
+
+                bitangents[i + 0] = Vector3f.Normalize(b);
+                bitangents[i + 1] = Vector3f.Normalize(b);
+                bitangents[i + 2] = Vector3f.Normalize(b);
+            }
+
             MeshEntry plane = new MeshEntry();
 
             plane.BaseIndex = 0;
@@ -80,6 +116,8 @@ namespace AlienEngine.Core.Graphics
             VBO<Vector3f> vertex = new VBO<Vector3f>(vertices);
             VBO<Vector2f> texture = new VBO<Vector2f>(uvs);
             VBO<Vector3f> normal = new VBO<Vector3f>(normals);
+            VBO<Vector3f> tangent = new VBO<Vector3f>(tangents);
+            VBO<Vector3f> bitangent = new VBO<Vector3f>(bitangents);
             VBO<int> element = new VBO<int>(indices, BufferTarget.ElementArrayBuffer, BufferUsageHint.StaticRead);
 
             GL.BindBuffer(vertex.BufferTarget, vertex.ID);
@@ -93,6 +131,14 @@ namespace AlienEngine.Core.Graphics
             GL.BindBuffer(normal.BufferTarget, normal.ID);
             GL.EnableVertexAttribArray(GL.VERTEX_NORMAL_LOCATION);
             GL.VertexAttribPointer(GL.VERTEX_NORMAL_LOCATION, normal.Size, normal.PointerType, false, 0, 0);
+
+            GL.BindBuffer(tangent.BufferTarget, tangent.ID);
+            GL.EnableVertexAttribArray(GL.VERTEX_TANGENT_LOCATION);
+            GL.VertexAttribPointer(GL.VERTEX_TANGENT_LOCATION, tangent.Size, tangent.PointerType, false, 0, 0);
+
+            GL.BindBuffer(bitangent.BufferTarget, bitangent.ID);
+            GL.EnableVertexAttribArray(GL.VERTEX_BITANGENT_LOCATION);
+            GL.VertexAttribPointer(GL.VERTEX_BITANGENT_LOCATION, bitangent.Size, bitangent.PointerType, false, 0, 0);
 
             GL.BindBuffer(element.BufferTarget, element.ID);
 

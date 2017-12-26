@@ -113,6 +113,7 @@ namespace AlienEngine.Core.Shaders.Samples
             public vec2 uv;
             public vec3 position;
             public vec4 fragPosLightSpace;
+            public mat3 tbn;
         };
 
         VS_OUT fs_in;
