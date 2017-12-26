@@ -907,7 +907,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Compute\OpenCL\" />
-    <Folder Include="Graphics\Buffers\" />
     <Folder Include="Shaders\Samples\Geometry Shaders\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
