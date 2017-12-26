@@ -95,6 +95,40 @@ namespace AlienEngine.Core.Graphics.Buffers
         }
 
         /// <summary>
+        /// Sets a part of the uniform buffer object's data.
+        /// </summary>
+        /// <param name="offset">The offset on which we start to write data.</param>
+        /// <param name="data">The data to write.</param>
+        public void SetBufferSubData(int offset, ref Vector3f data)
+        {
+            // Bind buffer
+            GL.BindBuffer(BufferTarget.UniformBuffer, _ubo);
+
+            // Set buffer data
+            GL.BufferSubData(BufferTarget.UniformBuffer, offset, BlittableValueType<Vector3f>.Stride, ref data);
+
+            // Ensure that the buffer is not modified from the outside
+            GL.BindBuffer(BufferTarget.UniformBuffer, 0);
+        }
+
+        /// <summary>
+        /// Sets a part of the uniform buffer object's data.
+        /// </summary>
+        /// <param name="offset">The offset on which we start to write data.</param>
+        /// <param name="data">The data to write.</param>
+        public void SetBufferSubData(int offset, ref Vector2f data)
+        {
+            // Bind buffer
+            GL.BindBuffer(BufferTarget.UniformBuffer, _ubo);
+
+            // Set buffer data
+            GL.BufferSubData(BufferTarget.UniformBuffer, offset, BlittableValueType<Vector2f>.Stride, ref data);
+
+            // Ensure that the buffer is not modified from the outside
+            GL.BindBuffer(BufferTarget.UniformBuffer, 0);
+        }
+
+        /// <summary>
         /// Sets the entire uniform buffer object's data.
         /// </summary>
         /// <param name="data">The data to set in the ubo.</param>

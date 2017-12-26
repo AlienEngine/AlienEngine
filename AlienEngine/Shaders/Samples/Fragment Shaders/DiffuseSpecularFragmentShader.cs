@@ -112,6 +112,7 @@ namespace AlienEngine.Core.Shaders.Samples
             public vec3 normal;
             public vec2 uv;
             public vec3 position;
+            public vec4 fragPosLightSpace;
         };
 
         VS_OUT fs_in;
@@ -134,27 +135,20 @@ namespace AlienEngine.Core.Shaders.Samples
         #endregion
 
         #region Camera informations
-        //[Uniform]
-        //[InterfaceBlock]
-        //[Layout(UniformLayout.Shared)]
-        //struct CameraInformations
-        //{
-        //    // Position
-        //    public vec3 c_position;
-        //    // Rotation
-        //    public vec3 c_rotation;
-        //    // Near/Far planes distances
-        //    public vec2 c_depthDistances;
-        //}
-        // Position
         [Uniform]
-        vec3 c_position;
-        // Rotation
-        [Uniform]
-        vec3 c_rotation;
-        // Near and Far planes distances
-        [Uniform]
-        vec2 c_depthDistances;
+        [InterfaceBlock("camera")]
+        [Layout(UniformLayout.STD140)]
+        struct Camera
+        {
+            // Position
+            public vec3 position;
+            // Rotation
+            public vec3 rotation;
+            // Near/Far planes distances
+            public vec2 depthDistances;
+        }
+
+        private Camera camera;
         #endregion
 
         vec3 CalcLightInternal(LightState light, vec3 direction, vec3 normal, vec2 uv)
@@ -194,7 +188,7 @@ namespace AlienEngine.Core.Shaders.Samples
 
             if (materialState.hasColorSpecular)
             {
-                vec3 vertexToEye = normalize(c_position - fs_in.position);
+                vec3 vertexToEye = normalize(camera.position - fs_in.position);
                 vec3 lv = -direction + vertexToEye;
                 vec3 halfway = lv / length(lv);
                 //vec3 lightReflect = normalize(reflect(direction, normal));
@@ -212,7 +206,8 @@ namespace AlienEngine.Core.Shaders.Samples
                 }
             }
 
-            vec3 color = (AmbientColor + DiffuseColor + SpecularColor) * light.Intensity;
+            vec3 color = AmbientColor +
+                         (DiffuseColor + SpecularColor) * light.Intensity;
 
             return color;
         }

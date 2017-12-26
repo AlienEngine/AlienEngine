@@ -65,5 +65,39 @@ namespace AlienEngine.Core.Graphics.Buffers.Data
             foreach (var ubo in _registeredUbos)
                 ubo.SetBufferSubData(variable.Offset, ref value);
         }
+
+        /// <summary>
+        /// Sets a variable's value.
+        /// </summary>
+        /// <param name="name">The name of the variable.</param>
+        /// <param name="value">The value.</param>
+        protected void SetVariableValue(string name, ref Vector3f value)
+        {
+            UBV variable;
+            if (!_variablesCollection.TryGetValue(name, out variable))
+                throw new KeyNotFoundException($"Unable to find the uniform buffer variable with name \"{name}\"");
+
+            variable.CheckType(ShaderUniformType.FloatVec3);
+
+            foreach (var ubo in _registeredUbos)
+                ubo.SetBufferSubData(variable.Offset, ref value);
+        }
+
+        /// <summary>
+        /// Sets a variable's value.
+        /// </summary>
+        /// <param name="name">The name of the variable.</param>
+        /// <param name="value">The value.</param>
+        protected void SetVariableValue(string name, ref Vector2f value)
+        {
+            UBV variable;
+            if (!_variablesCollection.TryGetValue(name, out variable))
+                throw new KeyNotFoundException($"Unable to find the uniform buffer variable with name \"{name}\"");
+
+            variable.CheckType(ShaderUniformType.FloatVec2);
+
+            foreach (var ubo in _registeredUbos)
+                ubo.SetBufferSubData(variable.Offset, ref value);
+        }
     }
 }

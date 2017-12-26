@@ -473,6 +473,10 @@ namespace AlienEngine
 
                 if (IsPrimary)
                 {
+                    RendererManager.CameraData.DepthDistances = new Vector2f(Near, Far);
+                    RendererManager.CameraData.Position = gameElement.WorldTransform.Translation;
+                    RendererManager.CameraData.Rotation = RollPicthYaw;
+
                     RendererManager.MatricesData.Projection = ProjectionMatrix;
                     RendererManager.MatricesData.InversedProjection = ProjectionMatrix.Inversed;
                     RendererManager.MatricesData.View = ViewMatrix;

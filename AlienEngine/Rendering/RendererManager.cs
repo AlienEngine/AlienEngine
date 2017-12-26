@@ -28,6 +28,7 @@ namespace AlienEngine.Core.Rendering
         private static Rectangle _viewport;
 
         private static UBO _matricesUBO;
+        private static UBO _cameraUBO;
 
         private static FBO _renderFBO;
         private static FBO _screenFBO;
@@ -35,7 +36,7 @@ namespace AlienEngine.Core.Rendering
         private static List<IShadowMap> _shadowMaps;
         private static ShaderProgram _depthShaderProgram;
         private static int _shadowPassID;
-        
+
         // Depth test
         private static DepthFunction _depthTestFunction;
 
@@ -46,7 +47,7 @@ namespace AlienEngine.Core.Rendering
         // Blending
         private static BlendingFactorSrc _blendingFactorSrc;
         private static BlendingFactorDest _blendingFactorDest;
-        
+
         // Backup
         private static Tuple<bool, CullFaceMode, FrontFaceDirection> _faceCullingBackup;
 
@@ -71,17 +72,18 @@ namespace AlienEngine.Core.Rendering
         public static bool IsMultisampleEnabled => _multisampleEnabled;
 
         public static bool IsGammaCorrectionEnabled => _gammaCorrectionEnabled;
-        
+
         public static bool IsRenderBufferEnabled => _renderBufferEnabled;
-        
+
         public static bool IsShadowMapDepthPass => _shadowMapDepthPass;
-        
+
         internal static readonly MatricesBufferData MatricesData;
+        internal static readonly CameraBufferData CameraData;
 
         public static UBO MatricesUBO => _matricesUBO;
 
         internal static ShaderProgram DepthShaderProgram => _depthShaderProgram;
-        
+
         internal static List<IShadowMap> ShadowMaps => _shadowMaps;
 
         internal static int ShadowPassID => _shadowPassID;
@@ -116,17 +118,14 @@ namespace AlienEngine.Core.Rendering
             // Viewport
             _viewport = Rectangle.Empty;
 
+            // UBOs data
+            MatricesData = new MatricesBufferData();
+            CameraData = new CameraBufferData();
+
             // Screen
             _screenVAO = 0;
             _screenVBO = 0;
-            
-            // UBOs
-            _matricesUBO = new UBO("Matrices", UniformBufferObjectIndex.Matrices, MatricesBufferData.Size);
-            
-            // UBOs data
-            MatricesData = new MatricesBufferData();
-            MatricesData.RegisterUBO(_matricesUBO);
-            
+
             // Framebuffers
             _renderFBO = new FBO(GameSettings.GameWindowSize, multisampled: GameSettings.MultisampleEnabled);
             _screenFBO = new FBO(_renderFBO.Size);
@@ -134,6 +133,13 @@ namespace AlienEngine.Core.Rendering
 
         internal static void Init()
         {
+            // UBOs
+            _matricesUBO = new UBO("Matrices", UniformBufferObjectIndex.Matrices, MatricesBufferData.Size);
+            _cameraUBO = new UBO("Camera", UniformBufferObjectIndex.Camera, CameraBufferData.Size);
+
+            MatricesData.RegisterUBO(_matricesUBO);
+            CameraData.RegisterUBO(_cameraUBO);
+
             // Shadow map
             _shadowMaps = new List<IShadowMap>();
             _depthShaderProgram = new ShadowMapDepthShaderProgram();
@@ -360,7 +366,7 @@ namespace AlienEngine.Core.Rendering
         public static void RenderScreen()
         {
             var fbo = GameSettings.MultisampleEnabled ? _screenFBO : _renderFBO;
-            
+
             // Create the screen if it's not exist
             if (_screenVAO == 0)
             {
@@ -396,7 +402,7 @@ namespace AlienEngine.Core.Rendering
                     Height = fbo.Size.Height
                 };
             }
-            
+
             // Save states
             BackupState(RendererBackupMode.GammaCorrection);
             BackupState(RendererBackupMode.DepthTest);
@@ -498,7 +504,7 @@ namespace AlienEngine.Core.Rendering
             DisableRenderBuffer();
 
             // Render the screen (output of the frame buffer)
-            RenderScreen(); 
+            RenderScreen();
         }
     }
 }

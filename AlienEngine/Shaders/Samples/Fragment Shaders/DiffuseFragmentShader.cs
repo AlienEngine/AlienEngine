@@ -134,30 +134,6 @@ namespace AlienEngine.Core.Shaders.Samples
         MaterialState materialState;
         #endregion
 
-        #region Camera informations
-        //[Uniform]
-        //[InterfaceBlock]
-        //[Layout(UniformLayout.Shared)]
-        //struct CameraInformations
-        //{
-        //    // Position
-        //    public vec3 c_position;
-        //    // Rotation
-        //    public vec3 c_rotation;
-        //    // Near/Far planes distances
-        //    public vec2 c_depthDistances;
-        //}
-        // Position
-        [Uniform]
-        vec3 c_position;
-        // Rotation
-        [Uniform]
-        vec3 c_rotation;
-        // Near and Far planes distances
-        [Uniform]
-        vec2 c_depthDistances;
-        #endregion
-
         vec3 CalcLightInternal(LightState light, vec3 direction, vec3 normal, vec2 uv)
         {
             vec3 AmbientColor = new vec3(0);
@@ -191,7 +167,8 @@ namespace AlienEngine.Core.Shaders.Samples
                 }
             }
 
-            vec3 color = (AmbientColor + DiffuseColor) * light.Intensity;
+            vec3 color = AmbientColor + 
+                         DiffuseColor * light.Intensity;
 
             return color;
         }

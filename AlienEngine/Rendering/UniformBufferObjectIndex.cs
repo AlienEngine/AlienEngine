@@ -1,6 +1,6 @@
 ﻿namespace AlienEngine.Core.Rendering
 {
-    public enum UniformBufferObjectIndex: uint
+    public enum UniformBufferObjectIndex
     {
         /// <summary>
         /// Index of uniform buffer object storing matrices.
@@ -10,6 +10,11 @@
         /// <summary>
         /// Index of uniform buffer object storing light informations.
         /// </summary>
-        Lights = 1
+        Lights = 1,
+
+        /// <summary>
+        /// Index of uniform buffer object storing camer informations.
+        /// </summary>
+        Camera = 2
     }
 }
