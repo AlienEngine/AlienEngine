@@ -243,6 +243,7 @@
     <Compile Include="Game\Shaders\DiffuseSpecularEmissiveShaderProgram.cs" />
     <Compile Include="Game\Shaders\FontShaderProgram.cs" />
     <Compile Include="Game\Shaders\ColoredUIShaderProgram.cs" />
+    <Compile Include="Game\Shaders\ShadowMapDepthShaderProgram.cs" />
     <Compile Include="Game\UIComponent.cs" />
     <Compile Include="Graphics\Buffers\Data\UBOData.cs" />
     <Compile Include="Graphics\Buffers\Data\MatricesBufferData.cs" />
@@ -279,6 +280,7 @@
     <Compile Include="Shaders\Samples\Fragment Shaders\DiffuseSpecularEmissiveFragmentShader.cs" />
     <Compile Include="Shaders\Samples\Fragment Shaders\FontFragmentShader.cs" />
     <Compile Include="Shaders\Samples\Fragment Shaders\ColoredUIFragmentShader.cs" />
+    <Compile Include="Shaders\Samples\Fragment Shaders\ShadowMapDepthFragmentShader.cs" />
     <Compile Include="Shaders\Samples\Geometry Shaders\ObjectExploderGeometryShader.cs" />
     <Compile Include="Shaders\Samples\Vertex Shaders\FontVertexShader.cs" />
     <Compile Include="Imaging\Enums.cs" />
@@ -691,6 +693,7 @@
     <Compile Include="Physics\Vehicle\WheelSlidingFriction.cs" />
     <Compile Include="Physics\Vehicle\WheelSuspension.cs" />
     <Compile Include="Shaders\Samples\Vertex Shaders\ColoredUIVertexShader.cs" />
+    <Compile Include="Shaders\Samples\Vertex Shaders\ShadowMapDepthVertexShader.cs" />
     <Compile Include="UI\Origin.cs" />
     <Compile Include="Rendering\Fonts\Character.cs" />
     <Compile Include="Rendering\Fonts\FontRendererConfiguration.cs" />
