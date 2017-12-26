@@ -11,18 +11,32 @@ namespace AlienEngine.Core.Game
         // --------------------
         // Rendering
         // --------------------
-        // Enabled/Disabled state
+        // Enable/Disable gamma correction
         // ----------
         /// <summary>
         /// Define if the <see cref="Game"/> uses gamma correction.
         /// </summary>
         public static readonly bool GammaCorrectionEnabled;
         // ----------
-
+        // Enable/Disable shadow map
+        // ----------
+        /// <summary>
+        /// Define if the <see cref="Game"/> uses shadow map.
+        /// </summary>
+        public static readonly bool ShadowMapEnabled;
+        // ----------
+        // Shadow map texture size
+        // ----------
+        /// <summary>
+        /// The size of the texture of the shadow map.
+        /// </summary>
+        public static readonly int ShadowMapTextureSize;
         // --------------------
-        // Multisample
+        
         // --------------------
-        // Enabled/Disabled state
+        // Multisample Anti Aliasing
+        // --------------------
+        // Enable/Disable MSAA
         // ----------
         /// <summary>
         /// Define if the <see cref="Game"/> will use multisample
@@ -41,7 +55,7 @@ namespace AlienEngine.Core.Game
         // --------------------
         // V-Sync
         // --------------------
-        // Enabled/Disabled state
+        // Enable/Disable V-Sync
         // ----------
         /// <summary>
         /// Define if the <see cref="Game"/> will use V-Sync.
@@ -122,6 +136,16 @@ namespace AlienEngine.Core.Game
             else
                 GammaCorrectionEnabled = false;
             
+            if (int.TryParse(config.SectionedResult["Rendering"]["ShadowMap"], out _int1))
+                ShadowMapEnabled = _int1 == 1;
+            else
+                ShadowMapEnabled = false;
+
+            if (int.TryParse(config.SectionedResult["Rendering"]["ShadowMapTextureSize"], out _int1))
+                ShadowMapTextureSize = _int1;
+            else
+                ShadowMapTextureSize = 1024;
+
             if (int.TryParse(config.SectionedResult["Multisample"]["MultisampleEnabled"], out _int1))
                 MultisampleEnabled = _int1 == 1;
             else
