@@ -18,10 +18,6 @@ namespace AlienEngine
         /// </summary>
         private GameWindow _window;
 
-        private FBO _renderFBO;
-
-        private FBO _screenFBO;
-
         private static Application _instance;
 
         #endregion
@@ -95,9 +91,6 @@ namespace AlienEngine
             // Save the last frame time
             double lastTime = Time.GetTime();
             double unprocessedTime = 0;
-
-            // Start the game.
-            Game.Instance.Start();
 
             // Run the rendering loop until the user has attempted to close the window.
             while (Game.Instance.Running)
@@ -194,10 +187,6 @@ namespace AlienEngine
             // Initialize AlienEngine
             Engine.Start();
 
-            // Create framebuffer objects
-            _renderFBO = new FBO(GameSettings.GameWindowSize, mipmaps: false, multisampled: GameSettings.MultisampleEnabled);
-            _screenFBO = new FBO(_renderFBO.Size, mipmaps: false, multisampled: false);
-
             // Set the renderer viewport
             int wi, he;
             _window.GetFramebufferSize(out wi, out he);
@@ -215,25 +204,20 @@ namespace AlienEngine
             // Enable Multi Samples
             RendererManager.MultiSample();
 
+            // Enable depth mask
             RendererManager.DepthMask();
+
+            // Start the game.
+            Game.Instance.Start();
+
+            // Initialize the renderer manager
+            RendererManager.Init();
         }
 
         public void Render()
         {
-            // Clear the screen
-            RendererManager.ClearScreen(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit | ClearBufferMask.StencilBufferBit);
-
-            // Enable Framebuffer
-            _renderFBO.Enable();
-
-            // Render the scene.
-            Game.Instance.CurrentScene.Render();
-
-            // Disable framebufer
-            _renderFBO.Disable(ref _screenFBO);
-
-            // Render the screen (output of the frame buffer)
-            RendererManager.RenderScreen(GameSettings.MultisampleEnabled ? _screenFBO : _renderFBO);
+            // Process rendering
+            RendererManager.Process();
 
             // Swap front and back buffers
             GameWindow.SwapBuffers(ref _window);

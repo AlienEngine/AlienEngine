@@ -9,6 +9,7 @@ using AlienEngine.Core.Graphics.Buffers.Data;
 
 namespace AlienEngine.Core.Rendering
 {
+    // TODO: Use stacks for backups
     public static class RendererManager
     {
         private static List<IRenderable> _renderables;
@@ -19,6 +20,8 @@ namespace AlienEngine.Core.Rendering
         private static bool _blendingEnabled;
         private static bool _multisampleEnabled;
         private static bool _gammaCorrectionEnabled;
+        private static bool _renderBufferEnabled;
+        private static bool _shadowMapDepthPass;
         private static uint _screenVAO;
         private static uint _screenVBO;
         private static ShaderProgram _screenShaderProgram;
@@ -26,6 +29,13 @@ namespace AlienEngine.Core.Rendering
 
         private static UBO _matricesUBO;
 
+        private static FBO _renderFBO;
+        private static FBO _screenFBO;
+
+        private static List<IShadowMap> _shadowMaps;
+        private static ShaderProgram _depthShaderProgram;
+        private static int _shadowPassID;
+        
         // Depth test
         private static DepthFunction _depthTestFunction;
 
@@ -57,11 +67,25 @@ namespace AlienEngine.Core.Rendering
         public static bool IsDepthMaskEnabled => _depthMaskEnabled;
 
         public static bool IsBlendingEnabled => _blendingEnabled;
+
+        public static bool IsMultisampleEnabled => _multisampleEnabled;
+
+        public static bool IsGammaCorrectionEnabled => _gammaCorrectionEnabled;
+        
+        public static bool IsRenderBufferEnabled => _renderBufferEnabled;
+        
+        public static bool IsShadowMapDepthPass => _shadowMapDepthPass;
         
         internal static readonly MatricesBufferData MatricesData;
 
         public static UBO MatricesUBO => _matricesUBO;
+
+        internal static ShaderProgram DepthShaderProgram => _depthShaderProgram;
         
+        internal static List<IShadowMap> ShadowMaps => _shadowMaps;
+
+        internal static int ShadowPassID => _shadowPassID;
+
         public delegate void ViewportChanged(object sender, ViewportChangedEventArgs e);
 
         public static event ViewportChanged OnViewportChange;
@@ -79,6 +103,8 @@ namespace AlienEngine.Core.Rendering
             _faceCullingEnabled = false;
             _multisampleEnabled = false;
             _gammaCorrectionEnabled = false;
+            _renderBufferEnabled = false;
+            _shadowMapDepthPass = false;
 
             // Backups
             _faceCullingBackup = null;
@@ -100,6 +126,31 @@ namespace AlienEngine.Core.Rendering
             // UBOs data
             MatricesData = new MatricesBufferData();
             MatricesData.RegisterUBO(_matricesUBO);
+            
+            // Framebuffers
+            _renderFBO = new FBO(GameSettings.GameWindowSize, multisampled: GameSettings.MultisampleEnabled);
+            _screenFBO = new FBO(_renderFBO.Size);
+        }
+
+        internal static void Init()
+        {
+            // Shadow map
+            _shadowMaps = new List<IShadowMap>();
+            _depthShaderProgram = new ShadowMapDepthShaderProgram();
+
+            var lights = Game.Game.Instance.CurrentScene.Lights;
+
+            for (int i = 0, l = lights.Length; i < l; i++)
+            {
+                var light = lights[i].GetComponent<Light>();
+
+                if (light.Type == LightType.Directional)
+                    _shadowMaps.Add(new DirectionalShadowMap(GameSettings.GameWindowSize));
+                else if (light.Type == LightType.Point)
+                    _shadowMaps.Add(new OmnidirectionalShadowMap(GameSettings.GameWindowSize));
+                else if (light.Type == LightType.Spot)
+                    _shadowMaps.Add(new OmnidirectionalShadowMap(GameSettings.GameWindowSize));
+            }
         }
 
         public static void BackupState(RendererBackupMode mode)
@@ -306,8 +357,10 @@ namespace AlienEngine.Core.Rendering
             _gammaCorrectionEnabled = enable;
         }
 
-        public static void RenderScreen(FBO fbo)
+        public static void RenderScreen()
         {
+            var fbo = GameSettings.MultisampleEnabled ? _screenFBO : _renderFBO;
+            
             // Create the screen if it's not exist
             if (_screenVAO == 0)
             {
@@ -408,6 +461,44 @@ namespace AlienEngine.Core.Rendering
                 _object.Render();
 
             RestoreState(RendererBackupMode.DepthTest);
+        }
+
+        public static void EnableRenderBuffer()
+        {
+            if (!_renderBufferEnabled)
+            {
+                // Enable Framebuffer
+                _renderFBO.Enable();
+                _renderBufferEnabled = true;
+            }
+        }
+
+        public static void DisableRenderBuffer()
+        {
+            if (_renderBufferEnabled)
+            {
+                // Disable Framebuffer
+                _renderFBO.Disable(ref _screenFBO);
+                _renderBufferEnabled = false;
+            }
+        }
+
+        public static void Process()
+        {
+            // Clear the screen
+            GL.Clear((ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit));
+
+            // Enable shadow map
+            EnableRenderBuffer();
+
+            // Render the scene.
+            Game.Game.Instance.CurrentScene.Render();
+
+            // Disable shadow map
+            DisableRenderBuffer();
+
+            // Render the screen (output of the frame buffer)
+            RenderScreen(); 
         }
     }
 }
