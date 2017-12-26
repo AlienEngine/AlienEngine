@@ -28,6 +28,7 @@ namespace AlienEngine.Core.Shaders.Samples
             public vec3 normal;
             public vec2 uv;
             public vec3 position;
+            public vec4 fragPosLightSpace;
         };
 
         VS_OUT vs_out;
@@ -55,6 +56,9 @@ namespace AlienEngine.Core.Shaders.Samples
             
             // Cubemap matrix
             public mat4 cm;
+            
+            // Light space matrix
+            public mat4 lm;
         }
 
         private Matrices matrices;
@@ -81,8 +85,12 @@ namespace AlienEngine.Core.Shaders.Samples
             vs_out.uv = in_uv;
 
             // Setting vertices position
-            vs_out.position = (w_matrix * new vec4(in_position, 1)).xyz;
+            vec4 worldPosition = w_matrix * new vec4(in_position, 1);
+            vs_out.position = worldPosition.xyz;
 
+            // Setting shadow map
+            vs_out.fragPosLightSpace = matrices.lm * worldPosition;
+            
             //// Setting tangents
             //vec3 vTangent = normalize(in_tangent);
 
@@ -94,7 +102,7 @@ namespace AlienEngine.Core.Shaders.Samples
             //// tbnT = normalize(tbnT - dot(tbnT, tbnN) * tbnN);
             //tbn = new mat3(tbnT, tbnB, tbnN);
 
-            gl_Position = matrices.p * matrices.v * w_matrix * new vec4(in_position, 1);
+            gl_Position = matrices.p * matrices.v * worldPosition;
         }
     }
 }

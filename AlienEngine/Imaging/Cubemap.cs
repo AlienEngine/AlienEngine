@@ -139,7 +139,6 @@ namespace AlienEngine.Imaging
             GL.BindVertexArray(0);
 
             RendererManager.RestoreState(RendererBackupMode.DepthMask);
-
             RendererManager.RestoreState(RendererBackupMode.FaceCulling);
         }
 

@@ -19,8 +19,11 @@ namespace AlienEngine.Core.Graphics.Buffers.Data
         // Cubemap matrix
         private Matrix4f _cmMatrix;
 
+        // Ligth projection matrix
+        private Matrix4f _lMatrix;
+
         // The size of the UBO data.
-        public new static int Size => 5 * BlittableValueType<Matrix4f>.Stride;
+        public new static int Size => 6 * BlittableValueType<Matrix4f>.Stride;
 
         /// <summary>
         /// Gets or sets the projection matrix of this ubo.
@@ -30,6 +33,7 @@ namespace AlienEngine.Core.Graphics.Buffers.Data
             get => _pMatrix;
             set
             {
+                if (_pMatrix == value) return;
                 _pMatrix = value;
                 SetVariableValue("p", ref _pMatrix);
             }
@@ -43,6 +47,7 @@ namespace AlienEngine.Core.Graphics.Buffers.Data
             get => _iPMatrix;
             set
             {
+                if (_iPMatrix == value) return;
                 _iPMatrix = value;
                 SetVariableValue("i_p", ref _iPMatrix);
             }
@@ -56,6 +61,7 @@ namespace AlienEngine.Core.Graphics.Buffers.Data
             get => _vMatrix;
             set
             {
+                if (_vMatrix == value) return;
                 _vMatrix = value;
                 SetVariableValue("v", ref _vMatrix);
             }
@@ -69,6 +75,7 @@ namespace AlienEngine.Core.Graphics.Buffers.Data
             get => _iVMatrix;
             set
             {
+                if (_iVMatrix == value) return;
                 _iVMatrix = value;
                 SetVariableValue("i_v", ref _iVMatrix);
             }
@@ -82,8 +89,23 @@ namespace AlienEngine.Core.Graphics.Buffers.Data
             get => _cmMatrix;
             set
             {
+                if (_cmMatrix == value) return;
                 _cmMatrix = value;
                 SetVariableValue("cm", ref _cmMatrix);
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the light space matrix of this ubo.
+        /// </summary>
+        public Matrix4f LightSpace
+        {
+            get => _lMatrix;
+            set
+            {
+                if (_lMatrix == value) return;
+                _lMatrix = value;
+                SetVariableValue("lm", ref _lMatrix);
             }
         }
 
@@ -116,6 +138,12 @@ namespace AlienEngine.Core.Graphics.Buffers.Data
             AddVariable("cm", new UBV()
             {
                 Offset = 256,
+                Type = ShaderUniformType.FloatMat4
+            });
+
+            AddVariable("lm", new UBV()
+            {
+                Offset = 320,
                 Type = ShaderUniformType.FloatMat4
             });
         }

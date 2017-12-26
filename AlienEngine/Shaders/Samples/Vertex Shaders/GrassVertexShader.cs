@@ -36,6 +36,9 @@ namespace AlienEngine.Core.Shaders.Samples
             
             // Cubemap matrix
             public mat4 cm;
+            
+            // Light space matrix
+            public mat4 lm;
         }
 
         private Matrices matrices;
