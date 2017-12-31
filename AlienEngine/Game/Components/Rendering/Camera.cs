@@ -110,14 +110,14 @@ namespace AlienEngine
         }
 
         /// <summary>
-        /// Gets or sets the field of view.
+        /// Gets or sets the field of view angle (in degrees).
         /// </summary>
         public float FieldOfView
         {
-            get { return _fov; }
+            get { return MathHelper.Rad2Deg(_fov); }
             set
             {
-                _fov = value;
+                _fov = MathHelper.Deg2Rad(value);
                 _shouldUpdate = true;
             }
         }
