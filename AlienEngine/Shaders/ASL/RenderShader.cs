@@ -118,6 +118,8 @@ namespace AlienEngine.ASL
         [BuiltIn]
         protected vec4 texture(sampler2DArray sampler, vec2 p, float bias = 0) { throw new NotImplementedException(); }
         [BuiltIn]
+        protected vec4 texture(sampler2DArray sampler, vec3 p, float bias = 0) { throw new NotImplementedException(); }
+        [BuiltIn]
         protected ivec4 texture(isampler2DArray sampler, vec2 p, float bias = 0) { throw new NotImplementedException(); }
         [BuiltIn]
         protected uvec4 texture(usampler2DArray sampler, vec2 p, float bias = 0) { throw new NotImplementedException(); }
