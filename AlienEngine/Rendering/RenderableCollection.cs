@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace AlienEngine.Core.Rendering
 {
-    public class RenderableCollection : IEnumerable<IRenderable>, IEnumerator<IRenderable>, IDisposable
+    public class RenderableCollection : IEnumerable<IRenderable>, IEnumerator<IRenderable>
     {
         #region Fields
 
@@ -28,32 +28,18 @@ namespace AlienEngine.Core.Rendering
         /// <summary>
         /// Gets the number of items in the collection.
         /// </summary>
-        public int Length
-        {
-            get { return _list.Count; }
-        }
+        public int Length => _list.Count;
 
         /// <summary>
         /// Gets the current element of the iterator.
         /// </summary>
-        public IRenderable Current
-        {
-            get
-            {
-                return _list[_key];
-            }
-        }
+        public IRenderable Current => _list[_key];
 
         /// <summary>
         /// Gets the current element of the iterator.
         /// </summary>
-        object IEnumerator.Current
-        {
-            get
-            {
-                return _list[_key];
-            }
-        }
+        object IEnumerator.Current => _list[_key];
+
         #endregion
 
         #endregion
