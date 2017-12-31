@@ -115,17 +115,6 @@ namespace AlienEngine
 
                 while (unprocessedTime >= frameTime)
                 {
-                    rend = true;
-
-                    // Sets the delta time
-                    Time.SetDelta(Game.Instance.Paused ? 0 : deltaTime);
-
-                    // Update all game elements and components
-                    Game.Instance.Update();
-
-                    // Update input manager
-                    Input.Update();
-
                     if (_window.ShouldClose())
                     {
                         _stop();
@@ -136,6 +125,17 @@ namespace AlienEngine
                         frames = 0;
                         frameCounter = 0;
                     }
+
+                    rend = true;
+
+                    // Sets the delta time
+                    Time.SetDelta(Game.Instance.Paused ? 0 : deltaTime);
+
+                    // Update all game elements and components
+                    Game.Instance.Update();
+
+                    // Update input manager
+                    Input.Update();
 
                     unprocessedTime -= frameTime;
                 }
