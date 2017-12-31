@@ -192,6 +192,8 @@ namespace AlienEngine.Core.Game
                     AddGameElement(child);
                 }
 
+                gameElement.OnAddToScene(this);
+
                 OnAddGameElement();
             }
         }

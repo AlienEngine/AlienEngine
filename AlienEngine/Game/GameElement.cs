@@ -417,12 +417,6 @@ namespace AlienEngine
                 component.SetGameElement(this);
                 _attachedComponents.Add(component);
 
-                if (component is IRenderable)
-                    RendererManager.RegisterRenderable(component as IRenderable);
-
-                if (component is IPostRenderable)
-                    RendererManager.RegisterPostRenderable(component as IPostRenderable);
-
                 component.TriggerAttachEvent();
             }
         }
@@ -494,6 +488,18 @@ namespace AlienEngine
         {
             foreach (IComponent component in _attachedComponents)
                 component.Stop();
+        }
+
+        internal virtual void OnAddToScene(Scene scene)
+        {
+            foreach (var component in _attachedComponents)
+            {
+                if (component is IRenderable)
+                    RendererManager.RegisterRenderable(component as IRenderable);
+
+                if (component is IPostRenderable)
+                    RendererManager.RegisterPostRenderable(component as IPostRenderable);
+            }
         }
 
         internal void SetParentScene(Scene parent)
