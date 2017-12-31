@@ -46,8 +46,7 @@ namespace AlienEngine
         {
             get
             {
-                var r = gameElement.WorldTransform.Rotation;
-                return Matrix4f.CreateRotation(MathHelper.Deg2Rad(r.X), MathHelper.Deg2Rad(r.Y), MathHelper.Deg2Rad(r.Z)).ToMatrix3f().Forward;
+                return gameElement.WorldTransform.GetTransformation().Forward;
             }
         }
 
