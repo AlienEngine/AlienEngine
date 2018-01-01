@@ -275,8 +275,12 @@
     <Compile Include="Rendering\IRenderer.cs" />
     <Compile Include="Rendering\MaterialBlendMode.cs" />
     <Compile Include="Rendering\MaterialShadingMode.cs" />
-    <Compile Include="Rendering\DirectionalShadowMap.cs" />
-    <Compile Include="Rendering\IShadowMap.cs" />
+    <Compile Include="Rendering\Shadows\DirectionalShadowMap.cs" />
+    <Compile Include="Rendering\Shadows\IShadowMap.cs" />
+    <Compile Include="Rendering\Shadows\OmnidirectionalShadowMap.cs" />
+    <Compile Include="Rendering\Shadows\ShadowMapBoundingBox.cs" />
+    <Compile Include="Rendering\Shadows\ShadowMapQuality.cs" />
+    <Compile Include="Rendering\Shadows\ShadowsRenderer.cs" />
     <Compile Include="Rendering\UniformBufferObjectIndex.cs" />
     <Compile Include="Shaders\Samples\Fragment Shaders\DiffuseFragmentShader.cs" />
     <Compile Include="Shaders\Samples\Fragment Shaders\DiffuseSpecularEmissiveFragmentShader.cs" />

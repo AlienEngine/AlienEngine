@@ -1,12 +1,10 @@
 ﻿using System;
-using AlienEngine.Core.Game;
-using AlienEngine.Core.Graphics.Buffers;
 using AlienEngine.Core.Graphics.OpenGL;
 using AlienEngine.Core.Resources;
 
-namespace AlienEngine.Core.Rendering
+namespace AlienEngine.Core.Rendering.Shadows
 {
-    public class DirectionalShadowMap : IShadowMap, IDisposable
+    public class OmnidirectionalShadowMap: IShadowMap, IDisposable
     {
         // The texutre size
         private Sizei _textureSize;
@@ -27,6 +25,8 @@ namespace AlienEngine.Core.Rendering
         /// </summary>
         public uint TextureID => _depthMapTexture;
 
+        public bool Cascaded { get; }
+
         /// <summary>
         /// The texture size of the shadow map.
         /// </summary>
@@ -42,10 +42,10 @@ namespace AlienEngine.Core.Rendering
         /// </summary>
         public int Height => _textureSize.Height;
 
-        public DirectionalShadowMap(Sizei textureSize)
+        public OmnidirectionalShadowMap(int textureSize)
         {
             // Save the texture size
-            _textureSize = textureSize;
+            _textureSize = Sizei.One * textureSize;
 
             // Generate the frame buffer
             _depthMap = GL.GenFramebuffer();
@@ -54,26 +54,28 @@ namespace AlienEngine.Core.Rendering
             _depthMapTexture = GL.GenTexture();
 
             // Bind the texture
-            GL.BindTexture(TextureTarget.Texture2D, _depthMapTexture);
+            GL.BindTexture(TextureTarget.TextureCubeMap, _depthMapTexture);
 
             // Set the texture type
-            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.DepthComponent32, Width, Height, 0, PixelFormat.DepthComponent, PixelType.Float, IntPtr.Zero);
+            GL.TexImage2D(TextureTarget.TextureCubeMapPositiveX, 0, PixelInternalFormat.DepthComponent, Width, Height, 0, PixelFormat.DepthComponent, PixelType.Float, IntPtr.Zero);
+            GL.TexImage2D(TextureTarget.TextureCubeMapNegativeX, 0, PixelInternalFormat.DepthComponent, Width, Height, 0, PixelFormat.DepthComponent, PixelType.Float, IntPtr.Zero);
+            GL.TexImage2D(TextureTarget.TextureCubeMapPositiveY, 0, PixelInternalFormat.DepthComponent, Width, Height, 0, PixelFormat.DepthComponent, PixelType.Float, IntPtr.Zero);
+            GL.TexImage2D(TextureTarget.TextureCubeMapNegativeY, 0, PixelInternalFormat.DepthComponent, Width, Height, 0, PixelFormat.DepthComponent, PixelType.Float, IntPtr.Zero);
+            GL.TexImage2D(TextureTarget.TextureCubeMapPositiveZ, 0, PixelInternalFormat.DepthComponent, Width, Height, 0, PixelFormat.DepthComponent, PixelType.Float, IntPtr.Zero);
+            GL.TexImage2D(TextureTarget.TextureCubeMapNegativeZ, 0, PixelInternalFormat.DepthComponent, Width, Height, 0, PixelFormat.DepthComponent, PixelType.Float, IntPtr.Zero);
 
             // Set texture parameters
-            GL.TexParameteri(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, TextureMagFilter.Linear);
-            GL.TexParameteri(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, TextureMagFilter.Linear);
-            GL.TexParameteri(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, TextureParameter.ClampToBorder);
-            GL.TexParameteri(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, TextureParameter.ClampToBorder);
-            GL.TexParameterfv(TextureTarget.Texture2D, TextureParameterName.TextureBorderColor, 1.0f, 1.0f, 1.0f, 1.0f);
-
-            // Make sure this texture is not altered from the outside
-            GL.BindTexture(TextureTarget.Texture2D, 0);
+            GL.TexParameteri(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, TextureMagFilter.Nearest);
+            GL.TexParameteri(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, TextureMagFilter.Nearest);
+            GL.TexParameteri(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, TextureParameter.ClampToEdge);
+            GL.TexParameteri(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, TextureParameter.ClampToEdge);
+            GL.TexParameteri(TextureTarget.Texture2D, TextureParameterName.TextureWrapR, TextureParameter.ClampToEdge);
 
             // Bind the framebuffer
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, _depthMap);
 
             // Attach depth texture as framebuffer object's depth buffer
-            GL.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.DepthAttachment, TextureTarget.Texture2D, _depthMapTexture, 0);
+            GL.FramebufferTexture(FramebufferTarget.Framebuffer, FramebufferAttachment.DepthAttachment, _depthMapTexture, 0);
             GL.DrawBuffer(DrawBufferMode.None);
             GL.ReadBuffer(ReadBufferMode.None);
 
@@ -84,30 +86,25 @@ namespace AlienEngine.Core.Rendering
             ResourcesManager.AddDisposableResource(this);
         }
 
-        public void FirstPass(bool clear = true)
+        public void Begin(bool clear = true)
         {
-            // TODO: Use RendererManager
-            GL.Enable(EnableCap.PolygonOffsetFill);
-            GL.PolygonOffset(2.0f, 2.0f);
-
             GL.Viewport(0, 0, Width, Height);
 
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, BufferID);
 
             // Configurably clear the depth buffer bits
             if (clear)
-            {
-                GL.ClearDepth(1.0);
                 RendererManager.ClearScreen(ClearBufferMask.DepthBufferBit);
-            }
         }
 
-        public void SecondPass()
+        public void End()
         {
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
+        }
 
-            // TODO: Use RendererManager
-            GL.Disable(EnableCap.PolygonOffsetFill);
+        public void BindTexture()
+        {
+            throw new NotImplementedException();
         }
 
 
@@ -126,7 +123,7 @@ namespace AlienEngine.Core.Rendering
             GC.SuppressFinalize(this);
         }
 
-        ~DirectionalShadowMap()
+        ~OmnidirectionalShadowMap()
         {
             ReleaseUnmanagedResources();
         }
