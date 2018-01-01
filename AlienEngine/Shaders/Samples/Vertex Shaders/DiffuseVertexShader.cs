@@ -29,7 +29,9 @@ namespace AlienEngine.Core.Shaders.Samples
         {
             public vec3 normal;
             public vec2 uv;
-            public vec3 position;
+            public vec3 positionRelativeToWorld;
+            public vec4 positionRelativeToCamera;
+            public float shadowDistance;
             public vec4 fragPosLightSpace;
             public mat3 tbn;
         };
@@ -56,18 +58,37 @@ namespace AlienEngine.Core.Shaders.Samples
 
             // Inversed Camera (view) matrix
             public mat4 i_v;
-            
+
             // Cubemap matrix
             public mat4 cm;
-            
+
             // Light space matrix
             public mat4 lm;
         }
 
         private Matrices matrices;
-        
+
         #endregion
-        
+
+        #region Camera informations
+
+        [Uniform]
+        [InterfaceBlock("camera")]
+        [Layout(UniformLayout.STD140)]
+        struct Camera
+        {
+            // Position
+            public vec3 position;
+            // Rotation
+            public vec3 rotation;
+            // Near/Far planes distances
+            public vec2 depthDistances;
+        }
+
+        private Camera camera;
+
+        #endregion
+
         #region Transformation matrices
 
         // Normal matrix
@@ -89,10 +110,16 @@ namespace AlienEngine.Core.Shaders.Samples
 
             // Setting vertices position
             vec4 worldPosition = w_matrix * new vec4(in_position, 1);
-            vs_out.position = worldPosition.xyz;
+            vs_out.positionRelativeToWorld = worldPosition.xyz;
+            vs_out.positionRelativeToCamera = matrices.v * worldPosition;
 
             // Setting shadow map
             vs_out.fragPosLightSpace = matrices.lm * worldPosition;
+
+            float distance = length(vs_out.positionRelativeToCamera.xyz);
+            distance = distance - (150 - 10);
+            distance = distance / 10;
+            vs_out.shadowDistance = clamp(1.0f - distance, 0.0f, 1.0f);
 
             //// Setting tangents
             //vec3 vTangent = normalize(in_tangent);
@@ -112,7 +139,7 @@ namespace AlienEngine.Core.Shaders.Samples
             //// tbnT = normalize(tbnT - dot(tbnT, tbnN) * tbnN);
             //tbn = new mat3(tbnT, tbnB, tbnN);
 
-            gl_Position = matrices.p * matrices.v * worldPosition;
+            gl_Position = matrices.p * vs_out.positionRelativeToCamera;
         }
     }
 }
