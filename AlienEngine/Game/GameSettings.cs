@@ -1,4 +1,6 @@
-﻿using AlienEngine.Core.Utils;
+﻿using AlienEngine.Core.Rendering;
+using AlienEngine.Core.Utils;
+using AlienEngine.Core.Rendering.Shadows;
 
 namespace AlienEngine.Core.Game
 {
@@ -25,12 +27,12 @@ namespace AlienEngine.Core.Game
         /// </summary>
         public static readonly bool ShadowMapEnabled;
         // ----------
-        // Shadow map texture size
+        // Shadow map quality
         // ----------
         /// <summary>
-        /// The size of the texture of the shadow map.
+        /// The quality of the texture of the shadow map.
         /// </summary>
-        public static readonly int ShadowMapTextureSize;
+        public static readonly ShadowMapQuality ShadowMapQuality;
         // --------------------
         
         // --------------------
@@ -141,10 +143,10 @@ namespace AlienEngine.Core.Game
             else
                 ShadowMapEnabled = false;
 
-            if (int.TryParse(config.SectionedResult["Rendering"]["ShadowMapTextureSize"], out _int1))
-                ShadowMapTextureSize = _int1;
+            if (int.TryParse(config.SectionedResult["Rendering"]["ShadowMapQuality"], out _int1))
+                ShadowMapQuality = (ShadowMapQuality)_int1;
             else
-                ShadowMapTextureSize = 1024;
+                ShadowMapQuality = ShadowMapQuality.Low;
 
             if (int.TryParse(config.SectionedResult["Multisample"]["MultisampleEnabled"], out _int1))
                 MultisampleEnabled = _int1 == 1;
