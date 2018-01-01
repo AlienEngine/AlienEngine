@@ -47,6 +47,7 @@ namespace AlienEngine
             {
                 _material.Use();
                 _mesh.Render();
+                _material.Unuse();
             }
         }
     }
