@@ -13,7 +13,7 @@
         Lights = 1,
 
         /// <summary>
-        /// Index of uniform buffer object storing camer informations.
+        /// Index of uniform buffer object storing camera informations.
         /// </summary>
         Camera = 2
     }
