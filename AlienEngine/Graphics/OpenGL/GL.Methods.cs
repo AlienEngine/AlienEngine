@@ -87,6 +87,17 @@ namespace AlienEngine.Core.Graphics.OpenGL
         }
 
         /// <summary>
+        /// Set a scalar texture parameter.
+        /// </summary>
+        /// <param name="target">Specificies the target for which the texture is bound.</param>
+        /// <param name="pname">Specifies the name of a single-values texture parameter.</param>
+        /// <param name="param">Specifies the value of pname.</param>
+        public static void TexParameteri(TextureTarget target, TextureParameterName pname, DepthTextureMode param)
+        {
+            TexParameteri(target, pname, (int)param);
+        }
+
+        /// <summary>
         /// Set a vector texture parameter.
         /// </summary>
         /// <param name="target">Specificies the target for which the texture is bound.</param>

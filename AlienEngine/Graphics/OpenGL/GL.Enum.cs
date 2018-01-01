@@ -62079,6 +62079,17 @@ namespace AlienEngine.Core.Graphics.OpenGL
     }
 
     /// <summary>
+    /// Value for <see cref="TextureParameterName.DepthTextureMode"/>.
+    /// </summary>
+    public enum DepthTextureMode : int
+    {
+        /// <summary>
+        /// Original was GL_INTENSITY = 0x8049
+        /// </summary>
+        Intensity = ((int)0x8049)
+    }
+
+    /// <summary>
     /// Value for <see cref="TextureParameterName.DepthStencilTextureMode"/>.
     /// </summary>
     public enum DepthStencilTextureMode : int
