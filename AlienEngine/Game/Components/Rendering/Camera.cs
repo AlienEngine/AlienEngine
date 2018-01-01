@@ -88,10 +88,10 @@ namespace AlienEngine
         /// </summary>
         public Vector3f Forward
         {
-            get { return _forward; }
+            get { return -_forward; }
             set
             {
-                _forward = value;
+                _forward = -value;
                 _shouldUpdate = true;
             }
         }
@@ -193,7 +193,7 @@ namespace AlienEngine
         {
             get
             {
-                Vector3f left = Forward.Cross(Up);
+                Vector3f left = _forward.Cross(_up);
                 left.Normalize();
                 return left;
             }
@@ -206,7 +206,7 @@ namespace AlienEngine
         {
             get
             {
-                Vector3f right = Up.Cross(Forward);
+                Vector3f right = _up.Cross(_forward);
                 right.Normalize();
                 return right;
             }
