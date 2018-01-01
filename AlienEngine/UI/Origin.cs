@@ -6,7 +6,7 @@
         Top,
         TopRight,
         MiddleLeft,
-        Middle,
+        Center,
         MiddleRight,
         BottomLeft,
         Bottom,

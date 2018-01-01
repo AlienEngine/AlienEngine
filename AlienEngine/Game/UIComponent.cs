@@ -37,7 +37,7 @@ namespace AlienEngine
                     case Origin.MiddleLeft:
                         position.Y -= Size.Height / 2f;
                         break;
-                    case Origin.Middle:
+                    case Origin.Center:
                         position.X -= Size.Width / 2f;
                         position.Y -= Size.Height / 2f;
                         break;
@@ -210,7 +210,7 @@ namespace AlienEngine
                     CorrectedPosition.Y += Camera.Viewport.Height / 2.0f;
                     break;
 
-                case Anchor.Middle:
+                case Anchor.Center:
                     CorrectedPosition.X += Camera.Viewport.Width / 2.0f;
                     CorrectedPosition.Y += Camera.Viewport.Height / 2.0f;
                     break;
@@ -247,7 +247,7 @@ namespace AlienEngine
                     projection = Matrix4f.CreateTranslation(new Vector3f(0, -Size.Height / 2f, 0)) * projection;
                     break;
 
-                case Origin.Middle:
+                case Origin.Center:
                     projection = Matrix4f.CreateTranslation(new Vector3f(-Size.Width / 2f, -Size.Height / 2f, 0)) * projection;
                     break;
 

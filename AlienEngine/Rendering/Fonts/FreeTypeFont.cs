@@ -256,7 +256,7 @@ namespace AlienEngine.Core.Rendering.Fonts
                     position.Y += (textSize.Height / 2) - lineHeight;
                     break;
 
-                case Origin.Middle:
+                case Origin.Center:
                     position.X -= textSize.Width / 2;
                     position.Y += (textSize.Height / 2) - lineHeight;
                     break;
