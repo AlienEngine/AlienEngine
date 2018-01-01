@@ -1684,10 +1684,10 @@ namespace AlienEngine
                 Vector3f f = forward;
                 f.Normalize();
 
-                Vector3f r = Vector3f.Cross(f, up);
+                Vector3f r = Vector3f.Cross(up, f);
                 r.Normalize();
 
-                Vector3f u = Vector3f.Cross(r, f);
+                Vector3f u = Vector3f.Cross(f, r);
 
                 result.Column0 = new Vector4f(r, 0.0f);
                 result.Column1 = new Vector4f(u, 0.0f);
