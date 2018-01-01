@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using AlienEngine.Core.Game;
 using AlienEngine.Core.Graphics.Buffers;
 using AlienEngine.Core.Graphics.Buffers.Data;
+using System.Diagnostics;
+using AlienEngine.Core.Rendering.Shadows;
 
 namespace AlienEngine.Core.Rendering
 {
@@ -33,10 +35,9 @@ namespace AlienEngine.Core.Rendering
         private static FBO _renderFBO;
         private static FBO _screenFBO;
 
-        private static List<IShadowMap> _shadowMaps;
-        private static ShaderProgram _depthShaderProgram;
-        private static int _shadowPassID;
-
+        // Renderers
+        private static ShadowsRenderer _shadowsRenderer;
+        
         // Depth test
         private static DepthFunction _depthTestFunction;
 
@@ -82,11 +83,13 @@ namespace AlienEngine.Core.Rendering
 
         public static UBO MatricesUBO => _matricesUBO;
 
-        internal static ShaderProgram DepthShaderProgram => _depthShaderProgram;
+        internal static ShaderProgram DepthShaderProgram => _shadowsRenderer.DepthShaderProgram;
 
-        internal static List<IShadowMap> ShadowMaps => _shadowMaps;
+        internal static IShadowMap CurrentShadowMap => _shadowsRenderer.CurrentShadowMap;
 
-        internal static int ShadowPassID => _shadowPassID;
+        internal static float[] CascadedShadowMapSplits => _shadowsRenderer.CascadedShadowMapSplits;
+
+        internal static int ShadowMapTextureSize => _shadowsRenderer.ShadowMapTextureSize;
 
         public delegate void ViewportChanged(object sender, ViewportChangedEventArgs e);
 
@@ -94,6 +97,9 @@ namespace AlienEngine.Core.Rendering
 
         static RendererManager()
         {
+            // Renderers
+            _shadowsRenderer = new ShadowsRenderer();
+            
             // Renderables
             _renderables = new List<IRenderable>();
             _postRenderables = new List<IPostRenderable>();
@@ -139,24 +145,8 @@ namespace AlienEngine.Core.Rendering
 
             MatricesData.RegisterUBO(_matricesUBO);
             CameraData.RegisterUBO(_cameraUBO);
-
-            // Shadow map
-            _shadowMaps = new List<IShadowMap>();
-            _depthShaderProgram = new ShadowMapDepthShaderProgram();
-
-            var lights = Game.Game.Instance.CurrentScene.Lights;
-
-            for (int i = 0, l = lights.Length; i < l; i++)
-            {
-                var light = lights[i].GetComponent<Light>();
-
-                if (light.Type == LightType.Directional)
-                    _shadowMaps.Add(new DirectionalShadowMap(GameSettings.GameWindowSize));
-                else if (light.Type == LightType.Point)
-                    _shadowMaps.Add(new OmnidirectionalShadowMap(GameSettings.GameWindowSize));
-                else if (light.Type == LightType.Spot)
-                    _shadowMaps.Add(new OmnidirectionalShadowMap(GameSettings.GameWindowSize));
-            }
+            
+            _shadowsRenderer.Init();
         }
 
         public static void BackupState(RendererBackupMode mode)
@@ -356,9 +346,10 @@ namespace AlienEngine.Core.Rendering
         public static void GammaCorrection(bool enable = true)
         {
             if (enable)
+            {
                 GL.Enable(EnableCap.FramebufferSrgb);
-            else
-                GL.Disable(EnableCap.FramebufferSrgb);
+            }
+            else if (_gammaCorrectionEnabled) GL.Disable(EnableCap.FramebufferSrgb);
 
             _gammaCorrectionEnabled = enable;
         }
@@ -489,22 +480,32 @@ namespace AlienEngine.Core.Rendering
             }
         }
 
+        public static void ShadowMapDepthPass(bool enable = true)
+        {
+            _shadowMapDepthPass = enable;
+        }
+        
         public static void Process()
         {
-            // Clear the screen
-            GL.Clear((ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit));
+            // Render shadows
+            _shadowsRenderer.Process();
 
             // Enable shadow map
             EnableRenderBuffer();
 
             // Render the scene.
-            Game.Game.Instance.CurrentScene.Render();
+            RenderScene();
 
             // Disable shadow map
             DisableRenderBuffer();
 
             // Render the screen (output of the frame buffer)
             RenderScreen();
+        }
+
+        internal static void RenderScene()
+        {
+            Game.Game.Instance.CurrentScene.Render();
         }
     }
 }
