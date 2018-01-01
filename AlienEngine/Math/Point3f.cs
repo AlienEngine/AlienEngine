@@ -112,7 +112,7 @@ namespace AlienEngine
         public Point3f(float[] values)
         {
             if (values.Length < 3)
-                throw new ArgumentException("The length of the array is lower than three.", "values");
+                throw new ArgumentException("The length of the array is lower than three.", nameof(values));
 
             X = values[0];
             Y = values[1];
@@ -195,6 +195,38 @@ namespace AlienEngine
         }
 
         /// <summary>
+        /// Negate this instance.
+        /// </summary>
+        public void Negate()
+        {
+            X = -X;
+            Y = -Y;
+            Z = -Z;
+        }
+
+        /// <summary>
+        /// Negate a <see cref="Point3f"/>.
+        /// </summary>
+        /// <param name="point">The point to negate.</param>
+        /// <returns>The negated point.</returns>
+        public static Point3f Negate(Point3f point)
+        {
+            Point3f res;
+            Negate(ref point, out res);
+            return res;
+        }
+
+        /// <summary>
+        /// Negate a <see cref="Point3f"/>.
+        /// </summary>
+        /// <param name="point">The point to negate.</param>
+        /// <param name="negate">The negated point.</param>
+        public static void Negate(ref Point3f point, out Point3f negate)
+        {
+            negate = -point;
+        }
+        
+        /// <summary>
         /// Returns a new <see cref="Point3f"/> with minimal values.
         /// </summary>
         /// <param name="a">The first point.</param>
@@ -224,6 +256,13 @@ namespace AlienEngine
             return new Vector3f(b.X - a.X, b.Y - a.Y, b.Z - a.Z);
         }
 
+        public static Point3f operator -(Point3f point)
+        {
+            Point3f res = point;
+            res.Negate();
+            return res;
+        }
+        
         /// <summary>
         /// Compare two <see cref="Point3f"/> for equality.
         /// </summary>
@@ -231,27 +270,7 @@ namespace AlienEngine
         /// <param name="rhs">Second Point3f</param>
         public static bool operator ==(Point3f lhs, Point3f rhs)
         {
-            bool Result = false;
-
-            if (ReferenceEquals(lhs, rhs))
-            {
-                Result = true;
-            }
-
-            if (ReferenceEquals(lhs, null) && ReferenceEquals(rhs, null))
-            {
-                Result = true;
-            }
-
-            if (!ReferenceEquals(lhs, null) && !ReferenceEquals(rhs, null))
-            {
-                if (lhs.X == rhs.X && lhs.Y == rhs.Y && lhs.Z == rhs.Z)
-                {
-                    Result = true;
-                }
-            }
-
-            return Result;
+            return lhs.Equals(rhs);
         }
 
         /// <summary>
@@ -279,36 +298,21 @@ namespace AlienEngine
         /// <param name="obj">The object to compare with this instance</param>
         public override bool Equals(object obj)
         {
-            bool Result = false;
+            bool result = false;
 
             // In order to have "equality", we must have same type of objects
-            if (GetType() == obj.GetType() && obj is Point3f)
+            if (obj != null && GetType() == obj.GetType() && obj is Point3f)
             {
-                // Check whether we have same instance
-                if (ReferenceEquals(this, obj))
-                {
-                    Result = true;
-                }
-
-                // Check whether both objects are null
-                if (ReferenceEquals(this, null) && ReferenceEquals(obj, null))
-                {
-                    Result = true;
-                }
-
                 // Check whether the "contents" are the same
-                if (!ReferenceEquals(this, null) && !ReferenceEquals(obj, null))
-                {
-                    Point3f Point = (Point3f)obj;
+                Point3f point = (Point3f)obj;
 
-                    if (X == Point.X && Y == Point.Y && Z == Point.Z)
-                    {
-                        Result = true;
-                    }
+                if (X == point.X && Y == point.Y && Z == point.Z)
+                {
+                    result = true;
                 }
             }
 
-            return Result;
+            return result;
         }
 
         /// <summary>
@@ -333,7 +337,7 @@ namespace AlienEngine
         /// </summary>
         public override string ToString()
         {
-            return string.Format("P({0},{1},{2})", X, Y, Z);
+            return $"P({X},{Y},{Z})";
         }
 
         /// <summary>
