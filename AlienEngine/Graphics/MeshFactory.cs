@@ -69,13 +69,13 @@ namespace AlienEngine.Core.Graphics
             Vector3f[] tangents = new Vector3f[indices.Length];
             Vector3f[] bitangents = new Vector3f[indices.Length];
 
-            for (int i = 0, l = vertices.Length; i < 2; i += 3)
+            for (int i = 0, l = indices.Length; i < l; i += 3)
             {
-                Vector3f e1 = vertices[i + 1] - vertices[i];
-                Vector3f e2 = vertices[i + 2] - vertices[i];
+                Vector3f e1 = vertices[indices[i + 1]] - vertices[indices[i]];
+                Vector3f e2 = vertices[indices[i + 2]] - vertices[indices[i]];
 
-                Vector2f u1 = uvs[i + 1] - uvs[i];
-                Vector2f u2 = uvs[i + 2] - uvs[i];
+                Vector2f u1 = uvs[indices[i + 1]] - uvs[indices[i]];
+                Vector2f u2 = uvs[indices[i + 2]] - uvs[indices[i]];
 
                 float f = 1.0f / (u1.X * u2.Y - u2.X * u1.Y);
 
