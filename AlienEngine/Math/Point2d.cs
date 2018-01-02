@@ -231,7 +231,7 @@ namespace AlienEngine
         /// </summary>
         /// <param name="a">The first point.</param>
         /// <param name="b">The second point.</param>
-        public static Point2d Min(Point2d a, Point2d b)
+        public static Point2d ComponentMin(Point2d a, Point2d b)
         {
             return new Point2d((a.X > b.X) ? b.X : a.X, (a.Y > b.Y) ? b.Y : a.Y);
         }
@@ -241,7 +241,7 @@ namespace AlienEngine
         /// </summary>
         /// <param name="a">The first point.</param>
         /// <param name="b">The second point.</param>
-        public static Point2d Max(Point2d a, Point2d b)
+        public static Point2d ComponentMax(Point2d a, Point2d b)
         {
             return new Point2d((a.X < b.X) ? b.X : a.X, (a.Y < b.Y) ? b.Y : a.Y);
         }
@@ -262,7 +262,7 @@ namespace AlienEngine
         /// <param name="point">The <see cref="Point2d"/>.</param>
         /// <param name="size">The <see cref="Sizef"/>.</param>
         /// <remarks>This translate the <paramref name="point"/> with the <paramref name="size"/>.</remarks>
-        public static Point2d operator +(Point2d point, Sizef size)
+        public static Point2d operator +(Point2d point, Sized size)
         {
             return new Point2d(point.X + size.Width, point.Y + size.Height);
         }
@@ -273,7 +273,7 @@ namespace AlienEngine
         /// <param name="point">The <see cref="Point2d"/>.</param>
         /// <param name="size">The <see cref="Sizef"/>.</param>
         /// <remarks>This translate the <paramref name="point"/> with the negative <paramref name="size"/>.</remarks>
-        public static Point2d operator -(Point2d point, Sizef size)
+        public static Point2d operator -(Point2d point, Sized size)
         {
             return new Point2d(point.X - size.Width, point.Y - size.Height);
         }
@@ -285,27 +285,7 @@ namespace AlienEngine
         /// <param name="rhs">Second Point2d</param>
         public static bool operator ==(Point2d lhs, Point2d rhs)
         {
-            bool Result = false;
-
-            if (ReferenceEquals(lhs, rhs))
-            {
-                Result = true;
-            }
-
-            if (ReferenceEquals(lhs, null) && ReferenceEquals(rhs, null))
-            {
-                Result = true;
-            }
-
-            if (!ReferenceEquals(lhs, null) && !ReferenceEquals(rhs, null))
-            {
-                if (lhs.X == rhs.X && lhs.Y == rhs.Y)
-                {
-                    Result = true;
-                }
-            }
-
-            return Result;
+            return lhs.Equals(rhs);
         }
 
         /// <summary>
@@ -324,36 +304,10 @@ namespace AlienEngine
         /// <param name="obj">The object to compare with this instance</param>
         public override bool Equals(object obj)
         {
-            bool Result = false;
+            if (!(obj is Point2d))
+                return false;
 
-            // In order to have "equality", we must have same type of objects
-            if (GetType() == obj.GetType() && obj is Point2d)
-            {
-                // Check whether we have same instance
-                if (ReferenceEquals(this, obj))
-                {
-                    Result = true;
-                }
-
-                // Check whether both objects are null
-                if (ReferenceEquals(this, null) && ReferenceEquals(obj, null))
-                {
-                    Result = true;
-                }
-
-                // Check whether the "contents" are the same
-                if (!ReferenceEquals(this, null) && !ReferenceEquals(obj, null))
-                {
-                    Point2d Point = (Point2d)obj;
-
-                    if (X == Point.X && Y == Point.Y)
-                    {
-                        Result = true;
-                    }
-                }
-            }
-
-            return Result;
+            return Equals((Point2d)obj);
         }
 
         /// <summary>
@@ -378,7 +332,7 @@ namespace AlienEngine
         /// </summary>
         public override string ToString()
         {
-            return string.Format("P({0},{1})", X, Y);
+            return $"P({X},{Y})";
         }
 
         /// <summary>

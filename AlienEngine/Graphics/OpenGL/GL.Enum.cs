@@ -47687,6 +47687,10 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// </summary>
         DepthComponent = ((int)0x1902),
         /// <summary>
+        /// Original was GL_RED = 0x1903
+        /// </summary>
+        Red = ((int)0x1903),
+        /// <summary>
         /// Original was GL_ALPHA = 0x1906
         /// </summary>
         Alpha = ((int)0x1906),
@@ -62072,6 +62076,17 @@ namespace AlienEngine.Core.Graphics.OpenGL
         StencilIndex = ((int)0x1901),
         DepthComponent = ((int)0x1902),
         MaxAnisotropyExt = ((int)0x84FE)
+    }
+
+    /// <summary>
+    /// Value for <see cref="TextureParameterName.DepthTextureMode"/>.
+    /// </summary>
+    public enum DepthTextureMode : int
+    {
+        /// <summary>
+        /// Original was GL_INTENSITY = 0x8049
+        /// </summary>
+        Intensity = ((int)0x8049)
     }
 
     /// <summary>

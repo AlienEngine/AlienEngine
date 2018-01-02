@@ -141,7 +141,7 @@ namespace AlienEngine
         /// </summary>
         /// <param name="a">The first size.</param>
         /// <param name="b">The second size.</param>
-        public static Sizei Min(Sizei a, Sizei b)
+        public static Sizei ComponentMin(Sizei a, Sizei b)
         {
             return new Sizei((a.X > b.X) ? b.X : a.X, (a.Y > b.Y) ? b.Y : a.Y);
         }
@@ -151,9 +151,32 @@ namespace AlienEngine
         /// </summary>
         /// <param name="a">The first size.</param>
         /// <param name="b">The second size.</param>
-        public static Sizei Max(Sizei a, Sizei b)
+        public static Sizei ComponentMax(Sizei a, Sizei b)
         {
             return new Sizei((a.X < b.X) ? b.X : a.X, (a.Y < b.Y) ? b.Y : a.Y);
+        }
+
+        /// <summary>
+        /// Scales a size.
+        /// </summary>
+        /// <param name="left">The <see cref="Sizei"/> to scale.</param>
+        /// <param name="right">The scale factor.</param>
+        /// <returns></returns>
+        public static Sizei operator *(Sizei left, int right)
+        {
+            return new Sizei(left.Width * right, left.Height * right);
+        }
+
+        /// <summary>
+        /// Divides a size.
+        /// </summary>
+        /// <param name="left">The <see cref="Sizei"/> to scale.</param>
+        /// <param name="right">The scale factor.</param>
+        /// <returns></returns>
+        public static Sizei operator /(Sizei left, int right)
+        {
+            int scale = 1 / right;
+            return left * scale;
         }
 
         /// <summary>

@@ -5,7 +5,7 @@ using AlienEngine.Core.Game;
 
 namespace AlienEngine.Core.Inputs
 {
-    public static class Keyboard
+    internal static class Keyboard
     {
         private static List<KeyCode> _currentKeys;
         private static Array _allKeys;
@@ -20,13 +20,13 @@ namespace AlienEngine.Core.Inputs
         {
             _currentKeys.Clear();
             foreach (KeyCode i in _allKeys)
-                if (GetKey(i))
+                if (GetKey(i) && !_currentKeys.Contains(i))
                     _currentKeys.Add(i);
         }
 
         public static bool GetKey(KeyCode keyCode)
         {
-            return GLFW.GetKey(Game.Game.Window.Handle, (int)keyCode);
+            return GLFW.GetKey(Game.Game.Instance.Window.Handle, (int)keyCode);
         }
 
         public static bool GetKeyDown(KeyCode keyCode)

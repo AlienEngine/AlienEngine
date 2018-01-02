@@ -20,6 +20,7 @@
 using System;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
+using ZeroFormatter;
 
 namespace AlienEngine
 {
@@ -29,21 +30,25 @@ namespace AlienEngine
     [Serializable]
     [TypeConverter(typeof(StructTypeConverter<Vector3f>))]
     [StructLayout(LayoutKind.Sequential)]
+    [ZeroFormattable]
     public struct Vector3f : IEquatable<Vector3f>, ILoadFromString
     {
         /// <summary>
         /// The X component of the Vector3f.
         /// </summary>
+        [Index(0)]
         public float X;
 
         /// <summary>
         /// The Y component of the Vector3f.
         /// </summary>
+        [Index(1)]
         public float Y;
 
         /// <summary>
         /// The Z component of the Vector3f.
         /// </summary>
+        [Index(2)]
         public float Z;
 
         /// <summary>
@@ -298,7 +303,7 @@ namespace AlienEngine
         }
 
         /// <summary>
-        /// Gets the normalized instance of t <see cref="Vector3f"/>.
+        /// Gets the normalized instance of this <see cref="Vector3f"/>.
         /// </summary>
         public Vector3f Normalized
         {
@@ -920,12 +925,23 @@ namespace AlienEngine
         /// <param name="result">Row vector product of the transformation.</param>
         public static void Transform(ref Vector2f v, ref Matrix2x3f matrix, out Vector3f result)
         {
-#if !WINDOWS
             result = new Vector3f();
-#endif
             result.X = v.X * matrix.M11 + v.Y * matrix.M21;
             result.Y = v.X * matrix.M12 + v.Y * matrix.M22;
             result.Z = v.X * matrix.M13 + v.Y * matrix.M23;
+        }
+
+        /// <summary>
+        /// Transforms the vector by the matrix.
+        /// </summary>
+        /// <param name="v">Vector2 to transform.  Considered to be a row vector for purposes of multiplication.</param>
+        /// <param name="matrix">Matrix to use as the transformation.</param>
+        /// <param name="result">Row vector product of the transformation.</param>
+        public static Vector3f Transform(Vector2f v, Matrix2x3f matrix)
+        {
+            var result = new Vector3f();
+            Transform(ref v, ref matrix, out result);
+            return result;
         }
 
         /// <summary>
@@ -936,12 +952,23 @@ namespace AlienEngine
         /// <param name="result">Column vector product of the transformation.</param>
         public static void Transform(ref Vector2f v, ref Matrix3x2f matrix, out Vector3f result)
         {
-#if !WINDOWS
             result = new Vector3f();
-#endif
             result.X = matrix.M11 * v.X + matrix.M12 * v.Y;
             result.Y = matrix.M21 * v.X + matrix.M22 * v.Y;
             result.Z = matrix.M31 * v.X + matrix.M32 * v.Y;
+        }
+
+        /// <summary>
+        /// Transforms the vector by the matrix.
+        /// </summary>
+        /// <param name="v">Vector2 to transform.  Considered to be a row vector for purposes of multiplication.</param>
+        /// <param name="matrix">Matrix to use as the transformation.</param>
+        /// <param name="result">Row vector product of the transformation.</param>
+        public static Vector3f Transform(Vector2f v, Matrix3x2f matrix)
+        {
+            var result = new Vector3f();
+            Transform(ref v, ref matrix, out result);
+            return result;
         }
 
         /// <summary>
@@ -968,9 +995,8 @@ namespace AlienEngine
             float vX = v.X;
             float vY = v.Y;
             float vZ = v.Z;
-#if !WINDOWS
+
             result = new Vector3f();
-#endif
             result.X = vX * matrix.M11 + vY * matrix.M21 + vZ * matrix.M31;
             result.Y = vX * matrix.M12 + vY * matrix.M22 + vZ * matrix.M32;
             result.Z = vX * matrix.M13 + vY * matrix.M23 + vZ * matrix.M33;
@@ -1000,9 +1026,8 @@ namespace AlienEngine
             float vX = v.X;
             float vY = v.Y;
             float vZ = v.Z;
-#if !WINDOWS
+
             result = new Vector3f();
-#endif
             result.X = vX * matrix.M11 + vY * matrix.M12 + vZ * matrix.M13;
             result.Y = vX * matrix.M21 + vY * matrix.M22 + vZ * matrix.M23;
             result.Z = vX * matrix.M31 + vY * matrix.M32 + vZ * matrix.M33;
@@ -1019,9 +1044,24 @@ namespace AlienEngine
             float vX = v.X;
             float vY = v.Y;
             float vZ = v.Z;
+
+            result = new Vector3f();
             result.X = vX * matrix.M11 + vY * matrix.M21 + vZ * matrix.M31 + matrix.M41;
             result.Y = vX * matrix.M12 + vY * matrix.M22 + vZ * matrix.M32 + matrix.M42;
             result.Z = vX * matrix.M13 + vY * matrix.M23 + vZ * matrix.M33 + matrix.M43;
+        }
+
+        /// <summary>
+        /// Transforms the vector by the matrix.
+        /// </summary>
+        /// <param name="v">Vector to transform.</param>
+        /// <param name="matrix">Matrix to use as the transformation.</param>
+        /// <param name="result">Row vector product of the transformation.</param>
+        public static Vector3f Transform(Vector3f v, Matrix4f matrix)
+        {
+            var result = new Vector3f();
+            Transform(ref v, ref matrix, out result);
+            return result;
         }
 
         /// <summary>

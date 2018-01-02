@@ -25,11 +25,8 @@
 //
 #endregion
 
-
 using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Diagnostics;
 
 using AlienEngine.Core.Audio.OpenAL;
 using AlienEngine.Core.Resources;
@@ -210,7 +207,7 @@ namespace AlienEngine.Core.Audio
         #region CreateContext
 
         /// <summary>May be passed at context construction time to indicate the number of desired auxiliary effect slot sends per source.</summary>
-        public enum MaxAuxiliarySends:int
+        public enum MaxAuxiliarySends : int
         {
             /// <summary>Will chose a reliably working parameter.</summary>
             UseDriverDefault = 0,
@@ -320,7 +317,7 @@ namespace AlienEngine.Core.Audio
                         Alc.GetInteger(device_handle, AlcGetInteger.EfxMaxAuxiliarySends, 1, out num_slots);
                         break;
                 }
-              
+
                 attributes.Add((int)AlcContextAttributes.EfxMaxAuxiliarySends);
                 attributes.Add(num_slots);
             }
@@ -345,7 +342,7 @@ namespace AlienEngine.Core.Audio
             CheckErrors();
 
             device_name = Alc.GetString(device_handle, AlcGetString.DeviceSpecifier);
- 
+
 
             lock (audio_context_lock)
             {

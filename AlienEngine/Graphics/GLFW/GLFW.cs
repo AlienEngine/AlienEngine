@@ -62,6 +62,8 @@ namespace AlienEngine.Core.Graphics.GLFW
 
         internal static string FromUTF8(IntPtr ptr)
         {
+            if (ptr == IntPtr.Zero) return "";
+
             int len = 0;
             while (Marshal.ReadByte(ptr, len) != 0)
                 ++len;

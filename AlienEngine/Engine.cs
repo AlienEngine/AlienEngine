@@ -1,6 +1,6 @@
 ﻿using AlienEngine.Core.Audio;
 using AlienEngine.Core.Audio.OpenAL;
-using AlienEngine.Core.Graphics.DevIL.Unmanaged;
+using AlienEngine.Core.Imaging.DevIL.Unmanaged;
 using AlienEngine.Core.Graphics.OpenGL;
 using AlienEngine.Core.Resources;
 
@@ -17,10 +17,7 @@ namespace AlienEngine.Core
         /// <summary>
         /// Checks if the engine has already started.
         /// </summary>
-        public static bool HasStarted
-        {
-            get { return _started; }
-        }
+        public static bool HasStarted => _started;
 
         /// <summary>
         /// Initialize the manager.
