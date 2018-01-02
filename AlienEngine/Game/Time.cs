@@ -34,7 +34,7 @@ namespace AlienEngine
         /// </summary>
         public static double GetTime()
         {
-            return (DateTime.Now.Subtract(_baseDate).TotalMilliseconds);
+            return AlienEngine.Core.Graphics.GLFW.GLFW.GetTime() * SECOND;
         }
 
         /// <summary>
