@@ -238,7 +238,9 @@
     <Compile Include="Game\Components\Rendering\MeshRenderer.cs" />
     <Compile Include="Game\Components\UI\Button.cs" />
     <Compile Include="Game\Components\UI\Checkbox.cs" />
-    <Compile Include="Game\Components\UI\Label2D.cs" />
+    <Compile Include="Game\Components\UI\ListBox.cs" />
+    <Compile Include="Game\Components\UI\Text.cs" />
+    <Compile Include="Game\Components\UI\TextInput.cs" />
     <Compile Include="Game\Shaders\DiffuseShaderProgram.cs" />
     <Compile Include="Game\Shaders\DiffuseSpecularEmissiveShaderProgram.cs" />
     <Compile Include="Game\Shaders\FontShaderProgram.cs" />
@@ -701,6 +703,7 @@
     <Compile Include="Physics\Vehicle\WheelSuspension.cs" />
     <Compile Include="Shaders\Samples\Vertex Shaders\ColoredUIVertexShader.cs" />
     <Compile Include="Shaders\Samples\Vertex Shaders\ShadowMapDepthVertexShader.cs" />
+    <Compile Include="UI\ListBoxChangeEventArgs.cs" />
     <Compile Include="UI\Origin.cs" />
     <Compile Include="Rendering\Fonts\Character.cs" />
     <Compile Include="Rendering\Fonts\FontRendererConfiguration.cs" />
@@ -768,6 +771,7 @@
     <Compile Include="Threading\SpinLock.cs" />
     <Compile Include="Threading\ThreadsManager.cs" />
     <Compile Include="UI\Anchor.cs" />
+    <Compile Include="UI\TextChangeEventArgs.cs" />
     <Compile Include="Utils\ConvertX.cs" />
     <Compile Include="Utils\CPUInfo.cs" />
     <Compile Include="Utils\DataStructures\ConcurrentDeque.cs" />

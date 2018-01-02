@@ -5,9 +5,9 @@ using AlienEngine.UI;
 
 namespace AlienEngine
 {
-    public class Label2D : UIComponent, IPostRenderable
+    public class Text : UIComponent, IPostRenderable
     {
-        public string Text;
+        public string Value;
 
         private IFont _fontEngine;
         private FontRendererConfiguration _fontRendererConfiguration;
@@ -28,13 +28,13 @@ namespace AlienEngine
 
         public float LineSpacing;
 
-        public Label2D() : base()
+        public Text()
         {
             Position = Point2f.Zero;
             Scale = Vector2f.One;
             ForegroundColor = Color4.Black;
             BackgroundColor = Color4.Transparent;
-            Text = string.Empty;
+            Value = string.Empty;
             FontPath = string.Empty;
             FontSize = 12;
             FontStyle = FontStyle.Regular;
@@ -43,7 +43,7 @@ namespace AlienEngine
 
         public override void Start()
         {
-            InitUI();
+            base.Start();
 
             BuildConfiguration();
 
@@ -51,10 +51,7 @@ namespace AlienEngine
 
             SetProjectionMatrix();
 
-            RendererManager.OnViewportChange += (sender, args) =>
-            {
-                SetProjectionMatrix();
-            };
+            RendererManager.OnViewportChange += (sender, args) => SetProjectionMatrix();
         }
 
         private void BuildConfiguration()
@@ -99,8 +96,17 @@ namespace AlienEngine
 
         public void Render()
         {
-            RenderColoredQuad();
-            _fontEngine.RenderText(Text);
+            if (BackgroundTexture != null)
+                RenderTexturedQuad();
+            else
+                RenderColoredQuad();
+
+            _fontEngine.RenderText(Value);
+        }
+
+        internal Sizef GetTextSize()
+        {
+            return _fontEngine.CalculateSize(Value);
         }
     }
 }

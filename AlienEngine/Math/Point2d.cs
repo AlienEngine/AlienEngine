@@ -268,6 +268,16 @@ namespace AlienEngine
         }
 
         /// <summary>
+        /// Add two <see cref="Point2d"/>.
+        /// </summary>
+        /// <param name="pointA">The first <see cref="Point2d"/>.</param>
+        /// <param name="pointB">The second <see cref="Point2d"/>.</param>
+        public static Point2d operator +(Point2d pointA, Point2d pointB)
+        {
+            return new Point2d(pointA.X + pointB.X, pointA.Y + pointB.Y);
+        }
+
+        /// <summary>
         /// Substract a <see cref="Point2d"/> with a <see cref="Sizef"/>.
         /// </summary>
         /// <param name="point">The <see cref="Point2d"/>.</param>
