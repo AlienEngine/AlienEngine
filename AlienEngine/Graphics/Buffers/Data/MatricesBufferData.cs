@@ -30,7 +30,7 @@ namespace AlienEngine.Core.Graphics.Buffers.Data
         /// </summary>
         public Matrix4f Projection
         {
-            get => _pMatrix;
+            get { return _pMatrix; }
             set
             {
                 if (_pMatrix == value) return;
@@ -44,7 +44,7 @@ namespace AlienEngine.Core.Graphics.Buffers.Data
         /// </summary>
         public Matrix4f InversedProjection
         {
-            get => _iPMatrix;
+            get { return _iPMatrix; }
             set
             {
                 if (_iPMatrix == value) return;
@@ -58,7 +58,7 @@ namespace AlienEngine.Core.Graphics.Buffers.Data
         /// </summary>
         public Matrix4f View
         {
-            get => _vMatrix;
+            get { return _vMatrix; }
             set
             {
                 if (_vMatrix == value) return;
@@ -72,7 +72,7 @@ namespace AlienEngine.Core.Graphics.Buffers.Data
         /// </summary>
         public Matrix4f InversedView
         {
-            get => _iVMatrix;
+            get { return _iVMatrix; }
             set
             {
                 if (_iVMatrix == value) return;
@@ -86,7 +86,7 @@ namespace AlienEngine.Core.Graphics.Buffers.Data
         /// </summary>
         public Matrix4f Cubemap
         {
-            get => _cmMatrix;
+            get { return _cmMatrix; }
             set
             {
                 if (_cmMatrix == value) return;
@@ -100,7 +100,7 @@ namespace AlienEngine.Core.Graphics.Buffers.Data
         /// </summary>
         public Matrix4f LightSpace
         {
-            get => _lMatrix;
+            get { return _lMatrix; }
             set
             {
                 if (_lMatrix == value) return;

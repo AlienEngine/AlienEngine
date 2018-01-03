@@ -21,7 +21,7 @@ namespace AlienEngine.Core.Graphics.Buffers.Data
         /// </summary>
         public Vector3f Position
         {
-            get => _position;
+            get { return _position; }
             set
             {
                 if (_position == value) return;
@@ -35,7 +35,7 @@ namespace AlienEngine.Core.Graphics.Buffers.Data
         /// </summary>
         public Vector3f Rotation
         {
-            get => _rotation;
+            get { return _rotation; }
             set
             {
                 if (_rotation == value) return;
@@ -49,7 +49,7 @@ namespace AlienEngine.Core.Graphics.Buffers.Data
         /// </summary>
         public Vector2f DepthDistances
         {
-            get => _depthDistances;
+            get { return _depthDistances; }
             set
             {
                 if (_depthDistances == value) return;
