@@ -2,6 +2,7 @@
 using AlienEngine.Core.Game;
 using AlienEngine.Core.Graphics.OpenGL;
 using AlienEngine.Shaders;
+using AlienEngine.Core.Shaders;
 
 namespace AlienEngine.Core.Rendering.Shadows
 {
@@ -54,6 +55,15 @@ namespace AlienEngine.Core.Rendering.Shadows
         /// The texture size of the shadow map.
         /// </summary>
         public int ShadowMapTextureSize => _shadowMapTextureSize;
+
+        public void BindTexture(ref ShaderProgram program)
+        {
+            if (GameSettings.ShadowMapEnabled)
+            {
+                program.SetUniform("shadowMap", GL.SHADOW_TEXTURE_UNIT_INDEX);
+                CurrentShadowMap.BindTexture();
+            }
+        }
 
         /// <summary>
         /// Initialize the renderer.
