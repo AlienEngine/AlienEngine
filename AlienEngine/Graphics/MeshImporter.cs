@@ -507,16 +507,16 @@ namespace AlienEngine.Core.Graphics
             {
                 if (disposing)
                 {
-                    positions.Clear();
+                    positions?.Clear();
                     positions = null;
 
-                    uvs.Clear();
+                    uvs?.Clear();
                     uvs = null;
 
-                    indices.Clear();
+                    indices?.Clear();
                     indices = null;
 
-                    normals.Clear();
+                    normals?.Clear();
                     normals = null;
                 }
 
