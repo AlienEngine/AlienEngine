@@ -125,7 +125,7 @@ namespace AlienEngine.Core.Game
         /// <summary>
         /// Creates a new scene.
         /// </summary>
-        public Scene(string name)
+        protected Scene(string name)
         {
             _name = name;
             

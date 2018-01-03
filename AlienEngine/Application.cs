@@ -36,7 +36,7 @@ namespace AlienEngine
         /// <summary>
         /// 
         /// </summary>
-        public Application()
+        protected Application()
         {
             if (_instance == null)
             {
