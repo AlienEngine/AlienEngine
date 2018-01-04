@@ -221,7 +221,7 @@ namespace AlienEngine.Core.Physics.Constraints.TwoEntity.Joints
             Matrix3f.CreateCrossProduct(ref worldOffsetB, out rBCrossProduct);
             if (connectionA.isDynamic && connectionB.isDynamic)
             {
-                Matrix3f.CreateScale(connectionA.inverseMass + connectionB.inverseMass, out linearComponent);
+                Matrix3f.CreateScale3D(connectionA.inverseMass + connectionB.inverseMass, out linearComponent);
                 Matrix3f angularComponentA, angularComponentB;
                 Matrix3f.Multiply(ref rACrossProduct, ref connectionA.inertiaTensorInverse, out angularComponentA);
                 Matrix3f.Multiply(ref rBCrossProduct, ref connectionB.inertiaTensorInverse, out angularComponentB);
@@ -232,7 +232,7 @@ namespace AlienEngine.Core.Physics.Constraints.TwoEntity.Joints
             }
             else if (connectionA.isDynamic && !connectionB.isDynamic)
             {
-                Matrix3f.CreateScale(connectionA.inverseMass, out linearComponent);
+                Matrix3f.CreateScale3D(connectionA.inverseMass, out linearComponent);
                 Matrix3f angularComponentA;
                 Matrix3f.Multiply(ref rACrossProduct, ref connectionA.inertiaTensorInverse, out angularComponentA);
                 Matrix3f.Multiply(ref angularComponentA, ref rACrossProduct, out angularComponentA);
@@ -240,7 +240,7 @@ namespace AlienEngine.Core.Physics.Constraints.TwoEntity.Joints
             }
             else if (!connectionA.isDynamic && connectionB.isDynamic)
             {
-                Matrix3f.CreateScale(connectionB.inverseMass, out linearComponent);
+                Matrix3f.CreateScale3D(connectionB.inverseMass, out linearComponent);
                 Matrix3f angularComponentB;
                 Matrix3f.Multiply(ref rBCrossProduct, ref connectionB.inertiaTensorInverse, out angularComponentB);
                 Matrix3f.Multiply(ref angularComponentB, ref rBCrossProduct, out angularComponentB);
