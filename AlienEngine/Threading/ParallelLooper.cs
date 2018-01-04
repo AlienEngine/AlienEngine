@@ -149,7 +149,6 @@ namespace AlienEngine.Core.Threading
                 loopFinished.Set();
         }
 
-
         private bool disposed;
         private readonly object disposedLocker = new object();
 
@@ -180,8 +179,5 @@ namespace AlienEngine.Core.Threading
         {
             Dispose();
         }
-
-
-
     }
 }

@@ -249,3 +249,6 @@ ModelManifest.xml
 
 # Visual Studio Code files
 .vscode/
+
+# AlienEngine test projects
+/AlienEngine.Tests

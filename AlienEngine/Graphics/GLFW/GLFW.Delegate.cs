@@ -19,11 +19,11 @@ namespace AlienEngine.Core.Graphics.GLFW
         /// </summary>
         /// <param name="window">The window that received the event.</param>
         /// <param name="codepoint">The Unicode code point of the character.</param>
-        /// <param name="mods">Bit field describing which <see cref="KeyMods"/> were held
+        /// <param name="mods">Bit field describing which <see cref="SpecialKeys"/> were held
         /// down.</param>
         /// <seealso cref="SetCharModsCallback(Window, CharModsFunc)"/>
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        public delegate void CharModsFunc([MarshalAs(UnmanagedType.Struct)] Window window, uint codepoint, KeyMods mods);
+        public delegate void CharModsFunc([MarshalAs(UnmanagedType.Struct)] Window window, uint codepoint, SpecialKeys mods);
 
         /// <summary>
         /// The function signature for cursor enter/leave callbacks.
@@ -83,11 +83,11 @@ namespace AlienEngine.Core.Graphics.GLFW
         /// <param name="key">The <see cref="KeyCode"/> that was pressed or released.</param>
         /// <param name="scancode">The system-specific scancode of the key.</param>
         /// <param name="state">One of <see cref="InputState"/>.</param>
-        /// <param name="mods">Bit field describing which <see cref="KeyMods"/> were held
+        /// <param name="mods">Bit field describing which <see cref="SpecialKeys"/> were held
         /// down.</param>
         /// <seealso cref="SetKeyCallback(Window, KeyFunc)"/>
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        public delegate void KeyFunc([MarshalAs(UnmanagedType.Struct)] Window window, KeyCode key, int scancode, InputState state, KeyMods mods);
+        public delegate void KeyFunc([MarshalAs(UnmanagedType.Struct)] Window window, KeyCode key, int scancode, InputState state, SpecialKeys mods);
 
         /// <summary>
         /// The function signature for joystick configuration callbacks.
@@ -96,7 +96,7 @@ namespace AlienEngine.Core.Graphics.GLFW
         /// <param name="evt">One of <see cref="ConnectionEvent"/>.</param>
         /// <seealso cref="SetJoystickCallback(JoystickFunc)"/>
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        public delegate void JoystickFunc(Joysticks joy, ConnectionEvent evt);
+        public delegate void JoystickFunc(JoystickDevice joy, ConnectionEvent evt);
 
         /// <summary>
         /// The function signature for monitor configuration callbacks.
@@ -112,13 +112,13 @@ namespace AlienEngine.Core.Graphics.GLFW
         /// </summary>
         /// <param name="window">The window that received the event.</param>
         /// <param name="button">The <see cref="MouseButton"/> that was pressed or released.</param>
-        /// <param name="state">One of <see cref="InputState.Press"/> or
-        /// <see cref="InputState.Release"/></param>
-        /// <param name="mods">Bit field describing which <see cref="KeyMods"/> were held
+        /// <param name="state">One of <see cref="InputState.Pressed"/> or
+        /// <see cref="InputState.Released"/></param>
+        /// <param name="mods">Bit field describing which <see cref="SpecialKeys"/> were held
         /// down.</param>
         /// <seealso cref="SetMouseButtonCallback(Window, MouseButtonFunc)"/>
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        public delegate void MouseButtonFunc([MarshalAs(UnmanagedType.Struct)] Window window, MouseButton button, InputState state, KeyMods mods);
+        public delegate void MouseButtonFunc([MarshalAs(UnmanagedType.Struct)] Window window, MouseButton button, InputState state, SpecialKeys mods);
 
         /// <summary>
         /// The function signature for scroll callbacks.

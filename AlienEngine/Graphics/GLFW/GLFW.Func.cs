@@ -10,7 +10,7 @@ namespace AlienEngine.Core.Graphics.GLFW
         const string Library = "libglfw.so";
         #else
         const string Library = "glfw.dll";
-#endif
+        #endif
 
         private static bool _initialized = false;
 
@@ -1157,13 +1157,13 @@ namespace AlienEngine.Core.Graphics.GLFW
         /// <para>If the mode is <see cref="GLFW.InputMode.StickyKeys"/>, the value must be either
         /// <c>true</c> to enable sticky keys, or <c>false</c> to disable it. If sticky keys are
         /// enabled, a key press will ensure that <see cref="GetKey(GLFW.Window, int)"/> returns
-        /// <see cref="InputState.Press"/> the next time it is called even if the key had been
+        /// <see cref="InputState.Pressed"/> the next time it is called even if the key had been
         /// released before the call. This is useful when you are only interested in whether keys
         /// have been pressed but not when or in which order.</para>
         /// <para>If the mode is <see cref="GLFW.InputMode.StickyMouseButton"/>, the value must be either
         /// <c>true</c> to enable sticky mouse buttons, or <c>false</c> to disable it. If sticky
         /// mouse buttons are enabled, a mouse button press will ensure that
-        /// <see cref="GetMouseButton(GLFW.Window, int)"/> returns <see cref="InputState.Press"/> the
+        /// <see cref="GetMouseButton(GLFW.Window, int)"/> returns <see cref="InputState.Pressed"/> the
         /// next time it is called even if the mouse button had been released before the call. This
         /// is useful when you are only interested in whether mouse buttons have been pressed but
         /// not when or in which order.</para>
@@ -1190,13 +1190,13 @@ namespace AlienEngine.Core.Graphics.GLFW
         /// <para>If the mode is <see cref="GLFW.InputMode.StickyKeys"/>, the value must be either
         /// <c>true</c> to enable sticky keys, or <c>false</c> to disable it. If sticky keys are
         /// enabled, a key press will ensure that <see cref="GetKey(GLFW.Window, int)"/> returns
-        /// <see cref="InputState.Press"/> the next time it is called even if the key had been
+        /// <see cref="InputState.Pressed"/> the next time it is called even if the key had been
         /// released before the call. This is useful when you are only interested in whether keys
         /// have been pressed but not when or in which order.</para>
         /// <para>If the mode is <see cref="GLFW.InputMode.StickyMouseButton"/>, the value must be either
         /// <c>true</c> to enable sticky mouse buttons, or <c>false</c> to disable it. If sticky
         /// mouse buttons are enabled, a mouse button press will ensure that
-        /// <see cref="GetMouseButton(GLFW.Window, int)"/> returns <see cref="InputState.Press"/> the
+        /// <see cref="GetMouseButton(GLFW.Window, int)"/> returns <see cref="InputState.Pressed"/> the
         /// next time it is called even if the mouse button had been released before the call. This
         /// is useful when you are only interested in whether mouse buttons have been pressed but
         /// not when or in which order.</para>
@@ -1253,11 +1253,11 @@ namespace AlienEngine.Core.Graphics.GLFW
 
         /// <summary>
         /// <para>This function returns the last state reported for the specified key to the
-        /// specified window. The returned state is one of <see cref="InputState.Press"/> or
-        /// <see cref="InputState.Release"/>. The higher-level action
-        /// <see cref="InputState.Repeat"/> is only reported to the key callback.</para>
+        /// specified window. The returned state is one of <see cref="InputState.Pressed"/> or
+        /// <see cref="InputState.Released"/>. The higher-level action
+        /// <see cref="InputState.Repeated"/> is only reported to the key callback.</para>
         /// <para>If the <see cref="GLFW.InputMode.StickyKeys"/> input mode is enabled, this function
-        /// returns <see cref="InputState.Press"/> the first time you call it for a key that was
+        /// returns <see cref="InputState.Pressed"/> the first time you call it for a key that was
         /// pressed, even if that key has already been released.</para>
         /// <para>The key functions deal with physical keys, with key tokens named after their use
         /// on the standard US keyboard layout. If you want to input text, use the Unicode character
@@ -1269,18 +1269,18 @@ namespace AlienEngine.Core.Graphics.GLFW
         /// <param name="window">The desired window.</param>
         /// <param name="key">The desired keyboard key. <see cref="GLFW.KeyCode.Unknown"/> is not a valid
         /// key for this function.</param>
-        /// <returns>One of <see cref="InputState.Press"/> or
-        /// <see cref="InputState.Release"/>.</returns>
+        /// <returns>One of <see cref="InputState.Pressed"/> or
+        /// <see cref="InputState.Released"/>.</returns>
         [DllImport(Library, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwGetKey"), SuppressUnmanagedCodeSecurity]
         [return: MarshalAs(UnmanagedType.Bool)]
         public static extern bool GetKey([MarshalAs(UnmanagedType.Struct)] GLFW.Window window, int key);
 
         /// <summary>
         /// <para>This function returns the last state reported for the specified mouse button to
-        /// the specified window. The returned state is one of <see cref="InputState.Press"/> or
-        /// <see cref="InputState.Release"/>.</para>
+        /// the specified window. The returned state is one of <see cref="InputState.Pressed"/> or
+        /// <see cref="InputState.Released"/>.</para>
         /// <para>If the <see cref="GLFW.InputMode.StickyKeys"/> input mode is enabled, this function
-        /// <see cref="InputState.Press"/> the first time you call it for a mouse button that was
+        /// <see cref="InputState.Pressed"/> the first time you call it for a mouse button that was
         /// pressed, even if that mouse button has already been released.</para>
         /// </summary>
         /// <param name="window">The desired window.</param>
@@ -1558,7 +1558,7 @@ namespace AlienEngine.Core.Graphics.GLFW
         /// <returns><c>true</c> if the joystick is present, or <c>false</c> otherwise.</returns>
         [DllImport(Library, CallingConvention = CallingConvention.Cdecl, EntryPoint = "glfwJoystickPresent"), SuppressUnmanagedCodeSecurity]
         [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern bool JoystickPresent(Joysticks joy);
+        public static extern bool JoystickPresent(JoystickDevice joy);
 
         /// <summary>
         /// <para>This function returns the values of all axes of the specified joystick. Each
@@ -1570,7 +1570,7 @@ namespace AlienEngine.Core.Graphics.GLFW
         /// <param name="joy">The joystick to query.</param>
         /// <returns>An array of axis values, or <c>null</c> if the joystick is not
         /// present.</returns>
-        public static unsafe float[] GetJoystickAxes(Joysticks joy)
+        public static unsafe float[] GetJoystickAxes(JoystickDevice joy)
         {
             int n;
             var array = glfwGetJoystickAxes((int)joy, &n);
@@ -1595,7 +1595,7 @@ namespace AlienEngine.Core.Graphics.GLFW
         /// <param name="joy">The joystick to query.</param>
         /// <returns>An array of button states, or <c>null</c> if the joystick is not
         /// present.</returns>
-        public static unsafe bool[] GetJoystickButtons(Joysticks joy)
+        public static unsafe bool[] GetJoystickButtons(JoystickDevice joy)
         {
             int n;
             var array = glfwGetJoystickButtons((int)joy, &n);
@@ -1626,7 +1626,7 @@ namespace AlienEngine.Core.Graphics.GLFW
         /// <param name="joy">The joystick to query.</param>
         /// <returns>The UTF-8 encoded name of the joystick, or <c>null</c> if the joystick is not
         /// present.</returns>
-        public static string GetJoystickName(Joysticks joy) => GLFW.FromUTF8(glfwGetJoystickName((int)joy));
+        public static string GetJoystickName(JoystickDevice joy) => GLFW.FromUTF8(glfwGetJoystickName((int)joy));
 
         [DllImport(Library, CallingConvention = CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
         static extern unsafe IntPtr glfwGetJoystickName(int joy);

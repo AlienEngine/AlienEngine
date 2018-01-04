@@ -435,7 +435,7 @@ namespace AlienEngine.Core.Utils
         /// <summary>
         /// The OpenGL library on Unix/Linux platforms.
         /// </summary>
-        private const string Library = "GL.so";
+        private const string Library = "libGL.so";
 
         /// <summary>
         /// Currently loaded libraries.

@@ -28,16 +28,25 @@ namespace AlienEngine.Core.Graphics.OpenGL
 {
     public static partial class GL
     {
+        #if LINUX
+        internal const string DLLName = "libGL.so";
+        #else
         internal const string DLLName = "opengl32.dll";
+        #endif
 
         const string platformErrorString = "Value to big for 32bit platform.";
+
         static string PlatformErrorString { get { return platformErrorString; } }
 
-        const string platformWrongTypeErrorString = "Plattform is 64bit and value need 64bit to store, but argument is only 32bit.";
+        const string platformWrongTypeErrorString = "Platform is 64bit and value need 64bit to store, but argument is only 32bit.";
+
         static string PlatformWrongTypeErrorString { get { return platformWrongTypeErrorString; } }
 
         const string platformArrayErrorString = "A value in the array to big for 32bit platform.";
+
         static string PlatformArrayErrorString { get { return platformErrorString; } }
+
+        public const string MAX_NUMBER_OF_LIGHTS = "MAX_NUMBER_OF_LIGHTS";
 
         /// <summary>
         /// Returned by <see cref="GL.GetProgramResourceIndex"/> on error.
@@ -102,24 +111,29 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// </summary>
         public const int VERTEX_BITANGENT_LOCATION = 5;
 
-        public const int COLOR_TEXTURE_UNIT_INDEX = 0;
+        public const int DIFFUSE_TEXTURE_UNIT_INDEX = 0;
 
-        public const int SHADOW_TEXTURE_UNIT_INDEX = 1;
+        public const int AMBIENT_TEXTURE_UNIT_INDEX = 1;
 
-        public const int NORMAL_TEXTURE_UNIT_INDEX = 2;
+        public const int SPECULAR_TEXTURE_UNIT_INDEX = 2;
 
-        public const int RANDOM_TEXTURE_UNIT_INDEX = 3;
+        public const int EMISSIVE_TEXTURE_UNIT_INDEX = 3;
 
-        public const int DISPLACEMENT_TEXTURE_UNIT_INDEX = 4;
+        public const int NORMAL_TEXTURE_UNIT_INDEX = 4;
 
-        public const int MOTION_TEXTURE_UNIT_INDEX = 5;
+        public const int SHADOW_TEXTURE_UNIT_INDEX = 5;
+
+        public const int RANDOM_TEXTURE_UNIT_INDEX = 6;
+
+        public const int DISPLACEMENT_TEXTURE_UNIT_INDEX = 7;
+
+        public const int MOTION_TEXTURE_UNIT_INDEX = 8;
 
         public const int CASCACDE_SHADOW_TEXTURE_UNIT0_INDEX = SHADOW_TEXTURE_UNIT_INDEX;
 
-        public const int CASCACDE_SHADOW_TEXTURE_UNIT1_INDEX = 6;
+        public const int CASCACDE_SHADOW_TEXTURE_UNIT1_INDEX = 9;
 
-        public const int CASCACDE_SHADOW_TEXTURE_UNIT2_INDEX = 7;
+        public const int CASCACDE_SHADOW_TEXTURE_UNIT2_INDEX = 10;
 
-        public const int EMISSIVE_TEXTURE_UNIT_INDEX = 8;
     }
 }

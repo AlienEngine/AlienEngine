@@ -1,4 +1,6 @@
-﻿using AlienEngine.Core.Utils;
+﻿using AlienEngine.Core.Rendering;
+using AlienEngine.Core.Utils;
+using AlienEngine.Core.Rendering.Shadows;
 
 namespace AlienEngine.Core.Game
 {
@@ -9,9 +11,34 @@ namespace AlienEngine.Core.Game
     public static class GameSettings
     {
         // --------------------
-        // Multisample
+        // Rendering
         // --------------------
-        // Enabled/Disabled state
+        // Enable/Disable gamma correction
+        // ----------
+        /// <summary>
+        /// Define if the <see cref="Game"/> uses gamma correction.
+        /// </summary>
+        public static readonly bool GammaCorrectionEnabled;
+        // ----------
+        // Enable/Disable shadow map
+        // ----------
+        /// <summary>
+        /// Define if the <see cref="Game"/> uses shadow map.
+        /// </summary>
+        public static readonly bool ShadowMapEnabled;
+        // ----------
+        // Shadow map quality
+        // ----------
+        /// <summary>
+        /// The quality of the texture of the shadow map.
+        /// </summary>
+        public static readonly ShadowMapQuality ShadowMapQuality;
+        // --------------------
+        
+        // --------------------
+        // Multisample Anti Aliasing
+        // --------------------
+        // Enable/Disable MSAA
         // ----------
         /// <summary>
         /// Define if the <see cref="Game"/> will use multisample
@@ -30,7 +57,7 @@ namespace AlienEngine.Core.Game
         // --------------------
         // V-Sync
         // --------------------
-        // Enabled/Disabled state
+        // Enable/Disable V-Sync
         // ----------
         /// <summary>
         /// Define if the <see cref="Game"/> will use V-Sync.
@@ -55,12 +82,44 @@ namespace AlienEngine.Core.Game
         /// </summary>
         public static readonly Sizei GameWindowSize;
         // ----------
+        // Aspect ratio
+        // ----------
+        /// <summary>
+        /// Defines the aspect ratio of the game window.
+        /// </summary>
+        public static readonly int[] GameWindowAspectRatio;
+        // ----------
         // Fullscreen mode
         // ----------
         /// <summary>
-        /// Define if the game window is in fullscreen mode.
+        /// Defines if the game window is in fullscreen mode.
         /// </summary>
         public static readonly bool GameWindowFullscreenMode;
+        // ----------
+        // Resizable
+        // ----------
+        /// <summary>
+        /// Defines if the game window is resizable or not.
+        /// </summary>
+        public static readonly bool GameWindowResizable;
+        // ----------
+        // Title
+        // ----------
+        /// <summary>
+        /// The game window's title.
+        /// </summary>
+        public static readonly string GameWindowTitle;
+        // --------------------
+
+        // --------------------
+        // Game
+        // --------------------
+        // Frames Per Secons
+        // ----------
+        /// <summary>
+        /// The game FPS.
+        /// </summary>
+        public static readonly int GameFps;
         // --------------------
 
         /// <summary>
@@ -74,35 +133,77 @@ namespace AlienEngine.Core.Game
             IniParser config = new IniParser("game.ini");
 
             // Get parsed values
-            if (int.TryParse(config.RawResult["MultisampleEnabled"], out _int1))
+            if (int.TryParse(config.SectionedResult["Rendering"]["GammaCorrectionEnabled"], out _int1))
+                GammaCorrectionEnabled = _int1 == 1;
+            else
+                GammaCorrectionEnabled = false;
+            
+            if (int.TryParse(config.SectionedResult["Rendering"]["ShadowMapEnabled"], out _int1))
+                ShadowMapEnabled = _int1 == 1;
+            else
+                ShadowMapEnabled = false;
+
+            if (int.TryParse(config.SectionedResult["Rendering"]["ShadowMapQuality"], out _int1))
+                ShadowMapQuality = (ShadowMapQuality)_int1;
+            else
+                ShadowMapQuality = ShadowMapQuality.Low;
+
+            if (int.TryParse(config.SectionedResult["Multisample"]["MultisampleEnabled"], out _int1))
                 MultisampleEnabled = _int1 == 1;
             else
                 MultisampleEnabled = false;
 
-            if (int.TryParse(config.RawResult["MultisampleLevel"], out _int1))
+            if (int.TryParse(config.SectionedResult["Multisample"]["MultisampleLevel"], out _int1))
                 MultisampleLevel = _int1;
             else
                 MultisampleLevel = 0;
 
-            if (int.TryParse(config.RawResult["VSyncEnabled"], out _int1))
+            if (int.TryParse(config.SectionedResult["VSync"]["VSyncEnabled"], out _int1))
                 VSyncEnabled = _int1 == 1;
             else
                 VSyncEnabled = false;
 
-            if (int.TryParse(config.RawResult["VSyncInterval"], out _int1))
+            if (int.TryParse(config.SectionedResult["VSync"]["VSyncInterval"], out _int1))
                 VSyncInterval = _int1;
             else
                 VSyncInterval = 0;
 
-            if (int.TryParse(config.RawResult["Width"], out _int1) && int.TryParse(config.RawResult["Height"], out _int2))
+            if (int.TryParse(config.SectionedResult["Window"]["Width"], out _int1) && int.TryParse(config.SectionedResult["Window"]["Height"], out _int2))
                 GameWindowSize = new Sizei(_int1, _int2);
             else
                 GameWindowSize = Sizei.Zero;
 
-            if (int.TryParse(config.RawResult["FullscreenMode"], out _int1))
+            if (config.SectionedResult["Window"]["AspectRatio"].Length > 0)
+            {
+                var ratio = config.SectionedResult["Window"]["AspectRatio"].Split(':');
+                if (int.TryParse(ratio[0].Trim(), out _int1) && int.TryParse(ratio[1].Trim(), out _int2))
+                    GameWindowAspectRatio = new int[] { _int1, _int2 };
+                else
+                    GameWindowAspectRatio = new int[] { 16, 9 };
+            }
+            else
+                GameWindowAspectRatio = new int[] { 16, 9 };
+
+            if (int.TryParse(config.SectionedResult["Window"]["FullscreenMode"], out _int1))
                 GameWindowFullscreenMode = _int1 == 1;
             else
                 GameWindowFullscreenMode = false;
+
+            if (int.TryParse(config.SectionedResult["Window"]["Resizable"], out _int1))
+                GameWindowResizable = _int1 == 1;
+            else
+                GameWindowResizable = true;
+
+            if (config.SectionedResult["Window"]["Title"].Length > 0)
+                GameWindowTitle = config.SectionedResult["Window"]["Title"];
+            else
+                GameWindowTitle = "AlienEngine Game";
+
+            if (int.TryParse(config.SectionedResult["Game"]["FPS"], out _int1))
+                GameFps = _int1;
+            else
+                GameFps = 60;
+
         }
     }
 }

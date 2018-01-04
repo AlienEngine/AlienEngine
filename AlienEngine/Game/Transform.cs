@@ -83,14 +83,8 @@ namespace AlienEngine
         {
             get
             {
-                Vector3f forwardVector;
                 Matrix4f transformation = GetTransformation();
-
-                forwardVector.X = transformation[0, 2];
-                forwardVector.Y = transformation[1, 2];
-                forwardVector.Z = transformation[2, 2];
-
-                return ((-forwardVector).Normalized);
+                return transformation.Forward;
             }
             set
             {
@@ -106,14 +100,8 @@ namespace AlienEngine
         {
             get
             {
-                Vector3f rightVector;
                 Matrix4f transformation = GetTransformation();
-
-                rightVector.X = transformation[0, 0];
-                rightVector.Y = transformation[1, 0];
-                rightVector.Z = transformation[2, 0];
-
-                return (rightVector.Normalized);
+                return transformation.Right;
             }
         }
 
@@ -124,14 +112,8 @@ namespace AlienEngine
         {
             get
             {
-                Vector3f upVector;
                 Matrix4f transformation = GetTransformation();
-
-                upVector.X = transformation[0, 1];
-                upVector.Y = transformation[1, 1];
-                upVector.Z = transformation[2, 1];
-
-                return (upVector.Normalized);
+                return transformation.Up;
             }
         }
 
@@ -215,7 +197,7 @@ namespace AlienEngine
         public Matrix4f GetTransformation()
         {
             Matrix4f t = Matrix4f.CreateTranslation(_translation);
-            Matrix4f r = Matrix4f.CreateRotation(_rotation);
+            Matrix4f r = Matrix4f.CreateRotation(MathHelper.Deg2Rad(_rotation.X), MathHelper.Deg2Rad(_rotation.Y), MathHelper.Deg2Rad(_rotation.Z));
             Matrix4f s = Matrix4f.CreateScale(_scale);
 
             return s * r * t;
@@ -227,15 +209,13 @@ namespace AlienEngine
         /// <returns></returns>
         public Matrix4f GetProjectedTransformation()
         {
-            Camera _camera = Game.CurrentScene.PrimaryCamera.GetComponent<Camera>();
+            Camera _camera = Game.Instance.CurrentScene.PrimaryCamera.GetComponent<Camera>();
 
             Matrix4f f = GetTransformation();
             Matrix4f v = _camera.ViewMatrix;
             Matrix4f p = _camera.ProjectionMatrix;
-            //Matrix4f r = Matrix4f.Look(Camera.Forward, Camera.Up);
-            //Matrix4f t = Matrix4f.CreateTranslation(Camera.Position);
 
-            return f * v * p;//p * r * t * f;
+            return f * v * p;
         }
 
         /// <summary>
@@ -327,7 +307,7 @@ namespace AlienEngine
         /// </summary>
         public Quaternion ToQuaternionRotation()
         {
-            return Quaternion.FromRotationMatrix(Matrix4f.CreateRotation(Rotation));
+            return Quaternion.FromRotationMatrix(Matrix4f.CreateRotation(MathHelper.Deg2Rad(_rotation.X), MathHelper.Deg2Rad(_rotation.Y), MathHelper.Deg2Rad(_rotation.Z)));
         }
 
         /// <summary>
@@ -478,8 +458,8 @@ namespace AlienEngine
         public void LookAt(Point3f targetPosition)
         {
             Matrix4f lookAtMatrix = Matrix4f.LookAt(Position, targetPosition, UpVector);
-            Matrix4f transformation = Matrix4f.CreateTranslation(Translation);
-            Matrix4f ret = (lookAtMatrix * transformation);
+            Matrix4f transformation = Matrix4f.CreateTranslation(-Translation);
+            Matrix4f ret = (transformation * lookAtMatrix);
 
             Vector3f direction = Point3f.CreateVector(targetPosition, Position);
 
@@ -502,9 +482,9 @@ namespace AlienEngine
         /// <param name="direction">The direction to look at.</param>
         public void LookAt(Vector3f direction)
         {
-            Matrix4f lookAtMatrix = Matrix4f.LookAt(-direction, UpVector);
-            Matrix4f transformation = Matrix4f.CreateTranslation(Translation);
-            Matrix4f ret = (lookAtMatrix * transformation);
+            Matrix4f lookAtMatrix = Matrix4f.LookAt(direction, UpVector);
+            Matrix4f transformation = Matrix4f.CreateTranslation(-Translation);
+            Matrix4f ret = (transformation * lookAtMatrix);
 
             Vector3f rotation = ret.GetEulerAngles();
 

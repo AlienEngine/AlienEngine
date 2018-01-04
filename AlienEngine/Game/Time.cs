@@ -15,17 +15,14 @@ namespace AlienEngine
         private static readonly DateTime _baseDate; 
 
         /// <summary>
-        /// Represend a second.
+        /// Represent the number of ticks in one second.
         /// </summary>
-        public static long SECOND = 1000L;
+        public const int SECOND = 1000;
 
         /// <summary>
         /// The delta time between two frames.
         /// </summary>
-        public static double DeltaTime
-        {
-            get { return _delta; }
-        }
+        public static double DeltaTime => _delta;
 
         static Time()
         {
@@ -37,7 +34,7 @@ namespace AlienEngine
         /// </summary>
         public static double GetTime()
         {
-            return (DateTime.Now.Subtract(_baseDate).TotalMilliseconds);
+            return AlienEngine.Core.Graphics.GLFW.GLFW.GetTime() * SECOND;
         }
 
         /// <summary>

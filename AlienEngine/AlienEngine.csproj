@@ -1,5 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\SharpFont.4.0.1\build\SharpFont.props" Condition="Exists('..\packages\SharpFont.4.0.1\build\SharpFont.props')" />
+  <Import Project="..\packages\SharpFont.Dependencies.2.6\build\SharpFont.Dependencies.props" Condition="Exists('..\packages\SharpFont.Dependencies.2.6\build\SharpFont.Dependencies.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -34,6 +36,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugSymbols>true</DebugSymbols>
@@ -58,6 +61,7 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
@@ -69,7 +73,7 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <WarningLevel>4</WarningLevel>
-    <Optimize>true</Optimize>
+    <Optimize>false</Optimize>
     <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
@@ -101,12 +105,22 @@
     <OutputPath>bin\Debug Linux</OutputPath>
     <WarningLevel>4</WarningLevel>
     <Optimize>false</Optimize>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DefineConstants>DEBUG;TRACE;LINUX</DefineConstants>
+    <PlatformTarget>x64</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug Linux|x86'">
     <Prefer32Bit>false</Prefer32Bit>
     <OutputPath>bin\Debug Linux</OutputPath>
     <WarningLevel>4</WarningLevel>
     <Optimize>false</Optimize>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DefineConstants>DEBUG;TRACE;LINUX</DefineConstants>
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>false</SignAssembly>
@@ -118,13 +132,13 @@
     <DelaySign>false</DelaySign>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="SharpFont, Version=4.0.1.200, Culture=neutral, PublicKeyToken=48add4c483071cdf, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpFont.4.0.1\lib\net45\SharpFont.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
     <Reference Include="ICSharpCode.Decompiler, Version=2.3.1.1855, Culture=neutral, PublicKeyToken=d4bfe873e7598c49">
@@ -173,19 +187,25 @@
     </Reference>
     <Reference Include="ZeroFormatter, Version=1.6.4.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\ZeroFormatter.1.6.4\lib\net45\ZeroFormatter.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="ZeroFormatter.Interfaces, Version=1.6.4.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\ZeroFormatter.Interfaces.1.6.4\lib\net45\ZeroFormatter.Interfaces.dll</HintPath>
-      <Private>True</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Application.cs" />
     <Compile Include="Assets\AssetsManager.cs" />
-    <Compile Include="Assets\IAsset.cs" />
     <Compile Include="Assets\AssetTypes.cs" />
+    <Compile Include="Assets\IAsset.cs" />
+    <Compile Include="Assets\Material\MaterialData.cs" />
+    <Compile Include="Assets\Material\ShaderData.cs" />
     <Compile Include="Assets\MeshAsset.cs" />
+    <Compile Include="Assets\Mesh\MeshData.cs" />
+    <Compile Include="Assets\TextureAsset.cs" />
+    <Compile Include="Assets\Texture\TextureData.cs" />
+    <Compile Include="Assets\Texture\TextureFilterMode.cs" />
+    <Compile Include="Assets\Texture\TextureType.cs" />
+    <Compile Include="Assets\Texture\TextureWrapMode.cs" />
     <Compile Include="Audio\AudioCapture.cs" />
     <Compile Include="Audio\AudioContext.cs" />
     <Compile Include="Audio\AudioContextException.cs" />
@@ -207,11 +227,84 @@
     <Compile Include="ContextHandle.cs" />
     <Compile Include="Engine.cs" />
     <Compile Include="Audio\AudioSourceState.cs" />
-    <Compile Include="Game\Components\AudioClip.cs" />
-    <Compile Include="Game\Components\AudioReverbZone.cs" />
-    <Compile Include="Game\Components\BoxCollider.cs" />
-    <Compile Include="Game\Components\CapsuleCollider.cs" />
+    <Compile Include="GameWindow.cs" />
+    <Compile Include="Game\Components\Audio\AudioClip.cs" />
+    <Compile Include="Game\Components\Audio\AudioListener.cs" />
+    <Compile Include="Game\Components\Audio\AudioReverbZone.cs" />
+    <Compile Include="Game\Components\Audio\AudioSource.cs" />
+    <Compile Include="Game\Components\Lightning\Light.cs" />
+    <Compile Include="Game\Components\Physics\BoxCollider.cs" />
+    <Compile Include="Game\Components\Physics\CapsuleCollider.cs" />
+    <Compile Include="Game\Components\Physics\MeshCollider.cs" />
+    <Compile Include="Game\Components\Physics\PlaneCollider.cs" />
+    <Compile Include="Game\Components\Physics\RigidBody.cs" />
+    <Compile Include="Game\Components\Physics\SphereCollider.cs" />
+    <Compile Include="Game\Components\Rendering\Camera.cs" />
+    <Compile Include="Game\Components\Rendering\Material.cs" />
+    <Compile Include="Game\Components\Rendering\MeshRenderer.cs" />
+    <Compile Include="Game\Components\UI\Button.cs" />
+    <Compile Include="Game\Components\UI\Checkbox.cs" />
+    <Compile Include="Game\Components\UI\ListBox.cs" />
+    <Compile Include="Game\Components\UI\Text.cs" />
+    <Compile Include="Game\Components\UI\TextInput.cs" />
+    <Compile Include="Game\Shaders\DiffuseShaderProgram.cs" />
+    <Compile Include="Game\Shaders\DiffuseSpecularEmissiveShaderProgram.cs" />
+    <Compile Include="Game\Shaders\FontShaderProgram.cs" />
+    <Compile Include="Game\Shaders\ColoredUIShaderProgram.cs" />
+    <Compile Include="Game\Shaders\ShadowMapDepthShaderProgram.cs" />
+    <Compile Include="Game\UIComponent.cs" />
+    <Compile Include="Graphics\Buffers\Data\CameraBufferData.cs" />
+    <Compile Include="Graphics\Buffers\Data\UBOData.cs" />
+    <Compile Include="Graphics\Buffers\Data\MatricesBufferData.cs" />
+    <Compile Include="Graphics\Buffers\FBO.cs" />
+    <Compile Include="Graphics\Buffers\UBO.cs" />
+    <Compile Include="Graphics\Buffers\UBV.cs" />
+    <Compile Include="Graphics\Buffers\VAO.cs" />
+    <Compile Include="Graphics\Buffers\VBO.cs" />
+    <Compile Include="Imaging\DevIL\Collections.cs" />
+    <Compile Include="Imaging\DevIL\FilterEngine.cs" />
+    <Compile Include="Imaging\DevIL\Image.cs" />
+    <Compile Include="Imaging\DevIL\ImageData.cs" />
+    <Compile Include="Imaging\DevIL\ImageExporter.cs" />
+    <Compile Include="Imaging\DevIL\ImageImporter.cs" />
+    <Compile Include="Imaging\DevIL\ImageStates.cs" />
+    <Compile Include="Imaging\DevIL\ManagedImage.cs" />
+    <Compile Include="Imaging\DevIL\MemoryHelper.cs" />
+    <Compile Include="Imaging\DevIL\TransformEngine.cs" />
+    <Compile Include="Imaging\DevIL\Unmanaged\Enums.cs" />
+    <Compile Include="Imaging\DevIL\Unmanaged\IL.cs" />
+    <Compile Include="Imaging\DevIL\Unmanaged\ILDefines.cs" />
+    <Compile Include="Imaging\DevIL\Unmanaged\ILU.cs" />
+    <Compile Include="Imaging\DevIL\Unmanaged\ILUDefines.cs" />
+    <Compile Include="Imaging\DevIL\Unmanaged\Structures.cs" />
+    <Compile Include="Inputs\JoystickAxis.cs" />
+    <Compile Include="Inputs\JoystickButton.cs" />
+    <Compile Include="Inputs\JoystickState.cs" />
+    <Compile Include="IO\FileSystemManager.cs" />
+    <Compile Include="Rendering\IRenderer.cs" />
+    <Compile Include="Rendering\MaterialBlendMode.cs" />
+    <Compile Include="Rendering\MaterialShadingMode.cs" />
+    <Compile Include="Rendering\Shadows\DirectionalShadowMap.cs" />
+    <Compile Include="Rendering\Shadows\IShadowMap.cs" />
+    <Compile Include="Rendering\Shadows\OmnidirectionalShadowMap.cs" />
+    <Compile Include="Rendering\Shadows\ShadowMapBoundingBox.cs" />
+    <Compile Include="Rendering\Shadows\ShadowMapQuality.cs" />
+    <Compile Include="Rendering\Shadows\ShadowsRenderer.cs" />
+    <Compile Include="Rendering\UniformBufferObjectIndex.cs" />
+    <Compile Include="Shaders\Samples\Fragment Shaders\DiffuseFragmentShader.cs" />
+    <Compile Include="Shaders\Samples\Fragment Shaders\DiffuseSpecularEmissiveFragmentShader.cs" />
+    <Compile Include="Shaders\Samples\Fragment Shaders\FontFragmentShader.cs" />
+    <Compile Include="Shaders\Samples\Fragment Shaders\ColoredUIFragmentShader.cs" />
+    <Compile Include="Shaders\Samples\Fragment Shaders\ShadowMapDepthFragmentShader.cs" />
+    <Compile Include="Shaders\Samples\Vertex Shaders\FontVertexShader.cs" />
+    <Compile Include="Imaging\Enums.cs" />
     <Compile Include="Imaging\Image.cs" />
+    <Compile Include="Inputs\KeyboardKeyEventArgs.cs" />
+    <Compile Include="Inputs\TextInputEventArgs.cs" />
+    <Compile Include="Inputs\MouseButtonEventArgs.cs" />
+    <Compile Include="Inputs\MouseMoveEventArgs.cs" />
+    <Compile Include="Inputs\MouseState.cs" />
+    <Compile Include="Inputs\MouseWheelEventArgs.cs" />
     <Compile Include="Math\AffineTransform.cs" />
     <Compile Include="Math\BoundingBox.cs" />
     <Compile Include="Math\BoundingSphere.cs" />
@@ -221,7 +314,13 @@
     <Compile Include="Math\Matrix3x2f.cs" />
     <Compile Include="Math\Plane.cs" />
     <Compile Include="Math\Ray.cs" />
+    <Compile Include="Math\Rectangled.cs" />
+    <Compile Include="Math\Rectanglef.cs" />
     <Compile Include="Math\RigidTransform.cs" />
+    <Compile Include="Math\Sized.cs" />
+    <Compile Include="Monitor.cs" />
+    <Compile Include="MouseEnterEventArgs.cs" />
+    <Compile Include="MouseLeaveEventArgs.cs" />
     <Compile Include="Physics\BroadPhaseEntries\BroadPhaseEntry.cs" />
     <Compile Include="Physics\BroadPhaseEntries\Collidable.cs" />
     <Compile Include="Physics\BroadPhaseEntries\CollidableCollection.cs" />
@@ -276,11 +375,6 @@
     <Compile Include="Physics\Character\SupportFinder.cs" />
     <Compile Include="Physics\Character\VerticalMotionConstraint.cs" />
     <Compile Include="Physics\Collider.cs" />
-    <Compile Include="Game\Components\Light.cs" />
-    <Compile Include="Game\Components\MeshCollider.cs" />
-    <Compile Include="Game\Components\PlaneCollider.cs" />
-    <Compile Include="Game\Components\RigidBody.cs" />
-    <Compile Include="Game\Components\SphereCollider.cs" />
     <Compile Include="Game\GameElementCollection.cs" />
     <Compile Include="Game\GameSettings.cs" />
     <Compile Include="Game\IComponent.cs" />
@@ -612,72 +706,62 @@
     <Compile Include="Physics\Vehicle\WheelShape.cs" />
     <Compile Include="Physics\Vehicle\WheelSlidingFriction.cs" />
     <Compile Include="Physics\Vehicle\WheelSuspension.cs" />
+    <Compile Include="Shaders\Samples\Vertex Shaders\ColoredUIVertexShader.cs" />
+    <Compile Include="Shaders\Samples\Vertex Shaders\ShadowMapDepthVertexShader.cs" />
+    <Compile Include="UI\ListBoxChangeEventArgs.cs" />
+    <Compile Include="UI\Origin.cs" />
+    <Compile Include="Rendering\Fonts\Character.cs" />
+    <Compile Include="Rendering\Fonts\FontRendererConfiguration.cs" />
+    <Compile Include="Rendering\Fonts\FontRenderingProjectionMethod.cs" />
+    <Compile Include="Rendering\Fonts\FontStyle.cs" />
+    <Compile Include="Rendering\Fonts\FontType.cs" />
+    <Compile Include="Rendering\Fonts\FreeTypeFont.cs" />
+    <Compile Include="Rendering\Fonts\IFont.cs" />
+    <Compile Include="Rendering\Fonts\TextAlignement.cs" />
+    <Compile Include="Rendering\Fonts\TextWrapMode.cs" />
     <Compile Include="Rendering\IRenderable.cs" />
     <Compile Include="Game\LightType.cs" />
     <Compile Include="Game\PostEffectMode.cs" />
+    <Compile Include="Rendering\IPostRenderable.cs" />
     <Compile Include="Rendering\RenderableCollection.cs" />
-    <Compile Include="Rendering\Renderer.cs" />
+    <Compile Include="Rendering\RendererManager.cs" />
     <Compile Include="Game\Scene.cs" />
     <Compile Include="Game\Shaders\BumpedDiffuseShaderProgram.cs" />
     <Compile Include="Game\Shaders\RenderTextureShaderProgram.cs" />
-    <Compile Include="Game\ShadowMap.cs" />
     <Compile Include="Graphics\Color3.cs" />
     <Compile Include="Graphics\Cursor.cs" />
     <Compile Include="BlittableValueType.cs" />
     <Compile Include="Game\Component.cs" />
-    <Compile Include="Game\Components\AudioListener.cs" />
-    <Compile Include="Game\Components\AudioSource.cs" />
-    <Compile Include="Game\Components\Camera.cs" />
-    <Compile Include="Game\Components\MeshRenderer.cs" />
     <Compile Include="Game\Transform.cs" />
     <Compile Include="Game\Game.cs" />
     <Compile Include="Game\GameElement.cs" />
     <Compile Include="Graphics\Color4.cs" />
     <Compile Include="Imaging\Cubemap.cs" />
-    <Compile Include="Graphics\DevIL\Collections.cs" />
-    <Compile Include="Graphics\DevIL\Enums.cs" />
-    <Compile Include="Graphics\DevIL\FilterEngine.cs" />
-    <Compile Include="Graphics\DevIL\Image.cs" />
-    <Compile Include="Graphics\DevIL\ImageData.cs" />
-    <Compile Include="Graphics\DevIL\ImageExporter.cs" />
-    <Compile Include="Graphics\DevIL\ImageImporter.cs" />
-    <Compile Include="Graphics\DevIL\ImageStates.cs" />
-    <Compile Include="Graphics\DevIL\ManagedImage.cs" />
-    <Compile Include="Graphics\DevIL\MemoryHelper.cs" />
-    <Compile Include="Graphics\DevIL\TransformEngine.cs" />
-    <Compile Include="Graphics\DevIL\Unmanaged\Enums.cs" />
-    <Compile Include="Graphics\DevIL\Unmanaged\IL.cs" />
-    <Compile Include="Graphics\DevIL\Unmanaged\ILDefines.cs" />
-    <Compile Include="Graphics\DevIL\Unmanaged\ILU.cs" />
-    <Compile Include="Graphics\DevIL\Unmanaged\ILUDefines.cs" />
-    <Compile Include="Graphics\DevIL\Unmanaged\Structures.cs" />
-    <Compile Include="Graphics\FBO.cs" />
-    <Compile Include="Graphics\GameWindow.cs" />
     <Compile Include="Graphics\Geometry.cs" />
-    <Compile Include="Game\Components\Material.cs" />
     <Compile Include="Graphics\MeshEntry.cs" />
     <Compile Include="Graphics\MeshFactory.cs" />
     <Compile Include="Graphics\MeshImporter.cs" />
     <Compile Include="Graphics\MeshTransformation.cs" />
     <Compile Include="Game\Shaders\CubemapShaderProgram.cs" />
-    <Compile Include="Graphics\Monitor.cs" />
-    <Compile Include="Graphics\Shaders\Samples\Fragment Shaders\CubemapFragmentShader.cs" />
-    <Compile Include="Graphics\Shaders\Samples\Fragment Shaders\GrassFragmentShader.cs" />
-    <Compile Include="Graphics\Shaders\Samples\Fragment Shaders\RenderTextureFragmentShader.cs" />
-    <Compile Include="Graphics\Shaders\Samples\Fragment Shaders\BumpedDiffuseFragmentShader.cs" />
-    <Compile Include="Graphics\Shaders\Samples\Vertex Shaders\CubemapVertexShader.cs" />
-    <Compile Include="Graphics\Shaders\Samples\Vertex Shaders\GrassVertexShader.cs" />
-    <Compile Include="Graphics\Shaders\Samples\Vertex Shaders\RenderTextureVertexShader.cs" />
+    <Compile Include="Shaders\Samples\Fragment Shaders\CubemapFragmentShader.cs" />
+    <Compile Include="Shaders\Samples\Fragment Shaders\GrassFragmentShader.cs" />
+    <Compile Include="Shaders\Samples\Fragment Shaders\RenderTextureFragmentShader.cs" />
+    <Compile Include="Shaders\Samples\Fragment Shaders\BumpedDiffuseFragmentShader.cs" />
+    <Compile Include="Shaders\Samples\Vertex Shaders\CubemapVertexShader.cs" />
+    <Compile Include="Shaders\Samples\Vertex Shaders\GrassVertexShader.cs" />
+    <Compile Include="Shaders\Samples\Vertex Shaders\RenderTextureVertexShader.cs" />
     <Compile Include="Imaging\Texture.cs" />
-    <Compile Include="Graphics\UBO.cs" />
-    <Compile Include="Graphics\UBOData.cs" />
     <Compile Include="Inputs\CursorState.cs" />
     <Compile Include="Inputs\InputState.cs" />
-    <Compile Include="Inputs\Joysticks.cs" />
+    <Compile Include="Inputs\JoystickDevice.cs" />
     <Compile Include="Inputs\KeyCode.cs" />
-    <Compile Include="Inputs\KeyMods.cs" />
+    <Compile Include="Inputs\SpecialKeys.cs" />
     <Compile Include="Inputs\MouseButton.cs" />
     <Compile Include="Physics\ColliderShapes.cs" />
+    <Compile Include="Rendering\RendererBackupMode.cs" />
+    <Compile Include="Rendering\ViewportChangedEventArgs.cs" />
+    <Compile Include="ResizeEventArgs.cs" />
+    <Compile Include="ScreenMode.cs" />
     <Compile Include="Resources\AssetsManager.cs" />
     <Compile Include="Resources\BufferPool.cs" />
     <Compile Include="Resources\BufferPools.cs" />
@@ -691,6 +775,8 @@
     <Compile Include="Threading\ParallelLoopWorker.cs" />
     <Compile Include="Threading\SpinLock.cs" />
     <Compile Include="Threading\ThreadsManager.cs" />
+    <Compile Include="UI\Anchor.cs" />
+    <Compile Include="UI\TextChangeEventArgs.cs" />
     <Compile Include="Utils\ConvertX.cs" />
     <Compile Include="Utils\CPUInfo.cs" />
     <Compile Include="Utils\DataStructures\ConcurrentDeque.cs" />
@@ -743,20 +829,15 @@
     <Compile Include="Graphics\OpenGL\Structs\SingleUInt32Union.cs" />
     <Compile Include="Graphics\OpenGL\Structs\UFloat10.cs" />
     <Compile Include="Graphics\OpenGL\Structs\UFloat11.cs" />
-    <Compile Include="Game\Shaders\DiffuseShaderProgram.cs" />
-    <Compile Include="Graphics\Shaders\Samples\UI\FontFragmentShader.cs" />
-    <Compile Include="Graphics\Shaders\Samples\UI\FontShaderProgram.cs" />
-    <Compile Include="Graphics\Shaders\Samples\UI\TexturedUIShaderProgram.cs" />
-    <Compile Include="Graphics\Shaders\Samples\UI\UITexturedFragmentShader.cs" />
-    <Compile Include="Graphics\Shaders\Samples\UI\FontVertexShader.cs" />
-    <Compile Include="Graphics\Shaders\Samples\UI\UITexturedVertexShader.cs" />
+    <Compile Include="Game\Shaders\DiffuseSpecularShaderProgram.cs" />
+    <Compile Include="Game\Shaders\TexturedUIShaderProgram.cs" />
+    <Compile Include="Shaders\Samples\Fragment Shaders\TexturedUIFragmentShader.cs" />
+    <Compile Include="Shaders\Samples\Vertex Shaders\TexturedUIVertexShader.cs" />
     <Compile Include="Graphics\Mesh.cs" />
-    <Compile Include="Graphics\Shaders\Samples\Fragment Shaders\DiffuseFragmentShader.cs" />
-    <Compile Include="Graphics\Shaders\Samples\Vertex Shaders\DiffuseVertexShader.cs" />
-    <Compile Include="Graphics\Shaders\Samples\Fragment Shaders\DualDiffuseBlendFragmentShader.cs" />
-    <Compile Include="Graphics\Shaders\ShaderProgram.cs" />
-    <Compile Include="Graphics\VAO.cs" />
-    <Compile Include="Graphics\VBO.cs" />
+    <Compile Include="Shaders\Samples\Fragment Shaders\DiffuseSpecularFragmentShader.cs" />
+    <Compile Include="Shaders\Samples\Vertex Shaders\DiffuseVertexShader.cs" />
+    <Compile Include="Shaders\Samples\Fragment Shaders\DualDiffuseBlendFragmentShader.cs" />
+    <Compile Include="Shaders\ShaderProgram.cs" />
     <Compile Include="Graphics\Vertex.cs" />
     <Compile Include="Inputs\Input.cs" />
     <Compile Include="Inputs\Joystick.cs" />
@@ -769,38 +850,38 @@
     <Compile Include="Utils\IniParser.cs" />
     <None Include="AlienEngine.pfx" />
     <None Include="app.config" />
-    <Compile Include="Graphics\Shaders\ASL\ASLException.cs" />
-    <Compile Include="Graphics\Shaders\ASL\ASLShader.Attributes.cs" />
-    <Compile Include="Graphics\Shaders\ASL\ASLShader.cs" />
-    <Compile Include="Graphics\Shaders\ASL\ASLShader.Functions.cs" />
-    <Compile Include="Graphics\Shaders\ASL\ASLShader.Matrices.cs" />
-    <Compile Include="Graphics\Shaders\ASL\ASLShader.Samplers.cs" />
-    <Compile Include="Graphics\Shaders\ASL\ASLShader.Vectors.cs" />
-    <Compile Include="Graphics\Shaders\ASL\ASLShaderAttributeHelper.cs" />
-    <Compile Include="Graphics\Shaders\ASL\ASLShaderCompiler.cs" />
-    <Compile Include="Graphics\Shaders\ASL\ASLShaderStruct.cs" />
-    <Compile Include="Graphics\Shaders\ASL\ASLShaderVariable.cs" />
-    <Compile Include="Graphics\Shaders\ASL\FragmentShader.cs" />
-    <Compile Include="Graphics\Shaders\ASL\FragmentShader.InputLayoutQualifiers.cs" />
-    <Compile Include="Graphics\Shaders\ASL\FragmentShader.LayoutAttribute.cs" />
-    <Compile Include="Graphics\Shaders\ASL\GeometryShader.cs" />
-    <Compile Include="Graphics\Shaders\ASL\GeometryShader.InputLayoutQualifiers.cs" />
-    <Compile Include="Graphics\Shaders\ASL\GeometryShader.LayoutAttribute.cs" />
-    <Compile Include="Graphics\Shaders\ASL\GeometryShader.OutputLayoutQualifiers.cs" />
-    <Compile Include="Graphics\Shaders\ASL\GLSL.cs" />
-    <Compile Include="Graphics\Shaders\ASL\GLSLVisitor.cs" />
-    <Compile Include="Graphics\Shaders\ASL\GLSLVisitor.NotImplemented.cs" />
-    <Compile Include="Graphics\Shaders\ASL\GLSLVisitorBase.Abstract.cs" />
-    <Compile Include="Graphics\Shaders\ASL\GLSLVisitorBase.cs" />
-    <Compile Include="Graphics\Shaders\ASL\GLSLVisitorBase.Illegal.cs" />
-    <Compile Include="Graphics\Shaders\ASL\GLSLVisitorBase.Unsupported.cs" />
-    <Compile Include="Graphics\Shaders\ASL\RenameLocals.cs" />
-    <Compile Include="Graphics\Shaders\ASL\RenderShader.cs" />
-    <Compile Include="Graphics\Shaders\ASL\RenderShader.UniformLayoutQualifiers.cs" />
-    <Compile Include="Graphics\Shaders\ASL\TessellationControlShader.cs" />
-    <Compile Include="Graphics\Shaders\ASL\TessellationEvaluationShader.cs" />
-    <Compile Include="Graphics\Shaders\ASL\VertexShader.cs" />
-    <Compile Include="Graphics\Shaders\ASL\VertexShader.LayoutAttribute.cs" />
+    <Compile Include="Shaders\ASL\ASLException.cs" />
+    <Compile Include="Shaders\ASL\ASLShader.Attributes.cs" />
+    <Compile Include="Shaders\ASL\ASLShader.cs" />
+    <Compile Include="Shaders\ASL\ASLShader.Functions.cs" />
+    <Compile Include="Shaders\ASL\ASLShader.Matrices.cs" />
+    <Compile Include="Shaders\ASL\ASLShader.Samplers.cs" />
+    <Compile Include="Shaders\ASL\ASLShader.Vectors.cs" />
+    <Compile Include="Shaders\ASL\ASLShaderAttributeHelper.cs" />
+    <Compile Include="Shaders\ASL\ASLShaderCompiler.cs" />
+    <Compile Include="Shaders\ASL\ASLShaderStruct.cs" />
+    <Compile Include="Shaders\ASL\ASLShaderVariable.cs" />
+    <Compile Include="Shaders\ASL\FragmentShader.cs" />
+    <Compile Include="Shaders\ASL\FragmentShader.InputLayoutQualifiers.cs" />
+    <Compile Include="Shaders\ASL\FragmentShader.LayoutAttribute.cs" />
+    <Compile Include="Shaders\ASL\GeometryShader.cs" />
+    <Compile Include="Shaders\ASL\GeometryShader.InputLayoutQualifiers.cs" />
+    <Compile Include="Shaders\ASL\GeometryShader.LayoutAttribute.cs" />
+    <Compile Include="Shaders\ASL\GeometryShader.OutputLayoutQualifiers.cs" />
+    <Compile Include="Shaders\ASL\GLSL.cs" />
+    <Compile Include="Shaders\ASL\GLSLVisitor.cs" />
+    <Compile Include="Shaders\ASL\GLSLVisitor.NotImplemented.cs" />
+    <Compile Include="Shaders\ASL\GLSLVisitorBase.Abstract.cs" />
+    <Compile Include="Shaders\ASL\GLSLVisitorBase.cs" />
+    <Compile Include="Shaders\ASL\GLSLVisitorBase.Illegal.cs" />
+    <Compile Include="Shaders\ASL\GLSLVisitorBase.Unsupported.cs" />
+    <Compile Include="Shaders\ASL\RenameLocals.cs" />
+    <Compile Include="Shaders\ASL\RenderShader.cs" />
+    <Compile Include="Shaders\ASL\RenderShader.UniformLayoutQualifiers.cs" />
+    <Compile Include="Shaders\ASL\TessellationControlShader.cs" />
+    <Compile Include="Shaders\ASL\TessellationEvaluationShader.cs" />
+    <Compile Include="Shaders\ASL\VertexShader.cs" />
+    <Compile Include="Shaders\ASL\VertexShader.LayoutAttribute.cs" />
     <Compile Include="ILoadFromString.cs" />
     <Compile Include="Math\DualQuaternion.cs" />
     <Compile Include="Math\MathHelper.cs" />
@@ -842,9 +923,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Compute\OpenCL\" />
-    <Folder Include="Graphics\DirectX\" />
-    <Folder Include="Graphics\Shaders\Samples\Geometry Shaders\" />
-    <Folder Include="Graphics\Vulkan\" />
+    <Folder Include="Shaders\Samples\Geometry Shaders\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\AssimpNet.3.3.2\build\AssimpNet.targets" Condition="Exists('..\packages\AssimpNet.3.3.2\build\AssimpNet.targets')" />
@@ -853,6 +932,8 @@
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\AssimpNet.3.3.2\build\AssimpNet.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\AssimpNet.3.3.2\build\AssimpNet.targets'))" />
+    <Error Condition="!Exists('..\packages\SharpFont.Dependencies.2.6\build\SharpFont.Dependencies.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\SharpFont.Dependencies.2.6\build\SharpFont.Dependencies.props'))" />
+    <Error Condition="!Exists('..\packages\SharpFont.4.0.1\build\SharpFont.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\SharpFont.4.0.1\build\SharpFont.props'))" />
   </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -278,7 +278,7 @@ namespace AlienEngine.Core.Physics.CollisionShapes
             Vector3f offset;
             Vector3f.Subtract(ref transform.Position, ref center, out offset);
             Matrix3f innerProduct;
-            Matrix3f.CreateScale(offset.LengthSquared, out innerProduct);
+            Matrix3f.CreateScale3D(offset.LengthSquared, out innerProduct);
             Matrix3f outerProduct;
             Matrix3f.CreateOuterProduct(ref offset, ref offset, out outerProduct);
 

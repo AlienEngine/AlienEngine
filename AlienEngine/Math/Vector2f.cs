@@ -20,6 +20,7 @@
 using System;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
+using ZeroFormatter;
 
 namespace AlienEngine
 {
@@ -29,16 +30,19 @@ namespace AlienEngine
     [Serializable]
     [TypeConverter(typeof(StructTypeConverter<Vector2f>))]
     [StructLayout(LayoutKind.Sequential)]
+    [ZeroFormattable]
     public struct Vector2f : IEquatable<Vector2f>, ILoadFromString
     {
         /// <summary>
         /// The x coordinate of the vector
         /// </summary>
+        [Index(0)]
         public float X;
 
         /// <summary>
         /// The y coordinate of the vector
         /// </summary>
+        [Index(1)]
         public float Y;
 
         /// <summary>
@@ -284,6 +288,15 @@ namespace AlienEngine
             get { return new Vector2f(-Y, X); }
         }
 
+        /// <summary>
+        /// Negates the vector.
+        /// </summary>
+        public void Negate()
+        {
+            X = -X;
+            Y = -Y;
+        }
+        
         /// <summary>
         /// Scales the Vector2f to unit length.
         /// </summary>
@@ -864,6 +877,32 @@ namespace AlienEngine
         }
 
         /// <summary>
+        /// Multiply the specified instances members by members.
+        /// </summary>
+        /// <param name="left">Left operand.</param>
+        /// <param name="right">Right operand.</param>
+        /// <returns>Result of multiplication.</returns>
+        public static Vector2f operator *(Vector2f left, Vector2f right)
+        {
+            left.X *= right.X;
+            left.Y *= right.Y;
+            return left;
+        }
+
+        /// <summary>
+        /// Divides the specified instances members by members.
+        /// </summary>
+        /// <param name="left">Left operand.</param>
+        /// <param name="right">Right operand.</param>
+        /// <returns>Result of division.</returns>
+        public static Vector2f operator /(Vector2f left, Vector2f right)
+        {
+            left.X /= right.X;
+            left.Y /= right.Y;
+            return left;
+        }
+
+        /// <summary>
         /// Negates the specified instance.
         /// </summary>
         /// <param name="vec">Operand.</param>
@@ -1006,7 +1045,7 @@ namespace AlienEngine
         /// <returns></returns>
         public override string ToString()
         {
-            return String.Format("({0} , {1})", X, Y);
+            return $"({X} , {Y})";
         }
     }
 }

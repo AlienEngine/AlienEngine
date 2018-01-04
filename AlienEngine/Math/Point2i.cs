@@ -62,6 +62,11 @@ namespace AlienEngine
         public static readonly Point2i UnitY = new Point2i(0, 1);
 
         /// <summary>
+        /// An empty Point2i. Similar to <see cref="Zero"/>.
+        /// </summary>
+        public static readonly Point2i Empty = new Point2i(0);
+
+        /// <summary>
         /// Construct a new Point2i.
         /// </summary>
         /// <param name="value">The value used to fill the coordinates of the Point2i</param>

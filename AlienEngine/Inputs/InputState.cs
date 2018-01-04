@@ -3,21 +3,26 @@
     /// <summary>
     /// Key and button actions.
     /// </summary>
-    public enum InputState : int
+    public enum InputState
     {
+        /// <summary>
+        /// References an unknown state.
+        /// </summary>
+        Unknown = -1,
+
         /// <summary>
         /// The key or mouse button was released.
         /// </summary>
-        Release = 0,
+        Released = 0,
 
         /// <summary>
         /// The key or mouse button was pressed.
         /// </summary>
-        Press = 1,
+        Pressed = 1,
 
         /// <summary>
         /// The key was held down until it repeated.
         /// </summary>
-        Repeat = 2
+        Repeated = 2
     }
 }
