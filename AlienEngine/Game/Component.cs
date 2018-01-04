@@ -247,5 +247,14 @@ namespace AlienEngine
         #endregion
 
         #endregion
+
+        protected virtual void Dispose(bool disposing)
+        { }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
     }
 }
