@@ -14,7 +14,6 @@ namespace AlienEngine.Core.Resources
         {
             _disposableResources = new List<IDisposable>();
             _disposed = false;
-            OnDisposeResources = new Action(() => { });
         }
 
         public static void AddOnDisposeEvent(Action e)
@@ -46,7 +45,7 @@ namespace AlienEngine.Core.Resources
 
         public static void DisposeResources()
         {
-            OnDisposeResources();
+            OnDisposeResources?.Invoke();
             OnDisposeResources = null;
 
             for (int i = 0, l = _disposableResources.Count; i < l; i++)
