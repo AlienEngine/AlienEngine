@@ -2,6 +2,7 @@
 using AlienEngine.Core.Rendering;
 using AlienEngine.Core.Threading;
 using System;
+using AlienEngine.Core.Resources;
 
 namespace AlienEngine.Core.Game
 {
@@ -11,7 +12,7 @@ namespace AlienEngine.Core.Game
         /// The name of the scene.
         /// </summary>
         private string _name;
-        
+
         /// <summary>
         /// A collection of all <see cref="GameElement"/>s in the <see cref="Scene"/>.
         /// </summary>
@@ -73,7 +74,7 @@ namespace AlienEngine.Core.Game
         /// The name of this <see cref="Scene"/>.
         /// </summary>
         public string Name => _name;
-        
+
         /// <summary>
         /// Gets a collection of all <see cref="GameElement"/>s
         /// in the current <see cref="Scene"/>.
@@ -128,7 +129,7 @@ namespace AlienEngine.Core.Game
         protected Scene(string name)
         {
             _name = name;
-            
+
             // Default camera
             GameElement _dummyCamera = new GameElement("_dummy_generated_camera");
             _dummyCamera.AttachComponent(Camera.None);
@@ -142,8 +143,8 @@ namespace AlienEngine.Core.Game
             _audioListener = null;
             _primaryCamera = _dummyCamera;
 
-            // Setup Physics
-            _setupPhysics();
+            // Register this in the resource manager
+            ResourcesManager.AddDisposableResource(this);
         }
 
         /// <summary>
@@ -152,50 +153,80 @@ namespace AlienEngine.Core.Game
         /// <param name="gameElement">The <see cref="GameElement"/> to add.</param>
         public void AddGameElement(GameElement gameElement)
         {
-            if (!_gameElements.Contains(gameElement))
+            if (_gameElements.Contains(gameElement)) return;
+
+            gameElement.SetParentScene(this);
+
+            _gameElements.Add(gameElement);
+
+            if (gameElement.HasComponent<Light>())
+                _lights.Add(gameElement);
+
+            if (gameElement.HasComponent<Camera>())
             {
-                gameElement.SetParentScene(this);
+                Camera cm = gameElement.GetComponent<Camera>();
+                _cameras.Add(gameElement);
 
-                _gameElements.Add(gameElement);
-
-                if (gameElement.HasComponent<Light>())
-                {
-                    _lights.Add(gameElement);
-                }
-
-                if (gameElement.HasComponent<Camera>())
-                {
-                    Camera cm = gameElement.GetComponent<Camera>();
-                    _cameras.Add(gameElement);
-
-                    if (cm.IsPrimary)
-                        _primaryCamera = gameElement;
-                }
-
-                if (gameElement.HasComponent<AudioSource>())
-                {
-                    _audioSources.Add(gameElement);
-                }
-
-                if (gameElement.HasComponent<AudioReverbZone>())
-                {
-                    _audioReverbZones.Add(gameElement);
-                }
-
-                if (gameElement.HasComponent<AudioListener>())
-                {
-                    _audioListener = gameElement;
-                }
-
-                foreach (GameElement child in gameElement.Childs)
-                {
-                    AddGameElement(child);
-                }
-
-                gameElement.OnAddToScene(this);
-
-                OnAddGameElement();
+                if (cm.IsPrimary)
+                    _primaryCamera = gameElement;
             }
+
+            if (gameElement.HasComponent<AudioSource>())
+                _audioSources.Add(gameElement);
+
+            if (gameElement.HasComponent<AudioReverbZone>())
+                _audioReverbZones.Add(gameElement);
+
+            if (gameElement.HasComponent<AudioListener>())
+                _audioListener = gameElement;
+
+            foreach (GameElement child in gameElement.Childs)
+                AddGameElement(child);
+
+            gameElement.OnAddToScene(this);
+
+            OnAddGameElement();
+        }
+
+        /// <summary>
+        /// Removes a <see cref="GameElement"/> in the scene.
+        /// </summary>
+        /// <param name="gameElement">The <see cref="GameElement"/> to add.</param>
+        public void RemoveGameElement(GameElement gameElement)
+        {
+            if (!_gameElements.Contains(gameElement)) return;
+
+            gameElement.SetParentScene(null);
+
+            _gameElements.Remove(gameElement);
+
+            if (gameElement.HasComponent<Light>())
+                _lights.Remove(gameElement);
+
+            if (gameElement.HasComponent<Camera>())
+            {
+                Camera cm = gameElement.GetComponent<Camera>();
+                _cameras.Remove(gameElement);
+
+                if (cm.IsPrimary)
+                    _primaryCamera = null;
+            }
+
+            if (gameElement.HasComponent<AudioSource>())
+                _audioSources.Remove(gameElement);
+
+            if (gameElement.HasComponent<AudioReverbZone>())
+                _audioReverbZones.Remove(gameElement);
+
+            if (gameElement.HasComponent<AudioListener>())
+                _audioListener = null;
+
+            foreach (GameElement child in gameElement.Childs)
+                RemoveGameElement(child);
+
+            gameElement.OnRemoveFromScene(this);
+
+            OnRemoveGameElement();
         }
 
         /// <summary>
@@ -223,25 +254,53 @@ namespace AlienEngine.Core.Game
         /// the <see cref="Game"/>.
         /// </summary>
         public virtual void Load()
-        { }
+        {
+            // Setup Physics
+            _loadPhysics();
+        }
 
         /// <summary>
         /// Action executed when the <see cref="Scene"/> is unloaded from
         /// the <see cref="Game"/>.
         /// </summary>
         public virtual void Unload()
-        { }
+        {
+            // Unload physics.
+            _unloadPhysics();
+            
+            GameElement[] arrayGameElements = _gameElements.ToArray();
+
+            for (int i = 0, l = arrayGameElements.Length; i < l; i++)
+            {
+                RemoveGameElement(arrayGameElements[i]);
+                arrayGameElements[i].Dispose();
+            }
+
+            arrayGameElements = null;
+
+            _gameElements.Clear();
+                
+            GameElement.Clear();
+        }
 
         public virtual void Start()
         {
-            foreach (GameElement element in _gameElements)
-                element.Start();
+            GameElement[] arrayGameElements = _gameElements.ToArray();
+
+            for (int i = 0, l = arrayGameElements.Length; i < l; i++)
+                arrayGameElements[i].Start();
+
+            arrayGameElements = null;
         }
 
         public virtual void BeforeUpdate()
         {
-            foreach (GameElement element in _gameElements)
-                element.BeforeUpdate();
+            GameElement[] arrayGameElements = _gameElements.ToArray();
+
+            for (int i = 0, l = arrayGameElements.Length; i < l; i++)
+                arrayGameElements[i].BeforeUpdate();
+
+            arrayGameElements = null;
         }
 
         /// <summary>
@@ -249,20 +308,32 @@ namespace AlienEngine.Core.Game
         /// </summary>
         public virtual void Update()
         {
-            foreach (GameElement element in _gameElements)
-                element.Update();
+            GameElement[] arrayGameElements = _gameElements.ToArray();
+
+            for (int i = 0, l = arrayGameElements.Length; i < l; i++)
+                arrayGameElements[i].Update();
+
+            arrayGameElements = null;
         }
 
         public virtual void AfterUpdate()
         {
-            foreach (GameElement element in _gameElements)
-                element.AfterUpdate();
+            GameElement[] arrayGameElements = _gameElements.ToArray();
+
+            for (int i = 0, l = arrayGameElements.Length; i < l; i++)
+                arrayGameElements[i].AfterUpdate();
+
+            arrayGameElements = null;
         }
 
         public virtual void Stop()
         {
-            foreach (GameElement element in _gameElements)
-                element.Stop();
+            GameElement[] arrayGameElements = _gameElements.ToArray();
+
+            for (int i = 0, l = arrayGameElements.Length; i < l; i++)
+                arrayGameElements[i].Stop();
+
+            arrayGameElements = null;
         }
 
         /// <summary>
@@ -270,10 +341,20 @@ namespace AlienEngine.Core.Game
         /// added in the <see cref="Scene"/>.
         /// </summary>
         protected virtual void OnAddGameElement()
-        { }
+        {
+        }
+
+        /// <summary>
+        /// Action executed when a <see cref="GameElement"/> is
+        /// removed from the <see cref="Scene"/>.
+        /// </summary>
+        protected virtual void OnRemoveGameElement()
+        {
+        }
 
         protected virtual void BeforeRender()
-        { }
+        {
+        }
 
         /// <summary>
         /// Renders the current scene.
@@ -286,14 +367,15 @@ namespace AlienEngine.Core.Game
         }
 
         protected virtual void AfterRender()
-        { }
+        {
+        }
 
         /// <summary>
         /// Process physics simulation for one frame.
         /// </summary>
         internal void SimulatePhysics()
         {
-            _space.Update((float)Time.DeltaTime);
+            _space.Update((float) Time.DeltaTime);
         }
 
         /// <summary>
@@ -333,11 +415,15 @@ namespace AlienEngine.Core.Game
         /// <summary>
         /// Initialize physics.
         /// </summary>
-        private void _setupPhysics()
+        private void _loadPhysics()
         {
+            if (_parallelLooper != null)
+                _parallelLooper.Dispose();
+            
             _parallelLooper = new ParallelLooper();
-            //This section lets the engine know that it can make use of multithreaded systems
-            //by adding threads to its thread pool.
+
+            // This section lets the engine know that it can make use of multithreaded systems
+            // by adding threads to its thread pool.
             if (Environment.ProcessorCount > 1)
             {
                 for (int i = 0; i < Environment.ProcessorCount; i++)
@@ -350,21 +436,52 @@ namespace AlienEngine.Core.Game
             _space.ForceUpdater.Gravity = VectorHelper.Down * 9.81f;
         }
 
+        /// <summary>
+        /// Deinitialize physics.
+        /// </summary>
+        private void _unloadPhysics()
+        {
+            if (_parallelLooper == null) return;
+            
+            if (Environment.ProcessorCount > 1)
+            {
+                for (int i = 0; i < Environment.ProcessorCount; i++)
+                {
+                    _parallelLooper.RemoveThread();
+                }
+            }
+        }
+
         #region IDisposable Support
-        private bool disposedValue = false; // To detect redundant calls
+
+        private bool _disposedValue;
 
         protected virtual void Dispose(bool disposing)
         {
-            if (!disposedValue)
+            if (_disposedValue) return;
+
+            if (disposing)
             {
-                if (disposing)
+                if (_parallelLooper != null)
+                    _parallelLooper.Dispose();
+
+                GameElement[] arrayGameElements = _gameElements.ToArray();
+
+                for (int i = 0, l = arrayGameElements.Length; i < l; i++)
                 {
-                    if (_parallelLooper != null)
-                        _parallelLooper.Dispose();
+                    RemoveGameElement(arrayGameElements[i]);
+                    arrayGameElements[i].Dispose();
                 }
 
-                disposedValue = true;
+                arrayGameElements = null;
+
+                _gameElements.Dispose();
+                _gameElements = null;
+                
+                GameElement.Clear();
             }
+
+            _disposedValue = true;
         }
 
         // TODO: override a finalizer only if Dispose(bool disposing) above has code to free unmanaged resources.
@@ -380,6 +497,7 @@ namespace AlienEngine.Core.Game
             // TODO: uncomment the following line if the finalizer is overridden above.
             // GC.SuppressFinalize(this);
         }
+
         #endregion
     }
 }
