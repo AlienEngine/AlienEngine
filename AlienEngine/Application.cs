@@ -12,7 +12,7 @@ namespace AlienEngine
     public abstract class Application
     {
         #region Fields
-        
+
         /// <summary>
         /// The game window.
         /// </summary>
@@ -66,9 +66,12 @@ namespace AlienEngine
         {
             try
             {
-                // Initialize the game
-                Init();
-
+                if (Game.Instance.NeedReload)
+                    Reload();
+                else
+                    // Initialize the game
+                    Init();
+                
                 // Show the game window
                 _window.Show();
 
@@ -109,9 +112,9 @@ namespace AlienEngine
                 double deltaTime = passedTime / Time.SECOND;
 
                 unprocessedTime += passedTime;
-                frameCounter += (int)passedTime;
+                frameCounter += (int) passedTime;
 
-                Game.Instance.CurrentScene.BeforeUpdate();
+                Game.Instance.BeforeUpdate();
 
                 while (unprocessedTime >= frameTime)
                 {
@@ -140,7 +143,7 @@ namespace AlienEngine
                     unprocessedTime -= frameTime;
                 }
 
-                Game.Instance.CurrentScene.AfterUpdate();
+                Game.Instance.AfterUpdate();
 
                 if (rend)
                 {
@@ -159,6 +162,9 @@ namespace AlienEngine
                     }
                 }
             }
+            
+            if (Game.Instance.NeedReload)
+                Start();
         }
 
         private void _stop()
@@ -214,6 +220,15 @@ namespace AlienEngine
             RendererManager.Init();
         }
 
+        public virtual void Reload()
+        {
+            // Reload the game
+            Game.Instance.Reload();
+
+            // Initialize the renderer manager
+            RendererManager.Init();
+        }
+        
         public void Render()
         {
             // Process rendering

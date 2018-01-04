@@ -510,7 +510,7 @@ namespace AlienEngine.Core.Rendering
 
         internal static void RenderScene()
         {
-            Game.Game.Instance.CurrentScene.Render();
+            Game.Game.Instance.Render();
         }
     }
 }

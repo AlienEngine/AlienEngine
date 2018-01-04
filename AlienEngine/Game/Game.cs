@@ -37,6 +37,11 @@ namespace AlienEngine.Core.Game
         private bool _isPaused;
 
         /// <summary>
+        /// Defines if the game has to be reloaded.
+        /// </summary>
+        private bool _needReload;
+
+        /// <summary>
         /// The window who handle the game.
         /// </summary>
         public GameWindow Window => _gameWindow;
@@ -56,6 +61,11 @@ namespace AlienEngine.Core.Game
         /// </summary>
         public bool Paused => _isPaused;
 
+        /// <summary>
+        /// Defines if the <see cref="Game"/> has to be reloaded after a scene load.
+        /// </summary>
+        public bool NeedReload => _needReload;
+        
         /// <summary>
         /// The unique game instance.
         /// </summary>
@@ -88,6 +98,21 @@ namespace AlienEngine.Core.Game
             {
                 _currentScene.Start();
                 _hasStarted = true;
+                _needReload = false;
+            }
+            else throw new System.Exception("Can't start the game without a scene. Use Game.LoadScene() first.");
+        }
+
+        /// <summary>
+        /// Starts the <see cref="Game"/>.
+        /// </summary>
+        public void Reload()
+        {
+            if (_currentScene != null)
+            {
+                _currentScene.Start();
+                _hasStarted = true;
+                _needReload = false;
             }
             else throw new System.Exception("Can't start the game without a scene. Use Game.LoadScene() first.");
         }
@@ -101,6 +126,7 @@ namespace AlienEngine.Core.Game
                 _currentScene.Stop();
 
             _hasStarted = false;
+            _needReload = false;
         }
 
         /// <summary>
@@ -135,13 +161,41 @@ namespace AlienEngine.Core.Game
         }
 
         /// <summary>
+        /// Trigerred before the <see cref="Game"/> updates.
+        /// </summary>
+        public void BeforeUpdate()
+        {
+            if (_hasStarted)
+                _currentScene.BeforeUpdate();
+        }
+
+        /// <summary>
         /// Updates the <see cref="Game"/> on each frames.
         /// </summary>
         public void Update()
         {
-            _currentScene.Update();
+            if (_hasStarted)
+                _currentScene.Update();
         }
 
+        /// <summary>
+        /// Trigerred after the <see cref="Game"/> updates.
+        /// </summary>
+        public void AfterUpdate()
+        {
+            if (_hasStarted)
+                _currentScene.AfterUpdate();
+        }
+
+        /// <summary>
+        /// Render the <see cref="Game"/> on each frames.
+        /// </summary>
+        public void Render()
+        {
+            if (_hasStarted)
+                _currentScene.Render();
+        }
+        
         /// <summary>
         /// Pauses the <see cref="Game"/>.
         /// </summary>
@@ -173,6 +227,9 @@ namespace AlienEngine.Core.Game
 
         private void _loadScene(Scene scene)
         {
+            _needReload = true;
+            _hasStarted = false;
+            
             if (_currentScene != null)
                 _currentScene.Unload();
 
