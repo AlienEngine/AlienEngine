@@ -12,7 +12,7 @@ namespace AlienEngine
     /// They can interact with the user and have defined behaviour
     /// through <see cref="Component"/>s.
     /// </summary>
-    public class GameElement
+    public class GameElement: IDisposable
     {
         #region Static Members
 
@@ -99,6 +99,14 @@ namespace AlienEngine
         }
 
         /// <summary>
+        /// Clears the current list of <see cref="GameElement"/>s.
+        /// </summary>
+        public static void Clear()
+        {
+            _gameElements.Clear();
+        }
+        
+        /// <summary>
         /// Executes <see cref="Component.Start()"/> in all components of all
         /// registered <see cref="GameElement"/>s.
         /// </summary>
@@ -165,7 +173,7 @@ namespace AlienEngine
         /// The list of attached components in the current
         /// <see cref="GameElement"/>.
         /// </summary>
-        private List<IComponent> _attachedComponents;
+        private List<Component> _attachedComponents;
 
         /// <summary>
         /// The list of childs in the current <see cref="GameElement"/>.
@@ -296,7 +304,7 @@ namespace AlienEngine
         /// <param name="name">The name of the new element.</param>
         public GameElement(string name)
         {
-            _attachedComponents = new List<IComponent>();
+            _attachedComponents = new List<Component>();
             _childs = new GameElementCollection();
             _name = name;
             _worldTransform = new Transform();
@@ -462,32 +470,62 @@ namespace AlienEngine
 
         public void Start()
         {
-            foreach (IComponent component in _attachedComponents)
-                component.Start();
+            if (_attachedComponents == null) return;
+
+            Component[] arrayComponents = _attachedComponents.ToArray();
+
+            for (int i = 0, l = arrayComponents.Length; i < l; i++)
+                arrayComponents[i].Start();
+
+            arrayComponents = null;
         }
 
         public void BeforeUpdate()
         {
-            foreach (IComponent component in _attachedComponents)
-                component.BeforeUpdate();
+            if (_attachedComponents == null) return;
+
+            Component[] arrayComponents = _attachedComponents.ToArray();
+
+            for (int i = 0, l = arrayComponents.Length; i < l; i++)
+                arrayComponents[i].BeforeUpdate();
+
+            arrayComponents = null;
         }
 
         public void Update()
         {
-            foreach (IComponent component in _attachedComponents)
-                component.Update();
+            if (_attachedComponents == null) return;
+            
+            Component[] arrayComponents = _attachedComponents.ToArray();
+
+            for (int i = 0, l = arrayComponents.Length; i < l; i++)
+                arrayComponents[i].Update();
+
+            arrayComponents = null;
         }
 
         public void AfterUpdate()
         {
-            foreach (IComponent component in _attachedComponents)
-                component.AfterUpdate();
+            if (_attachedComponents == null) return;
+
+            Component[] arrayComponents = _attachedComponents.ToArray();
+
+            for (int i = 0, l = arrayComponents.Length; i < l; i++)
+                arrayComponents[i].AfterUpdate();
+
+            arrayComponents = null;
         }
 
         public void Stop()
         {
-            foreach (IComponent component in _attachedComponents)
-                component.Stop();
+            if (_attachedComponents == null) return;
+
+            Component[] arrayComponents = _attachedComponents.ToArray();
+
+            for (int i = 0, l = arrayComponents.Length; i < l; i++)
+                arrayComponents[i].Stop();
+
+            arrayComponents = null;
         }
 
         internal virtual void OnAddToScene(Scene scene)
@@ -499,6 +537,18 @@ namespace AlienEngine
 
                 if (component is IPostRenderable)
                     RendererManager.RegisterPostRenderable(component as IPostRenderable);
+            }
+        }
+
+        internal virtual void OnRemoveFromScene(Scene scene)
+        {
+            foreach (var component in _attachedComponents)
+            {
+                if (component is IRenderable)
+                    RendererManager.UnregisterRenderable(component as IRenderable);
+
+                if (component is IPostRenderable)
+                    RendererManager.UnregisterPostRenderable(component as IPostRenderable);
             }
         }
 
@@ -515,5 +565,39 @@ namespace AlienEngine
         #endregion
 
         #endregion Public Members
+
+        private bool _disposed;
+        
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_disposed) return;
+            
+            if (disposing)
+            {
+                Component[] arrayComponents = _attachedComponents.ToArray();
+
+                for (int i = 0, l = arrayComponents.Length; i < l; i++)
+                {
+                    DetachComponent(arrayComponents[i]);
+                    arrayComponents[i].Dispose();
+                }
+
+                arrayComponents = null;
+                
+                _attachedComponents.Clear();
+                _attachedComponents = null;
+                
+                _childs.Dispose();
+                _childs = null;
+            }
+
+            _disposed = true;
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
     }
 }
