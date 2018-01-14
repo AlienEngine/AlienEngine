@@ -29,7 +29,11 @@ namespace AlienEngine.Core.Imaging.DevIL.Unmanaged
 {
     internal static class IL
     {
-        private const String ILDLL = "DevIL.dll";
+        #if LINUX
+        private const string Library = "libIL.so";
+        #else
+        private const String Library = "DevIL.dll";
+        #endif
         private static bool _init = false;
         private static Object s_sync = new Object();
         private static int s_ref = 0;
@@ -77,7 +81,7 @@ namespace AlienEngine.Core.Imaging.DevIL.Unmanaged
             return false;
         }
 
-        [DllImport(ILDLL, EntryPoint = "ilApplyPal", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(Library, EntryPoint = "ilApplyPal", CallingConvention = CallingConvention.StdCall)]
         [return: MarshalAs(UnmanagedType.U1)]
         public static extern bool ApplyPalette([In()] [MarshalAs(UnmanagedType.LPStr)] String FileName);
 
@@ -108,14 +112,14 @@ namespace AlienEngine.Core.Imaging.DevIL.Unmanaged
             return false;
         }
 
-        [DllImport(ILDLL, EntryPoint = "ilClampNTSC", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(Library, EntryPoint = "ilClampNTSC", CallingConvention = CallingConvention.StdCall)]
         [return: MarshalAs(UnmanagedType.U1)]
         public static extern bool ClampNTSC();
 
-        [DllImport(ILDLL, EntryPoint = "ilClearColour", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(Library, EntryPoint = "ilClearColour", CallingConvention = CallingConvention.StdCall)]
         public static extern void ClearColor(float red, float green, float blue, float alpha);
 
-        [DllImport(ILDLL, EntryPoint = "ilClearImage", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(Library, EntryPoint = "ilClearImage", CallingConvention = CallingConvention.StdCall)]
         [return: MarshalAs(UnmanagedType.U1)]
         public static extern bool ClearImage();
 
@@ -240,7 +244,7 @@ namespace AlienEngine.Core.Imaging.DevIL.Unmanaged
         /// Initializes the currently bound image to the default image - a 128x128 checkerboard texture.
         /// </summary>
         /// <returns>True if successful</returns>
-        [DllImport(ILDLL, EntryPoint = "ilDefaultImage", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(Library, EntryPoint = "ilDefaultImage", CallingConvention = CallingConvention.StdCall)]
         [return: MarshalAs(UnmanagedType.U1)]
         public static extern bool DefaultImage();
 
@@ -314,11 +318,11 @@ namespace AlienEngine.Core.Imaging.DevIL.Unmanaged
             return ilDisable((uint) mode);
         }
 
-        [DllImport(ILDLL, EntryPoint = "ilDxtcDataToImage", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(Library, EntryPoint = "ilDxtcDataToImage", CallingConvention = CallingConvention.StdCall)]
         [return: MarshalAs(UnmanagedType.U1)]
         public static extern bool DxtcDataToImage();
 
-        [DllImport(ILDLL, EntryPoint = "ilDxtcDataToSurface", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(Library, EntryPoint = "ilDxtcDataToSurface", CallingConvention = CallingConvention.StdCall)]
         [return: MarshalAs(UnmanagedType.U1)]
         public static extern bool DxtcDataToSurface();
 
@@ -335,7 +339,7 @@ namespace AlienEngine.Core.Imaging.DevIL.Unmanaged
         /// <summary>
         /// Flips the currently bound surface (image, mipmap, etc)'s dxtc data.
         /// </summary>
-        [DllImport(ILDLL, EntryPoint = "ilFlipSurfaceDxtcData", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(Library, EntryPoint = "ilFlipSurfaceDxtcData", CallingConvention = CallingConvention.StdCall)]
         public static extern void FlipSurfaceDxtcData();
 
         /// <summary>
@@ -555,7 +559,7 @@ namespace AlienEngine.Core.Imaging.DevIL.Unmanaged
             return (Quantization) ilGetInteger((uint) ILDefines.IL_QUANTIZATION_MODE);
         }
 
-        [DllImport(ILDLL, EntryPoint = "ilInvertSurfaceDxtcDataAlpha",
+        [DllImport(Library, EntryPoint = "ilInvertSurfaceDxtcDataAlpha",
             CallingConvention = CallingConvention.StdCall)]
         [return: MarshalAs(UnmanagedType.U1)]
         public static extern bool InvertSurfaceDxtcDataAlpha();
@@ -652,7 +656,7 @@ namespace AlienEngine.Core.Imaging.DevIL.Unmanaged
             }
         }
 
-        [DllImport(ILDLL, EntryPoint = "ilLoadImage", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(Library, EntryPoint = "ilLoadImage", CallingConvention = CallingConvention.StdCall)]
         [return: MarshalAs(UnmanagedType.U1)]
         public static extern bool LoadImage([In()] [MarshalAs(UnmanagedType.LPStr)] String FileName);
 
@@ -700,7 +704,7 @@ namespace AlienEngine.Core.Imaging.DevIL.Unmanaged
             return flag;
         }
 
-        [DllImport(ILDLL, EntryPoint = "ilLoadPal", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(Library, EntryPoint = "ilLoadPal", CallingConvention = CallingConvention.StdCall)]
         [return: MarshalAs(UnmanagedType.U1)]
         public static extern bool LoadPalette([In()] [MarshalAs(UnmanagedType.LPStr)] String fileName);
 
@@ -744,7 +748,7 @@ namespace AlienEngine.Core.Imaging.DevIL.Unmanaged
             }
         }
 
-        [DllImport(ILDLL, EntryPoint = "ilModAlpha", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(Library, EntryPoint = "ilModAlpha", CallingConvention = CallingConvention.StdCall)]
         public static extern void ModulateAlpha(double alphaValue);
 
         /// <summary>
@@ -766,7 +770,7 @@ namespace AlienEngine.Core.Imaging.DevIL.Unmanaged
             return ilOverlayImage((uint) srcImageID.ID, destX, destY, destZ);
         }
 
-        [DllImport(ILDLL, EntryPoint = "ilPopAttrib", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(Library, EntryPoint = "ilPopAttrib", CallingConvention = CallingConvention.StdCall)]
         public static extern void PopAttribute();
 
         public static void PushAttribute(AttributeBits bits)
@@ -774,7 +778,7 @@ namespace AlienEngine.Core.Imaging.DevIL.Unmanaged
             ilPushAttrib((uint) bits);
         }
 
-        [DllImport(ILDLL, EntryPoint = "ilSaveImage", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(Library, EntryPoint = "ilSaveImage", CallingConvention = CallingConvention.StdCall)]
         public static extern bool SaveImage([In()] [MarshalAs(UnmanagedType.LPStr)] String fileName);
 
         public static bool SaveImage(ImageType type, String filename)
@@ -808,16 +812,16 @@ namespace AlienEngine.Core.Imaging.DevIL.Unmanaged
             return true;
         }
 
-        [DllImport(ILDLL, EntryPoint = "ilSaveData", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(Library, EntryPoint = "ilSaveData", CallingConvention = CallingConvention.StdCall)]
         [return: MarshalAs(UnmanagedType.U1)]
         public static extern bool
             SaveRawData([In()] [MarshalAs(UnmanagedType.LPStr)] String FileName);
 
-        [DllImport(ILDLL, EntryPoint = "ilSavePal", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(Library, EntryPoint = "ilSavePal", CallingConvention = CallingConvention.StdCall)]
         [return: MarshalAs(UnmanagedType.U1)]
         public static extern bool SavePalette([In()] [MarshalAs(UnmanagedType.LPStr)] String FileName);
 
-        [DllImport(ILDLL, EntryPoint = "ilSetAlpha", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(Library, EntryPoint = "ilSetAlpha", CallingConvention = CallingConvention.StdCall)]
         [return: MarshalAs(UnmanagedType.U1)]
         public static extern bool SetAlpha(double alphaValue);
 
@@ -875,7 +879,7 @@ namespace AlienEngine.Core.Imaging.DevIL.Unmanaged
             return ilTypeFunc((uint) dataType);
         }
 
-        [DllImport(ILDLL, EntryPoint = "ilKeyColour", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(Library, EntryPoint = "ilKeyColour", CallingConvention = CallingConvention.StdCall)]
         public static extern void SetKeyColor(float red, float green, float blue, float alpha);
 
         public static void SetKeyColor(Color4 color)
@@ -1093,277 +1097,277 @@ namespace AlienEngine.Core.Imaging.DevIL.Unmanaged
         //Also removed all load/saves/etc using file handles. Removed get int/bool versions using pass by ref
         //Removed SetMemory, SetRead, SetWrite, GetLumpPos
 
-        [DllImport(ILDLL, EntryPoint = "ilActiveFace", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(Library, EntryPoint = "ilActiveFace", CallingConvention = CallingConvention.StdCall)]
         [return: MarshalAs(UnmanagedType.U1)]
         private static extern bool ilActiveFace(uint Number);
 
-        [DllImport(ILDLL, EntryPoint = "ilActiveImage", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(Library, EntryPoint = "ilActiveImage", CallingConvention = CallingConvention.StdCall)]
         [return: MarshalAs(UnmanagedType.U1)]
         private static extern bool ilActiveImage(uint Number);
 
-        [DllImport(ILDLL, EntryPoint = "ilActiveLayer", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(Library, EntryPoint = "ilActiveLayer", CallingConvention = CallingConvention.StdCall)]
         [return: MarshalAs(UnmanagedType.U1)]
         private static extern bool ilActiveLayer(uint Number);
 
-        [DllImport(ILDLL, EntryPoint = "ilActiveMipmap", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(Library, EntryPoint = "ilActiveMipmap", CallingConvention = CallingConvention.StdCall)]
         [return: MarshalAs(UnmanagedType.U1)]
         private static extern bool ilActiveMipmap(uint Number);
 
         ///InProfile: char*
         ///OutProfile: char*
-        [DllImport(ILDLL, EntryPoint = "ilApplyProfile", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(Library, EntryPoint = "ilApplyProfile", CallingConvention = CallingConvention.StdCall)]
         [return: MarshalAs(UnmanagedType.U1)]
         private static extern bool ilApplyProfile(IntPtr InProfile, IntPtr OutProfile);
 
-        [DllImport(ILDLL, EntryPoint = "ilBindImage", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(Library, EntryPoint = "ilBindImage", CallingConvention = CallingConvention.StdCall)]
         private static extern void ilBindImage(uint Image);
 
-        [DllImport(ILDLL, EntryPoint = "ilBlit", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(Library, EntryPoint = "ilBlit", CallingConvention = CallingConvention.StdCall)]
         [return: MarshalAs(UnmanagedType.U1)]
         private static extern bool ilBlit(uint Source, int DestX, int DestY, int DestZ, uint SrcX, uint SrcY, uint SrcZ,
             uint Width, uint Height, uint Depth);
 
-        [DllImport(ILDLL, EntryPoint = "ilCloneCurImage", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(Library, EntryPoint = "ilCloneCurImage", CallingConvention = CallingConvention.StdCall)]
         private static extern uint ilCloneCurImage();
 
-        [DllImport(ILDLL, EntryPoint = "ilCompressDXT", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(Library, EntryPoint = "ilCompressDXT", CallingConvention = CallingConvention.StdCall)]
         private static extern IntPtr ilCompressDXT(IntPtr Data, uint Width, uint Height, uint Depth, uint DXTCFormat,
             ref uint DXTCSize);
 
-        [DllImport(ILDLL, EntryPoint = "ilCompressFunc", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(Library, EntryPoint = "ilCompressFunc", CallingConvention = CallingConvention.StdCall)]
         [return: MarshalAs(UnmanagedType.U1)]
         private static extern bool ilCompressFunc(uint Mode);
 
-        [DllImport(ILDLL, EntryPoint = "ilConvertImage", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(Library, EntryPoint = "ilConvertImage", CallingConvention = CallingConvention.StdCall)]
         [return: MarshalAs(UnmanagedType.U1)]
         private static extern bool ilConvertImage(uint DestFormat, uint DestType);
 
-        [DllImport(ILDLL, EntryPoint = "ilConvertPal", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(Library, EntryPoint = "ilConvertPal", CallingConvention = CallingConvention.StdCall)]
         [return: MarshalAs(UnmanagedType.U1)]
         private static extern bool ilConvertPal(uint DestFormat);
 
-        [DllImport(ILDLL, EntryPoint = "ilCopyImage", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(Library, EntryPoint = "ilCopyImage", CallingConvention = CallingConvention.StdCall)]
         [return: MarshalAs(UnmanagedType.U1)]
         private static extern bool ilCopyImage(uint Src);
 
         /// Return Type: sizeOfData
         ///Data: void*
-        [DllImport(ILDLL, EntryPoint = "ilCopyPixels", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(Library, EntryPoint = "ilCopyPixels", CallingConvention = CallingConvention.StdCall)]
         private static extern uint ilCopyPixels(uint XOff, uint YOff, uint ZOff, uint Width, uint Height, uint Depth,
             uint Format, uint Type, IntPtr Data);
 
         /// Looks like creates a subimage @ the num index and type is IL_SUB_* (Next, Mip, Layer), etc
-        [DllImport(ILDLL, EntryPoint = "ilCreateSubImage", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(Library, EntryPoint = "ilCreateSubImage", CallingConvention = CallingConvention.StdCall)]
         private static extern uint ilCreateSubImage(uint Type, uint Num);
 
-        [DllImport(ILDLL, EntryPoint = "ilDeleteImage", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(Library, EntryPoint = "ilDeleteImage", CallingConvention = CallingConvention.StdCall)]
         private static extern void ilDeleteImage(uint Num);
 
         /// Num is a Size_t
-        [DllImport(ILDLL, EntryPoint = "ilDeleteImages", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(Library, EntryPoint = "ilDeleteImages", CallingConvention = CallingConvention.StdCall)]
         private static extern void ilDeleteImages(UIntPtr Num, uint[] Images);
 
         /// Return Type: Image Type
         ///FileName: char*
-        [DllImport(ILDLL, EntryPoint = "ilDetermineType", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(Library, EntryPoint = "ilDetermineType", CallingConvention = CallingConvention.StdCall)]
         private static extern uint ilDetermineType([In()] [MarshalAs(UnmanagedType.LPStr)] String FileName);
 
         /// Return Type: Image Type
         ///Lump: void*
-        [DllImport(ILDLL, EntryPoint = "ilDetermineTypeL", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(Library, EntryPoint = "ilDetermineTypeL", CallingConvention = CallingConvention.StdCall)]
         private static extern uint ilDetermineTypeL(IntPtr Lump, uint Size);
 
-        [DllImport(ILDLL, EntryPoint = "ilDisable", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(Library, EntryPoint = "ilDisable", CallingConvention = CallingConvention.StdCall)]
         [return: MarshalAs(UnmanagedType.U1)]
         private static extern bool ilDisable(uint Mode);
 
-        [DllImport(ILDLL, EntryPoint = "ilEnable", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(Library, EntryPoint = "ilEnable", CallingConvention = CallingConvention.StdCall)]
         [return: MarshalAs(UnmanagedType.U1)]
         private static extern bool ilEnable(uint Mode);
 
-        [DllImport(ILDLL, EntryPoint = "ilFormatFunc", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(Library, EntryPoint = "ilFormatFunc", CallingConvention = CallingConvention.StdCall)]
         [return: MarshalAs(UnmanagedType.U1)]
         private static extern bool ilFormatFunc(uint Mode);
 
         ///Num: ILsizei->size_t->unsigned int
-        [DllImport(ILDLL, EntryPoint = "ilGenImages", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(Library, EntryPoint = "ilGenImages", CallingConvention = CallingConvention.StdCall)]
         private static extern void ilGenImages(UIntPtr Num, uint[] Images);
 
-        [DllImport(ILDLL, EntryPoint = "ilGenImage", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(Library, EntryPoint = "ilGenImage", CallingConvention = CallingConvention.StdCall)]
         private static extern uint ilGenImage();
 
         /// Return Type: ILubyte*
         ///Type: ILenum->unsigned int (Data type)
-        [DllImport(ILDLL, EntryPoint = "ilGetAlpha", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(Library, EntryPoint = "ilGetAlpha", CallingConvention = CallingConvention.StdCall)]
         private static extern IntPtr ilGetAlpha(uint Type);
 
         /// Return Type: ILubyte*
-        [DllImport(ILDLL, EntryPoint = "ilGetData", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(Library, EntryPoint = "ilGetData", CallingConvention = CallingConvention.StdCall)]
         private static extern IntPtr ilGetData();
 
         /// Returns Size of Data, set Zero for BufferSize to get size initially.
-        [DllImport(ILDLL, EntryPoint = "ilGetDXTCData", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(Library, EntryPoint = "ilGetDXTCData", CallingConvention = CallingConvention.StdCall)]
         private static extern uint ilGetDXTCData(IntPtr Buffer, uint BufferSize, uint DXTCFormat);
 
         /// Return Type: Error type
-        [DllImport(ILDLL, EntryPoint = "ilGetError", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(Library, EntryPoint = "ilGetError", CallingConvention = CallingConvention.StdCall)]
         private static extern uint ilGetError();
 
-        [DllImport(ILDLL, EntryPoint = "ilGetInteger", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(Library, EntryPoint = "ilGetInteger", CallingConvention = CallingConvention.StdCall)]
         internal static extern int ilGetInteger(uint Mode);
 
         /// Return Type: ILubyte*, need to find size via current image's pal size
-        [DllImport(ILDLL, EntryPoint = "ilGetPalette", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(Library, EntryPoint = "ilGetPalette", CallingConvention = CallingConvention.StdCall)]
         private static extern IntPtr ilGetPalette();
 
         /// Return Type: char*
         ///StringName: ILenum->unsigned int - String type enum
-        [DllImport(ILDLL, EntryPoint = "ilGetString", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(Library, EntryPoint = "ilGetString", CallingConvention = CallingConvention.StdCall)]
         private static extern IntPtr ilGetString(uint StringName);
 
         ///Target: ILenum->unsigned int --> Type of hint
         ///Mode: ILenum->unsigned int ---> Hint value
-        [DllImport(ILDLL, EntryPoint = "ilHint", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(Library, EntryPoint = "ilHint", CallingConvention = CallingConvention.StdCall)]
         private static extern void ilHint(uint Target, uint Mode);
 
-        [DllImport(ILDLL, EntryPoint = "ilInit", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(Library, EntryPoint = "ilInit", CallingConvention = CallingConvention.StdCall)]
         private static extern void ilInit();
 
         /// Format Type
-        [DllImport(ILDLL, EntryPoint = "ilImageToDxtcData", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(Library, EntryPoint = "ilImageToDxtcData", CallingConvention = CallingConvention.StdCall)]
         [return: MarshalAs(UnmanagedType.U1)]
         private static extern bool ilImageToDxtcData(uint Format);
 
         //Enable enum
-        [DllImport(ILDLL, EntryPoint = "ilIsDisabled", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(Library, EntryPoint = "ilIsDisabled", CallingConvention = CallingConvention.StdCall)]
         [return: MarshalAs(UnmanagedType.U1)]
         private static extern bool ilIsDisabled(uint Mode);
 
         //Enable enum
-        [DllImport(ILDLL, EntryPoint = "ilIsEnabled", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(Library, EntryPoint = "ilIsEnabled", CallingConvention = CallingConvention.StdCall)]
         [return: MarshalAs(UnmanagedType.U1)]
         private static extern bool ilIsEnabled(uint Mode);
 
         ///Checks if valid image - input is image id
-        [DllImport(ILDLL, EntryPoint = "ilIsImage", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(Library, EntryPoint = "ilIsImage", CallingConvention = CallingConvention.StdCall)]
         [return: MarshalAs(UnmanagedType.U1)]
         private static extern bool ilIsImage(uint Image);
 
         ///Type: ILenum->unsigned int -- ImageType
         ///FileName: char*
-        [DllImport(ILDLL, EntryPoint = "ilIsValid", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(Library, EntryPoint = "ilIsValid", CallingConvention = CallingConvention.StdCall)]
         [return: MarshalAs(UnmanagedType.U1)]
         private static extern bool ilIsValid(uint Type,
             [In()] [MarshalAs(UnmanagedType.LPStr)] String FileName);
 
         /// Return Type: ILboolean->unsigned char - Image Type
         ///Lump: void*
-        [DllImport(ILDLL, EntryPoint = "ilIsValidL", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(Library, EntryPoint = "ilIsValidL", CallingConvention = CallingConvention.StdCall)]
         [return: MarshalAs(UnmanagedType.U1)]
         private static extern bool ilIsValidL(uint Type, IntPtr Lump, uint Size);
 
         /// Type is Image Type
-        [DllImport(ILDLL, EntryPoint = "ilLoad", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(Library, EntryPoint = "ilLoad", CallingConvention = CallingConvention.StdCall)]
         [return: MarshalAs(UnmanagedType.U1)]
         private static extern bool ilLoad(uint Type, [In()] [MarshalAs(UnmanagedType.LPStr)] String FileName);
 
         /// Type is Image Type
         ///Lump: void*
-        [DllImport(ILDLL, EntryPoint = "ilLoadL", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(Library, EntryPoint = "ilLoadL", CallingConvention = CallingConvention.StdCall)]
         [return: MarshalAs(UnmanagedType.U1)]
         private static extern bool ilLoadL(uint Type, IntPtr Lump, uint Size);
 
         /// Mode is origin type
-        [DllImport(ILDLL, EntryPoint = "ilOriginFunc", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(Library, EntryPoint = "ilOriginFunc", CallingConvention = CallingConvention.StdCall)]
         [return: MarshalAs(UnmanagedType.U1)]
         private static extern bool ilOriginFunc(uint Mode);
 
         /// SRC image, and coords are the offsets in a blit
-        [DllImport(ILDLL, EntryPoint = "ilOverlayImage", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(Library, EntryPoint = "ilOverlayImage", CallingConvention = CallingConvention.StdCall)]
         [return: MarshalAs(UnmanagedType.U1)]
         private static extern bool ilOverlayImage(uint Source, int XCoord, int YCoord, int ZCoord);
 
         /// Attribute bit flags
-        [DllImport(ILDLL, EntryPoint = "ilPushAttrib", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(Library, EntryPoint = "ilPushAttrib", CallingConvention = CallingConvention.StdCall)]
         private static extern void ilPushAttrib(uint Bits);
 
         /// Image Type
-        [DllImport(ILDLL, EntryPoint = "ilSave", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(Library, EntryPoint = "ilSave", CallingConvention = CallingConvention.StdCall)]
         [return: MarshalAs(UnmanagedType.U1)]
         private static extern bool ilSave(uint Type, [In()] [MarshalAs(UnmanagedType.LPStr)] String FileName);
 
-        [DllImport(ILDLL, EntryPoint = "ilSaveImage", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(Library, EntryPoint = "ilSaveImage", CallingConvention = CallingConvention.StdCall)]
         [return: MarshalAs(UnmanagedType.U1)]
         private static extern bool ilSaveImage([In()] [MarshalAs(UnmanagedType.LPStr)] String FileName);
 
         ///ImageType, similar deal with GetDXTCData - returns size, pass in a NULL for lump to determine size
-        [DllImport(ILDLL, EntryPoint = "ilSaveL", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(Library, EntryPoint = "ilSaveL", CallingConvention = CallingConvention.StdCall)]
         private static extern uint ilSaveL(uint Type, IntPtr Lump, uint Size);
 
         ///Data: void*
-        [DllImport(ILDLL, EntryPoint = "ilSetData", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(Library, EntryPoint = "ilSetData", CallingConvention = CallingConvention.StdCall)]
         [return: MarshalAs(UnmanagedType.U1)]
         private static extern bool ilSetData(IntPtr Data);
 
-        [DllImport(ILDLL, EntryPoint = "ilSetDuration", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(Library, EntryPoint = "ilSetDuration", CallingConvention = CallingConvention.StdCall)]
         [return: MarshalAs(UnmanagedType.U1)]
         private static extern bool ilSetDuration(uint Duration);
 
         /// IntegerMode, and param is value
-        [DllImport(ILDLL, EntryPoint = "ilSetInteger", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(Library, EntryPoint = "ilSetInteger", CallingConvention = CallingConvention.StdCall)]
         private static extern void ilSetInteger(uint Mode, int Param);
 
         ///Data: void*, dataFormat and DataType
-        [DllImport(ILDLL, EntryPoint = "ilSetPixels", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(Library, EntryPoint = "ilSetPixels", CallingConvention = CallingConvention.StdCall)]
         private static extern void ilSetPixels(int XOff, int YOff, int ZOff, uint Width, uint Height, uint Depth,
             uint Format, uint Type, IntPtr Data);
 
         /// Return Type: void
         ///Mode: ILenum->unsigned int
         ///String: char*
-        [DllImport(ILDLL, EntryPoint = "ilSetString", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(Library, EntryPoint = "ilSetString", CallingConvention = CallingConvention.StdCall)]
         private static extern void ilSetString(uint Mode,
             [In()] [MarshalAs(UnmanagedType.LPStr)] String String);
 
-        [DllImport(ILDLL, EntryPoint = "ilShutDown", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(Library, EntryPoint = "ilShutDown", CallingConvention = CallingConvention.StdCall)]
         private static extern void ilShutDown();
 
         /// compressed DataFormat
-        [DllImport(ILDLL, EntryPoint = "ilSurfaceToDxtcData", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(Library, EntryPoint = "ilSurfaceToDxtcData", CallingConvention = CallingConvention.StdCall)]
         [return: MarshalAs(UnmanagedType.U1)]
         private static extern bool ilSurfaceToDxtcData(uint Format);
 
         /// dataFormat and DataType, destroys current data
         /// Bpp (NumChannels) bytes per pixel - e.g. 3 for RGB
         ///Data: void*
-        [DllImport(ILDLL, EntryPoint = "ilTexImage", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(Library, EntryPoint = "ilTexImage", CallingConvention = CallingConvention.StdCall)]
         [return: MarshalAs(UnmanagedType.U1)]
         private static extern bool ilTexImage(uint Width, uint Height, uint Depth, byte Bpp, uint Format, uint Type,
             IntPtr Data);
 
         ///DxtcForamt is CompressedDataFormat, destroys current data
-        [DllImport(ILDLL, EntryPoint = "ilTexImageDxtc", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(Library, EntryPoint = "ilTexImageDxtc", CallingConvention = CallingConvention.StdCall)]
         [return: MarshalAs(UnmanagedType.U1)]
         private static extern bool ilTexImageDxtc(int Width, int Height, int Depth, uint DxtFormat, IntPtr Data);
 
         ///Image type from extension of file
-        [DllImport(ILDLL, EntryPoint = "ilTypeFromExt", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(Library, EntryPoint = "ilTypeFromExt", CallingConvention = CallingConvention.StdCall)]
         private static extern uint ilTypeFromExt(
             [In()] [MarshalAs(UnmanagedType.LPStr)] String FileName);
 
         ///Sets the current DataType
-        [DllImport(ILDLL, EntryPoint = "ilTypeFunc", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(Library, EntryPoint = "ilTypeFunc", CallingConvention = CallingConvention.StdCall)]
         [return: MarshalAs(UnmanagedType.U1)]
         private static extern bool ilTypeFunc(uint Mode);
 
         //Loads raw data from a file, bpp is only valid for 1, 3, 4
-        [DllImport(ILDLL, EntryPoint = "ilLoadData", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(Library, EntryPoint = "ilLoadData", CallingConvention = CallingConvention.StdCall)]
         [return: MarshalAs(UnmanagedType.U1)]
         private static extern bool ilLoadData([In()] [MarshalAs(UnmanagedType.LPStr)] String FileName,
             uint Width, uint Height, uint Depth, byte Bpp);
 
         //Loads raw data from a lump, bpp is only valid for 1, 3, 4
-        [DllImport(ILDLL, EntryPoint = "ilLoadDataL", CallingConvention = CallingConvention.StdCall)]
+        [DllImport(Library, EntryPoint = "ilLoadDataL", CallingConvention = CallingConvention.StdCall)]
         [return: MarshalAs(UnmanagedType.U1)]
         private static extern bool ilLoadDataL(IntPtr Lump, uint Size, uint Width, uint Height, uint Depth, byte Bpp);
 

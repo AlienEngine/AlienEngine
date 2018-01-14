@@ -18,7 +18,7 @@ namespace AlienEngine
         /// The <see cref="GameElement"/> in which
         /// this <see cref="Component"/> is attached.
         /// </summary>
-        public GameElement gameElement => _gameElement;
+        protected GameElement gameElement => _gameElement;
 
         /// <summary>
         /// Gets a boolean defining if this <see cref="Component"/>.
@@ -27,13 +27,14 @@ namespace AlienEngine
         protected bool Enabled => _enabled;
 
         /// <summary>
-        /// Enable this <see cref="Component"/>.
+        /// Returns the <see cref="GameElement"/> in which
+        /// this <see cref="Component"/> is attached.
         /// </summary>
-        protected void Enable()
+        public GameElement GetGameElement()
         {
-            Enable(true);
+            return _gameElement;
         }
-
+        
         /// <summary>
         /// Disable this <see cref="Component"/>.
         /// </summary>
@@ -46,7 +47,7 @@ namespace AlienEngine
         /// Enable or disable this <see cref="Component"/>.
         /// </summary>
         /// <param name="value">true to enable, false otherwise.</param>
-        protected void Enable(bool value)
+        protected void Enable(bool value = true)
         {
             _enabled = value;
         }

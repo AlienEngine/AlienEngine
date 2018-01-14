@@ -13,11 +13,6 @@ namespace AlienEngine
         /// </summary>
         private bool _isChecked;
 
-        /// <summary>
-        /// Define if the cursor is hover the checkbox.
-        /// </summary>
-        private bool _isHover;
-
         #endregion
 
         #region Public Fields
@@ -37,7 +32,7 @@ namespace AlienEngine
         /// </summary>
         public bool IsChecked
         {
-            get => _isChecked;
+            get { return _isChecked; }
             set
             {
                 _isChecked = value;
@@ -50,11 +45,6 @@ namespace AlienEngine
                     Unchecked?.Invoke();
             }
         }
-
-        /// <summary>
-        /// Define if the cursor is hover the checkbox.
-        /// </summary>
-        public bool IsHover => _isHover;
 
         #endregion
 
@@ -84,12 +74,7 @@ namespace AlienEngine
         /// </summary>
         public override void Start()
         {
-            InitUI();
-
-            Input.AddMouseMoveEvent((sender, args) =>
-            {
-                _isHover = Enabled && !Input.MouseIsGrabbed && Rectangled.Contains(args.Location);
-            });
+            base.Start();
         }
 
         /// <summary>
@@ -97,7 +82,9 @@ namespace AlienEngine
         /// </summary>
         public override void Update()
         {
-            if (_isHover && Input.Released(MouseButton.Left))
+            base.Update();
+
+            if (IsHover && Input.Released(MouseButton.Left))
                 IsChecked = !_isChecked;
         }
 

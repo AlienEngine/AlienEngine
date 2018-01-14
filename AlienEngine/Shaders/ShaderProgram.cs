@@ -64,11 +64,14 @@ namespace AlienEngine.Core.Shaders
         {
             uint shader = GL.CreateShader(type);
 
-            StringBuilder globalsString = new StringBuilder();
+            // Normalize line ending
+            source = string.Join ("\n", source.Split (new char[] { '\r', '\n' }));
+
+            StringBuilder globalsString = new StringBuilder ();
             foreach (var g in _globals)
                 globalsString.AppendLine("#define " + g.Key + " " + g.Value);
 
-            string fullsrc = Regex.Replace(source, @"\#version (.+)\r\n", "#version $1\r\n" + globalsString);
+            string fullsrc = Regex.Replace (source, @"\#version (.+)\n", "#version $1\n" + globalsString);
 
             GL.ShaderSource(shader, fullsrc);
 

@@ -133,12 +133,12 @@ namespace AlienEngine.Core.Game
             IniParser config = new IniParser("game.ini");
 
             // Get parsed values
-            if (int.TryParse(config.SectionedResult["Rendering"]["GammaCorrection"], out _int1))
+            if (int.TryParse(config.SectionedResult["Rendering"]["GammaCorrectionEnabled"], out _int1))
                 GammaCorrectionEnabled = _int1 == 1;
             else
                 GammaCorrectionEnabled = false;
             
-            if (int.TryParse(config.SectionedResult["Rendering"]["ShadowMap"], out _int1))
+            if (int.TryParse(config.SectionedResult["Rendering"]["ShadowMapEnabled"], out _int1))
                 ShadowMapEnabled = _int1 == 1;
             else
                 ShadowMapEnabled = false;

@@ -503,6 +503,11 @@ namespace AlienEngine.Core.Rendering
             RenderScreen();
         }
 
+        internal static void BindShadowMapTexture(ShaderProgram program)
+        {
+            _shadowsRenderer.BindTexture(ref program);
+        }
+
         internal static void RenderScene()
         {
             Game.Game.Instance.CurrentScene.Render();

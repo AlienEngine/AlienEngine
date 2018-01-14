@@ -250,7 +250,7 @@ namespace AlienEngine.Core.Audio
         void CreateContext(string device, int freq, int refresh, bool sync, bool enableEfx, MaxAuxiliarySends efxAuxiliarySends)
         {
             if (!AudioDeviceEnumerator.IsOpenALSupported)
-                throw new DllNotFoundException(AL.Lib);
+                throw new DllNotFoundException(AL.Library);
 
             if (AudioDeviceEnumerator.Version == AudioDeviceEnumerator.AlcVersion.Alc1_1 && AudioDeviceEnumerator.AvailablePlaybackDevices.Count == 0)    // Alc 1.0 does not support device enumeration.
                 throw new NotSupportedException("No audio hardware is available.");

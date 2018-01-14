@@ -226,8 +226,7 @@ namespace AlienEngine
                     TextureDisplacement.Bind(GL.DISPLACEMENT_TEXTURE_UNIT_INDEX);
                 }
 
-                ShaderProgram.SetUniform("shadowMap", GL.SHADOW_TEXTURE_UNIT_INDEX);
-                RendererManager.CurrentShadowMap.BindTexture();
+                RendererManager.BindShadowMapTexture(ShaderProgram);
             }
         }
 

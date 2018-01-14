@@ -68,8 +68,8 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <summary>
         /// Sets the polygon rasterization mode.
         /// </summary>
-        /// <param name="face">Must be <see cref="Face.FRONT_AND_BACK"/>.</param>
-        /// <param name="mode">A <see cref="PolygonMode"/> specifying the rasterization methode.</param>
+        /// <param name="face">Must be <see cref="glFace.FRONT_AND_BACK"/>.</param>
+        /// <param name="mode">A <see cref="glPolygonMode"/> specifying the rasterization methode.</param>
         [DllImport(DLLName, EntryPoint = "glPolygonMode")]
         public static extern void PolygonMode(PolygonFace face, PolygonMode mode);
 
@@ -150,7 +150,7 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// Sets texture parameter for the currently bound texture.
         /// </summary>
         /// <param name="target">A <see cref="TextureTarget"/> specifying the texture target.</param>
-        /// <param name="pname">Must be <see cref="TextureParameterName.TextureCompareMode"/>.</param>
+        /// <param name="pname">Must be <see cref="TextureParameterName.TEXTURE_COMPARE_MODE"/>.</param>
         /// <param name="param">The value the parameter is set to.</param>
         [DllImport(DLLName, EntryPoint = "glTexParameteri")]
         public static extern void TexParameteri(TextureTarget target, TextureParameterName pname, TextureCompareMode param);
@@ -159,7 +159,7 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// Sets texture parameter for the currently bound texture.
         /// </summary>
         /// <param name="target">A <see cref="TextureTarget"/> specifying the texture target.</param>
-        /// <param name="pname">Must be <see cref="TextureParameterName.TextureCompareFunc"/>.</param>
+        /// <param name="pname">Must be <see cref="TextureParameterName.TEXTURE_COMPARE_FUNC"/>.</param>
         /// <param name="param">The value the parameter is set to.</param>
         [DllImport(DLLName, EntryPoint = "glTexParameteri")]
         public static extern void TexParameteri(TextureTarget target, TextureParameterName pname, AlphaFunction param);
@@ -168,7 +168,7 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// Sets texture parameter for the currently bound texture.
         /// </summary>
         /// <param name="target">A <see cref="TextureTarget"/> specifying the texture target.</param>
-        /// <param name="pname">Must be <see cref="TextureParameterName.DepthTextureMode"/>.</param>
+        /// <param name="pname">Must be <see cref="TextureParameterName.DEPTH_STENCIL_TEXTURE_MODE"/>.</param>
         /// <param name="param">The value the parameter is set to.</param>
         [DllImport(DLLName, EntryPoint = "glTexParameteri")]
         public static extern void TexParameteri(TextureTarget target, TextureParameterName pname, DepthStencilTextureMode param);
@@ -176,13 +176,13 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <summary>
         /// Loads a 1D texture.
         /// </summary>
-        /// <param name="target">A <see cref="Texture1DProxyTarget"/> specifying the texture target.</param>
+        /// <param name="target">A <see cref="glTexture1DProxyTarget"/> specifying the texture target.</param>
         /// <param name="level">The level-of-detail to be filled.</param>
-        /// <param name="internalformat">A <see cref="InternalFormat"/> specifying the internal format to be used.</param>
+        /// <param name="internalformat">A <see cref="glInternalFormat"/> specifying the internal format to be used.</param>
         /// <param name="width">The width of the texture.</param>
         /// <param name="border">Must be zero for core profile.</param>
-        /// <param name="format">A <see cref="PixelFormat"/> specifying the format the pixels a given in.</param>
-        /// <param name="type">A <see cref="PixelDataType"/> specifying the data type the pixels a given in.</param>
+        /// <param name="format">A <see cref="glPixelFormat"/> specifying the format the pixels a given in.</param>
+        /// <param name="type">A <see cref="glPixelDataType"/> specifying the data type the pixels a given in.</param>
         /// <param name="pixels">Pointer to the pixels.</param>
         [DllImport(DLLName, EntryPoint = "glTexImage1D")]
         public static extern void TexImage1D(TextureTarget target, int level, PixelInternalFormat internalformat, int width, int border, PixelFormat format, PixelType type, IntPtr pixels);
@@ -191,13 +191,13 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <summary>
         /// Loads a 1D texture.
         /// </summary>
-        /// <param name="target">A <see cref="Texture1DProxyTarget"/> specifying the texture target.</param>
+        /// <param name="target">A <see cref="glTexture1DProxyTarget"/> specifying the texture target.</param>
         /// <param name="level">The level-of-detail to be filled.</param>
-        /// <param name="internalformat">A <see cref="InternalFormat"/> specifying the internal format to be used.</param>
+        /// <param name="internalformat">A <see cref="glInternalFormat"/> specifying the internal format to be used.</param>
         /// <param name="width">The width of the texture.</param>
         /// <param name="border">Must be zero for core profile.</param>
-        /// <param name="format">A <see cref="PixelFormat"/> specifying the format the pixels a given in.</param>
-        /// <param name="type">A <see cref="PixelDataType"/> specifying the data type the pixels a given in.</param>
+        /// <param name="format">A <see cref="glPixelFormat"/> specifying the format the pixels a given in.</param>
+        /// <param name="type">A <see cref="glPixelDataType"/> specifying the data type the pixels a given in.</param>
         /// <param name="offset">The offset into the array bound to <see cref="BufferTarget.PIXEL_UNPACK_BUFFER"/>.</param>
         public static void TexImage1D(TextureTarget target, int level, PixelInternalFormat internalformat, int width, int border, PixelFormat format, PixelType type, int offset)
         {
@@ -207,13 +207,13 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <summary>
         /// Loads a 1D texture.
         /// </summary>
-        /// <param name="target">A <see cref="Texture1DProxyTarget"/> specifying the texture target.</param>
+        /// <param name="target">A <see cref="glTexture1DProxyTarget"/> specifying the texture target.</param>
         /// <param name="level">The level-of-detail to be filled.</param>
-        /// <param name="internalformat">A <see cref="InternalFormat"/> specifying the internal format to be used.</param>
+        /// <param name="internalformat">A <see cref="glInternalFormat"/> specifying the internal format to be used.</param>
         /// <param name="width">The width of the texture.</param>
         /// <param name="border">Must be zero for core profile.</param>
-        /// <param name="format">A <see cref="PixelFormat"/> specifying the format the pixels a given in.</param>
-        /// <param name="type">A <see cref="PixelDataType"/> specifying the data type the pixels a given in.</param>
+        /// <param name="format">A <see cref="glPixelFormat"/> specifying the format the pixels a given in.</param>
+        /// <param name="type">A <see cref="glPixelDataType"/> specifying the data type the pixels a given in.</param>
         /// <param name="offset">The offset into the array bound to <see cref="BufferTarget.PIXEL_UNPACK_BUFFER"/>.</param>
         public static void TexImage1D(TextureTarget target, int level, PixelInternalFormat internalformat, int width, int border, PixelFormat format, PixelType type, long offset)
         {
@@ -224,13 +224,13 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <summary>
         /// Loads a 1D texture.
         /// </summary>
-        /// <param name="target">A <see cref="Texture1DProxyTarget"/> specifying the texture target.</param>
+        /// <param name="target">A <see cref="glTexture1DProxyTarget"/> specifying the texture target.</param>
         /// <param name="level">The level-of-detail to be filled.</param>
-        /// <param name="internalformat">A <see cref="InternalFormat"/> specifying the internal format to be used.</param>
+        /// <param name="internalformat">A <see cref="glInternalFormat"/> specifying the internal format to be used.</param>
         /// <param name="width">The width of the texture.</param>
         /// <param name="border">Must be zero for core profile.</param>
-        /// <param name="format">A <see cref="PixelFormat"/> specifying the format the pixels a given in.</param>
-        /// <param name="type">A <see cref="PixelDataType"/> specifying the data type the pixels a given in. Must be <see cref="glPixelDataType.UNSIGNED_BYTE"/>, <see cref="glPixelDataType.UNSIGNED_BYTE_3_3_2"/> or <see cref="glPixelDataType.UNSIGNED_BYTE_2_3_3_REV"/>.</param>
+        /// <param name="format">A <see cref="glPixelFormat"/> specifying the format the pixels a given in.</param>
+        /// <param name="type">A <see cref="glPixelDataType"/> specifying the data type the pixels a given in. Must be <see cref="glPixelDataType.UNSIGNED_BYTE"/>, <see cref="glPixelDataType.UNSIGNED_BYTE_3_3_2"/> or <see cref="glPixelDataType.UNSIGNED_BYTE_2_3_3_REV"/>.</param>
         /// <param name="pixels">Pointer to the pixels.</param>
         [DllImport(DLLName, EntryPoint = "glTexImage1D")]
         public static extern void TexImage1D(TextureTarget target, int level, PixelInternalFormat internalformat, int width, int border, PixelFormat format, PixelType type, byte[] pixels);
@@ -238,13 +238,13 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <summary>
         /// Loads a 1D texture.
         /// </summary>
-        /// <param name="target">A <see cref="Texture1DProxyTarget"/> specifying the texture target.</param>
+        /// <param name="target">A <see cref="glTexture1DProxyTarget"/> specifying the texture target.</param>
         /// <param name="level">The level-of-detail to be filled.</param>
-        /// <param name="internalformat">A <see cref="InternalFormat"/> specifying the internal format to be used.</param>
+        /// <param name="internalformat">A <see cref="glInternalFormat"/> specifying the internal format to be used.</param>
         /// <param name="width">The width of the texture.</param>
         /// <param name="border">Must be zero for core profile.</param>
-        /// <param name="format">A <see cref="PixelFormat"/> specifying the format the pixels a given in.</param>
-        /// <param name="type">A <see cref="PixelDataType"/> specifying the data type the pixels a given in. Must be <see cref="glPixelDataType.BYTE"/>.</param>
+        /// <param name="format">A <see cref="glPixelFormat"/> specifying the format the pixels a given in.</param>
+        /// <param name="type">A <see cref="glPixelDataType"/> specifying the data type the pixels a given in. Must be <see cref="glPixelDataType.BYTE"/>.</param>
         /// <param name="pixels">Pointer to the pixels.</param>
         [DllImport(DLLName, EntryPoint = "glTexImage1D")]
         [CLSCompliant(false)]
@@ -253,13 +253,13 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <summary>
         /// Loads a 1D texture.
         /// </summary>
-        /// <param name="target">A <see cref="Texture1DProxyTarget"/> specifying the texture target.</param>
+        /// <param name="target">A <see cref="glTexture1DProxyTarget"/> specifying the texture target.</param>
         /// <param name="level">The level-of-detail to be filled.</param>
-        /// <param name="internalformat">A <see cref="InternalFormat"/> specifying the internal format to be used.</param>
+        /// <param name="internalformat">A <see cref="glInternalFormat"/> specifying the internal format to be used.</param>
         /// <param name="width">The width of the texture.</param>
         /// <param name="border">Must be zero for core profile.</param>
-        /// <param name="format">A <see cref="PixelFormat"/> specifying the format the pixels a given in.</param>
-        /// <param name="type">A <see cref="PixelDataType"/> specifying the data type the pixels a given in. Must be <see cref="glPixelDataType.SHORT"/>.</param>
+        /// <param name="format">A <see cref="glPixelFormat"/> specifying the format the pixels a given in.</param>
+        /// <param name="type">A <see cref="glPixelDataType"/> specifying the data type the pixels a given in. Must be <see cref="glPixelDataType.SHORT"/>.</param>
         /// <param name="pixels">Pointer to the pixels.</param>
         [DllImport(DLLName, EntryPoint = "glTexImage1D")]
         public static extern void TexImage1D(TextureTarget target, int level, PixelInternalFormat internalformat, int width, int border, PixelFormat format, PixelType type, short[] pixels);
@@ -267,13 +267,13 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <summary>
         /// Loads a 1D texture.
         /// </summary>
-        /// <param name="target">A <see cref="Texture1DProxyTarget"/> specifying the texture target.</param>
+        /// <param name="target">A <see cref="glTexture1DProxyTarget"/> specifying the texture target.</param>
         /// <param name="level">The level-of-detail to be filled.</param>
-        /// <param name="internalformat">A <see cref="InternalFormat"/> specifying the internal format to be used.</param>
+        /// <param name="internalformat">A <see cref="glInternalFormat"/> specifying the internal format to be used.</param>
         /// <param name="width">The width of the texture.</param>
         /// <param name="border">Must be zero for core profile.</param>
-        /// <param name="format">A <see cref="PixelFormat"/> specifying the format the pixels a given in.</param>
-        /// <param name="type">A <see cref="PixelDataType"/> specifying the data type the pixels a given in. Must be <b>PixelType.UNSIGNED_SHORT*</b>.</param>
+        /// <param name="format">A <see cref="glPixelFormat"/> specifying the format the pixels a given in.</param>
+        /// <param name="type">A <see cref="glPixelDataType"/> specifying the data type the pixels a given in. Must be <b>PixelType.UNSIGNED_SHORT*</b>.</param>
         /// <param name="pixels">Pointer to the pixels.</param>
         [DllImport(DLLName, EntryPoint = "glTexImage1D")]
         [CLSCompliant(false)]
@@ -282,13 +282,13 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <summary>
         /// Loads a 1D texture.
         /// </summary>
-        /// <param name="target">A <see cref="Texture1DProxyTarget"/> specifying the texture target.</param>
+        /// <param name="target">A <see cref="glTexture1DProxyTarget"/> specifying the texture target.</param>
         /// <param name="level">The level-of-detail to be filled.</param>
-        /// <param name="internalformat">A <see cref="InternalFormat"/> specifying the internal format to be used.</param>
+        /// <param name="internalformat">A <see cref="glInternalFormat"/> specifying the internal format to be used.</param>
         /// <param name="width">The width of the texture.</param>
         /// <param name="border">Must be zero for core profile.</param>
-        /// <param name="format">A <see cref="PixelFormat"/> specifying the format the pixels a given in.</param>
-        /// <param name="type">A <see cref="PixelDataType"/> specifying the data type the pixels a given in. Must be <see cref="glPixelDataType.INT"/>.</param>
+        /// <param name="format">A <see cref="glPixelFormat"/> specifying the format the pixels a given in.</param>
+        /// <param name="type">A <see cref="glPixelDataType"/> specifying the data type the pixels a given in. Must be <see cref="glPixelDataType.INT"/>.</param>
         /// <param name="pixels">Pointer to the pixels.</param>
         [DllImport(DLLName, EntryPoint = "glTexImage1D")]
         public static extern void TexImage1D(TextureTarget target, int level, PixelInternalFormat internalformat, int width, int border, PixelFormat format, PixelType type, int[] pixels);
@@ -296,13 +296,13 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <summary>
         /// Loads a 1D texture.
         /// </summary>
-        /// <param name="target">A <see cref="Texture1DProxyTarget"/> specifying the texture target.</param>
+        /// <param name="target">A <see cref="glTexture1DProxyTarget"/> specifying the texture target.</param>
         /// <param name="level">The level-of-detail to be filled.</param>
-        /// <param name="internalformat">A <see cref="InternalFormat"/> specifying the internal format to be used.</param>
+        /// <param name="internalformat">A <see cref="glInternalFormat"/> specifying the internal format to be used.</param>
         /// <param name="width">The width of the texture.</param>
         /// <param name="border">Must be zero for core profile.</param>
-        /// <param name="format">A <see cref="PixelFormat"/> specifying the format the pixels a given in.</param>
-        /// <param name="type">A <see cref="PixelDataType"/> specifying the data type the pixels a given in. Must be <b>PixelType.UNSIGNED_INT*</b>.</param>
+        /// <param name="format">A <see cref="glPixelFormat"/> specifying the format the pixels a given in.</param>
+        /// <param name="type">A <see cref="glPixelDataType"/> specifying the data type the pixels a given in. Must be <b>PixelType.UNSIGNED_INT*</b>.</param>
         /// <param name="pixels">Pointer to the pixels.</param>
         [DllImport(DLLName, EntryPoint = "glTexImage1D")]
         [CLSCompliant(false)]
@@ -311,13 +311,13 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <summary>
         /// Loads a 1D texture. (For future use. Type not yet supported.)
         /// </summary>
-        /// <param name="target">A <see cref="Texture1DProxyTarget"/> specifying the texture target.</param>
+        /// <param name="target">A <see cref="glTexture1DProxyTarget"/> specifying the texture target.</param>
         /// <param name="level">The level-of-detail to be filled.</param>
-        /// <param name="internalformat">A <see cref="InternalFormat"/> specifying the internal format to be used.</param>
+        /// <param name="internalformat">A <see cref="glInternalFormat"/> specifying the internal format to be used.</param>
         /// <param name="width">The width of the texture.</param>
         /// <param name="border">Must be zero for core profile.</param>
-        /// <param name="format">A <see cref="PixelFormat"/> specifying the format the pixels a given in.</param>
-        /// <param name="type">A <see cref="PixelDataType"/> specifying the data type the pixels a given in.</param>
+        /// <param name="format">A <see cref="glPixelFormat"/> specifying the format the pixels a given in.</param>
+        /// <param name="type">A <see cref="glPixelDataType"/> specifying the data type the pixels a given in.</param>
         /// <param name="pixels">Pointer to the pixels.</param>
         [DllImport(DLLName, EntryPoint = "glTexImage1D")]
         public static extern void TexImage1D(TextureTarget target, int level, PixelInternalFormat internalformat, int width, int border, PixelFormat format, PixelType type, long[] pixels);
@@ -325,13 +325,13 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <summary>
         /// Loads a 1D texture. (For future use. Type not yet supported.)
         /// </summary>
-        /// <param name="target">A <see cref="Texture1DProxyTarget"/> specifying the texture target.</param>
+        /// <param name="target">A <see cref="glTexture1DProxyTarget"/> specifying the texture target.</param>
         /// <param name="level">The level-of-detail to be filled.</param>
-        /// <param name="internalformat">A <see cref="InternalFormat"/> specifying the internal format to be used.</param>
+        /// <param name="internalformat">A <see cref="glInternalFormat"/> specifying the internal format to be used.</param>
         /// <param name="width">The width of the texture.</param>
         /// <param name="border">Must be zero for core profile.</param>
-        /// <param name="format">A <see cref="PixelFormat"/> specifying the format the pixels a given in.</param>
-        /// <param name="type">A <see cref="PixelDataType"/> specifying the data type the pixels a given in.</param>
+        /// <param name="format">A <see cref="glPixelFormat"/> specifying the format the pixels a given in.</param>
+        /// <param name="type">A <see cref="glPixelDataType"/> specifying the data type the pixels a given in.</param>
         /// <param name="pixels">Pointer to the pixels.</param>
         [DllImport(DLLName, EntryPoint = "glTexImage1D")]
         [CLSCompliant(false)]
@@ -340,13 +340,13 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <summary>
         /// Loads a 1D texture.
         /// </summary>
-        /// <param name="target">A <see cref="Texture1DProxyTarget"/> specifying the texture target.</param>
+        /// <param name="target">A <see cref="glTexture1DProxyTarget"/> specifying the texture target.</param>
         /// <param name="level">The level-of-detail to be filled.</param>
-        /// <param name="internalformat">A <see cref="InternalFormat"/> specifying the internal format to be used.</param>
+        /// <param name="internalformat">A <see cref="glInternalFormat"/> specifying the internal format to be used.</param>
         /// <param name="width">The width of the texture.</param>
         /// <param name="border">Must be zero for core profile.</param>
-        /// <param name="format">A <see cref="PixelFormat"/> specifying the format the pixels a given in.</param>
-        /// <param name="type">A <see cref="PixelDataType"/> specifying the data type the pixels a given in. Must be <see cref="glPixelDataType.FLOAT"/>.</param>
+        /// <param name="format">A <see cref="glPixelFormat"/> specifying the format the pixels a given in.</param>
+        /// <param name="type">A <see cref="glPixelDataType"/> specifying the data type the pixels a given in. Must be <see cref="glPixelDataType.FLOAT"/>.</param>
         /// <param name="pixels">Pointer to the pixels.</param>
         [DllImport(DLLName, EntryPoint = "glTexImage1D")]
         public static extern void TexImage1D(TextureTarget target, int level, PixelInternalFormat internalformat, int width, int border, PixelFormat format, PixelType type, float[] pixels);
@@ -354,13 +354,13 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <summary>
         /// Loads a 1D texture. (For future use. Type not yet supported.)
         /// </summary>
-        /// <param name="target">A <see cref="Texture1DProxyTarget"/> specifying the texture target.</param>
+        /// <param name="target">A <see cref="glTexture1DProxyTarget"/> specifying the texture target.</param>
         /// <param name="level">The level-of-detail to be filled.</param>
-        /// <param name="internalformat">A <see cref="InternalFormat"/> specifying the internal format to be used.</param>
+        /// <param name="internalformat">A <see cref="glInternalFormat"/> specifying the internal format to be used.</param>
         /// <param name="width">The width of the texture.</param>
         /// <param name="border">Must be zero for core profile.</param>
-        /// <param name="format">A <see cref="PixelFormat"/> specifying the format the pixels a given in.</param>
-        /// <param name="type">A <see cref="PixelDataType"/> specifying the data type the pixels a given in.</param>
+        /// <param name="format">A <see cref="glPixelFormat"/> specifying the format the pixels a given in.</param>
+        /// <param name="type">A <see cref="glPixelDataType"/> specifying the data type the pixels a given in.</param>
         /// <param name="pixels">Pointer to the pixels.</param>
         [DllImport(DLLName, EntryPoint = "glTexImage1D")]
         public static extern void TexImage1D(TextureTarget target, int level, PixelInternalFormat internalformat, int width, int border, PixelFormat format, PixelType type, double[] pixels);
@@ -369,14 +369,14 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <summary>
         /// Loads a 2D texture.
         /// </summary>
-        /// <param name="target">A <see cref="Texture2DProxyTarget"/> specifying the texture target.</param>
+        /// <param name="target">A <see cref="glTexture2DProxyTarget"/> specifying the texture target.</param>
         /// <param name="level">The level-of-detail to be filled.</param>
-        /// <param name="internalformat">A <see cref="InternalFormat"/> specifying the internal format to be used.</param>
+        /// <param name="internalformat">A <see cref="glInternalFormat"/> specifying the internal format to be used.</param>
         /// <param name="width">The width of the texture.</param>
         /// <param name="height">The height of the texture.</param>
         /// <param name="border">Must be zero for core profile.</param>
-        /// <param name="format">A <see cref="PixelFormat"/> specifying the format the pixels a given in.</param>
-        /// <param name="type">A <see cref="PixelDataType"/> specifying the data type the pixels a given in.</param>
+        /// <param name="format">A <see cref="glPixelFormat"/> specifying the format the pixels a given in.</param>
+        /// <param name="type">A <see cref="glPixelDataType"/> specifying the data type the pixels a given in.</param>
         /// <param name="pixels">Pointer to the pixels.</param>
         [DllImport(DLLName, EntryPoint = "glTexImage2D")]
         public static extern void TexImage2D(TextureTarget target, int level, PixelInternalFormat internalformat, int width, int height, int border, PixelFormat format, PixelType type, IntPtr pixels);
@@ -385,14 +385,14 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <summary>
         /// Loads a 2D texture.
         /// </summary>
-        /// <param name="target">A <see cref="Texture2DProxyTarget"/> specifying the texture target.</param>
+        /// <param name="target">A <see cref="glTexture2DProxyTarget"/> specifying the texture target.</param>
         /// <param name="level">The level-of-detail to be filled.</param>
-        /// <param name="internalformat">A <see cref="InternalFormat"/> specifying the internal format to be used.</param>
+        /// <param name="internalformat">A <see cref="glInternalFormat"/> specifying the internal format to be used.</param>
         /// <param name="width">The width of the texture.</param>
         /// <param name="height">The height of the texture.</param>
         /// <param name="border">Must be zero for core profile.</param>
-        /// <param name="format">A <see cref="PixelFormat"/> specifying the format the pixels a given in.</param>
-        /// <param name="type">A <see cref="PixelDataType"/> specifying the data type the pixels a given in.</param>
+        /// <param name="format">A <see cref="glPixelFormat"/> specifying the format the pixels a given in.</param>
+        /// <param name="type">A <see cref="glPixelDataType"/> specifying the data type the pixels a given in.</param>
         /// <param name="offset">The offset into the array bound to <see cref="BufferTarget.PIXEL_UNPACK_BUFFER"/>.</param>
         public static void TexImage2D(TextureTarget target, int level, PixelInternalFormat internalformat, int width, int height, int border, PixelFormat format, PixelType type, int offset)
         {
@@ -402,14 +402,14 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <summary>
         /// Loads a 2D texture.
         /// </summary>
-        /// <param name="target">A <see cref="Texture2DProxyTarget"/> specifying the texture target.</param>
+        /// <param name="target">A <see cref="glTexture2DProxyTarget"/> specifying the texture target.</param>
         /// <param name="level">The level-of-detail to be filled.</param>
-        /// <param name="internalformat">A <see cref="InternalFormat"/> specifying the internal format to be used.</param>
+        /// <param name="internalformat">A <see cref="glInternalFormat"/> specifying the internal format to be used.</param>
         /// <param name="width">The width of the texture.</param>
         /// <param name="height">The height of the texture.</param>
         /// <param name="border">Must be zero for core profile.</param>
-        /// <param name="format">A <see cref="PixelFormat"/> specifying the format the pixels a given in.</param>
-        /// <param name="type">A <see cref="PixelDataType"/> specifying the data type the pixels a given in.</param>
+        /// <param name="format">A <see cref="glPixelFormat"/> specifying the format the pixels a given in.</param>
+        /// <param name="type">A <see cref="glPixelDataType"/> specifying the data type the pixels a given in.</param>
         /// <param name="offset">The offset into the array bound to <see cref="BufferTarget.PIXEL_UNPACK_BUFFER"/>.</param>
         public static void TexImage2D(TextureTarget target, int level, PixelInternalFormat internalformat, int width, int height, int border, PixelFormat format, PixelType type, long offset)
         {
@@ -420,14 +420,14 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <summary>
         /// Loads a 2D texture.
         /// </summary>
-        /// <param name="target">A <see cref="Texture2DProxyTarget"/> specifying the texture target.</param>
+        /// <param name="target">A <see cref="glTexture2DProxyTarget"/> specifying the texture target.</param>
         /// <param name="level">The level-of-detail to be filled.</param>
-        /// <param name="internalformat">A <see cref="InternalFormat"/> specifying the internal format to be used.</param>
+        /// <param name="internalformat">A <see cref="glInternalFormat"/> specifying the internal format to be used.</param>
         /// <param name="width">The width of the texture.</param>
         /// <param name="height">The height of the texture.</param>
         /// <param name="border">Must be zero for core profile.</param>
-        /// <param name="format">A <see cref="PixelFormat"/> specifying the format the pixels a given in.</param>
-        /// <param name="type">A <see cref="PixelDataType"/> specifying the data type the pixels a given in. Must be <see cref="glPixelDataType.UNSIGNED_BYTE"/>, <see cref="glPixelDataType.UNSIGNED_BYTE_3_3_2"/> or <see cref="glPixelDataType.UNSIGNED_BYTE_2_3_3_REV"/>.</param>
+        /// <param name="format">A <see cref="glPixelFormat"/> specifying the format the pixels a given in.</param>
+        /// <param name="type">A <see cref="glPixelDataType"/> specifying the data type the pixels a given in. Must be <see cref="glPixelDataType.UNSIGNED_BYTE"/>, <see cref="glPixelDataType.UNSIGNED_BYTE_3_3_2"/> or <see cref="glPixelDataType.UNSIGNED_BYTE_2_3_3_REV"/>.</param>
         /// <param name="pixels">Pointer to the pixels.</param>
         [DllImport(DLLName, EntryPoint = "glTexImage2D")]
         public static extern void TexImage2D(TextureTarget target, int level, PixelInternalFormat internalformat, int width, int height, int border, PixelFormat format, PixelType type, byte[] pixels);
@@ -435,14 +435,14 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <summary>
         /// Loads a 2D texture.
         /// </summary>
-        /// <param name="target">A <see cref="Texture2DProxyTarget"/> specifying the texture target.</param>
+        /// <param name="target">A <see cref="glTexture2DProxyTarget"/> specifying the texture target.</param>
         /// <param name="level">The level-of-detail to be filled.</param>
-        /// <param name="internalformat">A <see cref="InternalFormat"/> specifying the internal format to be used.</param>
+        /// <param name="internalformat">A <see cref="glInternalFormat"/> specifying the internal format to be used.</param>
         /// <param name="width">The width of the texture.</param>
         /// <param name="height">The height of the texture.</param>
         /// <param name="border">Must be zero for core profile.</param>
-        /// <param name="format">A <see cref="PixelFormat"/> specifying the format the pixels a given in.</param>
-        /// <param name="type">A <see cref="PixelDataType"/> specifying the data type the pixels a given in. Must be <see cref="glPixelDataType.BYTE"/>.</param>
+        /// <param name="format">A <see cref="glPixelFormat"/> specifying the format the pixels a given in.</param>
+        /// <param name="type">A <see cref="glPixelDataType"/> specifying the data type the pixels a given in. Must be <see cref="glPixelDataType.BYTE"/>.</param>
         /// <param name="pixels">Pointer to the pixels.</param>
         [DllImport(DLLName, EntryPoint = "glTexImage2D")]
         [CLSCompliant(false)]
@@ -451,14 +451,14 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <summary>
         /// Loads a 2D texture.
         /// </summary>
-        /// <param name="target">A <see cref="Texture2DProxyTarget"/> specifying the texture target.</param>
+        /// <param name="target">A <see cref="glTexture2DProxyTarget"/> specifying the texture target.</param>
         /// <param name="level">The level-of-detail to be filled.</param>
-        /// <param name="internalformat">A <see cref="InternalFormat"/> specifying the internal format to be used.</param>
+        /// <param name="internalformat">A <see cref="glInternalFormat"/> specifying the internal format to be used.</param>
         /// <param name="width">The width of the texture.</param>
         /// <param name="height">The height of the texture.</param>
         /// <param name="border">Must be zero for core profile.</param>
-        /// <param name="format">A <see cref="PixelFormat"/> specifying the format the pixels a given in.</param>
-        /// <param name="type">A <see cref="PixelDataType"/> specifying the data type the pixels a given in. Must be <see cref="glPixelDataType.SHORT"/>.</param>
+        /// <param name="format">A <see cref="glPixelFormat"/> specifying the format the pixels a given in.</param>
+        /// <param name="type">A <see cref="glPixelDataType"/> specifying the data type the pixels a given in. Must be <see cref="glPixelDataType.SHORT"/>.</param>
         /// <param name="pixels">Pointer to the pixels.</param>
         [DllImport(DLLName, EntryPoint = "glTexImage2D")]
         public static extern void TexImage2D(TextureTarget target, int level, PixelInternalFormat internalformat, int width, int height, int border, PixelFormat format, PixelType type, short[] pixels);
@@ -466,14 +466,14 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <summary>
         /// Loads a 2D texture.
         /// </summary>
-        /// <param name="target">A <see cref="Texture2DProxyTarget"/> specifying the texture target.</param>
+        /// <param name="target">A <see cref="glTexture2DProxyTarget"/> specifying the texture target.</param>
         /// <param name="level">The level-of-detail to be filled.</param>
-        /// <param name="internalformat">A <see cref="InternalFormat"/> specifying the internal format to be used.</param>
+        /// <param name="internalformat">A <see cref="glInternalFormat"/> specifying the internal format to be used.</param>
         /// <param name="width">The width of the texture.</param>
         /// <param name="height">The height of the texture.</param>
         /// <param name="border">Must be zero for core profile.</param>
-        /// <param name="format">A <see cref="PixelFormat"/> specifying the format the pixels a given in.</param>
-        /// <param name="type">A <see cref="PixelDataType"/> specifying the data type the pixels a given in. Must be <b>PixelType.UNSIGNED_SHORT*</b>.</param>
+        /// <param name="format">A <see cref="glPixelFormat"/> specifying the format the pixels a given in.</param>
+        /// <param name="type">A <see cref="glPixelDataType"/> specifying the data type the pixels a given in. Must be <b>PixelType.UNSIGNED_SHORT*</b>.</param>
         /// <param name="pixels">Pointer to the pixels.</param>
         [DllImport(DLLName, EntryPoint = "glTexImage2D")]
         [CLSCompliant(false)]
@@ -482,14 +482,14 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <summary>
         /// Loads a 2D texture.
         /// </summary>
-        /// <param name="target">A <see cref="Texture2DProxyTarget"/> specifying the texture target.</param>
+        /// <param name="target">A <see cref="glTexture2DProxyTarget"/> specifying the texture target.</param>
         /// <param name="level">The level-of-detail to be filled.</param>
-        /// <param name="internalformat">A <see cref="InternalFormat"/> specifying the internal format to be used.</param>
+        /// <param name="internalformat">A <see cref="glInternalFormat"/> specifying the internal format to be used.</param>
         /// <param name="width">The width of the texture.</param>
         /// <param name="height">The height of the texture.</param>
         /// <param name="border">Must be zero for core profile.</param>
-        /// <param name="format">A <see cref="PixelFormat"/> specifying the format the pixels a given in.</param>
-        /// <param name="type">A <see cref="PixelDataType"/> specifying the data type the pixels a given in. Must be <see cref="glPixelDataType.INT"/>.</param>
+        /// <param name="format">A <see cref="glPixelFormat"/> specifying the format the pixels a given in.</param>
+        /// <param name="type">A <see cref="glPixelDataType"/> specifying the data type the pixels a given in. Must be <see cref="glPixelDataType.INT"/>.</param>
         /// <param name="pixels">Pointer to the pixels.</param>
         [DllImport(DLLName, EntryPoint = "glTexImage2D")]
         public static extern void TexImage2D(TextureTarget target, int level, PixelInternalFormat internalformat, int width, int height, int border, PixelFormat format, PixelType type, int[] pixels);
@@ -497,14 +497,14 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <summary>
         /// Loads a 2D texture.
         /// </summary>
-        /// <param name="target">A <see cref="Texture2DProxyTarget"/> specifying the texture target.</param>
+        /// <param name="target">A <see cref="glTexture2DProxyTarget"/> specifying the texture target.</param>
         /// <param name="level">The level-of-detail to be filled.</param>
-        /// <param name="internalformat">A <see cref="InternalFormat"/> specifying the internal format to be used.</param>
+        /// <param name="internalformat">A <see cref="glInternalFormat"/> specifying the internal format to be used.</param>
         /// <param name="width">The width of the texture.</param>
         /// <param name="height">The height of the texture.</param>
         /// <param name="border">Must be zero for core profile.</param>
-        /// <param name="format">A <see cref="PixelFormat"/> specifying the format the pixels a given in.</param>
-        /// <param name="type">A <see cref="PixelDataType"/> specifying the data type the pixels a given in. Must be <b>PixelType.UNSIGNED_INT*</b>.</param>
+        /// <param name="format">A <see cref="glPixelFormat"/> specifying the format the pixels a given in.</param>
+        /// <param name="type">A <see cref="glPixelDataType"/> specifying the data type the pixels a given in. Must be <b>PixelType.UNSIGNED_INT*</b>.</param>
         /// <param name="pixels">Pointer to the pixels.</param>
         [DllImport(DLLName, EntryPoint = "glTexImage2D")]
         [CLSCompliant(false)]
@@ -513,14 +513,14 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <summary>
         /// Loads a 2D texture. (For future use. Type not yet supported.)
         /// </summary>
-        /// <param name="target">A <see cref="Texture2DProxyTarget"/> specifying the texture target.</param>
+        /// <param name="target">A <see cref="glTexture2DProxyTarget"/> specifying the texture target.</param>
         /// <param name="level">The level-of-detail to be filled.</param>
-        /// <param name="internalformat">A <see cref="InternalFormat"/> specifying the internal format to be used.</param>
+        /// <param name="internalformat">A <see cref="glInternalFormat"/> specifying the internal format to be used.</param>
         /// <param name="width">The width of the texture.</param>
         /// <param name="height">The height of the texture.</param>
         /// <param name="border">Must be zero for core profile.</param>
-        /// <param name="format">A <see cref="PixelFormat"/> specifying the format the pixels a given in.</param>
-        /// <param name="type">A <see cref="PixelDataType"/> specifying the data type the pixels a given in.</param>
+        /// <param name="format">A <see cref="glPixelFormat"/> specifying the format the pixels a given in.</param>
+        /// <param name="type">A <see cref="glPixelDataType"/> specifying the data type the pixels a given in.</param>
         /// <param name="pixels">Pointer to the pixels.</param>
         [DllImport(DLLName, EntryPoint = "glTexImage2D")]
         public static extern void TexImage2D(TextureTarget target, int level, PixelInternalFormat internalformat, int width, int height, int border, PixelFormat format, PixelType type, long[] pixels);
@@ -528,14 +528,14 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <summary>
         /// Loads a 2D texture. (For future use. Type not yet supported.)
         /// </summary>
-        /// <param name="target">A <see cref="Texture2DProxyTarget"/> specifying the texture target.</param>
+        /// <param name="target">A <see cref="glTexture2DProxyTarget"/> specifying the texture target.</param>
         /// <param name="level">The level-of-detail to be filled.</param>
-        /// <param name="internalformat">A <see cref="InternalFormat"/> specifying the internal format to be used.</param>
+        /// <param name="internalformat">A <see cref="glInternalFormat"/> specifying the internal format to be used.</param>
         /// <param name="width">The width of the texture.</param>
         /// <param name="height">The height of the texture.</param>
         /// <param name="border">Must be zero for core profile.</param>
-        /// <param name="format">A <see cref="PixelFormat"/> specifying the format the pixels a given in.</param>
-        /// <param name="type">A <see cref="PixelDataType"/> specifying the data type the pixels a given in.</param>
+        /// <param name="format">A <see cref="glPixelFormat"/> specifying the format the pixels a given in.</param>
+        /// <param name="type">A <see cref="glPixelDataType"/> specifying the data type the pixels a given in.</param>
         /// <param name="pixels">Pointer to the pixels.</param>
         [DllImport(DLLName, EntryPoint = "glTexImage2D")]
         [CLSCompliant(false)]
@@ -544,14 +544,14 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <summary>
         /// Loads a 2D texture.
         /// </summary>
-        /// <param name="target">A <see cref="Texture2DProxyTarget"/> specifying the texture target.</param>
+        /// <param name="target">A <see cref="glTexture2DProxyTarget"/> specifying the texture target.</param>
         /// <param name="level">The level-of-detail to be filled.</param>
-        /// <param name="internalformat">A <see cref="InternalFormat"/> specifying the internal format to be used.</param>
+        /// <param name="internalformat">A <see cref="glInternalFormat"/> specifying the internal format to be used.</param>
         /// <param name="width">The width of the texture.</param>
         /// <param name="height">The height of the texture.</param>
         /// <param name="border">Must be zero for core profile.</param>
-        /// <param name="format">A <see cref="PixelFormat"/> specifying the format the pixels a given in.</param>
-        /// <param name="type">A <see cref="PixelDataType"/> specifying the data type the pixels a given in. Must be <see cref="glPixelDataType.FLOAT"/>.</param>
+        /// <param name="format">A <see cref="glPixelFormat"/> specifying the format the pixels a given in.</param>
+        /// <param name="type">A <see cref="glPixelDataType"/> specifying the data type the pixels a given in. Must be <see cref="glPixelDataType.FLOAT"/>.</param>
         /// <param name="pixels">Pointer to the pixels.</param>
         [DllImport(DLLName, EntryPoint = "glTexImage2D")]
         public static extern void TexImage2D(TextureTarget target, int level, PixelInternalFormat internalformat, int width, int height, int border, PixelFormat format, PixelType type, float[] pixels);
@@ -559,14 +559,14 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <summary>
         /// Loads a 2D texture. (For future use. Type not yet supported.)
         /// </summary>
-        /// <param name="target">A <see cref="Texture2DProxyTarget"/> specifying the texture target.</param>
+        /// <param name="target">A <see cref="glTexture2DProxyTarget"/> specifying the texture target.</param>
         /// <param name="level">The level-of-detail to be filled.</param>
-        /// <param name="internalformat">A <see cref="InternalFormat"/> specifying the internal format to be used.</param>
+        /// <param name="internalformat">A <see cref="glInternalFormat"/> specifying the internal format to be used.</param>
         /// <param name="width">The width of the texture.</param>
         /// <param name="height">The height of the texture.</param>
         /// <param name="border">Must be zero for core profile.</param>
-        /// <param name="format">A <see cref="PixelFormat"/> specifying the format the pixels a given in.</param>
-        /// <param name="type">A <see cref="PixelDataType"/> specifying the data type the pixels a given in.</param>
+        /// <param name="format">A <see cref="glPixelFormat"/> specifying the format the pixels a given in.</param>
+        /// <param name="type">A <see cref="glPixelDataType"/> specifying the data type the pixels a given in.</param>
         /// <param name="pixels">Pointer to the pixels.</param>
         [DllImport(DLLName, EntryPoint = "glTexImage2D")]
         public static extern void TexImage2D(TextureTarget target, int level, PixelInternalFormat internalformat, int width, int height, int border, PixelFormat format, PixelType type, double[] pixels);
@@ -673,14 +673,14 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <summary>
         /// Sets the logical pixel operation to perform.
         /// </summary>
-        /// <param name="opcode">A <see cref="LogicOpMode"/> specifying the logical operation.</param>
+        /// <param name="opcode">A <see cref="glLogicOpMode"/> specifying the logical operation.</param>
         [DllImport(DLLName, EntryPoint = "glLogicOp")]
         public static extern void LogicOp(LogicOp opcode);
 
         /// <summary>
         /// Sets the stencil test function.
         /// </summary>
-        /// <param name="func">A <see cref="Func"/> specifying the test function.</param>
+        /// <param name="func">A <see cref="glFunc"/> specifying the test function.</param>
         /// <param name="refvalue">The reference value.</param>
         /// <param name="mask">The bitmask for the operation.</param>
         [DllImport(DLLName, EntryPoint = "glStencilFunc")]
@@ -699,14 +699,14 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <summary>
         /// Sets the depth test function.
         /// </summary>
-        /// <param name="func">A <see cref="Func"/> specifying the test function.</param>
+        /// <param name="func">A <see cref="glFunc"/> specifying the test function.</param>
         [DllImport(DLLName, EntryPoint = "glDepthFunc")]
         public static extern void DepthFunc(DepthFunction func);
 
         /// <summary>
         /// Sets the parameter for pixel pack or unpack operations.
         /// </summary>
-        /// <param name="pname">A <see cref="PixelStoreParameter"/> specifying the parameter.</param>
+        /// <param name="pname">A <see cref="glPixelStoreParameter"/> specifying the parameter.</param>
         /// <param name="param">The value.</param>
         [DllImport(DLLName, EntryPoint = "glPixelStoref")]
         public static extern void PixelStoref(PixelStoreParameter pname, float param);
@@ -714,7 +714,7 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <summary>
         /// Sets the parameter for pixel pack or unpack operations.
         /// </summary>
-        /// <param name="pname">A <see cref="PixelStoreParameter"/> specifying the parameter.</param>
+        /// <param name="pname">A <see cref="glPixelStoreParameter"/> specifying the parameter.</param>
         /// <param name="param">The value.</param>
         [DllImport(DLLName, EntryPoint = "glPixelStorei")]
         public static extern void PixelStorei(PixelStoreParameter pname, int param);
@@ -733,8 +733,8 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <param name="y">The start position in y-direction from which to read.</param>
         /// <param name="width">The width of the rectane to read.</param>
         /// <param name="height">The height of the rectane to read.</param>
-        /// <param name="format">A <see cref="PixelFormat"/> specifying the format the pixels a given out.</param>
-        /// <param name="type">A <see cref="PixelDataType"/> specifying the data type the pixels a given out.</param>
+        /// <param name="format">A <see cref="glPixelFormat"/> specifying the format the pixels a given out.</param>
+        /// <param name="type">A <see cref="glPixelDataType"/> specifying the data type the pixels a given out.</param>
         /// <param name="pixels">Pointer to the buffer for the returning data.</param>
         [DllImport(DLLName, EntryPoint = "glReadPixels")]
         public static extern void ReadPixels(int x, int y, int width, int height, PixelFormat format, PixelType type, IntPtr pixels);
@@ -747,8 +747,8 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <param name="y">The start position in y-direction from which to read.</param>
         /// <param name="width">The width of the rectane to read.</param>
         /// <param name="height">The height of the rectane to read.</param>
-        /// <param name="format">A <see cref="PixelFormat"/> specifying the format the pixels a given out.</param>
-        /// <param name="type">A <see cref="PixelDataType"/> specifying the data type the pixels a given out.</param>
+        /// <param name="format">A <see cref="glPixelFormat"/> specifying the format the pixels a given out.</param>
+        /// <param name="type">A <see cref="glPixelDataType"/> specifying the data type the pixels a given out.</param>
         /// <param name="offset">The offset into the array bound to <see cref="BufferTarget.PIXEL_PACK_BUFFER"/>.</param>
         public static void ReadPixels(int x, int y, int width, int height, PixelFormat format, PixelType type, int offset)
         {
@@ -762,8 +762,8 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <param name="y">The start position in y-direction from which to read.</param>
         /// <param name="width">The width of the rectane to read.</param>
         /// <param name="height">The height of the rectane to read.</param>
-        /// <param name="format">A <see cref="PixelFormat"/> specifying the format the pixels a given out.</param>
-        /// <param name="type">A <see cref="PixelDataType"/> specifying the data type the pixels a given out.</param>
+        /// <param name="format">A <see cref="glPixelFormat"/> specifying the format the pixels a given out.</param>
+        /// <param name="type">A <see cref="glPixelDataType"/> specifying the data type the pixels a given out.</param>
         /// <param name="offset">The offset into the array bound to <see cref="BufferTarget.PIXEL_PACK_BUFFER"/>.</param>
         public static void ReadPixels(int x, int y, int width, int height, PixelFormat format, PixelType type, long offset)
         {
@@ -778,8 +778,8 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <param name="y">The start position in y-direction from which to read.</param>
         /// <param name="width">The width of the rectane to read.</param>
         /// <param name="height">The height of the rectane to read.</param>
-        /// <param name="format">A <see cref="PixelFormat"/> specifying the format the pixels a given out.</param>
-        /// <param name="type">A <see cref="PixelDataType"/> specifying the data type the pixels a given out. Must be <see cref="glPixelDataType.UNSIGNED_BYTE"/>, <see cref="glPixelDataType.UNSIGNED_BYTE_3_3_2"/> or <see cref="glPixelDataType.UNSIGNED_BYTE_2_3_3_REV"/>.</param>
+        /// <param name="format">A <see cref="glPixelFormat"/> specifying the format the pixels a given out.</param>
+        /// <param name="type">A <see cref="glPixelDataType"/> specifying the data type the pixels a given out. Must be <see cref="glPixelDataType.UNSIGNED_BYTE"/>, <see cref="glPixelDataType.UNSIGNED_BYTE_3_3_2"/> or <see cref="glPixelDataType.UNSIGNED_BYTE_2_3_3_REV"/>.</param>
         /// <param name="pixels">Pointer to the buffer for the returning data.</param>
         [DllImport(DLLName, EntryPoint = "glReadPixels")]
         public static extern void ReadPixels(int x, int y, int width, int height, PixelFormat format, PixelType type, byte[] pixels);
@@ -791,8 +791,8 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <param name="y">The start position in y-direction from which to read.</param>
         /// <param name="width">The width of the rectane to read.</param>
         /// <param name="height">The height of the rectane to read.</param>
-        /// <param name="format">A <see cref="PixelFormat"/> specifying the format the pixels a given out.</param>
-        /// <param name="type">A <see cref="PixelDataType"/> specifying the data type the pixels a given out. Must be <see cref="glPixelDataType.BYTE"/>.</param>
+        /// <param name="format">A <see cref="glPixelFormat"/> specifying the format the pixels a given out.</param>
+        /// <param name="type">A <see cref="glPixelDataType"/> specifying the data type the pixels a given out. Must be <see cref="glPixelDataType.BYTE"/>.</param>
         /// <param name="pixels">Pointer to the buffer for the returning data.</param>
         [DllImport(DLLName, EntryPoint = "glReadPixels")]
         [CLSCompliant(false)]
@@ -805,8 +805,8 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <param name="y">The start position in y-direction from which to read.</param>
         /// <param name="width">The width of the rectane to read.</param>
         /// <param name="height">The height of the rectane to read.</param>
-        /// <param name="format">A <see cref="PixelFormat"/> specifying the format the pixels a given out.</param>
-        /// <param name="type">A <see cref="PixelDataType"/> specifying the data type the pixels a given out. Must be <see cref="glPixelDataType.SHORT"/>.</param>
+        /// <param name="format">A <see cref="glPixelFormat"/> specifying the format the pixels a given out.</param>
+        /// <param name="type">A <see cref="glPixelDataType"/> specifying the data type the pixels a given out. Must be <see cref="glPixelDataType.SHORT"/>.</param>
         /// <param name="pixels">Pointer to the buffer for the returning data.</param>
         [DllImport(DLLName, EntryPoint = "glReadPixels")]
         [CLSCompliant(false)]
@@ -819,8 +819,8 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <param name="y">The start position in y-direction from which to read.</param>
         /// <param name="width">The width of the rectane to read.</param>
         /// <param name="height">The height of the rectane to read.</param>
-        /// <param name="format">A <see cref="PixelFormat"/> specifying the format the pixels a given out.</param>
-        /// <param name="type">A <see cref="PixelDataType"/> specifying the data type the pixels a given out. Must be <b>PixelType.UNSIGNED_SHORT*</b>.</param>
+        /// <param name="format">A <see cref="glPixelFormat"/> specifying the format the pixels a given out.</param>
+        /// <param name="type">A <see cref="glPixelDataType"/> specifying the data type the pixels a given out. Must be <b>PixelType.UNSIGNED_SHORT*</b>.</param>
         /// <param name="pixels">Pointer to the buffer for the returning data.</param>
         [DllImport(DLLName, EntryPoint = "glReadPixels")]
         [CLSCompliant(false)]
@@ -833,8 +833,8 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <param name="y">The start position in y-direction from which to read.</param>
         /// <param name="width">The width of the rectane to read.</param>
         /// <param name="height">The height of the rectane to read.</param>
-        /// <param name="format">A <see cref="PixelFormat"/> specifying the format the pixels a given out.</param>
-        /// <param name="type">A <see cref="PixelDataType"/> specifying the data type the pixels a given out. Must be <see cref="glPixelDataType.INT"/>.</param>
+        /// <param name="format">A <see cref="glPixelFormat"/> specifying the format the pixels a given out.</param>
+        /// <param name="type">A <see cref="glPixelDataType"/> specifying the data type the pixels a given out. Must be <see cref="glPixelDataType.INT"/>.</param>
         /// <param name="pixels">Pointer to the buffer for the returning data.</param>
         [DllImport(DLLName, EntryPoint = "glReadPixels")]
         public static extern void ReadPixels(int x, int y, int width, int height, PixelFormat format, PixelType type, int[] pixels);
@@ -846,8 +846,8 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <param name="y">The start position in y-direction from which to read.</param>
         /// <param name="width">The width of the rectane to read.</param>
         /// <param name="height">The height of the rectane to read.</param>
-        /// <param name="format">A <see cref="PixelFormat"/> specifying the format the pixels a given out.</param>
-        /// <param name="type">A <see cref="PixelDataType"/> specifying the data type the pixels a given out. Must be <b>PixelType.UNSIGNED_INT*</b>.</param>
+        /// <param name="format">A <see cref="glPixelFormat"/> specifying the format the pixels a given out.</param>
+        /// <param name="type">A <see cref="glPixelDataType"/> specifying the data type the pixels a given out. Must be <b>PixelType.UNSIGNED_INT*</b>.</param>
         /// <param name="pixels">Pointer to the buffer for the returning data.</param>
         [DllImport(DLLName, EntryPoint = "glReadPixels")]
         [CLSCompliant(false)]
@@ -860,8 +860,8 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <param name="y">The start position in y-direction from which to read.</param>
         /// <param name="width">The width of the rectane to read.</param>
         /// <param name="height">The height of the rectane to read.</param>
-        /// <param name="format">A <see cref="PixelFormat"/> specifying the format the pixels a given out.</param>
-        /// <param name="type">A <see cref="PixelDataType"/> specifying the data type the pixels a given out.</param>
+        /// <param name="format">A <see cref="glPixelFormat"/> specifying the format the pixels a given out.</param>
+        /// <param name="type">A <see cref="glPixelDataType"/> specifying the data type the pixels a given out.</param>
         /// <param name="pixels">Pointer to the buffer for the returning data.</param>
         [DllImport(DLLName, EntryPoint = "glReadPixels")]
         public static extern void ReadPixels(int x, int y, int width, int height, PixelFormat format, PixelType type, long[] pixels);
@@ -873,8 +873,8 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <param name="y">The start position in y-direction from which to read.</param>
         /// <param name="width">The width of the rectane to read.</param>
         /// <param name="height">The height of the rectane to read.</param>
-        /// <param name="format">A <see cref="PixelFormat"/> specifying the format the pixels a given out.</param>
-        /// <param name="type">A <see cref="PixelDataType"/> specifying the data type the pixels a given out.</param>
+        /// <param name="format">A <see cref="glPixelFormat"/> specifying the format the pixels a given out.</param>
+        /// <param name="type">A <see cref="glPixelDataType"/> specifying the data type the pixels a given out.</param>
         /// <param name="pixels">Pointer to the buffer for the returning data.</param>
         [DllImport(DLLName, EntryPoint = "glReadPixels")]
         [CLSCompliant(false)]
@@ -887,8 +887,8 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <param name="y">The start position in y-direction from which to read.</param>
         /// <param name="width">The width of the rectane to read.</param>
         /// <param name="height">The height of the rectane to read.</param>
-        /// <param name="format">A <see cref="PixelFormat"/> specifying the format the pixels a given out.</param>
-        /// <param name="type">A <see cref="PixelDataType"/> specifying the data type the pixels a given out. Must be <see cref="glPixelDataType.FLOAT"/>.</param>
+        /// <param name="format">A <see cref="glPixelFormat"/> specifying the format the pixels a given out.</param>
+        /// <param name="type">A <see cref="glPixelDataType"/> specifying the data type the pixels a given out. Must be <see cref="glPixelDataType.FLOAT"/>.</param>
         /// <param name="pixels">Pointer to the buffer for the returning data.</param>
         [DllImport(DLLName, EntryPoint = "glReadPixels")]
         public static extern void ReadPixels(int x, int y, int width, int height, PixelFormat format, PixelType type, float[] pixels);
@@ -900,8 +900,8 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <param name="y">The start position in y-direction from which to read.</param>
         /// <param name="width">The width of the rectane to read.</param>
         /// <param name="height">The height of the rectane to read.</param>
-        /// <param name="format">A <see cref="PixelFormat"/> specifying the format the pixels a given out.</param>
-        /// <param name="type">A <see cref="PixelDataType"/> specifying the data type the pixels a given out.</param>
+        /// <param name="format">A <see cref="glPixelFormat"/> specifying the format the pixels a given out.</param>
+        /// <param name="type">A <see cref="glPixelDataType"/> specifying the data type the pixels a given out.</param>
         /// <param name="pixels">Pointer to the buffer for the returning data.</param>
         [DllImport(DLLName, EntryPoint = "glReadPixels")]
         public static extern void ReadPixels(int x, int y, int width, int height, PixelFormat format, PixelType type, double[] pixels);
@@ -946,7 +946,7 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <summary>
         /// Returns the value of a parameter.
         /// </summary>
-        /// <param name="pname">A <see cref="GetFloatParameter"/> specifying the parameter.</param>
+        /// <param name="pname">A <see cref="glGetFloatParameter"/> specifying the parameter.</param>
         /// <param name="param">Returns the requested value.</param>
         [DllImport(DLLName, EntryPoint = "glGetDoublev")]
         public static extern void GetDoublev(GetPName pname, out double param);
@@ -954,7 +954,7 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <summary>
         /// Returns the value(s) of a parameter.
         /// </summary>
-        /// <param name="pname">A <see cref="GetFloatParameter"/> specifying the parameter.</param>
+        /// <param name="pname">A <see cref="glGetFloatParameter"/> specifying the parameter.</param>
         /// <param name="params">Returns the requested value(s).</param>
         [DllImport(DLLName, EntryPoint = "glGetDoublev")]
         public static extern void GetDoublev(GetPName pname, double[] @params);
@@ -962,14 +962,14 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <summary>
         /// Returns the error code.
         /// </summary>
-        /// <returns>A <see cref="ErrorCode"/> specifying the error.</returns>
+        /// <returns>A <see cref="glErrorCode"/> specifying the error.</returns>
         [DllImport(DLLName, EntryPoint = "glGetError")]
         public static extern ErrorCode GetError();
 
         /// <summary>
         /// Returns the value of a parameter.
         /// </summary>
-        /// <param name="pname">A <see cref="GetFloatParameter"/> specifying the parameter.</param>
+        /// <param name="pname">A <see cref="glGetFloatParameter"/> specifying the parameter.</param>
         /// <param name="param">Returns the requested value.</param>
         [DllImport(DLLName, EntryPoint = "glGetFloatv")]
         public static extern void GetFloatv(GetPName pname, out float param);
@@ -977,7 +977,7 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <summary>
         /// Returns the value(s) of a parameter.
         /// </summary>
-        /// <param name="pname">A <see cref="GetFloatParameter"/> specifying the parameter.</param>
+        /// <param name="pname">A <see cref="glGetFloatParameter"/> specifying the parameter.</param>
         /// <param name="params">Returns the requested value(s).</param>
         [DllImport(DLLName, EntryPoint = "glGetFloatv")]
         public static extern void GetFloatv(GetPName pname, float[] @params);
@@ -985,7 +985,7 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <summary>
         /// Returns the value of a parameter.
         /// </summary>
-        /// <param name="pname">A <see cref="GetIntegerParameter"/> specifying the parameter.</param>
+        /// <param name="pname">A <see cref="glGetIntegerParameter"/> specifying the parameter.</param>
         /// <param name="param">Returns the requested value.</param>
         [DllImport(DLLName, EntryPoint = "glGetIntegerv")]
         public static extern void GetIntegerv(GetPName pname, out int param);
@@ -993,7 +993,7 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <summary>
         /// Returns the value(s) of a parameter.
         /// </summary>
-        /// <param name="pname">A <see cref="GetIntegerParameter"/> specifying the parameter.</param>
+        /// <param name="pname">A <see cref="glGetIntegerParameter"/> specifying the parameter.</param>
         /// <param name="params">Returns the requested value(s).</param>
         [DllImport(DLLName, EntryPoint = "glGetIntegerv")]
         public static extern void GetIntegerv(GetPName pname, int[] @params);
@@ -1004,7 +1004,7 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <summary>
         /// Returns the value of a parameter.
         /// </summary>
-        /// <param name="pname">A <see cref="GetStringParameter"/> specifying the parameter.</param>
+        /// <param name="pname">A <see cref="glGetStringParameter"/> specifying the parameter.</param>
         /// <returns>The requested value as <b>string</b>.</returns>
         public static string GetString(StringName pname)
         {
@@ -1014,10 +1014,10 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <summary>
         /// Reads a texture.
         /// </summary>
-        /// <param name="target">A <see cref="TextureProxyTarget"/> specifying the texture target.</param>
+        /// <param name="target">A <see cref="glTextureProxyTarget"/> specifying the texture target.</param>
         /// <param name="level">The level-of-detail to be read.</param>
-        /// <param name="format">A <see cref="PixelFormat"/> specifying the format the pixels a given out.</param>
-        /// <param name="type">A <see cref="PixelDataType"/> specifying the data type the pixels a given out.</param>
+        /// <param name="format">A <see cref="glPixelFormat"/> specifying the format the pixels a given out.</param>
+        /// <param name="type">A <see cref="glPixelDataType"/> specifying the data type the pixels a given out.</param>
         /// <param name="pixels">Pointer to the buffer for the returning data.</param>
         [DllImport(DLLName, EntryPoint = "glGetTexImage")]
         public static extern void GetTexImage(TextureTarget target, int level, PixelFormat format, PixelType type, IntPtr pixels);
@@ -1026,10 +1026,10 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <summary>
         /// Reads a texture.
         /// </summary>
-        /// <param name="target">A <see cref="TextureProxyTarget"/> specifying the texture target.</param>
+        /// <param name="target">A <see cref="glTextureProxyTarget"/> specifying the texture target.</param>
         /// <param name="level">The level-of-detail to be read.</param>
-        /// <param name="format">A <see cref="PixelFormat"/> specifying the format the pixels a given out.</param>
-        /// <param name="type">A <see cref="PixelDataType"/> specifying the data type the pixels a given out.</param>
+        /// <param name="format">A <see cref="glPixelFormat"/> specifying the format the pixels a given out.</param>
+        /// <param name="type">A <see cref="glPixelDataType"/> specifying the data type the pixels a given out.</param>
         /// <param name="offset">The offset into the array bound to <see cref="BufferTarget.PIXEL_PACK_BUFFER"/>.</param>
         public static void GetTexImage(TextureTarget target, int level, PixelFormat format, PixelType type, int offset)
         {
@@ -1039,10 +1039,10 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <summary>
         /// Reads a texture.
         /// </summary>
-        /// <param name="target">A <see cref="TextureProxyTarget"/> specifying the texture target.</param>
+        /// <param name="target">A <see cref="glTextureProxyTarget"/> specifying the texture target.</param>
         /// <param name="level">The level-of-detail to be read.</param>
-        /// <param name="format">A <see cref="PixelFormat"/> specifying the format the pixels a given out.</param>
-        /// <param name="type">A <see cref="PixelDataType"/> specifying the data type the pixels a given out.</param>
+        /// <param name="format">A <see cref="glPixelFormat"/> specifying the format the pixels a given out.</param>
+        /// <param name="type">A <see cref="glPixelDataType"/> specifying the data type the pixels a given out.</param>
         /// <param name="offset">The offset into the array bound to <see cref="BufferTarget.PIXEL_PACK_BUFFER"/>.</param>
         public static void GetTexImage(TextureTarget target, int level, PixelFormat format, PixelType type, long offset)
         {
@@ -1053,10 +1053,10 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <summary>
         /// Reads a texture.
         /// </summary>
-        /// <param name="target">A <see cref="TextureProxyTarget"/> specifying the texture target.</param>
+        /// <param name="target">A <see cref="glTextureProxyTarget"/> specifying the texture target.</param>
         /// <param name="level">The level-of-detail to be read.</param>
-        /// <param name="format">A <see cref="PixelFormat"/> specifying the format the pixels a given out.</param>
-        /// <param name="type">A <see cref="PixelDataType"/> specifying the data type the pixels a given out. Must be <see cref="glPixelDataType.UNSIGNED_BYTE"/>, <see cref="glPixelDataType.UNSIGNED_BYTE_3_3_2"/> or <see cref="glPixelDataType.UNSIGNED_BYTE_2_3_3_REV"/>.</param>
+        /// <param name="format">A <see cref="glPixelFormat"/> specifying the format the pixels a given out.</param>
+        /// <param name="type">A <see cref="glPixelDataType"/> specifying the data type the pixels a given out. Must be <see cref="glPixelDataType.UNSIGNED_BYTE"/>, <see cref="glPixelDataType.UNSIGNED_BYTE_3_3_2"/> or <see cref="glPixelDataType.UNSIGNED_BYTE_2_3_3_REV"/>.</param>
         /// <param name="pixels">Pointer to the buffer for the returning data.</param>
         [DllImport(DLLName, EntryPoint = "glGetTexImage")]
         public static extern void GetTexImage(TextureTarget target, int level, PixelFormat format, PixelType type, byte[] pixels);
@@ -1064,10 +1064,10 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <summary>
         /// Reads a texture.
         /// </summary>
-        /// <param name="target">A <see cref="TextureProxyTarget"/> specifying the texture target.</param>
+        /// <param name="target">A <see cref="glTextureProxyTarget"/> specifying the texture target.</param>
         /// <param name="level">The level-of-detail to be read.</param>
-        /// <param name="format">A <see cref="PixelFormat"/> specifying the format the pixels a given out.</param>
-        /// <param name="type">A <see cref="PixelDataType"/> specifying the data type the pixels a given out. Must be <see cref="glPixelDataType.BYTE"/>.</param>
+        /// <param name="format">A <see cref="glPixelFormat"/> specifying the format the pixels a given out.</param>
+        /// <param name="type">A <see cref="glPixelDataType"/> specifying the data type the pixels a given out. Must be <see cref="glPixelDataType.BYTE"/>.</param>
         /// <param name="pixels">Pointer to the buffer for the returning data.</param>
         [DllImport(DLLName, EntryPoint = "glGetTexImage")]
         [CLSCompliant(false)]
@@ -1076,10 +1076,10 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <summary>
         /// Reads a texture.
         /// </summary>
-        /// <param name="target">A <see cref="TextureProxyTarget"/> specifying the texture target.</param>
+        /// <param name="target">A <see cref="glTextureProxyTarget"/> specifying the texture target.</param>
         /// <param name="level">The level-of-detail to be read.</param>
-        /// <param name="format">A <see cref="PixelFormat"/> specifying the format the pixels a given out.</param>
-        /// <param name="type">A <see cref="PixelDataType"/> specifying the data type the pixels a given out. Must be <see cref="glPixelDataType.SHORT"/>.</param>
+        /// <param name="format">A <see cref="glPixelFormat"/> specifying the format the pixels a given out.</param>
+        /// <param name="type">A <see cref="glPixelDataType"/> specifying the data type the pixels a given out. Must be <see cref="glPixelDataType.SHORT"/>.</param>
         /// <param name="pixels">Pointer to the buffer for the returning data.</param>
         [DllImport(DLLName, EntryPoint = "glGetTexImage")]
         [CLSCompliant(false)]
@@ -1088,10 +1088,10 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <summary>
         /// Reads a texture.
         /// </summary>
-        /// <param name="target">A <see cref="TextureProxyTarget"/> specifying the texture target.</param>
+        /// <param name="target">A <see cref="glTextureProxyTarget"/> specifying the texture target.</param>
         /// <param name="level">The level-of-detail to be read.</param>
-        /// <param name="format">A <see cref="PixelFormat"/> specifying the format the pixels a given out.</param>
-        /// <param name="type">A <see cref="PixelDataType"/> specifying the data type the pixels a given out. Must be <b>PixelType.UNSIGNED_SHORT*</b>.</param>
+        /// <param name="format">A <see cref="glPixelFormat"/> specifying the format the pixels a given out.</param>
+        /// <param name="type">A <see cref="glPixelDataType"/> specifying the data type the pixels a given out. Must be <b>PixelType.UNSIGNED_SHORT*</b>.</param>
         /// <param name="pixels">Pointer to the buffer for the returning data.</param>
         [DllImport(DLLName, EntryPoint = "glGetTexImage")]
         [CLSCompliant(false)]
@@ -1100,10 +1100,10 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <summary>
         /// Reads a texture.
         /// </summary>
-        /// <param name="target">A <see cref="TextureProxyTarget"/> specifying the texture target.</param>
+        /// <param name="target">A <see cref="glTextureProxyTarget"/> specifying the texture target.</param>
         /// <param name="level">The level-of-detail to be read.</param>
-        /// <param name="format">A <see cref="PixelFormat"/> specifying the format the pixels a given out.</param>
-        /// <param name="type">A <see cref="PixelDataType"/> specifying the data type the pixels a given out. Must be <see cref="glPixelDataType.INT"/>.</param>
+        /// <param name="format">A <see cref="glPixelFormat"/> specifying the format the pixels a given out.</param>
+        /// <param name="type">A <see cref="glPixelDataType"/> specifying the data type the pixels a given out. Must be <see cref="glPixelDataType.INT"/>.</param>
         /// <param name="pixels">Pointer to the buffer for the returning data.</param>
         [DllImport(DLLName, EntryPoint = "glGetTexImage")]
         public static extern void GetTexImage(TextureTarget target, int level, PixelFormat format, PixelType type, int[] pixels);
@@ -1111,10 +1111,10 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <summary>
         /// Reads a texture.
         /// </summary>
-        /// <param name="target">A <see cref="TextureProxyTarget"/> specifying the texture target.</param>
+        /// <param name="target">A <see cref="glTextureProxyTarget"/> specifying the texture target.</param>
         /// <param name="level">The level-of-detail to be read.</param>
-        /// <param name="format">A <see cref="PixelFormat"/> specifying the format the pixels a given out.</param>
-        /// <param name="type">A <see cref="PixelDataType"/> specifying the data type the pixels a given out. Must be <b>PixelType.UNSIGNED_INT*</b>.</param>
+        /// <param name="format">A <see cref="glPixelFormat"/> specifying the format the pixels a given out.</param>
+        /// <param name="type">A <see cref="glPixelDataType"/> specifying the data type the pixels a given out. Must be <b>PixelType.UNSIGNED_INT*</b>.</param>
         /// <param name="pixels">Pointer to the buffer for the returning data.</param>
         [DllImport(DLLName, EntryPoint = "glGetTexImage")]
         [CLSCompliant(false)]
@@ -1123,10 +1123,10 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <summary>
         /// Reads a texture. (For future use. Type not yet supported.)
         /// </summary>
-        /// <param name="target">A <see cref="TextureProxyTarget"/> specifying the texture target.</param>
+        /// <param name="target">A <see cref="glTextureProxyTarget"/> specifying the texture target.</param>
         /// <param name="level">The level-of-detail to be read.</param>
-        /// <param name="format">A <see cref="PixelFormat"/> specifying the format the pixels a given out.</param>
-        /// <param name="type">A <see cref="PixelDataType"/> specifying the data type the pixels a given out.</param>
+        /// <param name="format">A <see cref="glPixelFormat"/> specifying the format the pixels a given out.</param>
+        /// <param name="type">A <see cref="glPixelDataType"/> specifying the data type the pixels a given out.</param>
         /// <param name="pixels">Pointer to the buffer for the returning data.</param>
         [DllImport(DLLName, EntryPoint = "glGetTexImage")]
         public static extern void GetTexImage(TextureTarget target, int level, PixelFormat format, PixelType type, long[] pixels);
@@ -1134,10 +1134,10 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <summary>
         /// Reads a texture. (For future use. Type not yet supported.)
         /// </summary>
-        /// <param name="target">A <see cref="TextureProxyTarget"/> specifying the texture target.</param>
+        /// <param name="target">A <see cref="glTextureProxyTarget"/> specifying the texture target.</param>
         /// <param name="level">The level-of-detail to be read.</param>
-        /// <param name="format">A <see cref="PixelFormat"/> specifying the format the pixels a given out.</param>
-        /// <param name="type">A <see cref="PixelDataType"/> specifying the data type the pixels a given out.</param>
+        /// <param name="format">A <see cref="glPixelFormat"/> specifying the format the pixels a given out.</param>
+        /// <param name="type">A <see cref="glPixelDataType"/> specifying the data type the pixels a given out.</param>
         /// <param name="pixels">Pointer to the buffer for the returning data.</param>
         [DllImport(DLLName, EntryPoint = "glGetTexImage")]
         [CLSCompliant(false)]
@@ -1146,10 +1146,10 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <summary>
         /// Reads a texture.
         /// </summary>
-        /// <param name="target">A <see cref="TextureProxyTarget"/> specifying the texture target.</param>
+        /// <param name="target">A <see cref="glTextureProxyTarget"/> specifying the texture target.</param>
         /// <param name="level">The level-of-detail to be read.</param>
-        /// <param name="format">A <see cref="PixelFormat"/> specifying the format the pixels a given out.</param>
-        /// <param name="type">A <see cref="PixelDataType"/> specifying the data type the pixels a given out. Must be <see cref="glPixelDataType.FLOAT"/>.</param>
+        /// <param name="format">A <see cref="glPixelFormat"/> specifying the format the pixels a given out.</param>
+        /// <param name="type">A <see cref="glPixelDataType"/> specifying the data type the pixels a given out. Must be <see cref="glPixelDataType.FLOAT"/>.</param>
         /// <param name="pixels">Pointer to the buffer for the returning data.</param>
         [DllImport(DLLName, EntryPoint = "glGetTexImage")]
         public static extern void GetTexImage(TextureTarget target, int level, PixelFormat format, PixelType type, float[] pixels);
@@ -1157,10 +1157,10 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <summary>
         /// Reads a texture. (For future use. Type not yet supported.)
         /// </summary>
-        /// <param name="target">A <see cref="TextureProxyTarget"/> specifying the texture target.</param>
+        /// <param name="target">A <see cref="glTextureProxyTarget"/> specifying the texture target.</param>
         /// <param name="level">The level-of-detail to be read.</param>
-        /// <param name="format">A <see cref="PixelFormat"/> specifying the format the pixels a given out.</param>
-        /// <param name="type">A <see cref="PixelDataType"/> specifying the data type the pixels a given out.</param>
+        /// <param name="format">A <see cref="glPixelFormat"/> specifying the format the pixels a given out.</param>
+        /// <param name="type">A <see cref="glPixelDataType"/> specifying the data type the pixels a given out.</param>
         /// <param name="pixels">Pointer to the buffer for the returning data.</param>
         [DllImport(DLLName, EntryPoint = "glGetTexImage")]
         public static extern void GetTexImage(TextureTarget target, int level, PixelFormat format, PixelType type, double[] pixels);
@@ -1233,7 +1233,7 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// Returns the value of a texture parameter.
         /// </summary>
         /// <param name="target">A <see cref="TextureTarget"/> specifying the texture target.</param>
-        /// <param name="pname">Must be <see cref="TextureParameterName.TextureCompareMode"/>.</param>
+        /// <param name="pname">Must be <see cref="TextureParameterName.TEXTURE_COMPARE_MODE"/>.</param>
         /// <param name="param">Returns the requested value.</param>
         [DllImport(DLLName, EntryPoint = "glGetTexParameteriv")]
         public static extern void GetTexParameteriv(TextureTarget target, TextureParameterName pname, out TextureCompareMode param);
@@ -1242,7 +1242,7 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// Returns the value of a texture parameter.
         /// </summary>
         /// <param name="target">A <see cref="TextureTarget"/> specifying the texture target.</param>
-        /// <param name="pname">Must be <see cref="TextureParameterName.TextureCompareFunc"/>.</param>
+        /// <param name="pname">Must be <see cref="TextureParameterName.TEXTURE_COMPARE_FUNC"/>.</param>
         /// <param name="param">Returns the requested value.</param>
         [DllImport(DLLName, EntryPoint = "glGetTexParameteriv")]
         public static extern void GetTexParameteriv(TextureTarget target, TextureParameterName pname, out AlphaFunction param);
@@ -1251,7 +1251,7 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// Returns the value of a texture parameter.
         /// </summary>
         /// <param name="target">A <see cref="TextureTarget"/> specifying the texture target.</param>
-        /// <param name="pname">Must be <see cref="TextureParameterName.DepthStencilTextureMode"/>.</param>
+        /// <param name="pname">Must be <see cref="TextureParameterName.DEPTH_STENCIL_TEXTURE_MODE"/>.</param>
         /// <param name="param">Returns the requested value.</param>
         [DllImport(DLLName, EntryPoint = "glGetTexParameteriv")]
         public static extern void GetTexParameteriv(TextureTarget target, TextureParameterName pname, out DepthStencilTextureMode param);
@@ -1359,841 +1359,11 @@ namespace AlienEngine.Core.Graphics.OpenGL
         [DllImport(DLLName, EntryPoint = "glViewport")]
         public static extern void Viewport(int x, int y, int width, int height);
 
-        /// <summary>[requires: v1.0][deprecated: v3.2]
-        /// Push and pop the current matrix stack
-        /// </summary>
-        [DllImport(DLLName, EntryPoint = "glPushMatrix")]
-        public static extern void PushMatrix();
-
-        /// <summary>[requires: v1.0][deprecated: v3.2]
-        /// Multiply the current matrix by a translation matrix
-        /// </summary>
-        /// <param name="x"> 
-        /// Specify the x, y, and z coordinates of a translation vector.
-        /// </param>
-        /// <param name="y"> 
-        /// Specify the x, y, and z coordinates of a translation vector.
-        /// </param>
-        /// <param name="z"> 
-        /// Specify the x, y, and z coordinates of a translation vector.
-        /// </param>
-        [DllImport(DLLName, EntryPoint = "glTranslated")]
-        public static extern void Translate(Double x, Double y, Double z);
-
-        /// <summary>[requires: v1.0][deprecated: v3.2]
-        /// Multiply the current matrix by a translation matrix
-        /// </summary>
-        /// <param name="x"> 
-        /// Specify the x, y, and z coordinates of a translation vector.
-        /// </param>
-        /// <param name="y"> 
-        /// Specify the x, y, and z coordinates of a translation vector.
-        /// </param>
-        /// <param name="z"> 
-        /// Specify the x, y, and z coordinates of a translation vector.
-        /// </param>
-        [DllImport(DLLName, EntryPoint = "glTranslatef")]
-        public static extern void Translate(Single x, Single y, Single z);
-
-        /// <summary>[requires: v1.0][deprecated: v3.2]
-        /// Set the current color
-        /// </summary>
-        /// <param name="red"> 
-        /// Specify new red, green, and blue values for the current color.
-        /// </param>
-        /// <param name="green"> 
-        /// Specify new red, green, and blue values for the current color.
-        /// </param>
-        /// <param name="blue"> 
-        /// Specify new red, green, and blue values for the current color.
-        /// </param>
-        [DllImport(DLLName, EntryPoint = "glColor3b")]
-        [CLSCompliant(false)]
-        public static extern void Color3(SByte red, SByte green, SByte blue);
-
-        /// <summary>[requires: v1.0][deprecated: v3.2]
-        /// Set the current color
-        /// </summary>
-        /// <param name="v">[length: 3] 
-        /// Specify new red, green, and blue values for the current color.
-        /// </param>
-        [DllImport(DLLName, EntryPoint = "glColor3bv")]
-        [CLSCompliant(false)]
-        public static extern void Color3(SByte[] v);
-
-        /// <summary>[requires: v1.0][deprecated: v3.2]
-        /// Set the current color
-        /// </summary>
-        /// <param name="v">[length: 3] 
-        /// Specify new red, green, and blue values for the current color.
-        /// </param>
-        [DllImport(DLLName, EntryPoint = "glColor3bv")]
-        [CLSCompliant(false)]
-        public static extern void Color3(ref SByte v);
-
-        /// <summary>[requires: v1.0][deprecated: v3.2]
-        /// Set the current color
-        /// </summary>
-        /// <param name="v">[length: 3] 
-        /// Specify new red, green, and blue values for the current color.
-        /// </param>
-        [DllImport(DLLName, EntryPoint = "glColor3bv")]
-        [CLSCompliant(false)]
-        public static extern unsafe void Color3(SByte* v);
-
-        /// <summary>[requires: v1.0][deprecated: v3.2]
-        /// Set the current color
-        /// </summary>
-        /// <param name="red"> 
-        /// Specify new red, green, and blue values for the current color.
-        /// </param>
-        /// <param name="green"> 
-        /// Specify new red, green, and blue values for the current color.
-        /// </param>
-        /// <param name="blue"> 
-        /// Specify new red, green, and blue values for the current color.
-        /// </param>
-        [DllImport(DLLName, EntryPoint = "glColor3d")]
-        public static extern void Color3(Double red, Double green, Double blue);
-
-        /// <summary>[requires: v1.0][deprecated: v3.2]
-        /// Set the current color
-        /// </summary>
-        /// <param name="v">[length: 3] 
-        /// Specify new red, green, and blue values for the current color.
-        /// </param>
-        [DllImport(DLLName, EntryPoint = "glColor3dv")]
-        [CLSCompliant(false)]
-        public static extern void Color3(Double[] v);
-
-        /// <summary>[requires: v1.0][deprecated: v3.2]
-        /// Set the current color
-        /// </summary>
-        /// <param name="v">[length: 3] 
-        /// Specify new red, green, and blue values for the current color.
-        /// </param>
-        [DllImport(DLLName, EntryPoint = "glColor3dv")]
-        [CLSCompliant(false)]
-        public static extern void Color3(ref Double v);
-
-        /// <summary>[requires: v1.0][deprecated: v3.2]
-        /// Set the current color
-        /// </summary>
-        /// <param name="v">[length: 3] 
-        /// Specify new red, green, and blue values for the current color.
-        /// </param>
-        [DllImport(DLLName, EntryPoint = "glColor3dv")]
-        [CLSCompliant(false)]
-        public static extern unsafe void Color3(Double* v);
-
-        /// <summary>[requires: v1.0][deprecated: v3.2]
-        /// Set the current color
-        /// </summary>
-        /// <param name="red"> 
-        /// Specify new red, green, and blue values for the current color.
-        /// </param>
-        /// <param name="green"> 
-        /// Specify new red, green, and blue values for the current color.
-        /// </param>
-        /// <param name="blue"> 
-        /// Specify new red, green, and blue values for the current color.
-        /// </param>
-        [DllImport(DLLName, EntryPoint = "glColor3f")]
-        public static extern void Color3(Single red, Single green, Single blue);
-
-        /// <summary>[requires: v1.0][deprecated: v3.2]
-        /// Set the current color
-        /// </summary>
-        /// <param name="v">[length: 3] 
-        /// Specify new red, green, and blue values for the current color.
-        /// </param>
-        [DllImport(DLLName, EntryPoint = "glColor3fv")]
-        [CLSCompliant(false)]
-        public static extern void Color3(Single[] v);
-
-        /// <summary>[requires: v1.0][deprecated: v3.2]
-        /// Set the current color
-        /// </summary>
-        /// <param name="v">[length: 3] 
-        /// Specify new red, green, and blue values for the current color.
-        /// </param>
-        [DllImport(DLLName, EntryPoint = "glColor3fv")]
-        [CLSCompliant(false)]
-        public static extern void Color3(ref Single v);
-
-        /// <summary>[requires: v1.0][deprecated: v3.2]
-        /// Set the current color
-        /// </summary>
-        /// <param name="v">[length: 3] 
-        /// Specify new red, green, and blue values for the current color.
-        /// </param>
-        [DllImport(DLLName, EntryPoint = "glColor3fv")]
-        [CLSCompliant(false)]
-        public static extern unsafe void Color3(Single* v);
-
-        /// <summary>[requires: v1.0][deprecated: v3.2]
-        /// Set the current color
-        /// </summary>
-        /// <param name="red"> 
-        /// Specify new red, green, and blue values for the current color.
-        /// </param>
-        /// <param name="green"> 
-        /// Specify new red, green, and blue values for the current color.
-        /// </param>
-        /// <param name="blue"> 
-        /// Specify new red, green, and blue values for the current color.
-        /// </param>
-        [DllImport(DLLName, EntryPoint = "glColor3i")]
-        public static extern void Color3(Int32 red, Int32 green, Int32 blue);
-
-        /// <summary>[requires: v1.0][deprecated: v3.2]
-        /// Set the current color
-        /// </summary>
-        /// <param name="v">[length: 3] 
-        /// Specify new red, green, and blue values for the current color.
-        /// </param>
-        [DllImport(DLLName, EntryPoint = "glColor3iv")]
-        [CLSCompliant(false)]
-        public static extern void Color3(Int32[] v);
-
-        /// <summary>[requires: v1.0][deprecated: v3.2]
-        /// Set the current color
-        /// </summary>
-        /// <param name="v">[length: 3] 
-        /// Specify new red, green, and blue values for the current color.
-        /// </param>
-        [DllImport(DLLName, EntryPoint = "glColor3iv")]
-        [CLSCompliant(false)]
-        public static extern void Color3(ref Int32 v);
-
-        /// <summary>[requires: v1.0][deprecated: v3.2]
-        /// Set the current color
-        /// </summary>
-        /// <param name="v">[length: 3] 
-        /// Specify new red, green, and blue values for the current color.
-        /// </param>
-        [DllImport(DLLName, EntryPoint = "glColor3iv")]
-        [CLSCompliant(false)]
-        public static extern unsafe void Color3(Int32* v);
-
-        /// <summary>[requires: v1.0][deprecated: v3.2]
-        /// Set the current color
-        /// </summary>
-        /// <param name="red"> 
-        /// Specify new red, green, and blue values for the current color.
-        /// </param>
-        /// <param name="green"> 
-        /// Specify new red, green, and blue values for the current color.
-        /// </param>
-        /// <param name="blue"> 
-        /// Specify new red, green, and blue values for the current color.
-        /// </param>
-        [DllImport(DLLName, EntryPoint = "glColor3s")]
-        public static extern void Color3(Int16 red, Int16 green, Int16 blue);
-
-        /// <summary>[requires: v1.0][deprecated: v3.2]
-        /// Set the current color
-        /// </summary>
-        /// <param name="v">[length: 3] 
-        /// Specify new red, green, and blue values for the current color.
-        /// </param>
-        [DllImport(DLLName, EntryPoint = "glColor3sv")]
-        [CLSCompliant(false)]
-        public static extern void Color3(Int16[] v);
-
-        /// <summary>[requires: v1.0][deprecated: v3.2]
-        /// Set the current color
-        /// </summary>
-        /// <param name="v">[length: 3] 
-        /// Specify new red, green, and blue values for the current color.
-        /// </param>
-        [DllImport(DLLName, EntryPoint = "glColor3sv")]
-        [CLSCompliant(false)]
-        public static extern void Color3(ref Int16 v);
-
-        /// <summary>[requires: v1.0][deprecated: v3.2]
-        /// Set the current color
-        /// </summary>
-        /// <param name="v">[length: 3] 
-        /// Specify new red, green, and blue values for the current color.
-        /// </param>
-        [DllImport(DLLName, EntryPoint = "glColor3sv")]
-        [CLSCompliant(false)]
-        public static extern unsafe void Color3(Int16* v);
-
-        /// <summary>[requires: v1.0][deprecated: v3.2]
-        /// Set the current color
-        /// </summary>
-        /// <param name="red"> 
-        /// Specify new red, green, and blue values for the current color.
-        /// </param>
-        /// <param name="green"> 
-        /// Specify new red, green, and blue values for the current color.
-        /// </param>
-        /// <param name="blue"> 
-        /// Specify new red, green, and blue values for the current color.
-        /// </param>
-        [DllImport(DLLName, EntryPoint = "glColor3ub")]
-        public static extern void Color3(Byte red, Byte green, Byte blue);
-
-        /// <summary>[requires: v1.0][deprecated: v3.2]
-        /// Set the current color
-        /// </summary>
-        /// <param name="v">[length: 3] 
-        /// Specify new red, green, and blue values for the current color.
-        /// </param>
-        [DllImport(DLLName, EntryPoint = "glColor3ubv")]
-        [CLSCompliant(false)]
-        public static extern void Color3(Byte[] v);
-
-        /// <summary>[requires: v1.0][deprecated: v3.2]
-        /// Set the current color
-        /// </summary>
-        /// <param name="v">[length: 3] 
-        /// Specify new red, green, and blue values for the current color.
-        /// </param>
-        [DllImport(DLLName, EntryPoint = "glColor3ubv")]
-        [CLSCompliant(false)]
-        public static extern void Color3(ref Byte v);
-
-        /// <summary>[requires: v1.0][deprecated: v3.2]
-        /// Set the current color
-        /// </summary>
-        /// <param name="v">[length: 3] 
-        /// Specify new red, green, and blue values for the current color.
-        /// </param>
-        [DllImport(DLLName, EntryPoint = "glColor3ubv")]
-        [CLSCompliant(false)]
-        public static extern unsafe void Color3(Byte* v);
-
-        /// <summary>[requires: v1.0][deprecated: v3.2]
-        /// Set the current color
-        /// </summary>
-        /// <param name="red"> 
-        /// Specify new red, green, and blue values for the current color.
-        /// </param>
-        /// <param name="green"> 
-        /// Specify new red, green, and blue values for the current color.
-        /// </param>
-        /// <param name="blue"> 
-        /// Specify new red, green, and blue values for the current color.
-        /// </param>
-        [DllImport(DLLName, EntryPoint = "glColor3ui")]
-        [CLSCompliant(false)]
-        public static extern void Color3(UInt32 red, UInt32 green, UInt32 blue);
-
-        /// <summary>[requires: v1.0][deprecated: v3.2]
-        /// Set the current color
-        /// </summary>
-        /// <param name="v">[length: 3] 
-        /// Specify new red, green, and blue values for the current color.
-        /// </param>
-        [DllImport(DLLName, EntryPoint = "glColor3uiv")]
-        [CLSCompliant(false)]
-        public static extern void Color3(UInt32[] v);
-
-        /// <summary>[requires: v1.0][deprecated: v3.2]
-        /// Set the current color
-        /// </summary>
-        /// <param name="v">[length: 3] 
-        /// Specify new red, green, and blue values for the current color.
-        /// </param>
-        [DllImport(DLLName, EntryPoint = "glColor3uiv")]
-        [CLSCompliant(false)]
-        public static extern void Color3(ref UInt32 v);
-
-        /// <summary>[requires: v1.0][deprecated: v3.2]
-        /// Set the current color
-        /// </summary>
-        /// <param name="v">[length: 3] 
-        /// Specify new red, green, and blue values for the current color.
-        /// </param>
-        [DllImport(DLLName, EntryPoint = "glColor3uiv")]
-        [CLSCompliant(false)]
-        public static extern unsafe void Color3(UInt32* v);
-
-        /// <summary>[requires: v1.0][deprecated: v3.2]
-        /// Set the current color
-        /// </summary>
-        /// <param name="red"> 
-        /// Specify new red, green, and blue values for the current color.
-        /// </param>
-        /// <param name="green"> 
-        /// Specify new red, green, and blue values for the current color.
-        /// </param>
-        /// <param name="blue"> 
-        /// Specify new red, green, and blue values for the current color.
-        /// </param>
-        [DllImport(DLLName, EntryPoint = "glColor3us")]
-        [CLSCompliant(false)]
-        public static extern void Color3(UInt16 red, UInt16 green, UInt16 blue);
-
-        /// <summary>[requires: v1.0][deprecated: v3.2]
-        /// Set the current color
-        /// </summary>
-        /// <param name="v">[length: 3] 
-        /// Specify new red, green, and blue values for the current color.
-        /// </param>
-        [DllImport(DLLName, EntryPoint = "glColor3usv")]
-        [CLSCompliant(false)]
-        public static extern void Color3(UInt16[] v);
-
-        /// <summary>[requires: v1.0][deprecated: v3.2]
-        /// Set the current color
-        /// </summary>
-        /// <param name="v">[length: 3] 
-        /// Specify new red, green, and blue values for the current color.
-        /// </param>
-        [DllImport(DLLName, EntryPoint = "glColor3usv")]
-        [CLSCompliant(false)]
-        public static extern void Color3(ref UInt16 v);
-
-        /// <summary>[requires: v1.0][deprecated: v3.2]
-        /// Set the current color
-        /// </summary>
-        /// <param name="v">[length: 3] 
-        /// Specify new red, green, and blue values for the current color.
-        /// </param>
-        [DllImport(DLLName, EntryPoint = "glColor3usv")]
-        [CLSCompliant(false)]
-        public static extern unsafe void Color3(UInt16* v);
-
-        /// <summary>[requires: v1.0][deprecated: v3.2]
-        /// Set the current color
-        /// </summary>
-        /// <param name="red"> 
-        /// Specify new red, green, and blue values for the current color.
-        /// </param>
-        /// <param name="green"> 
-        /// Specify new red, green, and blue values for the current color.
-        /// </param>
-        /// <param name="blue"> 
-        /// Specify new red, green, and blue values for the current color.
-        /// </param>
-        /// <param name="alpha"> 
-        /// Specifies a new alpha value for the current color. Included only in the four-argument glColor4 commands.
-        /// </param>
-        [DllImport(DLLName, EntryPoint = "glColor4b")]
-        [CLSCompliant(false)]
-        public static extern void Color4(SByte red, SByte green, SByte blue, SByte alpha);
-
-        /// <summary>[requires: v1.0][deprecated: v3.2]
-        /// Set the current color
-        /// </summary>
-        /// <param name="v">[length: 4] 
-        /// Specify new red, green, and blue values for the current color.
-        /// </param>
-        [DllImport(DLLName, EntryPoint = "glColor4bv")]
-        [CLSCompliant(false)]
-        public static extern void Color4(SByte[] v);
-
-        /// <summary>[requires: v1.0][deprecated: v3.2]
-        /// Set the current color
-        /// </summary>
-        /// <param name="v">[length: 4] 
-        /// Specify new red, green, and blue values for the current color.
-        /// </param>
-        [DllImport(DLLName, EntryPoint = "glColor4bv")]
-        [CLSCompliant(false)]
-        public static extern void Color4(ref SByte v);
-
-        /// <summary>[requires: v1.0][deprecated: v3.2]
-        /// Set the current color
-        /// </summary>
-        /// <param name="v">[length: 4] 
-        /// Specify new red, green, and blue values for the current color.
-        /// </param>
-        [DllImport(DLLName, EntryPoint = "glColor4bv")]
-        [CLSCompliant(false)]
-        public static extern unsafe void Color4(SByte* v);
-
-        /// <summary>[requires: v1.0][deprecated: v3.2]
-        /// Set the current color
-        /// </summary>
-        /// <param name="red"> 
-        /// Specify new red, green, and blue values for the current color.
-        /// </param>
-        /// <param name="green"> 
-        /// Specify new red, green, and blue values for the current color.
-        /// </param>
-        /// <param name="blue"> 
-        /// Specify new red, green, and blue values for the current color.
-        /// </param>
-        /// <param name="alpha"> 
-        /// Specifies a new alpha value for the current color. Included only in the four-argument glColor4 commands.
-        /// </param>
-        [DllImport(DLLName, EntryPoint = "glColor4d")]
-        public static extern void Color4(Double red, Double green, Double blue, Double alpha);
-
-        /// <summary>[requires: v1.0][deprecated: v3.2]
-        /// Set the current color
-        /// </summary>
-        /// <param name="v">[length: 4] 
-        /// Specify new red, green, and blue values for the current color.
-        /// </param>
-        [DllImport(DLLName, EntryPoint = "glColor4dv")]
-        [CLSCompliant(false)]
-        public static extern void Color4(Double[] v);
-
-        /// <summary>[requires: v1.0][deprecated: v3.2]
-        /// Set the current color
-        /// </summary>
-        /// <param name="v">[length: 4] 
-        /// Specify new red, green, and blue values for the current color.
-        /// </param>
-        [DllImport(DLLName, EntryPoint = "glColor4dv")]
-        [CLSCompliant(false)]
-        public static extern void Color4(ref Double v);
-
-        /// <summary>[requires: v1.0][deprecated: v3.2]
-        /// Set the current color
-        /// </summary>
-        /// <param name="v">[length: 4] 
-        /// Specify new red, green, and blue values for the current color.
-        /// </param>
-        [DllImport(DLLName, EntryPoint = "glColor4dv")]
-        [CLSCompliant(false)]
-        public static extern unsafe void Color4(Double* v);
-
-        /// <summary>[requires: v1.0][deprecated: v3.2]
-        /// Set the current color
-        /// </summary>
-        /// <param name="red"> 
-        /// Specify new red, green, and blue values for the current color.
-        /// </param>
-        /// <param name="green"> 
-        /// Specify new red, green, and blue values for the current color.
-        /// </param>
-        /// <param name="blue"> 
-        /// Specify new red, green, and blue values for the current color.
-        /// </param>
-        /// <param name="alpha"> 
-        /// Specifies a new alpha value for the current color. Included only in the four-argument glColor4 commands.
-        /// </param>
-        [DllImport(DLLName, EntryPoint = "glColor4f")]
-        public static extern void Color4(Single red, Single green, Single blue, Single alpha);
-
-        /// <summary>[requires: v1.0][deprecated: v3.2]
-        /// Set the current color
-        /// </summary>
-        /// <param name="v">[length: 4] 
-        /// Specify new red, green, and blue values for the current color.
-        /// </param>
-        [DllImport(DLLName, EntryPoint = "glColor4fv")]
-        [CLSCompliant(false)]
-        public static extern void Color4(Single[] v);
-
-        /// <summary>[requires: v1.0][deprecated: v3.2]
-        /// Set the current color
-        /// </summary>
-        /// <param name="v">[length: 4] 
-        /// Specify new red, green, and blue values for the current color.
-        /// </param>
-        [DllImport(DLLName, EntryPoint = "glColor4fv")]
-        [CLSCompliant(false)]
-        public static extern void Color4(ref Single v);
-
-        /// <summary>[requires: v1.0][deprecated: v3.2]
-        /// Set the current color
-        /// </summary>
-        /// <param name="v">[length: 4] 
-        /// Specify new red, green, and blue values for the current color.
-        /// </param>
-        [DllImport(DLLName, EntryPoint = "glColor4fv")]
-        [CLSCompliant(false)]
-        public static extern unsafe void Color4(Single* v);
-
-        /// <summary>[requires: v1.0][deprecated: v3.2]
-        /// Set the current color
-        /// </summary>
-        /// <param name="red"> 
-        /// Specify new red, green, and blue values for the current color.
-        /// </param>
-        /// <param name="green"> 
-        /// Specify new red, green, and blue values for the current color.
-        /// </param>
-        /// <param name="blue"> 
-        /// Specify new red, green, and blue values for the current color.
-        /// </param>
-        /// <param name="alpha"> 
-        /// Specifies a new alpha value for the current color. Included only in the four-argument glColor4 commands.
-        /// </param>
-        [DllImport(DLLName, EntryPoint = "glColor4i")]
-        public static extern void Color4(Int32 red, Int32 green, Int32 blue, Int32 alpha);
-
-        /// <summary>[requires: v1.0][deprecated: v3.2]
-        /// Set the current color
-        /// </summary>
-        /// <param name="v">[length: 4] 
-        /// Specify new red, green, and blue values for the current color.
-        /// </param>
-        [DllImport(DLLName, EntryPoint = "glColor4iv")]
-        [CLSCompliant(false)]
-        public static extern void Color4(Int32[] v);
-
-        /// <summary>[requires: v1.0][deprecated: v3.2]
-        /// Set the current color
-        /// </summary>
-        /// <param name="v">[length: 4] 
-        /// Specify new red, green, and blue values for the current color.
-        /// </param>
-        [DllImport(DLLName, EntryPoint = "glColor4iv")]
-        [CLSCompliant(false)]
-        public static extern void Color4(ref Int32 v);
-
-        /// <summary>[requires: v1.0][deprecated: v3.2]
-        /// Set the current color
-        /// </summary>
-        /// <param name="v">[length: 4] 
-        /// Specify new red, green, and blue values for the current color.
-        /// </param>
-        [DllImport(DLLName, EntryPoint = "glColor4iv")]
-        [CLSCompliant(false)]
-        public static extern unsafe void Color4(Int32* v);
-
-        /// <summary>[requires: v1.0][deprecated: v3.2]
-        /// Set the current color
-        /// </summary>
-        /// <param name="red"> 
-        /// Specify new red, green, and blue values for the current color.
-        /// </param>
-        /// <param name="green"> 
-        /// Specify new red, green, and blue values for the current color.
-        /// </param>
-        /// <param name="blue"> 
-        /// Specify new red, green, and blue values for the current color.
-        /// </param>
-        /// <param name="alpha"> 
-        /// Specifies a new alpha value for the current color. Included only in the four-argument glColor4 commands.
-        /// </param>
-        [DllImport(DLLName, EntryPoint = "glColor4s")]
-        public static extern void Color4(Int16 red, Int16 green, Int16 blue, Int16 alpha);
-
-        /// <summary>[requires: v1.0][deprecated: v3.2]
-        /// Set the current color
-        /// </summary>
-        /// <param name="v">[length: 4] 
-        /// Specify new red, green, and blue values for the current color.
-        /// </param>
-        [DllImport(DLLName, EntryPoint = "glColor4sv")]
-        [CLSCompliant(false)]
-        public static extern void Color4(Int16[] v);
-
-        /// <summary>[requires: v1.0][deprecated: v3.2]
-        /// Set the current color
-        /// </summary>
-        /// <param name="v">[length: 4] 
-        /// Specify new red, green, and blue values for the current color.
-        /// </param>
-        [DllImport(DLLName, EntryPoint = "glColor4sv")]
-        [CLSCompliant(false)]
-        public static extern void Color4(ref Int16 v);
-
-        /// <summary>[requires: v1.0][deprecated: v3.2]
-        /// Set the current color
-        /// </summary>
-        /// <param name="v">[length: 4] 
-        /// Specify new red, green, and blue values for the current color.
-        /// </param>
-        [DllImport(DLLName, EntryPoint = "glColor4sv")]
-        [CLSCompliant(false)]
-        public static extern unsafe void Color4(Int16* v);
-
-        /// <summary>[requires: v1.0][deprecated: v3.2]
-        /// Set the current color
-        /// </summary>
-        /// <param name="red"> 
-        /// Specify new red, green, and blue values for the current color.
-        /// </param>
-        /// <param name="green"> 
-        /// Specify new red, green, and blue values for the current color.
-        /// </param>
-        /// <param name="blue"> 
-        /// Specify new red, green, and blue values for the current color.
-        /// </param>
-        /// <param name="alpha"> 
-        /// Specifies a new alpha value for the current color. Included only in the four-argument glColor4 commands.
-        /// </param>
-        [DllImport(DLLName, EntryPoint = "glColor4ub")]
-        public static extern void Color4(Byte red, Byte green, Byte blue, Byte alpha);
-
-        /// <summary>[requires: v1.0][deprecated: v3.2]
-        /// Set the current color
-        /// </summary>
-        /// <param name="v">[length: 4] 
-        /// Specify new red, green, and blue values for the current color.
-        /// </param>
-        [DllImport(DLLName, EntryPoint = "glColor4ubv")]
-        [CLSCompliant(false)]
-        public static extern void Color4(Byte[] v);
-
-        /// <summary>[requires: v1.0][deprecated: v3.2]
-        /// Set the current color
-        /// </summary>
-        /// <param name="v">[length: 4] 
-        /// Specify new red, green, and blue values for the current color.
-        /// </param>
-        [DllImport(DLLName, EntryPoint = "glColor4ubv")]
-        [CLSCompliant(false)]
-        public static extern void Color4(ref Byte v);
-
-        /// <summary>[requires: v1.0][deprecated: v3.2]
-        /// Set the current color
-        /// </summary>
-        /// <param name="v">[length: 4] 
-        /// Specify new red, green, and blue values for the current color.
-        /// </param>
-        [DllImport(DLLName, EntryPoint = "glColor4ubv")]
-        [CLSCompliant(false)]
-        public static extern unsafe void Color4(Byte* v);
-
-        /// <summary>[requires: v1.0][deprecated: v3.2]
-        /// Set the current color
-        /// </summary>
-        /// <param name="red"> 
-        /// Specify new red, green, and blue values for the current color.
-        /// </param>
-        /// <param name="green"> 
-        /// Specify new red, green, and blue values for the current color.
-        /// </param>
-        /// <param name="blue"> 
-        /// Specify new red, green, and blue values for the current color.
-        /// </param>
-        /// <param name="alpha"> 
-        /// Specifies a new alpha value for the current color. Included only in the four-argument glColor4 commands.
-        /// </param>
-        [DllImport(DLLName, EntryPoint = "glColor4ui")]
-        [CLSCompliant(false)]
-        public static extern void Color4(UInt32 red, UInt32 green, UInt32 blue, UInt32 alpha);
-
-        /// <summary>[requires: v1.0][deprecated: v3.2]
-        /// Set the current color
-        /// </summary>
-        /// <param name="v">[length: 4] 
-        /// Specify new red, green, and blue values for the current color.
-        /// </param>
-        [DllImport(DLLName, EntryPoint = "glColor4uiv")]
-        [CLSCompliant(false)]
-        public static extern void Color4(UInt32[] v);
-
-        /// <summary>[requires: v1.0][deprecated: v3.2]
-        /// Set the current color
-        /// </summary>
-        /// <param name="v">[length: 4] 
-        /// Specify new red, green, and blue values for the current color.
-        /// </param>
-        [DllImport(DLLName, EntryPoint = "glColor4uiv")]
-        [CLSCompliant(false)]
-        public static extern void Color4(ref UInt32 v);
-
-        /// <summary>[requires: v1.0][deprecated: v3.2]
-        /// Set the current color
-        /// </summary>
-        /// <param name="v">[length: 4] 
-        /// Specify new red, green, and blue values for the current color.
-        /// </param>
-        [DllImport(DLLName, EntryPoint = "glColor4uiv")]
-        [CLSCompliant(false)]
-        public static extern unsafe void Color4(UInt32* v);
-
-        /// <summary>[requires: v1.0][deprecated: v3.2]
-        /// Set the current color
-        /// </summary>
-        /// <param name="red"> 
-        /// Specify new red, green, and blue values for the current color.
-        /// </param>
-        /// <param name="green"> 
-        /// Specify new red, green, and blue values for the current color.
-        /// </param>
-        /// <param name="blue"> 
-        /// Specify new red, green, and blue values for the current color.
-        /// </param>
-        /// <param name="alpha"> 
-        /// Specifies a new alpha value for the current color. Included only in the four-argument glColor4 commands.
-        /// </param>
-        [DllImport(DLLName, EntryPoint = "glColor4us")]
-        [CLSCompliant(false)]
-        public static extern void Color4(UInt16 red, UInt16 green, UInt16 blue, UInt16 alpha);
-
-        /// <summary>[requires: v1.0][deprecated: v3.2]
-        /// Set the current color
-        /// </summary>
-        /// <param name="v">[length: 4] 
-        /// Specify new red, green, and blue values for the current color.
-        /// </param>
-        [DllImport(DLLName, EntryPoint = "glColor4usv")]
-        [CLSCompliant(false)]
-        public static extern void Color4(UInt16[] v);
-
-        /// <summary>[requires: v1.0][deprecated: v3.2]
-        /// Set the current color
-        /// </summary>
-        /// <param name="v">[length: 4] 
-        /// Specify new red, green, and blue values for the current color.
-        /// </param>
-        [DllImport(DLLName, EntryPoint = "glColor4usv")]
-        [CLSCompliant(false)]
-        public static extern void Color4(ref UInt16 v);
-
-        /// <summary>[requires: v1.0][deprecated: v3.2]
-        /// Set the current color
-        /// </summary>
-        /// <param name="v">[length: 4] 
-        /// Specify new red, green, and blue values for the current color.
-        /// </param>
-        [DllImport(DLLName, EntryPoint = "glColor4usv")]
-        [CLSCompliant(false)]
-        public static extern unsafe void Color4(UInt16* v);
-
-        /// <summary>[requires: v1.0][deprecated: v3.2]</summary>
-        [DllImport(DLLName, EntryPoint = "glPopMatrix")]
-        public static extern void PopMatrix();
-
-        /// <summary>[requires: v1.0][deprecated: v3.2]
-        /// Specify which matrix is the current matrix
-        /// </summary>
-        /// <param name="mode"> 
-        /// Specifies which matrix stack is the target for subsequent matrix operations. Three values are accepted: Modelview, Projection, and Texture. The initial value is Modelview. Additionally, if the ARB_imaging extension is supported, Color is also accepted.
-        /// </param>
-        [DllImport(DLLName, EntryPoint = "glMatrixMode")]
-        public static extern void MatrixMode(MatrixMode mode);
-
-        /// <summary>[requires: v1.0][deprecated: v3.2]
-        /// Replace the current matrix with the identity matrix
-        /// </summary>
-        [DllImport(DLLName, EntryPoint = "glLoadIdentity")]
-        public static extern void LoadIdentity();
-
-        /// <summary>[requires: v1.0][deprecated: v3.2]
-        /// Multiply the current matrix with an orthographic matrix
-        /// </summary>
-        /// <param name="left"> 
-        /// Specify the coordinates for the left and right vertical clipping planes.
-        /// </param>
-        /// <param name="right"> 
-        /// Specify the coordinates for the left and right vertical clipping planes.
-        /// </param>
-        /// <param name="bottom"> 
-        /// Specify the coordinates for the bottom and top horizontal clipping planes.
-        /// </param>
-        /// <param name="top"> 
-        /// Specify the coordinates for the bottom and top horizontal clipping planes.
-        /// </param>
-        /// <param name="zNear"> 
-        /// Specify the distances to the nearer and farther depth clipping planes. These values are negative if the plane is to be behind the viewer.
-        /// </param>
-        /// <param name="zFar"> 
-        /// Specify the distances to the nearer and farther depth clipping planes. These values are negative if the plane is to be behind the viewer.
-        /// </param>
-        [DllImport(DLLName, EntryPoint = "glOrtho")]
-        public static extern void Ortho(Double left, Double right, Double bottom, Double top, Double zNear,
-            Double zFar);
-        
         #region Get*
         /// <summary>
         /// Returns the value of a parameter.
         /// </summary>
-        /// <param name="pname">A <see cref="GetFloatParameter"/> specifying the parameter.</param>
+        /// <param name="pname">A <see cref="glGetFloatParameter"/> specifying the parameter.</param>
         /// <returns>The requested value.</returns>
         public static double GetDouble(GetPName pname)
         {
@@ -2205,7 +1375,7 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <summary>
         /// Returns the value(s) of a parameter.
         /// </summary>
-        /// <param name="pname">A <see cref="GetFloatParameter"/> specifying the parameter.</param>
+        /// <param name="pname">A <see cref="glGetFloatParameter"/> specifying the parameter.</param>
         /// <param name="size">The number of values.</param>
         /// <returns>The requested value(s).</returns>
         public static double[] GetDoubles(GetPName pname, int size)
@@ -2218,7 +1388,7 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <summary>
         /// Returns the value of a parameter.
         /// </summary>
-        /// <param name="pname">A <see cref="GetFloatParameter"/> specifying the parameter.</param>
+        /// <param name="pname">A <see cref="glGetFloatParameter"/> specifying the parameter.</param>
         /// <returns>The requested value.</returns>
         public static float GetFloat(GetPName pname)
         {
@@ -2230,7 +1400,7 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <summary>
         /// Returns the value(s) of a parameter.
         /// </summary>
-        /// <param name="pname">A <see cref="GetFloatParameter"/> specifying the parameter.</param>
+        /// <param name="pname">A <see cref="glGetFloatParameter"/> specifying the parameter.</param>
         /// <param name="size">The number of values.</param>
         /// <returns>The requested value(s).</returns>
         public static float[] GetFloats(GetPName pname, int size)
@@ -2243,7 +1413,7 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <summary>
         /// Returns the value of a parameter.
         /// </summary>
-        /// <param name="pname">A <see cref="GetIntegerParameter"/> specifying the parameter.</param>
+        /// <param name="pname">A <see cref="glGetIntegerParameter"/> specifying the parameter.</param>
         /// <returns>The requested value.</returns>
         public static int GetInteger(GetPName pname)
         {
@@ -2255,7 +1425,7 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <summary>
         /// Returns the value(s) of a parameter.
         /// </summary>
-        /// <param name="pname">A <see cref="GetIntegerParameter"/> specifying the parameter.</param>
+        /// <param name="pname">A <see cref="glGetIntegerParameter"/> specifying the parameter.</param>
         /// <param name="size">The number of values.</param>
         /// <returns>The requested value(s).</returns>
         public static int[] GetIntegers(GetPName pname, int size)

@@ -43,7 +43,7 @@ namespace AlienEngine.Core.Rendering.Shadows
                     break;
                 
                 case LightType.Spot:
-                    _lightViewMatrix = Matrix4f.CreateTranslation(light.gameElement.WorldTransform.Translation) * Matrix4f.LookAt(light.Direction, VectorHelper.Up);
+                    _lightViewMatrix = Matrix4f.CreateTranslation(light.GetGameElement().WorldTransform.Translation) * Matrix4f.LookAt(light.Direction, VectorHelper.Up);
                     break;
             }
 

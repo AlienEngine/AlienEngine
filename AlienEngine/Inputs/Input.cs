@@ -34,22 +34,32 @@ namespace AlienEngine
         private static List<KeyboardKeyEvent> _keyEvents;
 
         /// <summary>
+        /// Events trigerred when the user press a key;
+        /// </summary>
+        private static List<KeyboardKeyEvent> _keyDownEvents;
+
+        /// <summary>
+        /// Events trigerred when the user release a key;
+        /// </summary>
+        private static List<KeyboardKeyEvent> _keyUpEvents;
+
+        /// <summary>
         /// Events trigerred when the user move the cursor.
         /// </summary>
         private static List<MouseMoveEvent> _mouseMoveEvents;
 
         /// <summary>
-        /// Events trigerred when the user move the cursor.
+        /// Events trigerred when the user press a mouse button.
         /// </summary>
         private static List<MouseButtonEvent> _mouseButtonDownEvents;
 
         /// <summary>
-        /// Events trigerred when the user move the cursor.
+        /// Events trigerred when the user release a mouse button.
         /// </summary>
         private static List<MouseButtonEvent> _mouseButtonUpEvents;
 
         /// <summary>
-        /// Events trigerred when the user move the cursor.
+        /// Events trigerred when the user scroll the wheel.
         /// </summary>
         private static List<MouseWheelEvent> _mouseWheelEvents;
 
@@ -64,22 +74,32 @@ namespace AlienEngine
         private static List<KeyboardKeyEvent> _keyEventsBackup;
 
         /// <summary>
+        /// Backup for key down events.
+        /// </summary>
+        private static List<KeyboardKeyEvent> _keyDownEventsBackup;
+
+        /// <summary>
+        /// Backup for key up events.
+        /// </summary>
+        private static List<KeyboardKeyEvent> _keyUpEventsBackup;
+
+        /// <summary>
         /// Backup for mouse move events.
         /// </summary>
         private static List<MouseMoveEvent> _mouseMoveEventsBackup;
 
         /// <summary>
-        /// Backup for mouse move events.
+        /// Backup for mouse button down events.
         /// </summary>
         private static List<MouseButtonEvent> _mouseButtonDownEventsBackup;
 
         /// <summary>
-        /// Backup for mouse move events.
+        /// Backup for mouse button up events.
         /// </summary>
         private static List<MouseButtonEvent> _mouseButtonUpEventsBackup;
 
         /// <summary>
-        /// Backup for mouse move events.
+        /// Backup for mouse wheel events.
         /// </summary>
         private static List<MouseWheelEvent> _mouseWheelEventsBackup;
 
@@ -159,6 +179,8 @@ namespace AlienEngine
 
             _textEvents = new List<TextInputEvent>();
             _keyEvents = new List<KeyboardKeyEvent>();
+            _keyDownEvents = new List<KeyboardKeyEvent>();
+            _keyUpEvents = new List<KeyboardKeyEvent>();
             _mouseMoveEvents = new List<MouseMoveEvent>();
             _mouseButtonDownEvents = new List<MouseButtonEvent>();
             _mouseButtonUpEvents = new List<MouseButtonEvent>();
@@ -166,6 +188,8 @@ namespace AlienEngine
 
             _textEventsBackup = null;
             _keyEventsBackup = null;
+            _keyDownEventsBackup = null;
+            _keyUpEventsBackup = null;
             _mouseMoveEventsBackup = null;
             _mouseButtonDownEventsBackup = null;
             _mouseButtonUpEventsBackup = null;
@@ -359,6 +383,8 @@ namespace AlienEngine
         public static void BackupEvents()
         {
             BackupKeyEvents();
+            BackupKeyDownEvents();
+            BackupKeyUpEvents();
             BackupMouseMoveEvents();
             BackupMouseButtonDownEvents();
             BackupMouseButtonUpEvents();
@@ -371,6 +397,8 @@ namespace AlienEngine
             if (backup) BackupEvents();
 
             ClearKeyEvents();
+            ClearKeyDownEvents();
+            ClearKeyUpEvents();
             ClearMouseMoveEvents();
             ClearMouseButtonDownEvents();
             ClearMouseButtonUpEvents();
@@ -381,6 +409,8 @@ namespace AlienEngine
         public static void RestoreEvents()
         {
             RestoreKeyEvents();
+            RestoreKeyDownEvents();
+            RestoreKeyUpEvents();
             RestoreMouseMoveEvents();
             RestoreMouseButtonDownEvents();
             RestoreMouseButtonUpEvents();
@@ -393,11 +423,37 @@ namespace AlienEngine
             _keyEventsBackup = _keyEvents;
         }
 
+        public static void BackupKeyDownEvents()
+        {
+            _keyDownEventsBackup = _keyDownEvents;
+        }
+
+        public static void BackupKeyUpEvents()
+        {
+            _keyUpEventsBackup = _keyUpEvents;
+        }
+
         public static void ClearKeyEvents(bool backup = false)
         {
             if (backup) BackupKeyEvents();
 
             _keyEvents = new List<KeyboardKeyEvent>();
+            Refresh();
+        }
+
+        public static void ClearKeyDownEvents(bool backup = false)
+        {
+            if (backup) BackupKeyDownEvents();
+
+            _keyDownEvents = new List<KeyboardKeyEvent>();
+            Refresh();
+        }
+
+        public static void ClearKeyUpEvents(bool backup = false)
+        {
+            if (backup) BackupKeyUpEvents();
+
+            _keyUpEvents = new List<KeyboardKeyEvent>();
             Refresh();
         }
 
@@ -407,6 +463,26 @@ namespace AlienEngine
             {
                 _keyEvents = _keyEventsBackup;
                 _keyEventsBackup = null;
+                Refresh();
+            }
+        }
+
+        public static void RestoreKeyDownEvents()
+        {
+            if (_keyDownEventsBackup != null)
+            {
+                _keyDownEvents = _keyDownEventsBackup;
+                _keyDownEventsBackup = null;
+                Refresh();
+            }
+        }
+
+        public static void RestoreKeyUpEvents()
+        {
+            if (_keyUpEventsBackup != null)
+            {
+                _keyUpEvents = _keyUpEventsBackup;
+                _keyUpEventsBackup = null;
                 Refresh();
             }
         }
@@ -533,6 +609,20 @@ namespace AlienEngine
             return _keyEvents.Count - 1;
         }
 
+        public static int AddKeyDownEvent(KeyboardKeyEvent e)
+        {
+            _keyDownEvents.Add(e);
+            Refresh();
+            return _keyDownEvents.Count - 1;
+        }
+
+        public static int AddKeyUpEvent(KeyboardKeyEvent e)
+        {
+            _keyUpEvents.Add(e);
+            Refresh();
+            return _keyUpEvents.Count - 1;
+        }
+
         public static int AddTextInputEvent(TextInputEvent e)
         {
             _textEvents.Add(e);
@@ -591,25 +681,32 @@ namespace AlienEngine
             GLFW.SetKeyCallback(Game.Instance.Window.Handle, (w, key, scancode, state, mods) =>
             {
                 foreach (var e in _keyEvents)
-                {
                     e?.Invoke(null, new KeyboardKeyEventArgs(key, state, mods));
+
+                switch (state)
+                {
+                    case InputState.Pressed:
+                        foreach (var e in _keyDownEvents)
+                            e?.Invoke(null, new KeyboardKeyEventArgs(key, state, mods));
+                        break;
+
+                    case InputState.Released:
+                        foreach (var e in _keyUpEvents)
+                    e?.Invoke(null, new KeyboardKeyEventArgs(key, state, mods));
+                        break;
                 }
             });
 
             GLFW.SetCharModsCallback(Game.Instance.Window.Handle, (w, code, mods) =>
             {
                 foreach (var e in _textEvents)
-                {
                     e?.Invoke(null, new TextInputEventArgs(code));
-                }
             });
 
             GLFW.SetCursorPosCallback(Game.Instance.Window.Handle, (w, x, y) =>
             {
                 foreach (var e in _mouseMoveEvents)
-                {
                     e?.Invoke(null, new MouseMoveEventArgs(new Point2d(x, y), PreviousMousePosition));
-                }
             });
 
             GLFW.SetMouseButtonCallback(Game.Instance.Window.Handle, (w, b, s, k) =>
@@ -633,9 +730,7 @@ namespace AlienEngine
                 var offset = new Vector2d(x, y);
 
                 foreach (var e in _mouseWheelEvents)
-                {
                     e?.Invoke(null, new MouseWheelEventArgs(MousePosition, offset, offset - _lastScrollOffset));
-                }
 
                 _lastScrollOffset = offset;
             });
