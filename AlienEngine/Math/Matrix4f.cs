@@ -733,7 +733,7 @@ namespace AlienEngine
                 if (Math.Abs(Scaling.Z) > MathHelper.BigEpsilon)
                     row3 /= Scaling.Z;
 
-                // Build 3x3 rot matrix, convert it to quaternion
+                // Build 4x4 rotation matrix
                 return new Matrix4f(new Vector4f(row1, 0), new Vector4f(row2, 0), new Vector4f(row3, 0), Vector4f.UnitW);
             }
         }
