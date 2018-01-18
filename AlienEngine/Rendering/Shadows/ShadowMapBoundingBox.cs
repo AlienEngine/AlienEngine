@@ -10,6 +10,8 @@ namespace AlienEngine.Core.Rendering.Shadows
 
         private Matrix4f _lightProjectionMatrix;
 
+        private Matrix4f _lightSpaceMatrix;
+
         /// <summary>
         /// Location with the lowest X, Y, and Z coordinates in the axis-aligned bounding box.
         /// </summary>
@@ -20,17 +22,18 @@ namespace AlienEngine.Core.Rendering.Shadows
         /// </summary>
         public Vector3f Max => _internalBoundingBox.Max;
 
-        public Matrix4f LightSpaceMatrix => Matrix4f.CreateTranslation(-GetCenter()) * _lightViewMatrix * _lightProjectionMatrix;
+        public Matrix4f LightSpaceMatrix => _lightSpaceMatrix;
 
         public ShadowMapBoundingBox(Camera camera, Light light, float n, float f)
         {
             _lightProjectionMatrix = Matrix4f.Identity;
             _lightViewMatrix = Matrix4f.Identity;
+            _lightSpaceMatrix = Matrix4f.Identity;
 
             float fov = camera.FieldOfView,
                 near = camera.Near,
                 far = camera.Far,
-                ratio = camera.Viewport.Width / camera.Viewport.Height;
+                ratio = camera.AspectRatio;
 
             switch (light.Type)
             {
@@ -93,6 +96,8 @@ namespace AlienEngine.Core.Rendering.Shadows
                     _lightProjectionMatrix = Matrix4f.CreatePerspectiveFieldOfView(MathHelper.Deg2Rad(light.FallOffAngles.Y), extents.X / extents.Y, 0.1f, he.Z);
                     break;
             }
+
+            _lightSpaceMatrix = Matrix4f.CreateTranslation(Vector3f.Negate(GetCenter())) * _lightViewMatrix * _lightProjectionMatrix;
         }
 
         /// <summary>
