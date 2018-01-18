@@ -52,15 +52,15 @@ namespace AlienEngine.Core.Rendering
         private static BlendingFactorDest _blendingFactorDest;
 
         // Backup
-        private static Tuple<bool, CullFaceMode, FrontFaceDirection> _faceCullingBackup;
+        private static Stack<Tuple<bool, CullFaceMode, FrontFaceDirection>> _faceCullingBackup;
 
-        private static Tuple<bool, DepthFunction> _depthTestBackup;
+        private static Stack<Tuple<bool, DepthFunction>> _depthTestBackup;
 
-        private static Tuple<bool> _depthMaskBackup;
+        private static Stack<Tuple<bool>> _depthMaskBackup;
 
-        private static Tuple<bool> _gammaCorrectionBackup;
+        private static Stack<Tuple<bool>> _gammaCorrectionBackup;
 
-        private static Tuple<bool, BlendingFactorSrc, BlendingFactorDest> _blendingBackup;
+        private static Stack<Tuple<bool, BlendingFactorSrc, BlendingFactorDest>> _blendingBackup;
 
         public static Rectangle Viewport => _viewport;
 
@@ -117,11 +117,11 @@ namespace AlienEngine.Core.Rendering
             _shadowMapDepthPass = false;
 
             // Backups
-            _faceCullingBackup = null;
-            _depthTestBackup = null;
-            _depthMaskBackup = null;
-            _blendingBackup = null;
-            _gammaCorrectionBackup = null;
+            _faceCullingBackup = new Stack<Tuple<bool, CullFaceMode, FrontFaceDirection>>();
+            _depthTestBackup = new Stack<Tuple<bool, DepthFunction>>();
+            _depthMaskBackup = new Stack<Tuple<bool>>();
+            _blendingBackup = new Stack<Tuple<bool, BlendingFactorSrc, BlendingFactorDest>>();
+            _gammaCorrectionBackup = new Stack<Tuple<bool>>();
 
             // Viewport
             _viewport = Rectangle.Empty;
@@ -157,7 +157,7 @@ namespace AlienEngine.Core.Rendering
 
             MatricesData.RegisterUBO(_matricesUBO);
             CameraData.RegisterUBO(_cameraUBO);
-            
+
             // Framebuffers
             _renderFBO = new FBO(Viewport, multisampled: GameSettings.MultisampleEnabled);
             _screenFBO = new FBO(_renderFBO.Viewport);
@@ -171,21 +171,21 @@ namespace AlienEngine.Core.Rendering
             switch (mode)
             {
                 case RendererBackupMode.DepthTest:
-                    _depthTestBackup = new Tuple<bool, DepthFunction>(_depthTestEnabled, _depthTestFunction);
+                    _depthTestBackup.Push(new Tuple<bool, DepthFunction>(_depthTestEnabled, _depthTestFunction));
                     break;
                 case RendererBackupMode.DepthMask:
-                    _depthMaskBackup = new Tuple<bool>(_depthMaskEnabled);
+                    _depthMaskBackup.Push(new Tuple<bool>(_depthMaskEnabled));
                     break;
                 case RendererBackupMode.Blending:
-                    _blendingBackup = new Tuple<bool, BlendingFactorSrc, BlendingFactorDest>(_blendingEnabled,
-                        _blendingFactorSrc, _blendingFactorDest);
+                    _blendingBackup.Push(new Tuple<bool, BlendingFactorSrc, BlendingFactorDest>(_blendingEnabled,
+                        _blendingFactorSrc, _blendingFactorDest));
                     break;
                 case RendererBackupMode.FaceCulling:
-                    _faceCullingBackup = new Tuple<bool, CullFaceMode, FrontFaceDirection>(_faceCullingEnabled,
-                        _faceCullingMode, _faceCullingFrontFaceDirection);
+                    _faceCullingBackup.Push(new Tuple<bool, CullFaceMode, FrontFaceDirection>(_faceCullingEnabled,
+                        _faceCullingMode, _faceCullingFrontFaceDirection));
                     break;
                 case RendererBackupMode.GammaCorrection:
-                    _gammaCorrectionBackup = new Tuple<bool>(_gammaCorrectionEnabled);
+                    _gammaCorrectionBackup.Push(new Tuple<bool>(_gammaCorrectionEnabled));
                     break;
             }
         }
@@ -197,36 +197,36 @@ namespace AlienEngine.Core.Rendering
                 case RendererBackupMode.DepthTest:
                     if (_depthTestBackup != null)
                     {
-                        DepthTest(_depthTestBackup.Item1, _depthTestBackup.Item2);
-                        _depthTestBackup = null;
+                        var bcp = _depthTestBackup.Pop();
+                        DepthTest(bcp.Item1, bcp.Item2);
                     }
                     break;
                 case RendererBackupMode.DepthMask:
                     if (_depthMaskBackup != null)
                     {
-                        DepthMask(_depthMaskBackup.Item1);
-                        _depthMaskBackup = null;
+                        var bcp = _depthMaskBackup.Pop();
+                        DepthMask(bcp.Item1);
                     }
                     break;
                 case RendererBackupMode.Blending:
                     if (_blendingBackup != null)
                     {
-                        Blending(_blendingBackup.Item1, _blendingBackup.Item2, _blendingBackup.Item3);
-                        _blendingBackup = null;
+                        var bcp = _blendingBackup.Pop();
+                        Blending(bcp.Item1, bcp.Item2, bcp.Item3);
                     }
                     break;
                 case RendererBackupMode.FaceCulling:
                     if (_faceCullingBackup != null)
                     {
-                        FaceCulling(_faceCullingBackup.Item1, _faceCullingBackup.Item2, _faceCullingBackup.Item3);
-                        _faceCullingBackup = null;
+                        var bcp = _faceCullingBackup.Pop();
+                        FaceCulling(bcp.Item1, bcp.Item2, bcp.Item3);
                     }
                     break;
                 case RendererBackupMode.GammaCorrection:
                     if (_gammaCorrectionBackup != null)
                     {
-                        GammaCorrection(_gammaCorrectionBackup.Item1);
-                        _gammaCorrectionBackup = null;
+                        var bcp = _gammaCorrectionBackup.Pop();
+                        GammaCorrection(bcp.Item1);
                     }
                     break;
             }
