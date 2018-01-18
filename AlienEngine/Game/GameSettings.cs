@@ -85,6 +85,10 @@ namespace AlienEngine.Core.Game
         // Aspect ratio
         // ----------
         /// <summary>
+        /// Defines if the game window's aspect ratio is defined.
+        /// </summary>
+        public static readonly bool GameWindowHasAspectRatio;
+        /// <summary>
         /// Defines the aspect ratio of the game window.
         /// </summary>
         public static readonly int[] GameWindowAspectRatio;
@@ -176,13 +180,22 @@ namespace AlienEngine.Core.Game
             if (config.SectionedResult["Window"]["AspectRatio"].Length > 0)
             {
                 var ratio = config.SectionedResult["Window"]["AspectRatio"].Split(':');
-                if (int.TryParse(ratio[0].Trim(), out _int1) && int.TryParse(ratio[1].Trim(), out _int2))
+                if (ratio.Length == 2 && int.TryParse(ratio[0].Trim(), out _int1) && int.TryParse(ratio[1].Trim(), out _int2))
+                {
                     GameWindowAspectRatio = new int[] { _int1, _int2 };
+                    GameWindowHasAspectRatio = true;
+                }
                 else
-                    GameWindowAspectRatio = new int[] { 16, 9 };
+                {
+                    GameWindowAspectRatio = new int[] { 1, 1 };
+                    GameWindowHasAspectRatio = false;
+                }
             }
             else
-                GameWindowAspectRatio = new int[] { 16, 9 };
+            {
+                GameWindowAspectRatio = new int[] { 1, 1 };
+                GameWindowHasAspectRatio = false;
+            }
 
             if (int.TryParse(config.SectionedResult["Window"]["FullscreenMode"], out _int1))
                 GameWindowFullscreenMode = _int1 == 1;

@@ -36,7 +36,7 @@ namespace AlienEngine.Core.Graphics.Buffers
         /// <summary>
         /// The size (in pixels) of all renderbuffers associated with this framebuffer.
         /// </summary>
-        public Sizei Size { get; private set; }
+        public Rectangle Viewport { get; private set; }
 
         /// <summary>
         /// The attachments used by this framebuffer.
@@ -68,35 +68,35 @@ namespace AlienEngine.Core.Graphics.Buffers
         /// <param name="attachment">Specifies the attachment to use for the frame buffer.</param>
         /// <param name="format">Specifies the internal pixel format for the frame buffer.</param>
         /// <param name="mipmaps">Specifies whether to build mipmaps after the frame buffer is unbound.</param>
-        public FBO(int width, int height, FramebufferAttachment attachment = FramebufferAttachment.ColorAttachment0, PixelInternalFormat format = PixelInternalFormat.Rgba8, bool mipmaps = true, bool renderbuffer = true, bool multisampled = false)
-            : this(new Sizei(width, height), new FramebufferAttachment[] { attachment }, format, mipmaps, renderbuffer: renderbuffer, multisampled: multisampled)
+        public FBO(int x, int y, int width, int height, FramebufferAttachment attachment = FramebufferAttachment.ColorAttachment0, PixelInternalFormat format = PixelInternalFormat.Rgba8, bool mipmaps = true, bool renderbuffer = true, bool multisampled = false)
+            : this(new Rectangle(x, y, width, height), new FramebufferAttachment[] { attachment }, format, mipmaps, renderbuffer: renderbuffer, multisampled: multisampled)
         {
         }
 
         /// <summary>
         /// Creates a framebuffer object and its associated resources (depth and frame buffers).
         /// </summary>
-        /// <param name="size">Specifies the size (in pixels) of the framebuffer and its associated buffers.</param>
+        /// <param name="viewport">Specifies the size (in pixels) of the framebuffer and its associated buffers.</param>
         /// <param name="attachment">Specifies the attachment to use for the frame buffer.</param>
         /// <param name="format">Specifies the internal pixel format for the frame buffer.</param>
         /// <param name="mipmaps">Specifies whether to build mipmaps after the frame buffer is unbound.</param>
-        public FBO(Sizei size, FramebufferAttachment attachment = FramebufferAttachment.ColorAttachment0, PixelInternalFormat format = PixelInternalFormat.Rgba8, bool mipmaps = true, bool renderbuffer = true, bool multisampled = false)
-            : this(size, new FramebufferAttachment[] { attachment }, format, mipmaps, renderbuffer: renderbuffer, multisampled: multisampled)
+        public FBO(Rectangle viewport, FramebufferAttachment attachment = FramebufferAttachment.ColorAttachment0, PixelInternalFormat format = PixelInternalFormat.Rgba8, bool mipmaps = true, bool renderbuffer = true, bool multisampled = false)
+            : this(viewport, new FramebufferAttachment[] { attachment }, format, mipmaps, renderbuffer: renderbuffer, multisampled: multisampled)
         {
         }
 
         /// <summary>
         /// Creates a framebuffer object and its associated resources (depth and frame buffers).
         /// </summary>
-        /// <param name="size">Specifies the size (in pixels) of the framebuffer and its associated buffers.</param>
+        /// <param name="viewport">Specifies the size (in pixels) of the framebuffer and its associated buffers.</param>
         /// <param name="attachments">Specifies the attachments to use for the frame buffer.</param>
         /// <param name="format">Specifies the internal pixel format for the frame buffer.</param>
         /// <param name="mipmaps">Specifies whether to build mipmaps after the frame buffer is unbound.</param>
         /// <param name="filterType">Specifies the type of filtering to apply to the frame buffer when bound as a texture.</param>
         /// <param name="pixelType">Specifies the pixel type to use for the underlying format of the frame buffer.</param>
-        public FBO(Sizei size, FramebufferAttachment[] attachments, PixelInternalFormat format, bool mipmaps = false, TextureParameter filterType = TextureParameter.Linear, PixelType pixelType = PixelType.UnsignedByte, bool renderbuffer = true, bool multisampled = false)
+        public FBO(Rectangle viewport, FramebufferAttachment[] attachments, PixelInternalFormat format, bool mipmaps = false, TextureParameter filterType = TextureParameter.Linear, PixelType pixelType = PixelType.UnsignedByte, bool renderbuffer = true, bool multisampled = false)
         {
-            Size = size;
+            Viewport = viewport;
             Attachments = attachments;
             Format = format;
             MipMaps = mipmaps;
@@ -117,11 +117,11 @@ namespace AlienEngine.Core.Graphics.Buffers
 
                 if (Multisampled)
                 {
-                    GL.TexImage2DMultisample(textureTarget, GameSettings.MultisampleLevel, Format, Size.Width, Size.Height, true);
+                    GL.TexImage2DMultisample(textureTarget, GameSettings.MultisampleLevel, Format, Viewport.Width, Viewport.Height, true);
                 }
                 else
                 {
-                    GL.TexImage2D(textureTarget, 0, Format, Size.Width, Size.Height, 0, PixelFormat.DepthComponent, PixelType.Float, IntPtr.Zero);
+                    GL.TexImage2D(textureTarget, 0, Format, Viewport.Width, Viewport.Height, 0, PixelFormat.DepthComponent, PixelType.Float, IntPtr.Zero);
                     GL.TexParameteri(textureTarget, TextureParameterName.TextureMagFilter, TextureParameter.Nearest);
                     GL.TexParameteri(textureTarget, TextureParameterName.TextureMinFilter, TextureParameter.Nearest);
                     GL.TexParameteri(textureTarget, TextureParameterName.TextureWrapS, TextureParameter.ClampToEdge);
@@ -148,11 +148,11 @@ namespace AlienEngine.Core.Graphics.Buffers
 
                     if (Multisampled)
                     {
-                        GL.TexImage2DMultisample(textureTarget, GameSettings.MultisampleLevel, Format, Size.Width, Size.Height, true);
+                        GL.TexImage2DMultisample(textureTarget, GameSettings.MultisampleLevel, Format, Viewport.Width, Viewport.Height, true);
                     }
                     else
                     {
-                        GL.TexImage2D(textureTarget, 0, Format, Size.Width, Size.Height, 0, PixelFormat.Rgba, pixelType, IntPtr.Zero);
+                        GL.TexImage2D(textureTarget, 0, Format, Viewport.Width, Viewport.Height, 0, PixelFormat.Rgba, pixelType, IntPtr.Zero);
 
                         if (MipMaps)
                         {
@@ -180,9 +180,9 @@ namespace AlienEngine.Core.Graphics.Buffers
                     GL.BindRenderbuffer(RenderbufferTarget.Renderbuffer, DepthID);
 
                     if (Multisampled)
-                        GL.RenderbufferStorageMultisample(RenderbufferTarget.Renderbuffer, GameSettings.MultisampleLevel, PixelInternalFormat.Depth32fStencil8, Size.Width, Size.Height);
+                        GL.RenderbufferStorageMultisample(RenderbufferTarget.Renderbuffer, GameSettings.MultisampleLevel, PixelInternalFormat.Depth32fStencil8, Viewport.Width, Viewport.Height);
                     else
-                        GL.RenderbufferStorage(RenderbufferTarget.Renderbuffer, PixelInternalFormat.Depth24Stencil8, Size.Width, Size.Height);
+                        GL.RenderbufferStorage(RenderbufferTarget.Renderbuffer, PixelInternalFormat.Depth24Stencil8, Viewport.Width, Viewport.Height);
 
                     GL.BindRenderbuffer(RenderbufferTarget.Renderbuffer, 0);
                     GL.FramebufferRenderbuffer(FramebufferTarget.Framebuffer, FramebufferAttachment.DepthStencilAttachment, RenderbufferTarget.Renderbuffer, DepthID);
@@ -257,7 +257,7 @@ namespace AlienEngine.Core.Graphics.Buffers
                 if (Attachments.Length > 1) GL.DrawBuffers(Attachments.Length, buffers);
             }
 
-            GL.Viewport(0, 0, Size.Width, Size.Height);
+            GL.Viewport(0, 0, Viewport.Width, Viewport.Height);
 
             // configurably clear the buffer and color bits
             if (clear)
@@ -279,7 +279,7 @@ namespace AlienEngine.Core.Graphics.Buffers
             {
                 GL.BindFramebuffer(FramebufferTarget.ReadFramebuffer, BufferID);
                 GL.BindFramebuffer(FramebufferTarget.DrawFramebuffer, screenFBO.BufferID);
-                GL.BlitFramebuffer(0, 0, Size.Width, Size.Height, 0, 0, screenFBO.Size.Width, screenFBO.Size.Height, ClearBufferMask.ColorBufferBit, BlitFramebufferFilter.Nearest);
+                GL.BlitFramebuffer(0, 0, Viewport.Width, Viewport.Height, 0, 0, screenFBO.Viewport.Width, screenFBO.Viewport.Height, ClearBufferMask.ColorBufferBit, BlitFramebufferFilter.Nearest);
             }
 
             // Unbind this framebuffer (does not guarantee the correct framebuffer is bound)

@@ -150,12 +150,14 @@ namespace AlienEngine.Core.Rendering.Shadows
     
                 RendererManager.MatricesData.LightSpace = lightSpaceMatrices[0];
     
+                // Backup state
+                RendererManager.BackupState(RendererBackupMode.FaceCulling);
                 RendererManager.FaceCulling(cullFaceMode: CullFaceMode.Front);
                 
                 // Render the scene.
                 RendererManager.RenderScene();
     
-                RendererManager.FaceCulling(cullFaceMode: CullFaceMode.Back);
+                RendererManager.RestoreState(RendererBackupMode.FaceCulling);
     
                 _shadowMaps[0].End();
     

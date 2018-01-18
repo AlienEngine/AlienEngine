@@ -77,7 +77,7 @@ namespace AlienEngine
         }
 
         /// <summary>
-        /// Get/set the forward vector of <see cref="GameElement"/>.
+        /// Get/set the forward vector of this <see cref="GameElement"/>.
         /// </summary>
         public Vector3f ForwardVector
         {
@@ -207,13 +207,11 @@ namespace AlienEngine
         /// Returns the projected transformation matrix of this <see cref="GameElement"/>.
         /// </summary>
         /// <returns></returns>
-        public Matrix4f GetProjectedTransformation()
+        public Matrix4f GetProjectedTransformation(Camera camera)
         {
-            Camera _camera = Game.Instance.CurrentScene.PrimaryCamera.GetComponent<Camera>();
-
             Matrix4f f = GetTransformation();
-            Matrix4f v = _camera.ViewMatrix;
-            Matrix4f p = _camera.ProjectionMatrix;
+            Matrix4f v = camera.ViewMatrix;
+            Matrix4f p = camera.ProjectionMatrix;
 
             return f * v * p;
         }
@@ -279,7 +277,7 @@ namespace AlienEngine
         /// </summary>
         /// <param name="additive">The amount of additive scale.</param>
         /// <param name="speed">The scaling speed.</param>
-        public void Rescale(Vector3f additive, float speed = 1)
+        public void RescaleAdditive(Vector3f additive, float speed = 1)
         {
             Scale += additive * speed;
         }
@@ -288,7 +286,7 @@ namespace AlienEngine
         /// Scales this <see cref="GameElement"/> with a <paramref name="factor"/> for the X, Y, and Z axis.
         /// </summary>
         /// <param name="factor">The amount scale factor for each axis.</param>
-        public void Rescale(Vector3f factor)
+        public void RescaleMultiply(Vector3f factor)
         {
             Scale *= factor;
         }
@@ -297,7 +295,7 @@ namespace AlienEngine
         /// Scales this <see cref="GameElement"/> with a <paramref name="factor"/> for all axis.
         /// </summary>
         /// <param name="factor">The amount scale factor for all axis.</param>
-        public void Rescale(float factor)
+        public void RescaleMultiply(float factor)
         {
             Scale *= factor;
         }
@@ -333,7 +331,7 @@ namespace AlienEngine
         /// <summary>
         /// Sets the translation of this <see cref="GameElement"/>.
         /// </summary>
-        /// <param name="position">The new translation for all axis.</param>
+        /// <param name="translation">The new translation for all axis.</param>
         public void SetTranslation(float translation)
         {
             SetTranslation(new Vector3f(translation));
@@ -547,7 +545,7 @@ namespace AlienEngine
         /// <returns>A System.Int32 containing the unique hashcode for this instance.</returns>
         public override int GetHashCode()
         {
-            return Translation.GetHashCode() * Rotation.GetHashCode() * Scale.GetHashCode();
+            return Scale.GetHashCode() * Rotation.GetHashCode() * Translation.GetHashCode();
         }
 
         #endregion
