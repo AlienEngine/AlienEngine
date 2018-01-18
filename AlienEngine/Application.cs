@@ -187,10 +187,14 @@ namespace AlienEngine
             // Initialize AlienEngine
             Engine.Start();
 
-            // Set the renderer viewport
+            // Set the renderer viewport and the aspect ratio
             int wi, he;
             _window.GetFramebufferSize(out wi, out he);
-            RendererManager.SetViewport(0, 0, wi, he);
+
+            if (GameSettings.GameWindowHasAspectRatio)
+                RendererManager.SetViewportWithAspectRatio(wi, he);
+            else
+                RendererManager.SetViewport(0, 0, wi, he);
 
             // Enable depth testing
             RendererManager.DepthTest();
