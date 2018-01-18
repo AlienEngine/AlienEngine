@@ -375,7 +375,10 @@ namespace AlienEngine.Core
         private void OnFramebufferSizeChange(Window window, int width, int height)
         {
             var size = new Sizei(width, height);
-            RendererManager.SetViewport(Point2i.Zero, size);
+            if (GameSettings.GameWindowHasAspectRatio)
+                RendererManager.SetViewportWithAspectRatio(size);
+            else
+                RendererManager.SetViewport(Point2i.Zero, size);
             FramebufferSizeChange?.Invoke(this, new ResizeEventArgs(size, FramebufferSize));
             _framebufferSize = size;
         }
