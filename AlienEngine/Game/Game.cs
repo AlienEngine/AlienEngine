@@ -109,8 +109,9 @@ namespace AlienEngine.Core.Game
         /// <param name="name">The name of the scene</param>
         public void LoadScene(string name)
         {
-            if (_sceneIsRegistered(name))
-                _loadScene(_getRegisteredScene(name));
+            Scene scene;
+            if (_sceneIsRegistered(name, out scene))
+                _loadScene(scene);
             else
                 // TODO: Create a GameException class.
                 throw new System.Exception("Can't load an unregistered scene.");
@@ -126,10 +127,10 @@ namespace AlienEngine.Core.Game
             {
                 _loadScene(_registeredScenes[index]);
             }
-            catch (System.Exception)
+            catch (System.Exception e)
             {
                 // TODO: Create a GameException class.
-                throw new System.Exception("Can't load an unregistered scene.");
+                throw new System.Exception("An error occured when loading the scene.", e);
             }
         }
 
@@ -185,14 +186,17 @@ namespace AlienEngine.Core.Game
         /// </summary>
         /// <param name="name">The name of the scene.</param>
         /// <returns></returns>
-        private bool _sceneIsRegistered(string name)
+        private bool _sceneIsRegistered(string name, out Scene scene)
         {
             bool result = false;
 
+            scene = null;
+            
             foreach (var  item in _registeredScenes)
             {
                 if (item.Name == name)
                 {
+                    scene = item;
                     result = true;
                     break;
                 }

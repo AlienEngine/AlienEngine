@@ -1,11 +1,11 @@
-﻿using AlienEngine.Core.Graphics.DevIL;
-using AlienEngine.Core.Graphics.DevIL.Unmanaged;
+﻿using AlienEngine.Core.Imaging.DevIL;
+using AlienEngine.Core.Imaging.DevIL.Unmanaged;
 using AlienEngine.Core.Resources;
 using System;
 using System.Drawing;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using DevILImage = AlienEngine.Core.Graphics.DevIL.Image;
+using DevILImage = AlienEngine.Core.Imaging.DevIL.Image;
 
 namespace AlienEngine.Imaging
 {

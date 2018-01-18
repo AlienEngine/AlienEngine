@@ -451,7 +451,7 @@ namespace AlienEngine.Core.Graphics.OpenGL
         [CLSCompliant(false)]
         public static void GetQueryObjectiv(uint id, GetQueryObjectParam pname, long offset)
         {
-            if (IntPtr.Size == 4 && ((long)offset >> 32) != 0) throw new ArgumentOutOfRangeException("offset", PlatformErrorString);
+            if (IntPtr.Size == 4 && ((long)offset >> 32) != 0) throw new ArgumentOutOfRangeException(nameof(offset), PlatformErrorString);
             _GetQueryObjectiv(id, pname, (IntPtr)offset);
         }
 
@@ -510,7 +510,7 @@ namespace AlienEngine.Core.Graphics.OpenGL
         [CLSCompliant(false)]
         public static void GetQueryObjectuiv(uint id, GetQueryObjectParam pname, long offset)
         {
-            if (IntPtr.Size == 4 && ((long)offset >> 32) != 0) throw new ArgumentOutOfRangeException("offset", PlatformErrorString);
+            if (IntPtr.Size == 4 && ((long)offset >> 32) != 0) throw new ArgumentOutOfRangeException(nameof(offset), PlatformErrorString);
             _GetQueryObjectuiv(id, pname, (IntPtr)offset);
         }
 
@@ -545,10 +545,15 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <param name="usage">A <see cref="BufferUsageHint"/> specifying the usage of the data store.</param>
         public static void BufferData<T>(BufferTarget target, int size, ref T data, BufferUsageHint usage) where T : struct
         {
-            IntPtr _data = Marshal.AllocHGlobal(BlittableValueType<T>.Stride);
-            Marshal.StructureToPtr(data, _data, false);
-            if (IntPtr.Size == 4) BufferData_32(target, size, _data, usage);
-            else BufferData_64(target, size, _data, usage);
+            GCHandle h = GCHandle.Alloc(data, GCHandleType.Pinned);
+            try
+            {
+                BufferData(target, size, h.AddrOfPinnedObject(), usage);
+            }
+            finally
+            {
+                h.Free();
+            }
         }
 
         /// <summary>
@@ -575,7 +580,7 @@ namespace AlienEngine.Core.Graphics.OpenGL
         {
             if (IntPtr.Size == 4)
             {
-                if (((long)size >> 32) != 0) throw new ArgumentOutOfRangeException("size", PlatformErrorString);
+                if (((long)size >> 32) != 0) throw new ArgumentOutOfRangeException(nameof(size), PlatformErrorString);
                 BufferData_32(target, (int)size, data, usage);
             }
             else BufferData_64(target, size, data, usage);
@@ -998,6 +1003,26 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <param name="offset">The offset in bytes into the data store.</param>
         /// <param name="size">The size of the data store region in bytes.</param>
         /// <param name="data">The data that will be loaded.</param>
+        public static void BufferSubData<T>(BufferTarget target, int offset, int size, ref T data) where T : struct
+        {
+            GCHandle h = GCHandle.Alloc(data, GCHandleType.Pinned);
+            try
+            {
+                BufferSubData(target, offset, size, h.AddrOfPinnedObject());
+            }
+            finally
+            {
+                h.Free();
+            }
+        }
+
+        /// <summary>
+        /// Updates a subset of a data store.
+        /// </summary>
+        /// <param name="target">A <see cref="BufferTarget"/> specifying the target.</param>
+        /// <param name="offset">The offset in bytes into the data store.</param>
+        /// <param name="size">The size of the data store region in bytes.</param>
+        /// <param name="data">The data that will be loaded.</param>
         public static void BufferSubData(BufferTarget target, int offset, int size, IntPtr data)
         {
             if (IntPtr.Size == 4) BufferSubData_32(target, offset, size, data);
@@ -1015,8 +1040,8 @@ namespace AlienEngine.Core.Graphics.OpenGL
         {
             if (IntPtr.Size == 4)
             {
-                if (((long)offset >> 32) != 0) throw new ArgumentOutOfRangeException("offset", PlatformErrorString);
-                if (((long)size >> 32) != 0) throw new ArgumentOutOfRangeException("size", PlatformErrorString);
+                if (((long)offset >> 32) != 0) throw new ArgumentOutOfRangeException(nameof(offset), PlatformErrorString);
+                if (((long)size >> 32) != 0) throw new ArgumentOutOfRangeException(nameof(size), PlatformErrorString);
                 BufferSubData_32(target, (int)offset, (int)size, data);
             }
             else BufferSubData_64(target, offset, size, data);
@@ -1476,8 +1501,8 @@ namespace AlienEngine.Core.Graphics.OpenGL
         {
             if (IntPtr.Size == 4)
             {
-                if (((long)offset >> 32) != 0) throw new ArgumentOutOfRangeException("offset", PlatformErrorString);
-                if (((long)size >> 32) != 0) throw new ArgumentOutOfRangeException("size", PlatformErrorString);
+                if (((long)offset >> 32) != 0) throw new ArgumentOutOfRangeException(nameof(offset), PlatformErrorString);
+                if (((long)size >> 32) != 0) throw new ArgumentOutOfRangeException(nameof(size), PlatformErrorString);
                 GetBufferSubData_32(target, (int)offset, (int)size, data);
             }
             else GetBufferSubData_64(target, offset, size, data);

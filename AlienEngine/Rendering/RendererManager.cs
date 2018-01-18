@@ -1,12 +1,17 @@
-﻿using AlienEngine.Core.Graphics;
-using AlienEngine.Core.Graphics.OpenGL;
+﻿using AlienEngine.Core.Graphics.OpenGL;
 using AlienEngine.Core.Shaders;
 using AlienEngine.Shaders;
 using System;
 using System.Collections.Generic;
+using AlienEngine.Core.Game;
+using AlienEngine.Core.Graphics.Buffers;
+using AlienEngine.Core.Graphics.Buffers.Data;
+using System.Diagnostics;
+using AlienEngine.Core.Rendering.Shadows;
 
 namespace AlienEngine.Core.Rendering
 {
+    // TODO: Use stacks for backups
     public static class RendererManager
     {
         private static List<IRenderable> _renderables;
@@ -16,22 +21,32 @@ namespace AlienEngine.Core.Rendering
         private static bool _depthMaskEnabled;
         private static bool _blendingEnabled;
         private static bool _multisampleEnabled;
-        private static uint screenVAO;
-        private static uint screenVBO;
-        private static ShaderProgram screenShaderProgram;
+        private static bool _gammaCorrectionEnabled;
+        private static bool _renderBufferEnabled;
+        private static bool _shadowMapDepthPass;
+        private static uint _screenVAO;
+        private static uint _screenVBO;
+        private static ShaderProgram _screenShaderProgram;
         private static Rectangle _viewport;
 
+        private static UBO _matricesUBO;
+        private static UBO _cameraUBO;
+
+        private static FBO _renderFBO;
+        private static FBO _screenFBO;
+
+        // Renderers
+        private static ShadowsRenderer _shadowsRenderer;
+        
         // Depth test
         private static DepthFunction _depthTestFunction;
 
         // Face culling
         private static CullFaceMode _faceCullingMode;
-
         private static FrontFaceDirection _faceCullingFrontFaceDirection;
 
         // Blending
         private static BlendingFactorSrc _blendingFactorSrc;
-
         private static BlendingFactorDest _blendingFactorDest;
 
         // Backup
@@ -40,6 +55,8 @@ namespace AlienEngine.Core.Rendering
         private static Tuple<bool, DepthFunction> _depthTestBackup;
 
         private static Tuple<bool> _depthMaskBackup;
+
+        private static Tuple<bool> _gammaCorrectionBackup;
 
         private static Tuple<bool, BlendingFactorSrc, BlendingFactorDest> _blendingBackup;
 
@@ -53,12 +70,36 @@ namespace AlienEngine.Core.Rendering
 
         public static bool IsBlendingEnabled => _blendingEnabled;
 
+        public static bool IsMultisampleEnabled => _multisampleEnabled;
+
+        public static bool IsGammaCorrectionEnabled => _gammaCorrectionEnabled;
+
+        public static bool IsRenderBufferEnabled => _renderBufferEnabled;
+
+        public static bool IsShadowMapDepthPass => _shadowMapDepthPass;
+
+        internal static readonly MatricesBufferData MatricesData;
+        internal static readonly CameraBufferData CameraData;
+
+        public static UBO MatricesUBO => _matricesUBO;
+
+        internal static ShaderProgram DepthShaderProgram => _shadowsRenderer.DepthShaderProgram;
+
+        internal static IShadowMap CurrentShadowMap => _shadowsRenderer.CurrentShadowMap;
+
+        internal static float[] CascadedShadowMapSplits => _shadowsRenderer.CascadedShadowMapSplits;
+
+        internal static int ShadowMapTextureSize => _shadowsRenderer.ShadowMapTextureSize;
+
         public delegate void ViewportChanged(object sender, ViewportChangedEventArgs e);
 
         public static event ViewportChanged OnViewportChange;
 
         static RendererManager()
         {
+            // Renderers
+            _shadowsRenderer = new ShadowsRenderer();
+            
             // Renderables
             _renderables = new List<IRenderable>();
             _postRenderables = new List<IPostRenderable>();
@@ -68,19 +109,44 @@ namespace AlienEngine.Core.Rendering
             _depthMaskEnabled = true;
             _blendingEnabled = false;
             _faceCullingEnabled = false;
+            _multisampleEnabled = false;
+            _gammaCorrectionEnabled = false;
+            _renderBufferEnabled = false;
+            _shadowMapDepthPass = false;
 
             // Backups
             _faceCullingBackup = null;
             _depthTestBackup = null;
             _depthMaskBackup = null;
             _blendingBackup = null;
+            _gammaCorrectionBackup = null;
 
             // Viewport
             _viewport = Rectangle.Empty;
 
+            // UBOs data
+            MatricesData = new MatricesBufferData();
+            CameraData = new CameraBufferData();
+
             // Screen
-            screenVAO = 0;
-            screenVBO = 0;
+            _screenVAO = 0;
+            _screenVBO = 0;
+
+            // Framebuffers
+            _renderFBO = new FBO(GameSettings.GameWindowSize, multisampled: GameSettings.MultisampleEnabled);
+            _screenFBO = new FBO(_renderFBO.Size);
+        }
+
+        internal static void Init()
+        {
+            // UBOs
+            _matricesUBO = new UBO("Matrices", UniformBufferObjectIndex.Matrices, MatricesBufferData.Size);
+            _cameraUBO = new UBO("Camera", UniformBufferObjectIndex.Camera, CameraBufferData.Size);
+
+            MatricesData.RegisterUBO(_matricesUBO);
+            CameraData.RegisterUBO(_cameraUBO);
+            
+            _shadowsRenderer.Init();
         }
 
         public static void BackupState(RendererBackupMode mode)
@@ -100,6 +166,9 @@ namespace AlienEngine.Core.Rendering
                 case RendererBackupMode.FaceCulling:
                     _faceCullingBackup = new Tuple<bool, CullFaceMode, FrontFaceDirection>(_faceCullingEnabled,
                         _faceCullingMode, _faceCullingFrontFaceDirection);
+                    break;
+                case RendererBackupMode.GammaCorrection:
+                    _gammaCorrectionBackup = new Tuple<bool>(_gammaCorrectionEnabled);
                     break;
             }
         }
@@ -134,6 +203,13 @@ namespace AlienEngine.Core.Rendering
                     {
                         FaceCulling(_faceCullingBackup.Item1, _faceCullingBackup.Item2, _faceCullingBackup.Item3);
                         _faceCullingBackup = null;
+                    }
+                    break;
+                case RendererBackupMode.GammaCorrection:
+                    if (_gammaCorrectionBackup != null)
+                    {
+                        GammaCorrection(_gammaCorrectionBackup.Item1);
+                        _gammaCorrectionBackup = null;
                     }
                     break;
             }
@@ -267,10 +343,23 @@ namespace AlienEngine.Core.Rendering
             _multisampleEnabled = enable;
         }
 
-        public static void RenderScreen(FBO fbo)
+        public static void GammaCorrection(bool enable = true)
         {
+            if (enable)
+            {
+                GL.Enable(EnableCap.FramebufferSrgb);
+            }
+            else if (_gammaCorrectionEnabled) GL.Disable(EnableCap.FramebufferSrgb);
+
+            _gammaCorrectionEnabled = enable;
+        }
+
+        public static void RenderScreen()
+        {
+            var fbo = GameSettings.MultisampleEnabled ? _screenFBO : _renderFBO;
+
             // Create the screen if it's not exist
-            if (screenVAO == 0)
+            if (_screenVAO == 0)
             {
                 float[] indArray = new float[]
                 {
@@ -283,11 +372,11 @@ namespace AlienEngine.Core.Rendering
                     -1.0f, 1.0f, 0.0f, 1.0f
                 };
 
-                screenVAO = GL.GenVertexArray();
-                screenVBO = GL.GenBuffer();
+                _screenVAO = GL.GenVertexArray();
+                _screenVBO = GL.GenBuffer();
 
-                GL.BindVertexArray(screenVAO);
-                GL.BindBuffer(BufferTarget.ArrayBuffer, screenVBO);
+                GL.BindVertexArray(_screenVAO);
+                GL.BindBuffer(BufferTarget.ArrayBuffer, _screenVBO);
                 GL.BufferData(BufferTarget.ArrayBuffer, sizeof(float) * indArray.Length, indArray,
                     BufferUsageHint.StaticDraw);
                 GL.EnableVertexAttribArray(GL.VERTEX_POSITION_LOCATION);
@@ -297,7 +386,7 @@ namespace AlienEngine.Core.Rendering
                 GL.VertexAttribPointer(GL.VERTEX_TEXTURE_COORD_LOCATION, 2, VertexAttribPointerType.Float, false,
                     4 * sizeof(float), 2 * sizeof(float));
 
-                screenShaderProgram = new RenderTextureShaderProgram()
+                _screenShaderProgram = new RenderTextureShaderProgram()
                 {
                     PostEffectMode = PostEffectMode.None,
                     Width = fbo.Size.Width,
@@ -305,17 +394,20 @@ namespace AlienEngine.Core.Rendering
                 };
             }
 
-            // Bind the shader
-            screenShaderProgram.Bind();
-
-            // Bind the vertex array
-            GL.BindVertexArray(screenVAO);
-
-            // Depth test settings
+            // Save states
+            BackupState(RendererBackupMode.GammaCorrection);
             BackupState(RendererBackupMode.DepthTest);
             BackupState(RendererBackupMode.FaceCulling);
+
             DepthTest(false);
             FaceCulling(false);
+            GammaCorrection(GameSettings.GammaCorrectionEnabled);
+
+            // Bind the shader
+            _screenShaderProgram.Bind();
+
+            // Bind the vertex array
+            GL.BindVertexArray(_screenVAO);
 
             // Bind the texture
             GL.ActiveTexture(GL.DIFFUSE_TEXTURE_UNIT_INDEX);
@@ -331,6 +423,7 @@ namespace AlienEngine.Core.Rendering
             GL.BindVertexArray(0);
 
             // Restore states
+            RestoreState(RendererBackupMode.GammaCorrection);
             RestoreState(RendererBackupMode.DepthTest);
             RestoreState(RendererBackupMode.FaceCulling);
         }
@@ -365,6 +458,59 @@ namespace AlienEngine.Core.Rendering
                 _object.Render();
 
             RestoreState(RendererBackupMode.DepthTest);
+        }
+
+        public static void EnableRenderBuffer()
+        {
+            if (!_renderBufferEnabled)
+            {
+                // Enable Framebuffer
+                _renderFBO.Enable();
+                _renderBufferEnabled = true;
+            }
+        }
+
+        public static void DisableRenderBuffer()
+        {
+            if (_renderBufferEnabled)
+            {
+                // Disable Framebuffer
+                _renderFBO.Disable(ref _screenFBO);
+                _renderBufferEnabled = false;
+            }
+        }
+
+        public static void ShadowMapDepthPass(bool enable = true)
+        {
+            _shadowMapDepthPass = enable;
+        }
+        
+        public static void Process()
+        {
+            // Render shadows
+            _shadowsRenderer.Process();
+
+            // Enable shadow map
+            EnableRenderBuffer();
+
+            // Render the scene.
+            RenderScene();
+
+            // Disable shadow map
+            DisableRenderBuffer();
+
+            // Render the screen (output of the frame buffer)
+            RenderScreen();
+        }
+
+        internal static void BindShadowMapTexture(ShaderProgram program)
+        {
+            _shadowsRenderer.BindTexture(ref program);
+        }
+
+        internal static void RenderScene()
+        {
+            Game.Game.Instance.CurrentScene.Render();
         }
     }
 }

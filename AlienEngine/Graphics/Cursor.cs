@@ -1,10 +1,10 @@
-﻿using AlienEngine.Core.Graphics.DevIL;
-using AlienEngine.Core.Graphics.DevIL.Unmanaged;
+﻿using AlienEngine.Core.Imaging.DevIL;
+using AlienEngine.Core.Imaging.DevIL.Unmanaged;
 using AlienEngine.Core.Resources;
 using System;
 using AlienEngine.Core.Physics.BroadPhaseEntries;
 using AlienEngine.Imaging;
-using Image = AlienEngine.Core.Graphics.DevIL.Image;
+using Image = AlienEngine.Core.Imaging.DevIL.Image;
 
 namespace AlienEngine.Core.Graphics
 {

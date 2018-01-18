@@ -7,25 +7,36 @@ namespace AlienEngine.ASL
         [AttributeUsage(AttributeTargets.Field | AttributeTargets.Struct, AllowMultiple = false)]
         public sealed class LayoutAttribute : Attribute
         {
-            public int MaxVertices { get; set; }
             public InputLayout InputID { get; private set; }
-            public OutputLayout OutputID { get; private set; }
-            public UniformLayout[] UniformIDS { get; private set; }
-
-            public LayoutAttribute(OutputLayout id)
-            {
-                OutputID = id;
-            }
 
             public LayoutAttribute(InputLayout id)
             {
                 InputID = id;
             }
+        }
+        
+        [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
+        public sealed class LayoutInAttribute : Attribute
+        {
+            public InputLayout InputID { get; private set; }
 
-            public LayoutAttribute(params UniformLayout[] ids)
+            public LayoutInAttribute(InputLayout id)
             {
-                UniformIDS = ids;
+                InputID = id;
             }
         }
+        
+        [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
+        public sealed class LayoutOutAttribute : Attribute
+        {
+            public int MaxVertices { get; set; }
+            public OutputLayout OutputID { get; private set; }
+
+            public LayoutOutAttribute(OutputLayout id)
+            {
+                OutputID = id;
+            }
+        }
+
     }
 }

@@ -119,7 +119,7 @@ namespace AlienEngine.Core.Assets
                             Vector3f tn = (Vector3f)(mesh.HasTangentBasis ? mesh.Tangents[j] : Zero3D);
                             Vector3f btn = (Vector3f)(mesh.HasTangentBasis ? mesh.BiTangents[j] : Zero3D);
 
-                            tempAsset.Vertices.Add(new Vertex(pos, new Vector2f(uv), normal));
+                            tempAsset.Vertices.Add(new Vertex(pos, new Vector2f(uv), normal, tn, btn));
                         }
 
                         // Populate the index buffer

@@ -1196,7 +1196,7 @@ namespace AlienEngine
         /// Gets or sets an Vector2f with the Z and Y components of this instance.
         /// </summary>
 
-        public Vector2f Zy
+        public Vector2f ZY
         {
             get { return new Vector2f(Z, Y); }
             set
@@ -1292,7 +1292,7 @@ namespace AlienEngine
         /// <summary>
         /// Gets or sets an Vector3f with the X, Z, and Y components of this instance.
         /// </summary>
-        public Vector3f XZy
+        public Vector3f XZY
         {
             get { return new Vector3f(X, Z, Y); }
             set
@@ -1603,7 +1603,7 @@ namespace AlienEngine
         /// Gets or sets an Vector3f with the W, Z, and Y components of this instance.
         /// </summary>
 
-        public Vector3f WZy
+        public Vector3f WZY
         {
             get { return new Vector3f(W, Z, Y); }
             set
@@ -1682,7 +1682,7 @@ namespace AlienEngine
         /// Gets or sets an Vector4f with the X, W, Z, and Y components of this instance.
         /// </summary>
 
-        public Vector4f XWZy
+        public Vector4f XWZY
         {
             get { return new Vector4f(X, W, Z, Y); }
             set
@@ -1922,12 +1922,12 @@ namespace AlienEngine
         /// Gets an Vector4f with the Z, W, Z, and Y components of this instance.
         /// </summary>
 
-        public Vector4f ZWZy
+        public Vector4f ZWZY
         {
             get { return new Vector4f(Z, W, Z, Y); }
             set
             {
-                X = value.X;
+                Z = value.X;
                 W = value.Y;
                 Z = value.Z;
                 Y = value.W;
@@ -1954,7 +1954,7 @@ namespace AlienEngine
         /// Gets or sets an Vector4f with the W, X, Z, and Y components of this instance.
         /// </summary>
 
-        public Vector4f WXZy
+        public Vector4f WXZY
         {
             get { return new Vector4f(W, X, Z, Y); }
             set
@@ -2039,7 +2039,7 @@ namespace AlienEngine
             get { return new Vector4f(W, Z, Y, W); }
             set
             {
-                X = value.X;
+                W = value.X;
                 Z = value.Y;
                 Y = value.Z;
                 W = value.W;

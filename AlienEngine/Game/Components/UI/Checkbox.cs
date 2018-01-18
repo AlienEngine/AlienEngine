@@ -32,7 +32,7 @@ namespace AlienEngine
         /// </summary>
         public bool IsChecked
         {
-            get => _isChecked;
+            get { return _isChecked; }
             set
             {
                 _isChecked = value;

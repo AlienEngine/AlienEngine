@@ -28,15 +28,22 @@ namespace AlienEngine.Core.Graphics.OpenGL
 {
     public static partial class GL
     {
+        #if LINUX
+        internal const string DLLName = "libGL.so";
+        #else
         internal const string DLLName = "opengl32.dll";
+        #endif
 
         const string platformErrorString = "Value to big for 32bit platform.";
+
         static string PlatformErrorString { get { return platformErrorString; } }
 
         const string platformWrongTypeErrorString = "Platform is 64bit and value need 64bit to store, but argument is only 32bit.";
+
         static string PlatformWrongTypeErrorString { get { return platformWrongTypeErrorString; } }
 
         const string platformArrayErrorString = "A value in the array to big for 32bit platform.";
+
         static string PlatformArrayErrorString { get { return platformErrorString; } }
 
         public const string MAX_NUMBER_OF_LIGHTS = "MAX_NUMBER_OF_LIGHTS";

@@ -76,10 +76,16 @@ namespace AlienEngine.ASL
         public sealed class InterfaceBlockAttribute : Attribute
         {
             public InterfaceBlockAttribute()
-            { }
+            {
+                BlockNamespace = string.Empty;
+            }
 
             public InterfaceBlockAttribute(string blockNamespace)
-            { }
+            {
+                BlockNamespace = blockNamespace;
+            }
+
+            internal string BlockNamespace { get; private set; }
         }
 
         /// <summary>

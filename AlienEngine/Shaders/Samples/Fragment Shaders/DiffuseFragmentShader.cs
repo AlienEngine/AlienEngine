@@ -104,9 +104,22 @@ namespace AlienEngine.Core.Shaders.Samples
         // --------------------
         #endregion
 
-        [In] vec3 normal;
-        [In] vec2 uv;
-        [In] vec3 position;
+        #region Fragment shader inputs
+        [InterfaceBlock("fs_in")]
+        [In]
+        struct VS_OUT
+        {
+            public vec3 normal;
+            public vec2 uv;
+            public vec3 positionRelativeToWorld;
+            public vec4 positionRelativeToCamera;
+            public float shadowDistance;
+            public vec4 fragPosLightSpace;
+            public mat3 tbn;
+        };
+
+        VS_OUT fs_in;
+        #endregion
 
         #region Lights
         // Lights
@@ -124,29 +137,27 @@ namespace AlienEngine.Core.Shaders.Samples
         MaterialState materialState;
         #endregion
 
-        #region Camera informations
-        //[Uniform]
-        //[InterfaceBlock]
-        //[Layout(UniformLayout.Shared)]
-        //struct CameraInformations
-        //{
-        //    // Position
-        //    public vec3 c_position;
-        //    // Rotation
-        //    public vec3 c_rotation;
-        //    // Near/Far planes distances
-        //    public vec2 c_depthDistances;
-        //}
-        // Position
-        [Uniform]
-        vec3 c_position;
-        // Rotation
-        [Uniform]
-        vec3 c_rotation;
-        // Near and Far planes distances
-        [Uniform]
-        vec2 c_depthDistances;
-        #endregion
+        [Uniform] sampler2D shadowMap;
+
+        float CalcShadowFactor(vec4 fragPosLightSpace)
+        {
+            // perform perspective divide
+            vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
+            // transform to [0,1] range
+            projCoords = projCoords * 0.5f + 0.5f;
+            // get closest depth value from light’s perspective (using [0,1] range fragPosLight as coords)
+            float closestDepth = texture(shadowMap, projCoords.xy).r;
+            // get depth of current fragment from light’s perspective
+            float currentDepth = projCoords.z;
+
+            // check whether current frag pos is in shadow
+            float shadow = currentDepth - 0.05f > closestDepth ? 1.0f : 0.0f;
+
+            if (currentDepth > 1.0f)
+                shadow = 0.0f;
+
+            return shadow;
+        }
 
         vec3 CalcLightInternal(LightState light, vec3 direction, vec3 normal, vec2 uv)
         {
@@ -155,6 +166,8 @@ namespace AlienEngine.Core.Shaders.Samples
 
             vec3 aTex = (materialState.hasTextureAmbient ? new vec3(texture(materialState.textureAmbient, uv)) : new vec3(1));
             vec3 dTex = (materialState.hasTextureDiffuse ? new vec3(texture(materialState.textureDiffuse, uv)) : new vec3(1));
+
+            float shadow = 1.0f;
 
             if (materialState.hasColorAmbient)
             {
@@ -168,7 +181,7 @@ namespace AlienEngine.Core.Shaders.Samples
 
             if (materialState.hasColorDiffuse)
             {
-                float diffuseFactor = max(0.0f, dot(normal, -direction));
+                float diffuseFactor = max(0.0f, dot(normal, direction));
 
                 if (diffuseFactor > 0)
                 {
@@ -178,10 +191,13 @@ namespace AlienEngine.Core.Shaders.Samples
                     {
                         DiffuseColor = DiffuseColor * dTex;
                     }
+
+                    shadow = CalcShadowFactor(fs_in.fragPosLightSpace);
                 }
             }
 
-            vec3 color = (AmbientColor + DiffuseColor) * light.Intensity;
+            vec3 color = AmbientColor +
+                         (1.0f - shadow) * DiffuseColor * light.Intensity;
 
             return color;
         }
@@ -193,7 +209,7 @@ namespace AlienEngine.Core.Shaders.Samples
 
         vec3 CalcPointLight(LightState light, vec3 normal, vec2 uv)
         {
-            vec3 LightDirection = position - light.Position;
+            vec3 LightDirection = light.Position - fs_in.positionRelativeToWorld;
             float Distance = length(LightDirection);
             LightDirection = normalize(LightDirection);
 
@@ -202,34 +218,40 @@ namespace AlienEngine.Core.Shaders.Samples
                                 light.AttenuationFactors.y * Distance +
                                 light.AttenuationFactors.z * Distance * Distance;
 
-            return Color / Attenuation;
+            Attenuation = 1.0f / Attenuation;
+
+            return Color * Attenuation;
         }
 
         vec3 CalcSpotLight(LightState light, vec3 normal, vec2 uv)
         {
-            vec3 LightToPixel = normalize(position - light.Position);
-            float SpotFactor = max(0.0f, dot(LightToPixel, normalize(light.Direction)));
+            vec3 LightToPixel = normalize(light.Position - fs_in.positionRelativeToWorld);
+            float SpotFactor = max(0.0f, dot(LightToPixel, normalize(-light.Direction)));
 
             float SpotAttenuation = pow(SpotFactor, light.FallOffExponent);
 
             vec3 Color = CalcPointLight(light, normal, uv);
 
-            return Color * SpotAttenuation;//(1.0f - (1.0f - SpotFactor) * 1.0f / (1.0f - light.CutOff.x));
+            float epsilon = light.CutOff.x - light.CutOff.y;
+            float intensity = clamp((SpotAttenuation - light.CutOff.y) / epsilon, 0.0f, 1.0f);
+
+
+            return Color * intensity;//(1.0f - (1.0f - SpotFactor) * 1.0f / (1.0f - light.CutOff.x));
         }
 
         void main()
         {
             if (materialState.hasTextureDiffuse)
             {
-                vec4 textureDiffuse = texture(materialState.textureDiffuse, uv);
+                vec4 textureDiffuse = texture(materialState.textureDiffuse, fs_in.uv);
                 if (textureDiffuse.a < 0.1f)
                 {
                     __output("discard");
                 }
             }
 
-            vec3 _normal = normalize(normal);
-            vec2 _uv = uv * materialState.textureTilling;
+            vec3 _normal = normalize(fs_in.normal);
+            vec2 _uv = fs_in.uv * materialState.textureTilling;
             vec3 _totalLight = new vec3(0);
 
             for (int i = 0; i < lights_nb; i++)

@@ -10,7 +10,7 @@ namespace AlienEngine.Core.Graphics.GLFW
         const string Library = "libglfw.so";
         #else
         const string Library = "glfw.dll";
-#endif
+        #endif
 
         private static bool _initialized = false;
 

@@ -1,4 +1,5 @@
-﻿using AlienEngine.Core.Shaders;
+﻿using AlienEngine.Core.Graphics.Buffers;
+using AlienEngine.Core.Shaders;
 using AlienEngine.Core.Graphics.OpenGL;
 
 namespace AlienEngine.Core.Graphics
