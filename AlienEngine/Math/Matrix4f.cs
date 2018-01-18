@@ -175,6 +175,8 @@ namespace AlienEngine
         /// </summary>
         /// <param name="row0">The first row of the matrix.</param>
         /// <param name="row1">The second row of the matrix.</param>
+        /// <param name="row2">The third row of the matrix.</param>
+        /// <param name="row3">The fourth row of the matrix.</param>
         public Matrix4f(Vector4f row0, Vector4f row1, Vector4f row2, Vector4f row3)
         {
             M11 = row0.X;
@@ -292,6 +294,9 @@ namespace AlienEngine
         /// <param name="values">An array of values used to populate the matrix.</param>
         public Matrix4f(float[] values)
         {
+            if (values.Length < 16)
+                throw new ArgumentException();
+
             M11 = values[0];
             M12 = values[1];
             M13 = values[2];
@@ -884,7 +889,7 @@ namespace AlienEngine
         {
             this = CreateScale(v) * this;
         }
-            
+
         /// <summary>
         /// Applies a scale transformation to this matrix.
         /// </summary>
@@ -1457,10 +1462,10 @@ namespace AlienEngine
             float d = -(2.0f * zFar * zNear) / (zFar - zNear);
 
             result = Identity;
-            result.Row0 = new Vector4f(x,  0,  0,  0);
-            result.Row1 = new Vector4f(0,  y,  0,  0);
-            result.Row2 = new Vector4f(a,  b,  c, -1);
-            result.Row3 = new Vector4f(0,  0,  d,  0);
+            result.Row0 = new Vector4f(x, 0, 0, 0);
+            result.Row1 = new Vector4f(0, y, 0, 0);
+            result.Row2 = new Vector4f(a, b, c, -1);
+            result.Row3 = new Vector4f(0, 0, d, 0);
         }
 
         /// <summary>
