@@ -28,6 +28,8 @@ namespace AlienEngine
 
         public float LineSpacing;
 
+        internal IFont FontEngine => _fontEngine;
+
         public Text()
         {
             Position = Point2f.Zero;
@@ -41,17 +43,15 @@ namespace AlienEngine
             FontType = FontType.FreeType;
         }
 
-        public override void Start()
+        protected override void Init()
         {
-            base.Start();
+            base.Init();
 
             BuildConfiguration();
 
             InitFontEngine();
 
             SetProjectionMatrix();
-
-            RendererManager.OnViewportChange += (sender, args) => SetProjectionMatrix();
         }
 
         private void BuildConfiguration()
@@ -107,6 +107,11 @@ namespace AlienEngine
         internal Sizef GetTextSize()
         {
             return _fontEngine.CalculateSize(Value);
+        }
+
+        internal Sizef GetTextSize(string value)
+        {
+            return _fontEngine.CalculateSize(value);
         }
     }
 }
