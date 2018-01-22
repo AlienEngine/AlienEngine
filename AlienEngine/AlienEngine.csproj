@@ -770,6 +770,7 @@
     <Compile Include="Threading\SpinLock.cs" />
     <Compile Include="Threading\ThreadsManager.cs" />
     <Compile Include="UI\Anchor.cs" />
+    <Compile Include="Math\Range.cs" />
     <Compile Include="UI\TextChangeEventArgs.cs" />
     <Compile Include="Utils\ConvertX.cs" />
     <Compile Include="Utils\CPUInfo.cs" />
