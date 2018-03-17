@@ -267,7 +267,7 @@ namespace AlienEngine
         /// <summary>
         /// Initializes a new instance of the <see cref="Matrix4f"/> struct.
         /// </summary>
-        /// <param name="a">The value used to populate the matrix</param>
+        /// <param name="matrix">The matrix to copy</param>
         public Matrix4f(Matrix4f matrix)
         {
             M11 = matrix.M11;
@@ -458,18 +458,12 @@ namespace AlienEngine
         /// <summary>
         /// Gets the inverse of the determinant.
         /// </summary>
-        public float OneOverDeterminant
-        {
-            get { return 1.0f / Determinant; }
-        }
+        public float OneOverDeterminant => 1.0f / Determinant;
 
         /// <summary>
         /// Determine if this instance is inversible or not.
         /// </summary>
-        public bool IsInversible
-        {
-            get { return System.Math.Abs(Determinant) >= Single.Epsilon; }
-        }
+        public bool IsInversible => System.Math.Abs(Determinant) >= Single.Epsilon;
 
         /// <summary>
         /// Gets the inversed matrix of this instance.
@@ -680,7 +674,7 @@ namespace AlienEngine
                 if (row == 1) { return Row1; }
                 if (row == 2) { return Row2; }
                 if (row == 3) { return Row3; }
-                throw new ArgumentOutOfRangeException();
+                throw new IndexOutOfRangeException();
             }
             set
             {
@@ -688,7 +682,7 @@ namespace AlienEngine
                 else if (row == 1) { Row1 = value; }
                 else if (row == 2) { Row2 = value; }
                 else if (row == 3) { Row3 = value; }
-                else throw new ArgumentOutOfRangeException();
+                else throw new IndexOutOfRangeException();
             }
         }
 
@@ -711,7 +705,7 @@ namespace AlienEngine
                 if (row == 1) { return Row1[column]; }
                 if (row == 2) { return Row2[column]; }
                 if (row == 3) { return Row3[column]; }
-                throw new ArgumentOutOfRangeException();
+                throw new IndexOutOfRangeException();
             }
             set
             {
@@ -721,6 +715,7 @@ namespace AlienEngine
                     if (column == 1) M12 = value;
                     if (column == 2) M13 = value;
                     if (column == 3) M14 = value;
+                    if (column >= 4) throw new IndexOutOfRangeException();
                 }
                 else if (row == 1)
                 {
@@ -728,6 +723,7 @@ namespace AlienEngine
                     if (column == 1) M22 = value;
                     if (column == 2) M23 = value;
                     if (column == 3) M24 = value;
+                    if (column >= 4) throw new IndexOutOfRangeException();
                 }
                 else if (row == 2)
                 {
@@ -735,6 +731,7 @@ namespace AlienEngine
                     if (column == 1) M32 = value;
                     if (column == 2) M33 = value;
                     if (column == 3) M34 = value;
+                    if (column >= 4) throw new IndexOutOfRangeException();
                 }
                 else if (row == 3)
                 {
@@ -742,8 +739,9 @@ namespace AlienEngine
                     if (column == 1) M42 = value;
                     if (column == 2) M43 = value;
                     if (column == 3) M44 = value;
+                    if (column >= 4) throw new IndexOutOfRangeException();
                 }
-                else throw new ArgumentOutOfRangeException();
+                else throw new IndexOutOfRangeException();
             }
         }
 
