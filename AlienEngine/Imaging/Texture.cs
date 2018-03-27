@@ -1,7 +1,8 @@
-﻿using AlienEngine.Core.Graphics.DevIL;
+﻿using AlienEngine.Core.Imaging.DevIL;
 using AlienEngine.Core.Graphics.OpenGL;
 using AlienEngine.Core.Resources;
 using System;
+using AlienEngine.Core.Game;
 using SharpFont;
 
 namespace AlienEngine.Imaging
@@ -57,7 +58,6 @@ namespace AlienEngine.Imaging
             _image = image;
             TextureID = 0;
             TextureTarget = target;
-            FlipY = flipY;
 
             LoadImage(image);
 

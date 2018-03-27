@@ -5,6 +5,7 @@
         DepthTest,
         DepthMask,
         Blending,
-        FaceCulling
+        FaceCulling,
+        GammaCorrection
     }
 }

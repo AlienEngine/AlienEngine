@@ -1,4 +1,6 @@
-﻿using AlienEngine.ASL;
+﻿using System;
+using AlienEngine.ASL;
+using AlienEngine.Core.Graphics.OpenGL;
 
 namespace AlienEngine.Core.Shaders.Samples
 {
@@ -6,13 +8,14 @@ namespace AlienEngine.Core.Shaders.Samples
     internal class BumpedDiffuseFragmentShader : FragmentShader
     {
         [Out] vec4 FragColor;
-        
+
         #region Structs
         // --------------------
         // Material state
         // --------------------
         struct MaterialState
         {
+            public int textureTilling;
             public uint blendMode;
             public float bumpScaling;
             public vec4 colorAmbient;
@@ -66,6 +69,7 @@ namespace AlienEngine.Core.Shaders.Samples
             public sampler2D textureReflection;
             public sampler2D textureSpecular;
         }
+
         // --------------------
         // Light State
         // --------------------
@@ -100,18 +104,27 @@ namespace AlienEngine.Core.Shaders.Samples
         // --------------------
         #endregion
 
-        [In] vec3 normal;
-        [In] vec2 uv;
-        //[In] vec2 color;
-        //[In] vec2 tbn;
-        [In] vec3 position;
+        #region Fragment shader inputs
+        [InterfaceBlock("fs_in")]
+        [In]
+        struct VS_OUT
+        {
+            public vec3 normal;
+            public vec2 uv;
+            public vec3 positionRelativeToWorld;
+            public vec4 positionRelativeToCamera;
+            public float shadowDistance;
+            public vec4 fragPosLightSpace;
+            public mat3 tbn;
+        };
 
-        // [Out] vec4 fragment;
+        VS_OUT fs_in;
+        #endregion
 
         #region Lights
         // Lights
         [Uniform]
-        [ArraySize("MAX_NUMBER_OF_LIGHTS")]
+        [ArraySize(GL.MAX_NUMBER_OF_LIGHTS)]
         LightState[] lights;
         // Number of lights
         [Uniform]
@@ -125,204 +138,173 @@ namespace AlienEngine.Core.Shaders.Samples
         #endregion
 
         #region Camera informations
-        //[Uniform]
-        //[InterfaceBlock]
-        //[Layout(UniformLayout.Shared)]
-        //struct CameraInformations
-        //{
-        //    // Position
-        //    public vec3 c_position;
-        //    // Rotation
-        //    public vec3 c_rotation;
-        //    // Near/Far planes distances
-        //    public vec2 c_depthDistances;
-        //}
-        // Position
         [Uniform]
-        vec3 c_position;
-        // Rotation
-        [Uniform]
-        vec3 c_rotation;
-        // Near/Far planes distances
-        [Uniform]
-        vec2 c_depthDistances;
+        [InterfaceBlock("camera")]
+        [Layout(UniformLayout.STD140)]
+        struct Camera
+        {
+            // Position
+            public vec3 position;
+            // Rotation
+            public vec3 rotation;
+            // Near/Far planes distances
+            public vec2 depthDistances;
+        }
+
+        private Camera camera;
         #endregion
 
-        mat3 CotangentFrame(vec3 N, vec3 p, vec2 uv)
+        [Uniform] sampler2D shadowMap;
+
+        float CalcShadowFactor(vec4 fragPosLightSpace)
         {
-            // récupère les vecteurs du triangle composant le pixel
-            vec3 dp1 = dFdx(p);
-            vec3 dp2 = dFdy(p);
-            vec2 duv1 = dFdx(uv);
-            vec2 duv2 = dFdy(uv);
+            // perform perspective divide
+            vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
+            // transform to [0,1] range
+            projCoords = projCoords * 0.5f + 0.5f;
+            // get closest depth value from light’s perspective (using [0,1] range fragPosLight as coords)
+            float closestDepth = texture(shadowMap, projCoords.xy).r;
+            // get depth of current fragment from light’s perspective
+            float currentDepth = projCoords.z;
 
-            // résout le système linéaire
-            vec3 dp2perp = cross(dp2, N);
-            vec3 dp1perp = cross(N, dp1);
-            vec3 T = dp2perp * duv1.x + dp1perp * duv2.x;
-            vec3 B = dp2perp * duv1.y + dp1perp * duv2.y;
+            // check whether current frag pos is in shadow
+            float shadow = currentDepth > closestDepth ? 1.0f : 0.0f;
 
-            // construit une trame invariante à l'échelle 
-            float invmax = inversesqrt(max(dot(T, T), dot(B, B)));
-            return new mat3(T * invmax, B * invmax, N);
+            if (currentDepth > 1.0f)
+                shadow = 0.0f;
+
+            return shadow;
         }
 
-        vec3 PerturbNormal(vec3 N, vec3 V, vec2 texcoord)
+        vec3 CalcLightInternal(LightState light, vec3 direction, vec3 normal, vec2 uv)
         {
-            // N, la normale interpolée et
-            // V, le vecteur vue (vertex dirigé vers l'œil)
-            vec3 map = texture(materialState.textureNormal, texcoord).rgb;
-            map = map * 255f / 127f - 128f / 127f;
-            mat3 TBN = CotangentFrame(N, -V, texcoord);
-            return normalize(TBN * map);
-        }
+            if (materialState.hasTextureNormal)
+            {
+                direction = normalize(fs_in.tbn * direction);
+            }
 
-        vec4 CalcLightInternal(LightState light, vec3 direction, vec3 normal)
-        {
-            vec4 mat = (materialState.hasColorAmbient ? materialState.colorAmbient : new vec4(1));
-            vec4 AmbientColor = new vec4(light.AmbientColor.rgb * mat.rgb, light.AmbientColor.a * mat.a);
-            vec4 DiffuseColor = new vec4(0, 0, 0, 0);
-            vec4 SpecularColor = new vec4(0, 0, 0, 0);
+            vec3 AmbientColor = new vec3(0);
+            vec3 DiffuseColor = new vec3(0);
 
-            //if (materialState.hasColorDiffuse)
-            //{
-                float diffuseFactor = max(0.0f, dot(normal, -direction));
+            vec3 aTex = (materialState.hasTextureAmbient ? new vec3(texture(materialState.textureAmbient, uv)) : new vec3(1));
+            vec3 dTex = (materialState.hasTextureDiffuse ? new vec3(texture(materialState.textureDiffuse, uv)) : new vec3(1));
+
+            float shadow = 1.0f;
+
+            if (materialState.hasColorAmbient)
+            {
+                AmbientColor = light.AmbientColor.rgb * materialState.colorAmbient.rgb;
+
+                if (materialState.hasTextureAmbient)
+                {
+                    AmbientColor = AmbientColor * aTex;
+                }
+            }
+
+            if (materialState.hasColorDiffuse)
+            {
+                float diffuseFactor = max(0.0f, dot(normal, direction));
 
                 if (diffuseFactor > 0)
                 {
-                    DiffuseColor = new vec4(light.DiffuseColor.rgb * materialState.colorDiffuse.rgb * diffuseFactor, light.DiffuseColor.a * materialState.colorDiffuse.a);
+                    DiffuseColor = light.DiffuseColor.rgb * materialState.colorDiffuse.rgb * diffuseFactor;
 
-                    //if (materialState.hasColorSpecular)
-                    //{
-                        vec3 vertexToEye = normalize(c_position - position);
-                        vec3 lv = -direction + vertexToEye;
-                        vec3 halfway = lv / length(lv);
-                        vec3 PN = PerturbNormal(normalize(normal), -vertexToEye, uv);
-                        //vec3 lightReflect = normalize(reflect(direction, normal));
-                        float specularFactor = max(0.0f, dot(PN, halfway));
+                    if (materialState.hasTextureDiffuse)
+                    {
+                        DiffuseColor = DiffuseColor * dTex;
+                    }
 
-                        if (specularFactor > 0)
-                        {
-                            specularFactor = pow(specularFactor, materialState.shininess);
-                            SpecularColor = new vec4(light.SpecularColor.rgb * materialState.colorSpecular.rgb * materialState.shininessStrength * specularFactor, light.SpecularColor.a * materialState.colorSpecular.a);
-                        }
-                //}
+                    shadow = CalcShadowFactor(fs_in.fragPosLightSpace);
                 }
-            //}
+            }
 
-            vec4 color = (AmbientColor + DiffuseColor + SpecularColor);
+            vec3 color = AmbientColor +
+                         (1.0f - shadow) * DiffuseColor * light.Intensity;
 
-            return  new vec4(color.rgb * light.Intensity, color.a);
+            return color;
         }
 
-        vec4 CalcDirectionalLight(LightState light, vec3 Normal)
+        vec3 CalcDirectionalLight(LightState light, vec3 normal, vec2 uv)
         {
-            return CalcLightInternal(light, light.Direction, Normal);
+            return CalcLightInternal(light, light.Direction, normal, uv);
         }
 
-        vec4 CalcPointLight(LightState light, vec3 Normal)
+        vec3 CalcPointLight(LightState light, vec3 normal, vec2 uv)
         {
-            vec3 LightDirection = position - light.Position;
+            vec3 LightDirection = light.Position - fs_in.positionRelativeToWorld;
             float Distance = length(LightDirection);
             LightDirection = normalize(LightDirection);
 
-            vec4 Color = CalcLightInternal(light, LightDirection, Normal);
+            vec3 Color = CalcLightInternal(light, LightDirection, normal, uv);
             float Attenuation = light.AttenuationFactors.x +
                                 light.AttenuationFactors.y * Distance +
                                 light.AttenuationFactors.z * Distance * Distance;
 
-            return Color / Attenuation;
+            Attenuation = 1.0f / Attenuation;
+
+            return Color * Attenuation;
         }
 
-        vec4 CalcSpotLight(LightState light, vec3 Normal)
+        vec3 CalcSpotLight(LightState light, vec3 normal, vec2 uv)
         {
-            vec3 LightToPixel = normalize(position - light.Position);
-            float SpotFactor = max(0.0f, dot(LightToPixel, normalize(light.Direction)));
+            vec3 LightToPixel = normalize(light.Position - fs_in.positionRelativeToWorld);
+            float SpotFactor = max(0.0f, dot(LightToPixel, normalize(-light.Direction)));
 
-            if (SpotFactor > light.CutOff.x)
-            {
-                float spotValue = smoothstep(light.CutOff.x, light.CutOff.y, SpotFactor);
-                float spotAttenuation = pow(spotValue, light.FallOffExponent);
-                vec4 Color = CalcPointLight(light, Normal);
-                return Color * spotAttenuation;//(1.0f - (1.0f - SpotFactor) * 1.0f / (1.0f - light.CutOff.x));
-            }
-            else
-            {
-                return new vec4(0, 0, 0, 0);
-            }
+            float SpotAttenuation = pow(SpotFactor, light.FallOffExponent);
+
+            vec3 Color = CalcPointLight(light, normal, uv);
+
+            float epsilon = light.CutOff.x - light.CutOff.y;
+            float intensity = clamp((SpotAttenuation - light.CutOff.y) / epsilon, 0.0f, 1.0f);
+
+
+            return Color * intensity;//(1.0f - (1.0f - SpotFactor) * 1.0f / (1.0f - light.CutOff.x));
         }
 
         void main()
         {
-            vec3 _normal = normalize(normal);
-            vec4 _totalLight = new vec4(0);
+            vec3 _normal = normalize(fs_in.normal);
+            vec2 _uv = fs_in.uv * materialState.textureTilling;
+            vec3 _totalLight = new vec3(0);
+
+            if (materialState.hasTextureDiffuse)
+            {
+                vec4 textureDiffuse = texture(materialState.textureDiffuse, _uv);
+                if (textureDiffuse.a < 0.1f)
+                {
+                    __output("discard");
+                }
+            }
+
+            if (materialState.hasTextureNormal)
+            {
+                _normal = texture(materialState.textureNormal, _uv).rgb;
+                _normal = normalize(_normal * 2.0f - 1.0f);
+            }
+
 
             for (int i = 0; i < lights_nb; i++)
             {
                 // If it is a spot light
                 if (lights[i].Type == 1)
                 {
-                    _totalLight += CalcSpotLight(lights[i], _normal);
+                    _totalLight += CalcSpotLight(lights[i], _normal, _uv);
                 }
 
                 // If it is a directional light
                 if (lights[i].Type == 2)
                 {
-                    _totalLight += CalcDirectionalLight(lights[i], _normal);
+                    _totalLight += CalcDirectionalLight(lights[i], _normal, _uv);
                 }
 
                 // If it is a point light
                 if (lights[i].Type == 3)
                 {
-                    _totalLight += CalcPointLight(lights[i], _normal);
+                    _totalLight += CalcPointLight(lights[i], _normal, _uv);
                 }
             }
 
-            // Diffuse Texture Light Intensity
-            if (materialState.hasTextureDiffuse)
-            {
-                FragColor = texture(materialState.textureDiffuse, uv) * _totalLight;
-            }
-            else
-            {
-                FragColor = _totalLight;
-            }
-
-            //float Ip = 1 / length(ld);
-            //vec3 H = normalize(ld + viewport_vector);
-
-            //// Ambient Light Intensity
-            //vec4 ambientColorIntensity = colorAmbient; // Ka * Ia
-
-            //// Diffuse Light Intensity
-            //vec4 diffuseColorIntensity = colorDiffuse * Ip * max(0, dot(normalize(normal), normalize(ld))); // Kd * Ip * (N.L)
-            //diffuseColorIntensity = clamp(diffuseColorIntensity, 0.0f, 1.0f);
-
-            //// Specular Light Intensity
-            //vec4 specularColorIntensity = colorSpecular * Ip * pow(max(0, dot(normalize(normal), H)), shininess); // Ks * Ip * (R.V)^n
-            //specularColorIntensity = clamp(specularColorIntensity, 0.0f, 1.0f);
-
-            //// Edge detection
-            ////Black color if dot product is smaller than 0.3
-            ////else keep the same colors
-            ////float edgeDetection = (dot(normalize(viewport_vector), normalize(normal)) > 0.3f) ? 1 : 0;
-
-            ////vec4 color = new vec4(edgeDetection * (ambientColorIntensity.rgb + diffuseColorIntensity.rgb + specularColorIntensity.rgb + diffuseTextureIntensity.rgb), opacity * (ambientColorIntensity.a + diffuseColorIntensity.a + specularColorIntensity.a + diffuseTextureIntensity.a));
-
-            ////float intensity = dot(normalize(ld), normalize(normal));
-
-            ////if (intensity > 0.95f)
-            ////    color = new vec4(color.rgb * 1.00f, color.a);
-            ////else if (intensity < 0.95f && intensity > 0.5f)
-            ////    color = new vec4(color.rgb * 0.95f, color.a);
-            ////else if (intensity < 0.5f && intensity > 0.25f)
-            ////    color = new vec4(color.rgb * 0.5f, color.a);
-            ////else if (intensity < 0.25f && intensity > 0.0f)
-            ////    color = new vec4(color.rgb * 0.25f, color.a);
-            ////else
-            ////    color = new vec4(color.rgb * 0.1f, color.a);
-
-            //gl_FragColor = diffuseColorIntensity * new vec4(ambientColorIntensity.rgb + diffuseColorIntensity.rgb + specularColorIntensity.rgb, opacity * min(1.0f, ambientColorIntensity.a + diffuseColorIntensity.a + specularColorIntensity.a));
+            FragColor = new vec4(_totalLight, 1);
         }
     }
 }

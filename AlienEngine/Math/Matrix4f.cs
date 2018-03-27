@@ -175,6 +175,8 @@ namespace AlienEngine
         /// </summary>
         /// <param name="row0">The first row of the matrix.</param>
         /// <param name="row1">The second row of the matrix.</param>
+        /// <param name="row2">The third row of the matrix.</param>
+        /// <param name="row3">The fourth row of the matrix.</param>
         public Matrix4f(Vector4f row0, Vector4f row1, Vector4f row2, Vector4f row3)
         {
             M11 = row0.X;
@@ -292,6 +294,9 @@ namespace AlienEngine
         /// <param name="values">An array of values used to populate the matrix.</param>
         public Matrix4f(float[] values)
         {
+            if (values.Length < 16)
+                throw new ArgumentException();
+
             M11 = values[0];
             M12 = values[1];
             M13 = values[2];
@@ -323,15 +328,7 @@ namespace AlienEngine
         {
             get
             {
-#if !WINDOWS
-                Vector3f vector = new Vector3f();
-#else
-                Vector3f vector;
-#endif
-                vector.X = M31;
-                vector.Y = M32;
-                vector.Z = M33;
-                return vector;
+                return new Vector3f(M31, M32, M33);
             }
             set
             {
@@ -348,15 +345,7 @@ namespace AlienEngine
         {
             get
             {
-#if !WINDOWS
-                Vector3f vector = new Vector3f();
-#else
-                Vector3f vector;
-#endif
-                vector.X = -M21;
-                vector.Y = -M22;
-                vector.Z = -M23;
-                return vector;
+                return new Vector3f(-M21, -M22, -M23);
             }
             set
             {
@@ -373,15 +362,7 @@ namespace AlienEngine
         {
             get
             {
-#if !WINDOWS
-                Vector3f vector = new Vector3f();
-#else
-                Vector3f vector;
-#endif
-                vector.X = -M31;
-                vector.Y = -M32;
-                vector.Z = -M33;
-                return vector;
+                return new Vector3f(-M31, -M32, -M33);
             }
             set
             {
@@ -398,15 +379,7 @@ namespace AlienEngine
         {
             get
             {
-#if !WINDOWS
-                Vector3f vector = new Vector3f();
-#else
-                Vector3f vector;
-#endif
-                vector.X = -M11;
-                vector.Y = -M12;
-                vector.Z = -M13;
-                return vector;
+                return new Vector3f(-M11, -M12, -M13);
             }
             set
             {
@@ -423,15 +396,7 @@ namespace AlienEngine
         {
             get
             {
-#if !WINDOWS
-                Vector3f vector = new Vector3f();
-#else
-                Vector3f vector;
-#endif
-                vector.X = M11;
-                vector.Y = M12;
-                vector.Z = M13;
-                return vector;
+                return new Vector3f(M11, M12, M13);
             }
             set
             {
@@ -448,15 +413,7 @@ namespace AlienEngine
         {
             get
             {
-#if !WINDOWS
-                Vector3f vector = new Vector3f();
-#else
-                Vector3f vector;
-#endif
-                vector.X = M21;
-                vector.Y = M22;
-                vector.Z = M23;
-                return vector;
+                return new Vector3f(M21, M22, M23);
             }
             set
             {
@@ -900,7 +857,7 @@ namespace AlienEngine
         /// <summary>
         /// Applies a rotation transformation to this matrix.
         /// </summary>
-        /// <param name="angle">The angle in radians to use for rotation</param>
+        /// <param name="angle">The angle in radians to use for rotation.</param>
         /// <param name="x">X axis.</param>
         /// <param name="y">Y axis.</param>
         /// <param name="z">Z axis.</param>
@@ -912,9 +869,9 @@ namespace AlienEngine
         /// <summary>
         /// Applies a rotation transformation to this matrix by vector <paramref name="v"/>.
         /// </summary>
-        /// <param name="angleX">X rotation.</param>
-        /// <param name="angleY">Y rotation.</param>
-        /// <param name="angleZ">Z rotation.</param>
+        /// <param name="angleX">Angle on X axis in radians.</param>
+        /// <param name="angleY">Angle on Y axis in radians.</param>
+        /// <param name="angleZ">Angle on Z axis in radians.</param>
         public void Rotate(float angleX, float angleY, float angleZ)
         {
             this = CreateRotation(angleX, angleY, angleZ) * this;
@@ -932,7 +889,7 @@ namespace AlienEngine
         {
             this = CreateScale(v) * this;
         }
-            
+
         /// <summary>
         /// Applies a scale transformation to this matrix.
         /// </summary>
@@ -1057,9 +1014,9 @@ namespace AlienEngine
         /// <summary>
         /// Builds a rotation matrix for a rotation.
         /// </summary>
-        /// <param name="angleX">X rotation.</param>
-        /// <param name="angleY">Y rotation.</param>
-        /// <param name="angleZ">Z rotation.</param>
+        /// <param name="angleX">Angle on X axis in radians.</param>
+        /// <param name="angleY">Angle on Y axis in radians.</param>
+        /// <param name="angleZ">Angle on Z axis in radians.</param>
         /// <param name="result">The resulting Matrix4f instance.</param>
         public static void CreateRotation(float angleX, float angleY, float angleZ, out Matrix4f result)
         {
@@ -1079,9 +1036,9 @@ namespace AlienEngine
         /// <summary>
         /// Builds a rotation matrix for a rotation.
         /// </summary>
-        /// <param name="angleX">X rotation.</param>
-        /// <param name="angleY">Y rotation.</param>
-        /// <param name="angleZ">Z rotation.</param>
+        /// <param name="angleX">X rotation in radians.</param>
+        /// <param name="angleY">Y rotation in radians.</param>
+        /// <param name="angleZ">Z rotation in radians.</param>
         /// <returns>The resulting Matrix4f instance.</returns>
         public static Matrix4f CreateRotation(float angleX, float angleY, float angleZ)
         {
@@ -1369,13 +1326,13 @@ namespace AlienEngine
             float invTB = 1.0f / (top - bottom);
             float invFN = 1.0f / (zFar - zNear);
 
-            result.M11 = 2 * invRL;
-            result.M22 = 2 * invTB;
-            result.M33 = -invFN;
+            result.M11 = +2 * invRL;
+            result.M22 = +2 * invTB;
+            result.M33 = -2 * invFN;
 
             result.M41 = -(right + left) * invRL;
             result.M42 = -(top + bottom) * invTB;
-            result.M43 = -zNear * invFN;
+            result.M43 = -(zFar + zNear) * invFN;
         }
 
         /// <summary>
@@ -1505,10 +1462,10 @@ namespace AlienEngine
             float d = -(2.0f * zFar * zNear) / (zFar - zNear);
 
             result = Identity;
-            result.Row0 = new Vector4f(x,  0,  0,  0);
-            result.Row1 = new Vector4f(0,  y,  0,  0);
-            result.Row2 = new Vector4f(a,  b,  c, -1);
-            result.Row3 = new Vector4f(0,  0,  d,  0);
+            result.Row0 = new Vector4f(x, 0, 0, 0);
+            result.Row1 = new Vector4f(0, y, 0, 0);
+            result.Row2 = new Vector4f(a, b, c, -1);
+            result.Row3 = new Vector4f(0, 0, d, 0);
         }
 
         /// <summary>
@@ -1732,8 +1689,7 @@ namespace AlienEngine
                 Vector3f f = forward;
                 f.Normalize();
 
-                Vector3f r = up;
-                r = Vector3f.Cross(r, f);
+                Vector3f r = Vector3f.Cross(up, f);
                 r.Normalize();
 
                 Vector3f u = Vector3f.Cross(f, r);

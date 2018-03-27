@@ -5,6 +5,7 @@ using Assimp;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using AlienEngine.Core.Graphics.Buffers;
 using AlienEngine.Core.Rendering;
 
 namespace AlienEngine.Core.Graphics
@@ -21,6 +22,8 @@ namespace AlienEngine.Core.Graphics
         List<Vector3f> positions;
         List<Vector3f> normals;
         List<Vector2f> uvs;
+        List<Vector3f> tangents;
+        List<Vector3f> bitangents;
         List<int> indices;
 
         private string _filename;
@@ -41,7 +44,7 @@ namespace AlienEngine.Core.Graphics
 
             try
             {
-                Scene scene = importer.ImportFile(file, PostProcessSteps.Triangulate | PostProcessSteps.SortByPrimitiveType | PostProcessSteps.GenerateSmoothNormals);
+                Scene scene = importer.ImportFile(file, PostProcessSteps.Triangulate | PostProcessSteps.SortByPrimitiveType | PostProcessSteps.GenerateSmoothNormals | PostProcessSteps.CalculateTangentSpace);
                 _initFromScene(scene);
                 _meshes = new Mesh[_entries.Length];
 
@@ -55,6 +58,8 @@ namespace AlienEngine.Core.Graphics
                 VBO<Vector3f> vertex = new VBO<Vector3f>(positions.ToArray());
                 VBO<Vector2f> texture = new VBO<Vector2f>(uvs.ToArray());
                 VBO<Vector3f> normal = new VBO<Vector3f>(normals.ToArray());
+                VBO<Vector3f> tangent = new VBO<Vector3f>(tangents.ToArray());
+                VBO<Vector3f> bitangent = new VBO<Vector3f>(bitangents.ToArray());
                 VBO<int> index = new VBO<int>(indices.ToArray(), BufferTarget.ElementArrayBuffer, BufferUsageHint.StaticRead);
 
                 GL.BindBuffer(vertex.BufferTarget, vertex.ID);
@@ -68,6 +73,14 @@ namespace AlienEngine.Core.Graphics
                 GL.BindBuffer(normal.BufferTarget, normal.ID);
                 GL.EnableVertexAttribArray(GL.VERTEX_NORMAL_LOCATION);
                 GL.VertexAttribPointer(GL.VERTEX_NORMAL_LOCATION, normal.Size, normal.PointerType, false, 0, 0);
+
+                GL.BindBuffer(tangent.BufferTarget, tangent.ID);
+                GL.EnableVertexAttribArray(GL.VERTEX_TANGENT_LOCATION);
+                GL.VertexAttribPointer(GL.VERTEX_TANGENT_LOCATION, tangent.Size, tangent.PointerType, false, 0, 0);
+
+                GL.BindBuffer(bitangent.BufferTarget, bitangent.ID);
+                GL.EnableVertexAttribArray(GL.VERTEX_BITANGENT_LOCATION);
+                GL.VertexAttribPointer(GL.VERTEX_BITANGENT_LOCATION, bitangent.Size, bitangent.PointerType, false, 0, 0);
 
                 GL.BindBuffer(index.BufferTarget, index.ID);
 
@@ -137,6 +150,8 @@ namespace AlienEngine.Core.Graphics
 
             positions = new List<Vector3f>();
             normals = new List<Vector3f>();
+            tangents = new List<Vector3f>();
+            bitangents = new List<Vector3f>();
             uvs = new List<Vector2f>();
             indices = new List<int>();
 
@@ -159,6 +174,8 @@ namespace AlienEngine.Core.Graphics
             // Reserve space in the vectors for the vertex attributes and indices
             positions.Capacity = numVertices;
             normals.Capacity = numVertices;
+            tangents.Capacity = numVertices;
+            bitangents.Capacity = numVertices;
             uvs.Capacity = numVertices;
             indices.Capacity = numIndices;
 
@@ -184,10 +201,14 @@ namespace AlienEngine.Core.Graphics
                     Assimp.Vector3D pos = mesh.HasVertices ? mesh.Vertices[i] : Zero3D;
                     Assimp.Vector3D normal = mesh.HasNormals ? mesh.Normals[i] : Zero3D;
                     Assimp.Vector3D uv = mesh.HasTextureCoords(0) ? mesh.TextureCoordinateChannels[0][i] : Zero3D;
+                    Vector3f tn = (Vector3f)(mesh.HasTangentBasis ? mesh.Tangents[i] : Zero3D);
+                    Vector3f btn = (Vector3f)(mesh.HasTangentBasis ? mesh.BiTangents[i] : Zero3D);
 
                     positions.Add(new Vector3f(pos.X, pos.Y, pos.Z));
                     normals.Add(new Vector3f(normal.X, normal.Y, normal.Z));
                     uvs.Add(new Vector2f(uv.X, uv.Y));
+                    tangents.Add(tn);
+                    bitangents.Add(btn);
                 }
 
                 // Populate the index buffer
@@ -486,16 +507,16 @@ namespace AlienEngine.Core.Graphics
             {
                 if (disposing)
                 {
-                    positions.Clear();
+                    positions?.Clear();
                     positions = null;
 
-                    uvs.Clear();
+                    uvs?.Clear();
                     uvs = null;
 
-                    indices.Clear();
+                    indices?.Clear();
                     indices = null;
 
-                    normals.Clear();
+                    normals?.Clear();
                     normals = null;
                 }
 

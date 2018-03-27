@@ -5,6 +5,7 @@ using AlienEngine.Core.Graphics.OpenGL;
 using AlienEngine.Core.Rendering;
 using System;
 using System.Threading;
+using AlienEngine.Core.Graphics.Buffers;
 
 namespace AlienEngine
 {
@@ -17,13 +18,13 @@ namespace AlienEngine
         /// </summary>
         private GameWindow _window;
 
-        private FBO _renderFBO;
-
-        private FBO _screenFBO;
+        private static Application _instance;
 
         #endregion
 
         #region Properties
+
+        public static Application Instance => _instance;
 
         /// <summary>
         /// The game window.
@@ -35,10 +36,15 @@ namespace AlienEngine
         /// <summary>
         /// 
         /// </summary>
-        public Application()
+        protected Application()
         {
-            // Create the game window
-            _window = new GameWindow(GameSettings.GameWindowSize, GameSettings.GameWindowTitle);
+            if (_instance == null)
+            {
+                // Create the game window
+                _window = new GameWindow(GameSettings.GameWindowSize, GameSettings.GameWindowTitle);
+
+                _instance = this;
+            }
         }
 
         /// <summary>
@@ -47,19 +53,12 @@ namespace AlienEngine
         /// </summary>
         public static void Quit()
         {
-            // Stop the game
-            Game.Instance.Stop();
-
-            // Close the game window
-            Game.Instance.Window.Destroy();
-
-            // Stop the engine
-            Engine.Stop();
+            _instance._stop();
         }
 
         public void Start()
         {
-            if (Game.Instance.Started) return;
+            if (Game.Instance.Running) return;
             else _run();
         }
 
@@ -87,17 +86,14 @@ namespace AlienEngine
             int frames = 0;
             int frameCounter = 0;
 
-            double frameTime = Time.SECOND / GameSettings.GameFPS;
+            double frameTime = Time.SECOND / GameSettings.GameFps;
 
             // Save the last frame time
             double lastTime = Time.GetTime();
             double unprocessedTime = 0;
 
-            // Start the game.
-            Game.Instance.Start();
-
             // Run the rendering loop until the user has attempted to close the window.
-            while (Game.Instance.Started)
+            while (Game.Instance.Running)
             {
                 bool rend = false;
 
@@ -119,17 +115,6 @@ namespace AlienEngine
 
                 while (unprocessedTime >= frameTime)
                 {
-                    rend = true;
-
-                    // Sets the delta time
-                    Time.SetDelta(Game.Instance.Paused ? 0 : unprocessedTime / frameTime);
-
-                    // Update all game elements and components
-                    Game.Instance.Update();
-
-                    // Update input manager
-                    Input.Update();
-
                     if (_window.ShouldClose())
                     {
                         _stop();
@@ -140,6 +125,17 @@ namespace AlienEngine
                         frames = 0;
                         frameCounter = 0;
                     }
+
+                    rend = true;
+
+                    // Sets the delta time
+                    Time.SetDelta(Game.Instance.Paused ? 0 : deltaTime);
+
+                    // Update all game elements and components
+                    Game.Instance.Update();
+
+                    // Update input manager
+                    Input.Update();
 
                     unprocessedTime -= frameTime;
                 }
@@ -167,7 +163,7 @@ namespace AlienEngine
 
         private void _stop()
         {
-            if (!Game.Instance.Started) return;
+            if (!Game.Instance.Running) return;
             else Game.Instance.Stop();
         }
 
@@ -191,14 +187,14 @@ namespace AlienEngine
             // Initialize AlienEngine
             Engine.Start();
 
-            // Create framebuffer objects
-            _renderFBO = new FBO(GameSettings.GameWindowSize, mipmaps: false, multisampled: GameSettings.MultisampleEnabled);
-            _screenFBO = new FBO(_renderFBO.Size, mipmaps: false);
-
-            // Set the renderer viewport
+            // Set the renderer viewport and the aspect ratio
             int wi, he;
             _window.GetFramebufferSize(out wi, out he);
-            RendererManager.SetViewport(0, 0, wi, he);
+
+            if (GameSettings.GameWindowHasAspectRatio)
+                RendererManager.SetViewportWithAspectRatio(wi, he);
+            else
+                RendererManager.SetViewport(0, 0, wi, he);
 
             // Enable depth testing
             RendererManager.DepthTest();
@@ -212,25 +208,20 @@ namespace AlienEngine
             // Enable Multi Samples
             RendererManager.MultiSample();
 
+            // Enable depth mask
             RendererManager.DepthMask();
+
+            // Start the game.
+            Game.Instance.Start();
+
+            // Initialize the renderer manager
+            RendererManager.Init();
         }
 
         public void Render()
         {
-            // Clear the screen
-            RendererManager.ClearScreen(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit | ClearBufferMask.StencilBufferBit);
-
-            // Enable Framebuffer
-            _renderFBO.Enable();
-
-            // Render the scene.
-            Game.Instance.CurrentScene.Render();
-
-            // Disable framebufer
-            _renderFBO.Disable(_screenFBO);
-
-            // Render the screen (output of the frame buffer)
-            RendererManager.RenderScreen(GameSettings.MultisampleEnabled ? _screenFBO : _renderFBO);
+            // Process rendering
+            RendererManager.Process();
 
             // Swap front and back buffers
             GameWindow.SwapBuffers(ref _window);

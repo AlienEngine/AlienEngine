@@ -125,7 +125,7 @@ namespace AlienEngine.Core.Game
         /// <summary>
         /// Creates a new scene.
         /// </summary>
-        public Scene(string name)
+        protected Scene(string name)
         {
             _name = name;
             
@@ -192,6 +192,8 @@ namespace AlienEngine.Core.Game
                     AddGameElement(child);
                 }
 
+                gameElement.OnAddToScene(this);
+
                 OnAddGameElement();
             }
         }
@@ -230,12 +232,18 @@ namespace AlienEngine.Core.Game
         public virtual void Unload()
         { }
 
+        /// <summary>
+        /// Starts the <see cref="Scene"/>.
+        /// </summary>
         public virtual void Start()
         {
             foreach (GameElement element in _gameElements)
                 element.Start();
         }
 
+        /// <summary>
+        /// Triggered before the frame's update of the <see cref="Scene"/>.
+        /// </summary>
         public virtual void BeforeUpdate()
         {
             foreach (GameElement element in _gameElements)
@@ -251,6 +259,9 @@ namespace AlienEngine.Core.Game
                 element.Update();
         }
 
+        /// <summary>
+        /// Triggered after the frame's update of the <see cref="Scene"/>.
+        /// </summary>
         public virtual void AfterUpdate()
         {
             foreach (GameElement element in _gameElements)

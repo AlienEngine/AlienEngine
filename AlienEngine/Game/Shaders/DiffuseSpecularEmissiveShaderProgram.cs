@@ -6,14 +6,14 @@ namespace AlienEngine.Shaders
 {
     public class DiffuseSpecularEmissiveShaderProgram : ShaderProgram
     {
-        private static UBO _cameraUBO;
-        private static UBO _lightsUBO;
+        //private static UBO _cameraUBO;
+        //private static UBO _lightsUBO;
 
-        static DiffuseSpecularEmissiveShaderProgram()
-        {
-            _cameraUBO = null;
-            _lightsUBO = null;
-        }
+        //static DiffuseSpecularEmissiveShaderProgram()
+        //{
+        //    _cameraUBO = null;
+        //    _lightsUBO = null;
+        //}
 
         public DiffuseSpecularEmissiveShaderProgram() : base(new DiffuseVertexShader(), new DiffuseSpecularEmissiveFragmentShader())
         {

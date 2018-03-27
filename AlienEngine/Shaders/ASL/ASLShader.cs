@@ -214,6 +214,8 @@ namespace AlienEngine.ASL
             {
                 var isInterfaceBlock = structure.HasCustomAttributes && structure.HasAttribute<InterfaceBlockAttribute>();
                 TypeReference interfaceBlockType = null;
+                var interfaceBlockAttribute = isInterfaceBlock ? structure.CustomAttributes.Where(a => a.AttributeType.Is<InterfaceBlockAttribute>()).First() : null;
+                var interfaceBlockNamespace = isInterfaceBlock && interfaceBlockAttribute.ConstructorArguments.Count > 0 ? interfaceBlockAttribute.ConstructorArguments.First().Value.ToString() : string.Empty;
 
                 if (isInterfaceBlock)
                 {
@@ -261,7 +263,7 @@ namespace AlienEngine.ASL
                     ((this is GeometryShader) ? structure.CustomAttributes.Where(a => a.AttributeType.Is<GeometryShader.LayoutAttribute>()) : null));
                 var layout = (layoutAttr != null && layoutAttr.Count() > 0) ? layoutAttr.First() : null;
 
-                yield return new ASLShaderStruct(structure.Name, isInterfaceBlock, interfaceBlockType, fields, layout);
+                yield return new ASLShaderStruct(structure.Name, isInterfaceBlock, interfaceBlockType, interfaceBlockNamespace, fields, layout);
             }
         }
 

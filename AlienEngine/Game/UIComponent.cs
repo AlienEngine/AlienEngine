@@ -37,7 +37,7 @@ namespace AlienEngine
                     case Origin.MiddleLeft:
                         position.Y -= Size.Height / 2f;
                         break;
-                    case Origin.Middle:
+                    case Origin.Center:
                         position.X -= Size.Width / 2f;
                         position.Y -= Size.Height / 2f;
                         break;
@@ -57,6 +57,11 @@ namespace AlienEngine
             }
         }
 
+        /// <summary>
+        /// Defines if the button's state is hover.
+        /// </summary>
+        private bool _isHover;
+
         private Mesh _quad;
 
         protected Point2f CorrectedPosition;
@@ -69,11 +74,21 @@ namespace AlienEngine
 
         public Vector2f Scale;
 
-        public Color4 ForegroundColor;
+        public Color4 ForegroundColor = Color4.Transparent;
 
-        public Color4 BackgroundColor;
+        public Color4 BackgroundColor = Color4.Transparent;
+
+        /// <summary>
+        /// The background <see cref="Color4"/> when the mouse is over.
+        /// </summary>
+        public Color4 HoverColor = Color4.Transparent;
 
         public Texture BackgroundTexture;
+
+        /// <summary>
+        /// The button's background <see cref="Texture"/> when the mouse is over.
+        /// </summary>
+        public Texture HoverTexture;
 
         public Anchor Anchor;
 
@@ -81,10 +96,14 @@ namespace AlienEngine
 
         public Rectanglef Rectangle => new Rectanglef(Position, Size);
 
+        public bool IsHover => _isHover;
+
+        public event Action Hover;
+
         private ColoredUIShaderProgram _coloredUIShader;
         private TexturedUIShaderProgram _texturedUIShader;
 
-        private Matrix4f _projectionMatrix;
+        protected Matrix4f ProjectionMatrix;
 
         protected UIComponent()
         {
@@ -94,11 +113,29 @@ namespace AlienEngine
             ResourcesManager.AddDisposableResource(this);
         }
 
+        public override void Start()
+        {
+            InitUI();
+
+            Input.AddMouseMoveEvent((sender, args) =>
+            {
+                _isHover = Enabled && !Input.MouseIsGrabbed && Rectangled.Contains(args.Location);
+            });
+        }
+
+        public override void Update()
+        {
+            if (_isHover)
+                Hover?.Invoke();
+        }
+
         public void RenderColoredQuad()
         {
-            if (BackgroundColor == Color4.Transparent) return;
+            Color4 color = _isHover ? HoverColor : BackgroundColor;
 
-            RenderColoredQuad(BackgroundColor);
+            if (color == Color4.Transparent) return;
+
+            RenderColoredQuad(color);
         }
 
         public void RenderColoredQuad(Color4 color)
@@ -111,7 +148,7 @@ namespace AlienEngine
             _coloredUIShader.Bind();
             _coloredUIShader.SetPosition(new Vector3f(CorrectedPosition.X, CorrectedPosition.Y, 0));
             _coloredUIShader.SetColor(color);
-            _coloredUIShader.SetProjectionMatrix(_projectionMatrix);
+            _coloredUIShader.SetProjectionMatrix(ProjectionMatrix);
 
             _quad.Render();
 
@@ -120,9 +157,11 @@ namespace AlienEngine
 
         public void RenderTexturedQuad()
         {
-            if (BackgroundTexture == null) return;
+            Texture texture = IsHover ? HoverTexture : BackgroundTexture;
 
-            RenderTexturedQuad(BackgroundTexture);
+            if (texture == null) return;
+
+            RenderTexturedQuad(texture);
         }
 
         public void RenderTexturedQuad(Texture texture)
@@ -136,7 +175,7 @@ namespace AlienEngine
             _texturedUIShader.Bind();
             _texturedUIShader.SetPosition(new Vector3f(CorrectedPosition.X, CorrectedPosition.Y, 0));
             _texturedUIShader.SetTexture(GL.DIFFUSE_TEXTURE_UNIT_INDEX);
-            _texturedUIShader.SetProjectionMatrix(_projectionMatrix);
+            _texturedUIShader.SetProjectionMatrix(ProjectionMatrix);
 
             _quad.Render();
 
@@ -171,7 +210,7 @@ namespace AlienEngine
                     CorrectedPosition.Y += Camera.Viewport.Height / 2.0f;
                     break;
 
-                case Anchor.Middle:
+                case Anchor.Center:
                     CorrectedPosition.X += Camera.Viewport.Width / 2.0f;
                     CorrectedPosition.Y += Camera.Viewport.Height / 2.0f;
                     break;
@@ -208,7 +247,7 @@ namespace AlienEngine
                     projection = Matrix4f.CreateTranslation(new Vector3f(0, -Size.Height / 2f, 0)) * projection;
                     break;
 
-                case Origin.Middle:
+                case Origin.Center:
                     projection = Matrix4f.CreateTranslation(new Vector3f(-Size.Width / 2f, -Size.Height / 2f, 0)) * projection;
                     break;
 
@@ -230,7 +269,7 @@ namespace AlienEngine
 
         protected void UpdateProjectionMatrix(Matrix4f pMatrix)
         {
-            _projectionMatrix = pMatrix;
+            ProjectionMatrix = pMatrix;
         }
 
         #region IDisposable Support

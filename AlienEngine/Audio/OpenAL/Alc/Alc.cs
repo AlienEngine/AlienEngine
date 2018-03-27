@@ -75,7 +75,7 @@ namespace AlienEngine.Core.Audio.OpenAL
     {
         #region Constants
 
-        private const string Lib = AL.Lib;
+        private const string Lib = AL.Library;
         private const CallingConvention Style = CallingConvention.Cdecl;
 
         #endregion Constants

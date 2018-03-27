@@ -1,4 +1,6 @@
-﻿using AlienEngine.Core.Utils;
+﻿using AlienEngine.Core.Rendering;
+using AlienEngine.Core.Utils;
+using AlienEngine.Core.Rendering.Shadows;
 
 namespace AlienEngine.Core.Game
 {
@@ -9,9 +11,34 @@ namespace AlienEngine.Core.Game
     public static class GameSettings
     {
         // --------------------
-        // Multisample
+        // Rendering
         // --------------------
-        // Enabled/Disabled state
+        // Enable/Disable gamma correction
+        // ----------
+        /// <summary>
+        /// Define if the <see cref="Game"/> uses gamma correction.
+        /// </summary>
+        public static readonly bool GammaCorrectionEnabled;
+        // ----------
+        // Enable/Disable shadow map
+        // ----------
+        /// <summary>
+        /// Define if the <see cref="Game"/> uses shadow map.
+        /// </summary>
+        public static readonly bool ShadowMapEnabled;
+        // ----------
+        // Shadow map quality
+        // ----------
+        /// <summary>
+        /// The quality of the texture of the shadow map.
+        /// </summary>
+        public static readonly ShadowMapQuality ShadowMapQuality;
+        // --------------------
+        
+        // --------------------
+        // Multisample Anti Aliasing
+        // --------------------
+        // Enable/Disable MSAA
         // ----------
         /// <summary>
         /// Define if the <see cref="Game"/> will use multisample
@@ -30,7 +57,7 @@ namespace AlienEngine.Core.Game
         // --------------------
         // V-Sync
         // --------------------
-        // Enabled/Disabled state
+        // Enable/Disable V-Sync
         // ----------
         /// <summary>
         /// Define if the <see cref="Game"/> will use V-Sync.
@@ -57,6 +84,10 @@ namespace AlienEngine.Core.Game
         // ----------
         // Aspect ratio
         // ----------
+        /// <summary>
+        /// Defines if the game window's aspect ratio is defined.
+        /// </summary>
+        public static readonly bool GameWindowHasAspectRatio;
         /// <summary>
         /// Defines the aspect ratio of the game window.
         /// </summary>
@@ -92,7 +123,7 @@ namespace AlienEngine.Core.Game
         /// <summary>
         /// The game FPS.
         /// </summary>
-        public static readonly int GameFPS;
+        public static readonly int GameFps;
         // --------------------
 
         /// <summary>
@@ -106,6 +137,21 @@ namespace AlienEngine.Core.Game
             IniParser config = new IniParser("game.ini");
 
             // Get parsed values
+            if (int.TryParse(config.SectionedResult["Rendering"]["GammaCorrectionEnabled"], out _int1))
+                GammaCorrectionEnabled = _int1 == 1;
+            else
+                GammaCorrectionEnabled = false;
+            
+            if (int.TryParse(config.SectionedResult["Rendering"]["ShadowMapEnabled"], out _int1))
+                ShadowMapEnabled = _int1 == 1;
+            else
+                ShadowMapEnabled = false;
+
+            if (int.TryParse(config.SectionedResult["Rendering"]["ShadowMapQuality"], out _int1))
+                ShadowMapQuality = (ShadowMapQuality)_int1;
+            else
+                ShadowMapQuality = ShadowMapQuality.Low;
+
             if (int.TryParse(config.SectionedResult["Multisample"]["MultisampleEnabled"], out _int1))
                 MultisampleEnabled = _int1 == 1;
             else
@@ -134,13 +180,22 @@ namespace AlienEngine.Core.Game
             if (config.SectionedResult["Window"]["AspectRatio"].Length > 0)
             {
                 var ratio = config.SectionedResult["Window"]["AspectRatio"].Split(':');
-                if (int.TryParse(ratio[0].Trim(), out _int1) && int.TryParse(ratio[1].Trim(), out _int2))
+                if (ratio.Length == 2 && int.TryParse(ratio[0].Trim(), out _int1) && int.TryParse(ratio[1].Trim(), out _int2))
+                {
                     GameWindowAspectRatio = new int[] { _int1, _int2 };
+                    GameWindowHasAspectRatio = true;
+                }
                 else
-                    GameWindowAspectRatio = new int[] { 16, 9 };
+                {
+                    GameWindowAspectRatio = new int[] { 1, 1 };
+                    GameWindowHasAspectRatio = false;
+                }
             }
             else
-                GameWindowAspectRatio = new int[] { 16, 9 };
+            {
+                GameWindowAspectRatio = new int[] { 1, 1 };
+                GameWindowHasAspectRatio = false;
+            }
 
             if (int.TryParse(config.SectionedResult["Window"]["FullscreenMode"], out _int1))
                 GameWindowFullscreenMode = _int1 == 1;
@@ -158,9 +213,9 @@ namespace AlienEngine.Core.Game
                 GameWindowTitle = "AlienEngine Game";
 
             if (int.TryParse(config.SectionedResult["Game"]["FPS"], out _int1))
-                GameFPS = _int1;
+                GameFps = _int1;
             else
-                GameFPS = 60;
+                GameFps = 60;
 
         }
     }
