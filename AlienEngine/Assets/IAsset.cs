@@ -11,7 +11,7 @@ namespace AlienEngine.Core.Assets
     /// Provide access to shared assets methods.
     /// </summary>
     [CLSCompliant(false)]
-    [Union(typeof(MeshAsset), typeof(TextureAsset))]
+    [DynamicUnion]
     public interface IAsset
     {
         /// <summary>
