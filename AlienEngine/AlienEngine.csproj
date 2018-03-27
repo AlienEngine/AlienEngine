@@ -201,6 +201,7 @@
     <Compile Include="Assets\Texture\TextureType.cs" />
     <Compile Include="Assets\Texture\TextureWrapMode.cs" />
     <Compile Include="Audio\AudioCapture.cs" />
+    <Compile Include="Audio\AudioClip.cs"/>
     <Compile Include="Audio\AudioContext.cs" />
     <Compile Include="Audio\AudioContextException.cs" />
     <Compile Include="Audio\AudioDeviceEnumerator.cs" />
@@ -222,7 +223,6 @@
     <Compile Include="Engine.cs" />
     <Compile Include="Audio\AudioSourceState.cs" />
     <Compile Include="GameWindow.cs" />
-    <Compile Include="Game\Components\Audio\AudioClip.cs" />
     <Compile Include="Game\Components\Audio\AudioListener.cs" />
     <Compile Include="Game\Components\Audio\AudioReverbZone.cs" />
     <Compile Include="Game\Components\Audio\AudioSource.cs" />
@@ -285,6 +285,7 @@
     <Compile Include="Rendering\Shadows\ShadowMapQuality.cs" />
     <Compile Include="Rendering\Shadows\ShadowsRenderer.cs" />
     <Compile Include="Rendering\UniformBufferObjectIndex.cs" />
+    <Compile Include="Resources\IResource.cs"/>
     <Compile Include="Resources\ResourceLoaderException.cs"/>
     <Compile Include="Resources\ResourceType.cs"/>
     <Compile Include="Shaders\Samples\Fragment Shaders\DiffuseFragmentShader.cs" />
