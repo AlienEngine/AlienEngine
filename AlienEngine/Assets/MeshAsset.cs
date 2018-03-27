@@ -19,6 +19,8 @@ namespace AlienEngine.Core.Assets
     [ZeroFormattable]
     public class MeshAsset : IAsset
     {
+        private const string Ext = "aemesh";
+        
         private static List<string> _loadedTextures;
 
         /// <summary>
@@ -31,7 +33,7 @@ namespace AlienEngine.Core.Assets
         /// The file extension handled by this asset.
         /// </summary>
         [IgnoreFormat]
-        public string Extension => "aemesh";
+        public string Extension => Ext;
 
         /// <summary>
         /// The list of childs in this <see cref="MeshAsset"/>.
@@ -42,6 +44,7 @@ namespace AlienEngine.Core.Assets
         /// <summary>
         /// The type of data handled by this asset.
         /// </summary>
+        [IgnoreFormat]
         public AssetTypes Type => AssetTypes.Mesh;
 
         /// <summary>
@@ -141,8 +144,7 @@ namespace AlienEngine.Core.Assets
                 for (int i = 0; i < node.ChildCount; i++)
                     if (node.Children[i].HasMeshes) ComputeAssetChildrens(ref scene, ref element, node.Children[i]);
 
-            if (element != null)
-                element.AddChild(tempAsset);
+            element?.AddChild(tempAsset);
 
             return element;
         }
@@ -410,10 +412,11 @@ namespace AlienEngine.Core.Assets
         /// Checks if a file is a serialized <see cref="MeshAsset"/>.
         /// </summary>
         /// <param name="meshFile">The file to check.</param>
-        public static bool IsAsset(string meshFile)
+        /// <param name="asset">The result of the deserialization.</param>
+        public static bool IsAsset(string meshFile, out IAsset asset)
         {
-            // TODO: Use Zeroformatter to retrieve and compare the union type
-            return false;
+            asset = ZeroFormatterSerializer.Deserialize<IAsset>(File.ReadAllBytes(meshFile));
+            return asset.Type == AssetTypes.Mesh;
         }
 
         /// <summary>
@@ -425,11 +428,8 @@ namespace AlienEngine.Core.Assets
         /// </param>
         public static MeshAsset From(string meshFile)
         {
-            if (IsAsset(meshFile))
-            {
-                // Extract data from mesh file
-                return new MeshAsset(meshFile);
-            }
+            if (meshFile.EndsWith($".{Ext}") && IsAsset(meshFile, out IAsset file))
+                return file as MeshAsset;
 
             AssimpContext importer = new AssimpContext();
 
@@ -444,7 +444,7 @@ namespace AlienEngine.Core.Assets
             }
             catch (Exception e)
             {
-                Console.WriteLine(string.Format("Error parsing {0}: {1}", meshFile, e.Message));
+                Console.WriteLine($"Error parsing {meshFile}: {e.Message}");
                 throw;
             }
         }
@@ -456,9 +456,7 @@ namespace AlienEngine.Core.Assets
 
             StringBuilder file = new StringBuilder();
 
-            var data = ZeroFormatterSerializer.Serialize(this);
-
-            var test = ZeroFormatterSerializer.Deserialize<MeshAsset>(data);
+            var data = ZeroFormatterSerializer.Serialize<IAsset>(this);
 
             if (!File.Exists(filePath) || force)
             {

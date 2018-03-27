@@ -9,7 +9,7 @@ namespace AlienEngine.Core.Assets
     /// <summary>
     /// Load and manage game assets.
     /// </summary>
-    public class AssetsManager
+    public static class AssetsManager
     {
         /// <summary>
         /// Initialize the Assets Manager.

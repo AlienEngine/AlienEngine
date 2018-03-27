@@ -759,7 +759,6 @@
     <Compile Include="Rendering\ViewportChangedEventArgs.cs" />
     <Compile Include="ResizeEventArgs.cs" />
     <Compile Include="ScreenMode.cs" />
-    <Compile Include="Resources\AssetsManager.cs" />
     <Compile Include="Resources\BufferPool.cs" />
     <Compile Include="Resources\BufferPools.cs" />
     <Compile Include="Resources\CommonResources.cs" />
