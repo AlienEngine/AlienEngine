@@ -285,6 +285,8 @@
     <Compile Include="Rendering\Shadows\ShadowMapQuality.cs" />
     <Compile Include="Rendering\Shadows\ShadowsRenderer.cs" />
     <Compile Include="Rendering\UniformBufferObjectIndex.cs" />
+    <Compile Include="Resources\ResourceLoaderException.cs"/>
+    <Compile Include="Resources\ResourceType.cs"/>
     <Compile Include="Shaders\Samples\Fragment Shaders\DiffuseFragmentShader.cs" />
     <Compile Include="Shaders\Samples\Fragment Shaders\DiffuseSpecularEmissiveFragmentShader.cs" />
     <Compile Include="Shaders\Samples\Fragment Shaders\FontFragmentShader.cs" />
