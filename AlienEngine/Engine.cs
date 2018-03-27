@@ -3,6 +3,7 @@ using AlienEngine.Core.Audio.OpenAL;
 using AlienEngine.Core.Imaging.DevIL.Unmanaged;
 using AlienEngine.Core.Graphics.OpenGL;
 using AlienEngine.Core.Resources;
+using AlienEngine.Core.Assets;
 
 namespace AlienEngine.Core
 {
@@ -62,6 +63,13 @@ namespace AlienEngine.Core
                 AL.DistanceModel(ALDistanceModel.None);
                 // --------------------
 
+                // --------------------
+                // Assets Manager
+                // --------------------
+                // Initialize assets manager
+                AssetsManager.Initialize();
+                // --------------------
+                
                 _started = true;
             }
         }
