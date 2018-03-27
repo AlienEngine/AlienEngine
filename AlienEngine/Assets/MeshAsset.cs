@@ -42,7 +42,6 @@ namespace AlienEngine.Core.Assets
         /// <summary>
         /// The type of data handled by this asset.
         /// </summary>
-        [IgnoreFormat]
         public AssetTypes Type => AssetTypes.Mesh;
 
         /// <summary>
@@ -405,8 +404,6 @@ namespace AlienEngine.Core.Assets
                 VertexShader = new ASLShaderCompiler(new DiffuseVertexShader()).Shader,
                 FragmentShader = new ASLShaderCompiler(new DiffuseFragmentShader()).Shader
             };
-
-
         }
 
         /// <summary>
@@ -469,7 +466,7 @@ namespace AlienEngine.Core.Assets
             }
             else
             {
-                throw new Exception($"The file at \"{filePath}\" already exists");
+                throw new Exception($"The file at \"{filePath}\" already exists.");
             }
         }
 

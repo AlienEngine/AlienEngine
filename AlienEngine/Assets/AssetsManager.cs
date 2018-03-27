@@ -18,11 +18,11 @@ namespace AlienEngine.Core.Assets
         {
             ZeroFormatter.Formatters.Formatter.AppendDynamicUnionResolver((unionType, resolver) =>
             {
-                //can be easily extended to reflection based scan if library consumer wants it
                 if (unionType == typeof(IAsset))
                 {
                     resolver.RegisterUnionKeyType(typeof(AssetTypes));
                     resolver.RegisterSubType(key: AssetTypes.Mesh, subType: typeof(MeshAsset));
+                    resolver.RegisterSubType(key: AssetTypes.Texture, subType: typeof(TextureAsset));
                 }
             });
         }
