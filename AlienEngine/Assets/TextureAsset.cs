@@ -11,6 +11,8 @@ namespace AlienEngine.Core.Assets
     [ZeroFormattable]
     public class TextureAsset : IAsset
     {
+        private const string Ext = "aetexture";
+        
         [Index(0)]
         public virtual string Source { get; protected set; }
 
@@ -21,7 +23,7 @@ namespace AlienEngine.Core.Assets
         public AssetTypes Type => AssetTypes.Texture;
 
         [IgnoreFormat]
-        public string Extension => "aetexture";
+        public string Extension => Ext;
 
         public TextureAsset()
         { }
@@ -30,16 +32,11 @@ namespace AlienEngine.Core.Assets
         /// Checks if a file is a serialized <see cref="TextureAsset"/>.
         /// </summary>
         /// <param name="textureFile">The file to check.</param>
-        public static bool IsAsset(string textureFile)
+        /// <param name="asset">The result of the deserialization.</param>
+        public static bool IsAsset(string textureFile, out IAsset asset)
         {
-            // TODO: Use Zeroformatter to retrieve and compare the union type
-            return false;
-        }
-
-        private static TextureAsset _fromAsset(string asset)
-        {
-            // TODO: Compute data from asset
-            return new TextureAsset();
+            asset = ZeroFormatterSerializer.Deserialize<IAsset>(File.ReadAllBytes(textureFile));
+            return asset.Type == AssetTypes.Texture;
         }
 
         /// <summary>
@@ -51,12 +48,8 @@ namespace AlienEngine.Core.Assets
         /// </param>
         public static TextureAsset From(string textureFile)
         {
-            if (IsAsset(textureFile))
-            {
-                // Extract data from mesh file
-                return _fromAsset(textureFile);
-            }
-
+            if (textureFile.EndsWith($".{Ext}") && IsAsset(textureFile, out IAsset file))
+                return file as TextureAsset;
 
             try
             {
@@ -111,9 +104,7 @@ namespace AlienEngine.Core.Assets
             if (!filePath.EndsWith($".{Extension}"))
                 filePath = filePath + $".{Extension}";
 
-            var data = ZeroFormatterSerializer.Serialize(this);
-
-            var test = ZeroFormatterSerializer.Deserialize<TextureAsset>(data);
+            var data = ZeroFormatterSerializer.Serialize<IAsset>(this);
 
             if (!File.Exists(filePath) || force)
             {
