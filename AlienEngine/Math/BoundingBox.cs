@@ -21,6 +21,11 @@ namespace AlienEngine
         public Vector3f Max;
 
         /// <summary>
+        /// Location of the center of this axis-aligned bounding box.
+        /// </summary>
+        public Vector3f Center => (Max + Min) / 2;
+
+        /// <summary>
         /// Constructs a bounding box from the specified minimum and maximum.
         /// </summary>
         /// <param name="min">Location with the lowest X, Y, and Z coordinates contained by the axis-aligned bounding box.</param>
