@@ -30,14 +30,8 @@ namespace AlienEngine.Core.Graphics
 
         private GameElement _gameMesh;
 
-        private uint _vao;
-
-        private Dictionary<string, Texture> _loadedTextures;
-
         public MeshImporter(string file)
         {
-            _loadedTextures = new Dictionary<string, Texture>();
-
             _filename = file;
 
             AssimpContext importer = new AssimpContext();
@@ -48,11 +42,38 @@ namespace AlienEngine.Core.Graphics
                 _initFromScene(scene);
                 _meshes = new Mesh[_entries.Length];
 
-                _vao = 0;
+                for (int i = 0, l = indices.Count; i < l; i += 3)
+                {
+                    Vector3f e1 = positions[indices[i + 1]] - positions[indices[i]];
+                    Vector3f e2 = positions[indices[i + 2]] - positions[indices[i]];
 
-                // Create the VAO
-                _vao = GL.GenVertexArray();
-                GL.BindVertexArray(_vao);
+                    Vector2f u1 = uvs[indices[i + 1]] - uvs[indices[i]];
+                    Vector2f u2 = uvs[indices[i + 2]] - uvs[indices[i]];
+
+                    float f = 1.0f / (u1.X * u2.Y - u2.X * u1.Y);
+
+                    var t = new Vector3f()
+                    {
+                        X = f * (u2.Y * e1.X - u1.Y * e2.X),
+                        Y = f * (u2.Y * e1.Y - u1.Y * e2.Y),
+                        Z = f * (u2.Y * e1.Z - u1.Y * e2.Z)
+                    };
+
+                    tangents.Add(Vector3f.Normalize(t));
+                    tangents.Add(Vector3f.Normalize(t));
+                    tangents.Add(Vector3f.Normalize(t));
+
+                    var b = new Vector3f()
+                    {
+                        X = f * (-u2.X * e1.X + u1.X * e2.X),
+                        Y = f * (-u2.X * e1.Y + u1.X * e2.Y),
+                        Z = f * (-u2.X * e1.Z + u1.X * e2.Z)
+                    };
+
+                    bitangents.Add(Vector3f.Normalize(b));
+                    bitangents.Add(Vector3f.Normalize(b));
+                    bitangents.Add(Vector3f.Normalize(b));
+                }
 
                 // Generate and populate the buffers with vertex attributes and the indices
                 VBO<Vector3f> vertex = new VBO<Vector3f>(positions.ToArray());
@@ -62,45 +83,17 @@ namespace AlienEngine.Core.Graphics
                 VBO<Vector3f> bitangent = new VBO<Vector3f>(bitangents.ToArray());
                 VBO<int> index = new VBO<int>(indices.ToArray(), BufferTarget.ElementArrayBuffer, BufferUsageHint.StaticRead);
 
-                GL.BindBuffer(vertex.BufferTarget, vertex.ID);
-                GL.EnableVertexAttribArray(GL.VERTEX_POSITION_LOCATION);
-                GL.VertexAttribPointer(GL.VERTEX_POSITION_LOCATION, vertex.Size, vertex.PointerType, false, 0, 0);
-
-                GL.BindBuffer(texture.BufferTarget, texture.ID);
-                GL.EnableVertexAttribArray(GL.VERTEX_TEXTURE_COORD_LOCATION);
-                GL.VertexAttribPointer(GL.VERTEX_TEXTURE_COORD_LOCATION, texture.Size, texture.PointerType, false, 0, 0);
-
-                GL.BindBuffer(normal.BufferTarget, normal.ID);
-                GL.EnableVertexAttribArray(GL.VERTEX_NORMAL_LOCATION);
-                GL.VertexAttribPointer(GL.VERTEX_NORMAL_LOCATION, normal.Size, normal.PointerType, false, 0, 0);
-
-                GL.BindBuffer(tangent.BufferTarget, tangent.ID);
-                GL.EnableVertexAttribArray(GL.VERTEX_TANGENT_LOCATION);
-                GL.VertexAttribPointer(GL.VERTEX_TANGENT_LOCATION, tangent.Size, tangent.PointerType, false, 0, 0);
-
-                GL.BindBuffer(bitangent.BufferTarget, bitangent.ID);
-                GL.EnableVertexAttribArray(GL.VERTEX_BITANGENT_LOCATION);
-                GL.VertexAttribPointer(GL.VERTEX_BITANGENT_LOCATION, bitangent.Size, bitangent.PointerType, false, 0, 0);
-
-                GL.BindBuffer(index.BufferTarget, index.ID);
-
-                // Make sure the VAO is not changed from the outside
-                GL.BindVertexArray(0);
+                // Create the VAO
+                VAO vao = new VAO(vertex, normal, tangent, bitangent, texture, index);
 
                 for (int i = 0; i < _meshes.Length; i++)
-                    _meshes[i] = new Mesh(_vao, _entries[i]);
+                    _meshes[i] = new Mesh(vao, _entries[i]);
 
                 _gameMesh = _appendGameElement(null, scene.RootNode);
-
-                ResourcesManager.AddOnDisposeEvent(() =>
-                {
-                    if (_vao != 0)
-                        GL.DeleteVertexArray(_vao);
-                });
             }
             catch (Exception e)
             {
-                Console.WriteLine(string.Format("Error parsing {0}: {1}", file, e.Message));
+                Console.WriteLine($"Error parsing {file}: {e.Message}");
             }
         }
 
@@ -198,17 +191,17 @@ namespace AlienEngine.Core.Graphics
                 // Populate the vertex attribute vectors
                 for (int i = 0; i < mesh.VertexCount; i++)
                 {
-                    Assimp.Vector3D pos = mesh.HasVertices ? mesh.Vertices[i] : Zero3D;
-                    Assimp.Vector3D normal = mesh.HasNormals ? mesh.Normals[i] : Zero3D;
-                    Assimp.Vector3D uv = mesh.HasTextureCoords(0) ? mesh.TextureCoordinateChannels[0][i] : Zero3D;
-                    Vector3f tn = (Vector3f)(mesh.HasTangentBasis ? mesh.Tangents[i] : Zero3D);
-                    Vector3f btn = (Vector3f)(mesh.HasTangentBasis ? mesh.BiTangents[i] : Zero3D);
+                    Vector3f pos = (Vector3f)(mesh.HasVertices ? mesh.Vertices[i] : Zero3D);
+                    Vector3f normal = (Vector3f)(mesh.HasNormals ? mesh.Normals[i] : Zero3D);
+                    Vector3f uv = (Vector3f)(mesh.HasTextureCoords(0) ? mesh.TextureCoordinateChannels[0][i] : Zero3D);
+                    //Vector3f tn = (Vector3f)(mesh.HasTangentBasis ? mesh.Tangents[i] : Zero3D);
+                    //Vector3f btn = (Vector3f)(mesh.HasTangentBasis ? mesh.BiTangents[i] : Zero3D);
 
-                    positions.Add(new Vector3f(pos.X, pos.Y, pos.Z));
-                    normals.Add(new Vector3f(normal.X, normal.Y, normal.Z));
-                    uvs.Add(new Vector2f(uv.X, uv.Y));
-                    tangents.Add(tn);
-                    bitangents.Add(btn);
+                    positions.Add(pos);
+                    normals.Add(normal);
+                    uvs.Add(new Vector2f(uv));
+                    //tangents.Add(tn);
+                    //bitangents.Add(btn);
                 }
 
                 // Populate the index buffer
@@ -284,141 +277,61 @@ namespace AlienEngine.Core.Graphics
                 if (material.HasTextureAmbient)
                 {
                     _materials[i].HasTextureAmbient = true;
-                    if (!_loadedTextures.ContainsKey(material.TextureAmbient.FilePath))
-                    {
-                        _materials[i].TextureAmbient = new Texture(_getTextureFullPath(material.TextureAmbient), Core.Graphics.OpenGL.TextureTarget.Texture2D);
-                        _loadedTextures.Add(material.TextureAmbient.FilePath, _materials[i].TextureAmbient);
-                    }
-                    else
-                    {
-                        _materials[i].TextureAmbient = _loadedTextures[material.TextureAmbient.FilePath];
-                    }
+                    _materials[i].TextureAmbient = ResourcesManager.LoadResource<Texture>(ResourceType.Texture, _getTextureFullPath(material.TextureAmbient));
                 }
 
                 if (material.HasTextureDiffuse)
                 {
                     _materials[i].HasTextureDiffuse= true;
-                    if (!_loadedTextures.ContainsKey(material.TextureDiffuse.FilePath))
-                    {
-                        _materials[i].TextureAmbient = new Texture(_getTextureFullPath(material.TextureDiffuse), Core.Graphics.OpenGL.TextureTarget.Texture2D);
-                        _loadedTextures.Add(material.TextureDiffuse.FilePath, _materials[i].TextureDiffuse);
-                    }
-                    else
-                    {
-                        _materials[i].TextureDiffuse = _loadedTextures[material.TextureDiffuse.FilePath];
-                    }
+                    _materials[i].TextureDiffuse = ResourcesManager.LoadResource<Texture>(ResourceType.Texture, _getTextureFullPath(material.TextureDiffuse));
                 }
 
                 if (material.HasTextureDisplacement)
                 {
                     _materials[i].HasTextureDisplacement = true;
-                    if (!_loadedTextures.ContainsKey(material.TextureDisplacement.FilePath))
-                    {
-                        _materials[i].TextureDisplacement = new Texture(_getTextureFullPath(material.TextureDisplacement), Core.Graphics.OpenGL.TextureTarget.Texture2D);
-                        _loadedTextures.Add(material.TextureDisplacement.FilePath, _materials[i].TextureDisplacement);
-                    }
-                    else
-                    {
-                        _materials[i].TextureDisplacement = _loadedTextures[material.TextureDisplacement.FilePath];
-                    }
+                    _materials[i].TextureDisplacement = ResourcesManager.LoadResource<Texture>(ResourceType.Texture, _getTextureFullPath(material.TextureDisplacement));
                 }
 
                 if (material.HasTextureEmissive)
                 {
                     _materials[i].HasTextureEmissive = true;
-                    if (!_loadedTextures.ContainsKey(material.TextureEmissive.FilePath))
-                    {
-                        _materials[i].TextureEmissive = new Texture(_getTextureFullPath(material.TextureEmissive), Core.Graphics.OpenGL.TextureTarget.Texture2D);
-                        _loadedTextures.Add(material.TextureEmissive.FilePath, _materials[i].TextureEmissive);
-                    }
-                    else
-                    {
-                        _materials[i].TextureEmissive = _loadedTextures[material.TextureEmissive.FilePath];
-                    }
+                    _materials[i].TextureEmissive = ResourcesManager.LoadResource<Texture>(ResourceType.Texture, _getTextureFullPath(material.TextureEmissive));
                 }
 
                 if (material.HasTextureHeight)
                 {
                     _materials[i].HasTextureHeight = true;
-                    if (!_loadedTextures.ContainsKey(material.TextureHeight.FilePath))
-                    {
-                        _materials[i].TextureHeight = new Texture(_getTextureFullPath(material.TextureHeight), Core.Graphics.OpenGL.TextureTarget.Texture2D);
-                        _loadedTextures.Add(material.TextureHeight.FilePath, _materials[i].TextureHeight);
-                    }
-                    else
-                    {
-                        _materials[i].TextureHeight = _loadedTextures[material.TextureHeight.FilePath];
-                    }
+                    _materials[i].TextureHeight = ResourcesManager.LoadResource<Texture>(ResourceType.Texture, _getTextureFullPath(material.TextureHeight));
                 }
 
                 if (material.HasTextureLightMap)
                 {
                     _materials[i].HasTextureLightMap = true;
-                    if (!_loadedTextures.ContainsKey(material.TextureLightMap.FilePath))
-                    {
-                        _materials[i].TextureLightMap = new Texture(_getTextureFullPath(material.TextureLightMap), Core.Graphics.OpenGL.TextureTarget.Texture2D);
-                        _loadedTextures.Add(material.TextureLightMap.FilePath, _materials[i].TextureLightMap);
-                    }
-                    else
-                    {
-                        _materials[i].TextureLightMap = _loadedTextures[material.TextureLightMap.FilePath];
-                    }
+                    _materials[i].TextureLightMap = ResourcesManager.LoadResource<Texture>(ResourceType.Texture, _getTextureFullPath(material.TextureLightMap));
                 }
 
                 if (material.HasTextureNormal)
                 {
                     _materials[i].HasTextureNormal = true;
-                    if (!_loadedTextures.ContainsKey(material.TextureNormal.FilePath))
-                    {
-                        _materials[i].TextureNormal = new Texture(_getTextureFullPath(material.TextureNormal), Core.Graphics.OpenGL.TextureTarget.Texture2D);
-                        _loadedTextures.Add(material.TextureNormal.FilePath, _materials[i].TextureNormal);
-                    }
-                    else
-                    {
-                        _materials[i].TextureNormal = _loadedTextures[material.TextureNormal.FilePath];
-                    }
+                    _materials[i].TextureNormal = ResourcesManager.LoadResource<Texture>(ResourceType.Texture, _getTextureFullPath(material.TextureNormal));
                 }
 
                 if (material.HasTextureOpacity)
                 {
                     _materials[i].HasTextureOpacity = true;
-                    if (!_loadedTextures.ContainsKey(material.TextureOpacity.FilePath))
-                    {
-                        _materials[i].TextureOpacity = new Texture(_getTextureFullPath(material.TextureOpacity), Core.Graphics.OpenGL.TextureTarget.Texture2D);
-                        _loadedTextures.Add(material.TextureOpacity.FilePath, _materials[i].TextureOpacity);
-                    }
-                    else
-                    {
-                        _materials[i].TextureOpacity = _loadedTextures[material.TextureOpacity.FilePath];
-                    }
+                    _materials[i].TextureOpacity = ResourcesManager.LoadResource<Texture>(ResourceType.Texture, _getTextureFullPath(material.TextureOpacity));
                 }
 
                 if (material.HasTextureReflection)
                 {
                     _materials[i].HasTextureReflection = true;
-                    if (!_loadedTextures.ContainsKey(material.TextureReflection.FilePath))
-                    {
-                        _materials[i].TextureReflection = new Texture(_getTextureFullPath(material.TextureReflection), Core.Graphics.OpenGL.TextureTarget.Texture2D);
-                        _loadedTextures.Add(material.TextureReflection.FilePath, _materials[i].TextureReflection);
-                    }
-                    else
-                    {
-                        _materials[i].TextureReflection = _loadedTextures[material.TextureReflection.FilePath];
-                    }
+                    _materials[i].TextureReflection = ResourcesManager.LoadResource<Texture>(ResourceType.Texture, _getTextureFullPath(material.TextureReflection));
                 }
 
                 if (material.HasTextureSpecular)
                 {
                     _materials[i].HasTextureSpecular = true;
-                    if (!_loadedTextures.ContainsKey(material.TextureSpecular.FilePath))
-                    {
-                        _materials[i].TextureSpecular = new Texture(_getTextureFullPath(material.TextureSpecular), Core.Graphics.OpenGL.TextureTarget.Texture2D);
-                        _loadedTextures.Add(material.TextureSpecular.FilePath, _materials[i].TextureSpecular);
-                    }
-                    else
-                    {
-                        _materials[i].TextureSpecular = _loadedTextures[material.TextureSpecular.FilePath];
-                    }
+                    _materials[i].TextureSpecular = ResourcesManager.LoadResource<Texture>(ResourceType.Texture, _getTextureFullPath(material.TextureSpecular));
                 }
 
                 if (material.HasName)

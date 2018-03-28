@@ -1,31 +1,44 @@
-using AlienEngine.Core.Graphics.OpenGL;
-using Assimp;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Runtime.InteropServices;
+using AlienEngine.Core.Graphics.Buffers;
 
 namespace AlienEngine.Core.Graphics
 {
-    public class Mesh
+    /// <summary>
+    /// Associates a <see cref="VAO"/> to a <see cref="MeshEntry"/>.
+    /// </summary>
+    public class Mesh : IDisposable
     {
-        private uint _vao;
+        #region Private Fields
+
+        private VAO _vao;
 
         private MeshEntry _entry;
 
-        public uint VAO
-        {
-            get { return _vao; }
-        }
+        #endregion
 
-        public string Name
-        {
-            get { return _entry.Name; }
-        }
+        #region Public Members
+
+        /// <summary>
+        /// Gets the <see cref="VAO"/> used by this <see cref="Mesh"/>.
+        /// </summary>
+        public VAO VAO => _vao;
+
+        /// <summary>
+        /// Gets the name of this <see cref="Mesh"/>.
+        /// </summary>
+        public string Name => _entry.Name;
+
+        #endregion
 
         #region Constructors and Destructors
 
-        public Mesh(uint vao, MeshEntry entry)
+        /// <summary>
+        /// Create a new <see cref="Mesh"/> with the given
+        /// <see cref="VAO"/> and <see cref="MeshEntry"/>.
+        /// </summary>
+        /// <param name="vao">The <see cref="VAO"/> used by this mesh.</param>
+        /// <param name="entry">The <see cref="MeshEntry"/> rendered by this mesh.</param>
+        public Mesh(VAO vao, MeshEntry entry)
         {
             _vao = vao;
             _entry = entry;
@@ -35,16 +48,20 @@ namespace AlienEngine.Core.Graphics
 
         #region Methods
 
+        /// <summary>
+        /// Rnder the <see cref="MeshEntry"/> with the current <see cref="VAO"/>.
+        /// </summary>
         public void Render()
         {
-            // Use the VAO
-            GL.BindVertexArray(_vao);
+            _vao.Draw(_entry);
+        }
 
-            // Draw the mesh
-            GL.DrawElementsBaseVertex(BeginMode.Triangles, _entry.NumIndices, DrawElementsType.UnsignedInt, Marshal.SizeOf(typeof(int)) * _entry.BaseIndex, _entry.BaseVertex);
-
-            // Make sure the VAO is not changed from the outside
-            GL.BindVertexArray(0);
+        /// <summary>
+        /// Release all resources used by the <see cref="Mesh"/>.
+        /// </summary>
+        public void Dispose()
+        {
+            _vao?.Dispose();
         }
 
         #endregion
