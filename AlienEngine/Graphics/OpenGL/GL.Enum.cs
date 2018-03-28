@@ -39395,6 +39395,10 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// Original was GL_CLIP_DEPTH_MODE = 0x935D
         /// </summary>
         ClipDepthMode = ((int)0x935D),
+        /// <summary>
+        /// Original was GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT = 0x84FF
+        /// </summary>
+        MaxTextureMaxAnisotropyExt = ((int)0x84FF),
     }
 
     /// <summary>
@@ -53502,6 +53506,10 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// Original was GL_TEXTURE_SWIZZLE_RGBA = 0x8E46
         /// </summary>
         TextureSwizzleRgba = ((int)0x8E46),
+        /// <summary>
+        /// Original was GL_TEXTURE_MAX_ANISOTROPY_EXT = 0x84FE
+        /// </summary>
+        MaxAnisotropyExt = ((int)0x84FE),
     }
 
     /// <summary>
