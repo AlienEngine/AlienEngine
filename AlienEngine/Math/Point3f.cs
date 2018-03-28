@@ -283,6 +283,11 @@ namespace AlienEngine
             return !(lhs == rhs);
         }
 
+        public static Point3f operator +(Point3f lhs, Point3f rhs)
+        {
+            return new Point3f(lhs.X + rhs.X, lhs.Y + rhs.Y, lhs.Z + rhs.Z);
+        }
+
         /// <summary>
         /// Converts a <see cref="Vector3f"/> in a <see cref="Point3f"/>.
         /// </summary>
