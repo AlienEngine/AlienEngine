@@ -186,6 +186,15 @@ namespace AlienEngine
         }
 
         /// <summary>
+        /// Negates this instance.
+        /// </summary>
+        public void Negate()
+        {
+            X = -X;
+            Y = -Y;
+        }
+
+        /// <summary>
         /// Returns the distance between the point <paramref name="A"/> and the point <paramref name="B"/>.
         /// </summary>
         /// <param name="A">The first Point2f.</param>
@@ -226,6 +235,27 @@ namespace AlienEngine
             point.Translate(vector);
         }
 
+        /// <summary>
+        /// Negates the given instance of <see cref="Point2f"/>.
+        /// </summary>
+        /// <param name="point">The point's coordinates to negate.</param>
+        public static Point2f Negate(Point2f point)
+        {
+            Point2f res;
+            Negate(ref point , out res);
+            return res;
+        }
+
+        /// <summary>
+        /// Negates the given instance of <see cref="Point2f"/> and
+        /// store the output in <paramref name="result"/>.
+        /// </summary>
+        /// <param name="point">The point's coordinates to negate.</param>
+        /// <param name="result">The negated coordinates.</param>
+        public static void Negate(ref Point2f point, out Point2f result)
+        {
+            result = new Point2f(-point.X, -point.Y);
+        }
 
         /// <summary>
         /// Returns a new <see cref="Point2f"/> with minimal values.
@@ -279,33 +309,22 @@ namespace AlienEngine
         }
 
         /// <summary>
+        /// Negate the given instance of <see cref="Point2f"/>.
+        /// </summary>
+        /// <param name="point">The instance to negate.</param>
+        public static Point2f operator -(Point2f point)
+        {
+            return Negate(point);
+        }
+
+        /// <summary>
         /// Compare two <see cref="Point2f"/> for equality.
         /// </summary>
         /// <param name="lhs">First Point2f</param>
         /// <param name="rhs">Second Point2f</param>
         public static bool operator ==(Point2f lhs, Point2f rhs)
         {
-            bool Result = false;
-
-            if (ReferenceEquals(lhs, rhs))
-            {
-                Result = true;
-            }
-
-            if (ReferenceEquals(lhs, null) && ReferenceEquals(rhs, null))
-            {
-                Result = true;
-            }
-
-            if (!ReferenceEquals(lhs, null) && !ReferenceEquals(rhs, null))
-            {
-                if (lhs.X == rhs.X && lhs.Y == rhs.Y)
-                {
-                    Result = true;
-                }
-            }
-
-            return Result;
+            return lhs.X == rhs.X && lhs.Y == rhs.Y;
         }
 
         /// <summary>
@@ -324,36 +343,21 @@ namespace AlienEngine
         /// <param name="obj">The object to compare with this instance</param>
         public override bool Equals(object obj)
         {
-            bool Result = false;
+            bool result = false;
 
             // In order to have "equality", we must have same type of objects
-            if (GetType() == obj.GetType() && obj is Point2f)
+            if (obj != null && (GetType() == obj.GetType() && obj is Point2f))
             {
-                // Check whether we have same instance
-                if (ReferenceEquals(this, obj))
-                {
-                    Result = true;
-                }
-
-                // Check whether both objects are null
-                if (ReferenceEquals(this, null) && ReferenceEquals(obj, null))
-                {
-                    Result = true;
-                }
-
                 // Check whether the "contents" are the same
-                if (!ReferenceEquals(this, null) && !ReferenceEquals(obj, null))
-                {
-                    Point2f Point = (Point2f)obj;
+                Point2f point = (Point2f)obj;
 
-                    if (X == Point.X && Y == Point.Y)
-                    {
-                        Result = true;
-                    }
+                if (X == point.X && Y == point.Y)
+                {
+                    result = true;
                 }
             }
 
-            return Result;
+            return result;
         }
 
         /// <summary>
@@ -378,7 +382,7 @@ namespace AlienEngine
         /// </summary>
         public override string ToString()
         {
-            return string.Format("P({0},{1})", X, Y);
+            return $"P({X},{Y})";
         }
 
         /// <summary>

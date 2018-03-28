@@ -40,9 +40,13 @@ namespace AlienEngine
         {
             if (_instance == null)
             {
+                // Initialize game settings
+                GameSettings.PreLoad();
+
                 // Create the game window
                 _window = new GameWindow(GameSettings.GameWindowSize, GameSettings.GameWindowTitle);
 
+                // Store this instance
                 _instance = this;
             }
         }
@@ -58,8 +62,8 @@ namespace AlienEngine
 
         public void Start()
         {
-            if (Game.Instance.Running) return;
-            else _run();
+            if (!Game.Instance.Running)
+                _run();
         }
 
         private void _run()
@@ -70,8 +74,8 @@ namespace AlienEngine
                     Reload();
                 else
                     // Initialize the game
-                    Init();
-                
+                    Initialize();
+
                 // Show the game window
                 _window.Show();
 
@@ -182,7 +186,7 @@ namespace AlienEngine
             Engine.Stop();
         }
 
-        public virtual void Init()
+        public virtual void Initialize()
         {
             // Set the created window current
             _window.SetCurrent();
@@ -193,10 +197,14 @@ namespace AlienEngine
             // Initialize AlienEngine
             Engine.Start();
 
-            // Set the renderer viewport
+            // Set the renderer viewport and the aspect ratio
             int wi, he;
             _window.GetFramebufferSize(out wi, out he);
-            RendererManager.SetViewport(0, 0, wi, he);
+
+            if (GameSettings.GameWindowHasAspectRatio)
+                RendererManager.SetViewportWithAspectRatio(wi, he);
+            else
+                RendererManager.SetViewport(0, 0, wi, he);
 
             // Enable depth testing
             RendererManager.DepthTest();
@@ -217,7 +225,7 @@ namespace AlienEngine
             Game.Instance.Start();
 
             // Initialize the renderer manager
-            RendererManager.Init();
+            RendererManager.Initialize();
         }
 
         public virtual void Reload()
@@ -226,7 +234,7 @@ namespace AlienEngine
             Game.Instance.Reload();
 
             // Initialize the renderer manager
-            RendererManager.Init();
+            RendererManager.Initialize();
         }
         
         public void Render()

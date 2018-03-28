@@ -11,6 +11,9 @@ namespace AlienEngine
         // The enabled state of the component
         private bool _enabled = true;
 
+        // Define if the component has already started
+        private bool _started = false;
+
         // The game element who handling this component.
         private GameElement _gameElement = null;
 
@@ -21,10 +24,16 @@ namespace AlienEngine
         protected GameElement gameElement => _gameElement;
 
         /// <summary>
-        /// Gets a boolean defining if this <see cref="Component"/>.
+        /// Gets a boolean defining if this <see cref="Component"/>
         /// is enabled or not.
         /// </summary>
         protected bool Enabled => _enabled;
+
+        /// <summary>
+        /// Gets a boolean defining if this <see cref="GameElement"/>
+        /// has started or not.
+        /// </summary>
+        protected bool Started => _started;
 
         /// <summary>
         /// Returns the <see cref="GameElement"/> in which
@@ -172,6 +181,7 @@ namespace AlienEngine
         /// </summary>
         public virtual void Start()
         {
+            _started = true;
         }
 
         /// <summary>
@@ -204,6 +214,7 @@ namespace AlienEngine
         /// </summary>
         public virtual void Stop()
         {
+            _started = false;
         }
 
         #region Physics triggers

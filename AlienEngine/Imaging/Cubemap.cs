@@ -9,7 +9,7 @@ using System;
 
 namespace AlienEngine.Imaging
 {
-    public class Cubemap : IDisposable
+    public class Cubemap : IResource
     {
         private string[] _textures;
         private Image[] _images;
@@ -19,7 +19,7 @@ namespace AlienEngine.Imaging
         private bool _loaded;
         private Camera _camera;
 
-        private static TextureTarget[] _types = new TextureTarget[6]
+        private static readonly TextureTarget[] Types = new TextureTarget[6]
         {
             TextureTarget.TextureCubeMapPositiveX,
             TextureTarget.TextureCubeMapNegativeX,
@@ -29,19 +29,22 @@ namespace AlienEngine.Imaging
             TextureTarget.TextureCubeMapNegativeZ
         };
 
-        public Cubemap(string posx, string negx, string posy, string negy, string posz, string negz)
+        public Cubemap()
         {
             _textures = new string[6];
-            _images = new Image[6] { null, null, null, null, null, null };
+            _images = new Image[6] {null, null, null, null, null, null};
 
+            _textureID = 0;
+        }
+        
+        public Cubemap(string posx, string negx, string posy, string negy, string posz, string negz): this()
+        {
             _textures[0] = posx;
             _textures[1] = negx;
             _textures[2] = posy;
             _textures[3] = negy;
             _textures[4] = posz;
             _textures[5] = negz;
-
-            _textureID = 0;
         }
 
         #region Methods
@@ -59,8 +62,8 @@ namespace AlienEngine.Imaging
                 _images[sideID] = Image.FromFile(_textures[sideID]);
             }
 
-            GL.TexImage2D(_types[sideID], 0, PixelInternalFormat.Rgba8, _images[sideID].Width, _images[sideID].Height, 0,
-                Core.Graphics.OpenGL.PixelFormat.Bgra, PixelType.UnsignedByte, _images[sideID].Pixels);
+            GL.TexImage2D(Types[sideID], 0, PixelInternalFormat.Rgba8, _images[sideID].Width, _images[sideID].Height, 0,
+                PixelFormat.Bgra, PixelType.UnsignedByte, _images[sideID].Pixels);
             GL.TexParameteri(TextureTarget.TextureCubeMap, TextureParameterName.TextureMagFilter,
                 TextureParameter.Linear);
             GL.TexParameteri(TextureTarget.TextureCubeMap, TextureParameterName.TextureMinFilter,
@@ -84,7 +87,7 @@ namespace AlienEngine.Imaging
                 _textureID = GL.GenTexture();
                 GL.BindTexture(TextureTarget.TextureCubeMap, _textureID);
 
-                for (uint i = 0; i < _types.Length; i++)
+                for (uint i = 0; i < Types.Length; i++)
                 {
                     try
                     {
@@ -102,6 +105,19 @@ namespace AlienEngine.Imaging
 
                 _loaded = true;
             }
+
+            return true;
+        }
+
+        public bool Load(string paths)
+        {
+            var sides = paths.Split(' ');
+
+            if (sides.Length != 6)
+                return false;
+
+            for (int i = 0; i < 6; i++)
+                _textures[i] = sides[i];
 
             return true;
         }
@@ -146,11 +162,11 @@ namespace AlienEngine.Imaging
 
         #region IDisposable Support
 
-        private bool disposedValue = false; // To detect redundant calls
+        private bool _disposedValue = false; // To detect redundant calls
 
         protected virtual void Dispose(bool disposing)
         {
-            if (!disposedValue)
+            if (!_disposedValue)
             {
                 if (_textureID != 0)
                     GL.DeleteTexture(_textureID);
@@ -160,7 +176,7 @@ namespace AlienEngine.Imaging
                         if (_images[i] != null)
                             _images[i].Dispose();
 
-                disposedValue = true;
+                _disposedValue = true;
             }
         }
 

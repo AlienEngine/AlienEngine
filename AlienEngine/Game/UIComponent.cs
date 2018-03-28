@@ -12,7 +12,8 @@ namespace AlienEngine
     public abstract class UIComponent : Component
     {
         /// <summary>
-        /// The UI element's rectangle according to screen units.
+        /// The UI element's rectangle according to screen units
+        /// and <see cref="Camera.Viewport"/>.
         /// </summary>
         protected Rectangled Rectangled
         {
@@ -23,32 +24,32 @@ namespace AlienEngine
                 switch (Origin)
                 {
                     case Origin.TopLeft:
-                        position.Y -= Size.Height;
+                        position.Y -= Size.Height + Camera.Viewport.Location.Y;
                         break;
                     case Origin.Top:
-                        position.X -= Size.Width / 2f;
-                        position.Y -= Size.Height;
+                        position.X -= (Size.Width / 2f) + Camera.Viewport.Location.X;
+                        position.Y -= Size.Height + Camera.Viewport.Location.Y;
                         break;
                     case Origin.TopRight:
-                        position.X -= Size.Width;
-                        position.Y -= Size.Height;
+                        position.X -= Size.Width + Camera.Viewport.Location.X;
+                        position.Y -= Size.Height + Camera.Viewport.Location.Y;
                         break;
                     case Origin.MiddleLeft:
-                        position.Y -= Size.Height / 2f;
+                        position.Y -= (Size.Height / 2f) + Camera.Viewport.Location.Y;
                         break;
                     case Origin.Center:
-                        position.X -= Size.Width / 2f;
-                        position.Y -= Size.Height / 2f;
+                        position.X -= (Size.Width / 2f) + Camera.Viewport.Location.X;
+                        position.Y -= (Size.Height / 2f) + Camera.Viewport.Location.Y;
                         break;
                     case Origin.MiddleRight:
-                        position.X -= Size.Width;
-                        position.Y -= Size.Height / 2f;
+                        position.X -= Size.Width + Camera.Viewport.Location.X;
+                        position.Y -= (Size.Height / 2f) + Camera.Viewport.Location.Y;
                         break;
                     case Origin.Bottom:
-                        position.X -= Size.Width / 2f;
+                        position.X -= (Size.Width / 2f) + Camera.Viewport.Location.X;
                         break;
                     case Origin.BottomRight:
-                        position.X -= Size.Width;
+                        position.X -= Size.Width + Camera.Viewport.Location.X;
                         break;
                 }
 
@@ -65,6 +66,8 @@ namespace AlienEngine
         private Mesh _quad;
 
         protected Point2f CorrectedPosition;
+
+        protected Point2f NormalizedPosition;
 
         protected Camera Camera;
 
@@ -115,12 +118,16 @@ namespace AlienEngine
 
         public override void Start()
         {
-            InitUI();
+            Init();
 
             Input.AddMouseMoveEvent((sender, args) =>
             {
                 _isHover = Enabled && !Input.MouseIsGrabbed && Rectangled.Contains(args.Location);
             });
+
+            RendererManager.OnViewportChange += (sender, args) => _setUIPosition();
+
+            base.Start();
         }
 
         public override void Update()
@@ -129,7 +136,7 @@ namespace AlienEngine
                 Hover?.Invoke();
         }
 
-        public void RenderColoredQuad()
+        protected void RenderColoredQuad()
         {
             Color4 color = _isHover ? HoverColor : BackgroundColor;
 
@@ -138,7 +145,7 @@ namespace AlienEngine
             RenderColoredQuad(color);
         }
 
-        public void RenderColoredQuad(Color4 color)
+        protected void RenderColoredQuad(Color4 color)
         {
             if (_quad == null) _quad = MeshFactory.CreateQuad(Point2f.Zero, Size, Point2f.Zero, Sizef.One);
 
@@ -149,13 +156,13 @@ namespace AlienEngine
             _coloredUIShader.SetPosition(new Vector3f(CorrectedPosition.X, CorrectedPosition.Y, 0));
             _coloredUIShader.SetColor(color);
             _coloredUIShader.SetProjectionMatrix(ProjectionMatrix);
-
             _quad.Render();
+            _coloredUIShader.Unbind();
 
             RendererManager.RestoreState(RendererBackupMode.Blending);
         }
 
-        public void RenderTexturedQuad()
+        protected void RenderTexturedQuad()
         {
             Texture texture = IsHover ? HoverTexture : BackgroundTexture;
 
@@ -164,7 +171,7 @@ namespace AlienEngine
             RenderTexturedQuad(texture);
         }
 
-        public void RenderTexturedQuad(Texture texture)
+        protected void RenderTexturedQuad(Texture texture)
         {
             if (_quad == null) _quad = MeshFactory.CreateQuad(Point2f.Zero, Size, Point2f.Zero, Sizef.One);
 
@@ -176,13 +183,23 @@ namespace AlienEngine
             _texturedUIShader.SetPosition(new Vector3f(CorrectedPosition.X, CorrectedPosition.Y, 0));
             _texturedUIShader.SetTexture(GL.DIFFUSE_TEXTURE_UNIT_INDEX);
             _texturedUIShader.SetProjectionMatrix(ProjectionMatrix);
-
             _quad.Render();
+            _texturedUIShader.Unbind();
 
             RendererManager.RestoreState(RendererBackupMode.Blending);
         }
 
-        protected void InitUI()
+        protected virtual void Init()
+        {
+            _setUIPosition();
+        }
+
+        protected void UpdateProjectionMatrix(Matrix4f pMatrix)
+        {
+            ProjectionMatrix = pMatrix;
+        }
+
+        private void _setUIPosition()
         {
             CorrectedPosition = Position;
 
@@ -268,12 +285,48 @@ namespace AlienEngine
                     break;
             }
 
-            UpdateProjectionMatrix(projection);
-        }
+            NormalizedPosition = CorrectedPosition;
 
-        protected void UpdateProjectionMatrix(Matrix4f pMatrix)
-        {
-            ProjectionMatrix = pMatrix;
+            switch (Anchor)
+            {
+                case Anchor.TopLeft:
+                    NormalizedPosition.Y -= Size.Height;
+                    break;
+
+                case Anchor.Top:
+                    NormalizedPosition.X -= Size.Width / 2.0f;
+                    NormalizedPosition.Y -= Size.Height;
+                    break;
+
+                case Anchor.TopRight:
+                    NormalizedPosition.X -= Size.Width;
+                    NormalizedPosition.Y -= Size.Height;
+                    break;
+
+                case Anchor.MiddleLeft:
+                    NormalizedPosition.Y -= Size.Height / 2.0f;
+                    break;
+
+                case Anchor.Center:
+                    NormalizedPosition.X -= Size.Width / 2.0f;
+                    NormalizedPosition.Y -= Size.Height / 2.0f;
+                    break;
+
+                case Anchor.MiddleRight:
+                    NormalizedPosition.X -= Size.Width;
+                    NormalizedPosition.Y -= Size.Height / 2.0f;
+                    break;
+
+                case Anchor.Bottom:
+                    NormalizedPosition.X -= Size.Width / 2.0f;
+                    break;
+
+                case Anchor.BottomRight:
+                    NormalizedPosition.X -= Size.Width;
+                    break;
+            }
+
+            UpdateProjectionMatrix(projection);
         }
 
         #region IDisposable Support

@@ -8,7 +8,7 @@
         /// <summary>
         /// Initialize the renderer.
         /// </summary>
-        void Init();
+        void Initialize();
         
         /// <summary>
         /// Execute the renderer.

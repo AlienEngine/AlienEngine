@@ -323,6 +323,9 @@ namespace AlienEngine
         /// <param name="values">An array of values used to populate the matrix.</param>
         public Matrix4f(float[] values)
         {
+            if (values.Length < 16)
+                throw new ArgumentException();
+
             M11 = values[0];
             M12 = values[1];
             M13 = values[2];
@@ -494,18 +497,12 @@ namespace AlienEngine
         /// <summary>
         /// Gets the inverse of the determinant.
         /// </summary>
-        public float OneOverDeterminant
-        {
-            get { return 1.0f / Determinant; }
-        }
+        public float OneOverDeterminant => 1.0f / Determinant;
 
         /// <summary>
         /// Determine if this instance is inversible or not.
         /// </summary>
-        public bool IsInversible
-        {
-            get { return System.Math.Abs(Determinant) >= Single.Epsilon; }
-        }
+        public bool IsInversible => System.Math.Abs(Determinant) >= Single.Epsilon;
 
         /// <summary>
         /// Gets the inversed matrix of this instance.
@@ -762,43 +759,19 @@ namespace AlienEngine
         {
             get
             {
-                if (row == 0)
-                {
-                    return Row0;
-                }
-                if (row == 1)
-                {
-                    return Row1;
-                }
-                if (row == 2)
-                {
-                    return Row2;
-                }
-                if (row == 3)
-                {
-                    return Row3;
-                }
-                throw new ArgumentOutOfRangeException();
+                if (row == 0) { return Row0; }
+                if (row == 1) { return Row1; }
+                if (row == 2) { return Row2; }
+                if (row == 3) { return Row3; }
+                throw new IndexOutOfRangeException();
             }
             set
             {
-                if (row == 0)
-                {
-                    Row0 = value;
-                }
-                else if (row == 1)
-                {
-                    Row1 = value;
-                }
-                else if (row == 2)
-                {
-                    Row2 = value;
-                }
-                else if (row == 3)
-                {
-                    Row3 = value;
-                }
-                else throw new ArgumentOutOfRangeException();
+                if (row == 0) { Row0 = value; }
+                else if (row == 1) { Row1 = value; }
+                else if (row == 2) { Row2 = value; }
+                else if (row == 3) { Row3 = value; }
+                else throw new IndexOutOfRangeException();
             }
         }
 
@@ -817,23 +790,11 @@ namespace AlienEngine
         {
             get
             {
-                if (row == 0)
-                {
-                    return Row0[column];
-                }
-                if (row == 1)
-                {
-                    return Row1[column];
-                }
-                if (row == 2)
-                {
-                    return Row2[column];
-                }
-                if (row == 3)
-                {
-                    return Row3[column];
-                }
-                throw new ArgumentOutOfRangeException();
+                if (row == 0) { return Row0[column]; }
+                if (row == 1) { return Row1[column]; }
+                if (row == 2) { return Row2[column]; }
+                if (row == 3) { return Row3[column]; }
+                throw new IndexOutOfRangeException();
             }
             set
             {
@@ -843,6 +804,7 @@ namespace AlienEngine
                     if (column == 1) M12 = value;
                     if (column == 2) M13 = value;
                     if (column == 3) M14 = value;
+                    if (column >= 4) throw new IndexOutOfRangeException();
                 }
                 else if (row == 1)
                 {
@@ -850,6 +812,7 @@ namespace AlienEngine
                     if (column == 1) M22 = value;
                     if (column == 2) M23 = value;
                     if (column == 3) M24 = value;
+                    if (column >= 4) throw new IndexOutOfRangeException();
                 }
                 else if (row == 2)
                 {
@@ -857,6 +820,7 @@ namespace AlienEngine
                     if (column == 1) M32 = value;
                     if (column == 2) M33 = value;
                     if (column == 3) M34 = value;
+                    if (column >= 4) throw new IndexOutOfRangeException();
                 }
                 else if (row == 3)
                 {
@@ -864,8 +828,9 @@ namespace AlienEngine
                     if (column == 1) M42 = value;
                     if (column == 2) M43 = value;
                     if (column == 3) M44 = value;
+                    if (column >= 4) throw new IndexOutOfRangeException();
                 }
-                else throw new ArgumentOutOfRangeException();
+                else throw new IndexOutOfRangeException();
             }
         }
 
@@ -1985,12 +1950,13 @@ namespace AlienEngine
         /// </summary>
         /// <param name='left'>Left.</param>
         /// <param name='right'>Right.</param>
+        /// <param name="result">The result of the operation.</param>
         public static void Multiply(ref Vector4f left, ref Matrix4f right, out Vector4f result)
         {
             result = new Vector4f(left.X * right.M11 + left.Y * right.M21 + left.Z * right.M31 + left.W * right.M41,
-                left.X * right.M12 + left.Y * right.M22 + left.Z * right.M32 + left.W * right.M42,
-                left.X * right.M13 + left.Y * right.M23 + left.Z * right.M33 + left.W * right.M43,
-                left.X * right.M14 + left.Y * right.M24 + left.Z * right.M34 + left.W * right.M44);
+                                  left.X * right.M12 + left.Y * right.M22 + left.Z * right.M32 + left.W * right.M42,
+                                  left.X * right.M13 + left.Y * right.M23 + left.Z * right.M33 + left.W * right.M43,
+                                  left.X * right.M14 + left.Y * right.M24 + left.Z * right.M34 + left.W * right.M44);
         }
 
         /// <summary>

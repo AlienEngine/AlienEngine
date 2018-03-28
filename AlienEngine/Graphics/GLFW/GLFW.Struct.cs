@@ -19,7 +19,7 @@ namespace AlienEngine.Core.Graphics.GLFW
             /// <summary>
             /// Pointer to an internal GLFWcursor.
             /// </summary>
-            public IntPtr Ptr;
+            public readonly IntPtr Ptr;
 
             internal Cursor(IntPtr ptr)
             {
@@ -28,8 +28,8 @@ namespace AlienEngine.Core.Graphics.GLFW
 
             public override bool Equals(object obj)
             {
-                if (obj is Cursor)
-                    return Equals((Cursor)obj);
+                if (obj is Cursor cursor)
+                    return Equals(cursor);
                 return false;
             }
 
@@ -105,7 +105,6 @@ namespace AlienEngine.Core.Graphics.GLFW
         /// <summary>
         /// Image data.
         /// </summary>
-        /// <seealso cref=""/>
         public struct Image
         {
             /// <summary>
@@ -162,7 +161,7 @@ namespace AlienEngine.Core.Graphics.GLFW
             /// <summary>
             /// Pointer to an internal GLFWmonitor.
             /// </summary>
-            public IntPtr Ptr;
+            public readonly IntPtr Ptr;
 
             internal Monitor(IntPtr ptr)
             {
@@ -171,8 +170,8 @@ namespace AlienEngine.Core.Graphics.GLFW
 
             public override bool Equals(object obj)
             {
-                if (obj is Monitor)
-                    return Equals((Monitor)obj);
+                if (obj is Monitor monitor)
+                    return Equals(monitor);
 
                 return false;
             }
@@ -230,8 +229,8 @@ namespace AlienEngine.Core.Graphics.GLFW
 
             public override bool Equals(object obj)
             {
-                if (obj is VideoMode)
-                    return Equals((VideoMode)obj);
+                if (obj is VideoMode mode)
+                    return Equals(mode);
 
                 return false;
             }
@@ -248,14 +247,7 @@ namespace AlienEngine.Core.Graphics.GLFW
 
             public override string ToString()
             {
-                return string.Format("VideoMode(width: {0}, height: {1}, redBits: {2}, greenBits: {3}, blueBits: {4}, refreshRate: {5})",
-                    Width.ToString(),
-                    Height.ToString(),
-                    RedBits.ToString(),
-                    GreenBits.ToString(),
-                    BlueBits.ToString(),
-                    RefreshRate.ToString()
-                );
+                return $"VideoMode(width: {Width}, height: {Height}, redBits: {RedBits}, greenBits: {GreenBits}, blueBits: {BlueBits}, refreshRate: {RefreshRate})";
             }
 
             public override int GetHashCode()
@@ -281,7 +273,7 @@ namespace AlienEngine.Core.Graphics.GLFW
         /// <summary>
         /// <para>Opaque window object.</para>
         /// </summary>
-        /// <seealso cref="CreateWindow(int, int, string, Monitor, Window)"/>
+        /// <seealso cref="CreateWindow(int, int, string, Monitor?, Window?)"/>
         [StructLayout(LayoutKind.Sequential)]
         public struct Window : IEquatable<Window>
         {
@@ -293,7 +285,7 @@ namespace AlienEngine.Core.Graphics.GLFW
             /// <summary>
             /// Pointer to an internal GLFWwindow.
             /// </summary>
-            public IntPtr Ptr;
+            public readonly IntPtr Ptr;
 
             internal Window(IntPtr ptr)
             {
@@ -302,8 +294,8 @@ namespace AlienEngine.Core.Graphics.GLFW
 
             public override bool Equals(object obj)
             {
-                if (obj is Window)
-                    return Equals((Window)obj);
+                if (obj is Window window)
+                    return Equals(window);
 
                 return false;
             }

@@ -283,6 +283,9 @@ namespace AlienEngine.Core.Game
             GameElement.Clear();
         }
 
+        /// <summary>
+        /// Starts the <see cref="Scene"/>.
+        /// </summary>
         public virtual void Start()
         {
             GameElement[] arrayGameElements = _gameElements.ToArray();
@@ -293,6 +296,9 @@ namespace AlienEngine.Core.Game
             arrayGameElements = null;
         }
 
+        /// <summary>
+        /// Triggered before the frame's update of the <see cref="Scene"/>.
+        /// </summary>
         public virtual void BeforeUpdate()
         {
             GameElement[] arrayGameElements = _gameElements.ToArray();
@@ -316,6 +322,9 @@ namespace AlienEngine.Core.Game
             arrayGameElements = null;
         }
 
+        /// <summary>
+        /// Triggered after the frame's update of the <see cref="Scene"/>.
+        /// </summary>
         public virtual void AfterUpdate()
         {
             GameElement[] arrayGameElements = _gameElements.ToArray();

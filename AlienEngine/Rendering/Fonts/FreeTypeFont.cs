@@ -168,8 +168,6 @@ namespace AlienEngine.Core.Rendering.Fonts
 
         public void RenderLine(string lineText, Sizef textSize, Point2f textPosition, int lineNumber = 0)
         {
-            lineText = lineText.Trim();
-
             float textWidth = CalculateWidth(lineText);
             float xAdvance = 0.0f;
             float yAdvance = 0.0f;
@@ -336,9 +334,9 @@ namespace AlienEngine.Core.Rendering.Fonts
             }
             else if (_config.TextWrapMode == TextWrapMode.Normal)
             {
-                var words = text.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                var words = text.Split(' ');
 
-                var line = string.Empty;
+                var line = new List<string>();
 
                 foreach (string word in words)
                 {
@@ -349,28 +347,28 @@ namespace AlienEngine.Core.Rendering.Fonts
 
                     if (_config.Container.Width > 0 && currentWidth + _config.Scale.X > _config.Container.Width)
                     {
-                        RenderLine(line, textSize, position, currentLine);
+                        RenderLine(string.Join(" ", line), textSize, position, currentLine);
 
                         currentLine++;
                         currentWidth = _wordWidth;
 
-                        line = string.Empty;
+                        line.Clear();
                     }
 
-                    line += _word;
+                    line.Add(word);
                 }
 
-                if (!string.IsNullOrEmpty(line) && !string.IsNullOrWhiteSpace(line))
+                if (line.Count > 0)
                 {
-                    RenderLine(line, textSize, position, currentLine);
-
-                    line = string.Empty;
+                    RenderLine(string.Join(" ", line), textSize, position, currentLine);
                 }
             }
 
             GL.BindVertexArray(0);
 
             GL.BindTexture(TextureTarget.Texture2D, 0);
+
+            _shaderProgram.Unbind();
 
             RendererManager.RestoreState(RendererBackupMode.Blending);
         }
@@ -485,6 +483,11 @@ namespace AlienEngine.Core.Rendering.Fonts
             bRect = new Sizef(width, height);
 
             return bRect;
+        }
+
+        public void SetPosition(Point2f position)
+        {
+            _config.Position = position;
         }
 
         /// <summary>Returns a string that represents the current object.</summary>
