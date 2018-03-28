@@ -59,24 +59,18 @@ namespace AlienEngine.Core.Game
         /// <summary>
         /// The unique game instance.
         /// </summary>
-        public static Game Instance
-        {
-            get { return _instance; }
-            private set
-            {
-                if (_instance == null)
-                    _instance = value;
-            }
-        }
+        public static Game Instance => _instance;
 
         /// <summary>
         /// Initialize the game.
         /// </summary>
         protected Game()
         {
-            Instance = this;
-
-            _registeredScenes = new List<Scene>();
+            if (_instance == null)
+            {
+                _registeredScenes = new List<Scene>();
+                _instance = this;
+            }
         }
 
         /// <summary>
