@@ -8,6 +8,7 @@ using System.IO;
 using System.Text;
 using AlienEngine.ASL;
 using AlienEngine.Core.Rendering;
+using AlienEngine.Core.Resources;
 using AlienEngine.Core.Shaders.Samples;
 using ZeroFormatter;
 
@@ -466,6 +467,11 @@ namespace AlienEngine.Core.Assets
             {
                 throw new Exception($"The file at \"{filePath}\" already exists.");
             }
+        }
+
+        public IResource ToResource()
+        {
+            throw new NotImplementedException();
         }
 
         //private List<Tuple<int, MeshAsset>> _computeSerializableAsset(int p, int o)
