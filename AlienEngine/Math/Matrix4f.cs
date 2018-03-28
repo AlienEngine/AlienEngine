@@ -1801,6 +1801,7 @@ namespace AlienEngine
         /// </summary>
         /// <param name='left'>Left.</param>
         /// <param name='right'>Right.</param>
+        /// <param name="result">The result of the operation.</param>
         public static void Multiply(ref Vector4f left, ref Matrix4f right, out Vector4f result)
         {
             result = new Vector4f(left.X * right.M11 + left.Y * right.M21 + left.Z * right.M31 + left.W * right.M41,
