@@ -1818,7 +1818,7 @@ namespace AlienEngine
         /// <returns></returns>
         public override string ToString()
         {
-            return String.Format("({0} , {1} , {2})", X, Y, Z);
+            return $"({X} , {Y} , {Z})";
         }
 
         /// <summary>
