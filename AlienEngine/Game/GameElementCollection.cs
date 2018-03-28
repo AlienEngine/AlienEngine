@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace AlienEngine.Core.Game
 {
-    public class GameElementCollection : IEnumerable<GameElement>, IEnumerator<GameElement>, IDisposable
+    public class GameElementCollection : IEnumerable<GameElement>, IEnumerator<GameElement>
     {
         private int _key;
         private List<GameElement> _list;
