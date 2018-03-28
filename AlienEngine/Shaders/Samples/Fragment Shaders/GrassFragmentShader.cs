@@ -7,6 +7,8 @@ namespace AlienEngine.Core.Shaders.Samples
     {
         [In] vec2 uv;
 
+        [Out] vec4 color;
+        
         [Uniform] sampler2D grassTexture;
 
         void main()
@@ -17,7 +19,7 @@ namespace AlienEngine.Core.Shaders.Samples
                 __output("discard");
             }
 
-            gl_FragColor = texColor;
+            color = texColor;
         }
     }
 }

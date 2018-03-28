@@ -7,9 +7,11 @@ namespace AlienEngine.Core.Shaders.Samples
     {
         [Uniform] vec4 color;
 
+        [Out] vec4 outColor;
+
         void main()
         {
-            gl_FragColor = color;
+            outColor = color;
         }
     }
 }
