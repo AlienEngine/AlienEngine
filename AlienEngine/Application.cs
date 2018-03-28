@@ -71,7 +71,7 @@ namespace AlienEngine
             try
             {
                 // Initialize the game
-                Init();
+                Initialize();
 
                 // Show the game window
                 _window.Show();
@@ -180,7 +180,7 @@ namespace AlienEngine
             Engine.Stop();
         }
 
-        public virtual void Init()
+        public virtual void Initialize()
         {
             // Set the created window current
             _window.SetCurrent();
@@ -219,7 +219,7 @@ namespace AlienEngine
             Game.Instance.Start();
 
             // Initialize the renderer manager
-            RendererManager.Init();
+            RendererManager.Initialize();
         }
 
         public void Render()

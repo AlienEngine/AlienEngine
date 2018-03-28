@@ -68,7 +68,7 @@ namespace AlienEngine.Core.Rendering.Shadows
         /// <summary>
         /// Initialize the renderer.
         /// </summary>
-        public void Init()
+        public void Initialize()
         {
             _shadowMaps = new List<IShadowMap>();
             _depthShaderProgram = new ShadowMapDepthShaderProgram();

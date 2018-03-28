@@ -149,7 +149,7 @@ namespace AlienEngine.Core.Rendering
             SetViewportWithAspectRatio(size.Width, size.Height);
         }
 
-        internal static void Init()
+        public static void Initialize()
         {
             // UBOs
             _matricesUBO = new UBO("Matrices", UniformBufferObjectIndex.Matrices, MatricesBufferData.Size);
@@ -163,7 +163,7 @@ namespace AlienEngine.Core.Rendering
             _screenFBO = new FBO(_renderFBO.Viewport);
 
             // Shadow mapping
-            _shadowsRenderer.Init();
+            _shadowsRenderer.Initialize();
         }
 
         public static void BackupState(RendererBackupMode mode)
