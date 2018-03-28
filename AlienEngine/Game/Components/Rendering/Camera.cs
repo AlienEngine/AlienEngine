@@ -10,7 +10,7 @@ namespace AlienEngine
         #region Static members
 
         public static readonly Camera None =
-            new Camera(Vector3f.Zero, Vector3f.Zero, 1.0f, 1.0f, 2.0f) { Viewport = Rectangle.Zero };
+            new Camera(Vector3f.Zero, Vector3f.Zero, 1.0f, 1.0f, 2.0f) {Viewport = Rectangle.Zero};
 
         #endregion
 
