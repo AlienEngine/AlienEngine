@@ -247,6 +247,7 @@
     <Compile Include="Game\Components\UI\ListBox.cs" />
     <Compile Include="Game\Components\UI\Text.cs" />
     <Compile Include="Game\Components\UI\TextInput.cs" />
+    <Compile Include="Game\SceneManager.cs" />
     <Compile Include="Game\Shaders\DiffuseShaderProgram.cs" />
     <Compile Include="Game\Shaders\DiffuseSpecularEmissiveShaderProgram.cs" />
     <Compile Include="Game\Shaders\FontShaderProgram.cs" />
