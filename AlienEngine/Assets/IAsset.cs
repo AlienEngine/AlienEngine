@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AlienEngine.Core.Resources;
 using ZeroFormatter;
 
 namespace AlienEngine.Core.Assets
@@ -36,5 +37,10 @@ namespace AlienEngine.Core.Assets
         /// <param name="filePath">The file path.</param>
         /// <param name="force">Define if we have to force the serialization.</param>
         void Serialize(string filePath, bool force);
+
+        /// <summary>
+        /// Transform an asset to a game resource.
+        /// </summary>
+        IResource ToResource();
     }
 }
