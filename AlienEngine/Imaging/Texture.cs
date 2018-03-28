@@ -133,7 +133,7 @@ namespace AlienEngine.Imaging
                     GL.TexParameterf(TextureTarget, TextureParameterName.MaxAnisotropyExt, GameSettings.AnisotropyLevel);
                 }
                 
-                GL.TexParameteri(TextureTarget, TextureParameterName.TextureMinFilter, TextureParameter.LinearMipMapNearest);
+                GL.TexParameteri(TextureTarget, TextureParameterName.TextureMinFilter, TextureParameter.LinearMipMapLinear);
                 GL.TexParameteri(TextureTarget, TextureParameterName.TextureMagFilter, TextureParameter.Linear);
                 GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
 
