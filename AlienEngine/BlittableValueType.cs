@@ -1,4 +1,5 @@
 #region License
+
 //
 // The Open Toolkit Library License
 //
@@ -23,6 +24,7 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // OTHER DEALINGS IN THE SOFTWARE.
 //
+
 #endregion
 
 using System;
@@ -47,8 +49,15 @@ namespace AlienEngine
     {
         #region Fields
 
-        static readonly Type Type;
-        static readonly int stride;
+        private static readonly Type Type;
+
+        /// <summary>
+        /// Gets the size of the type in bytes or 0 for non-blittable types.
+        /// </summary>
+        /// <remarks>
+        /// This property returns 0 for non-blittable types.
+        /// </remarks>
+        public static readonly int Stride;
 
         #endregion
 
@@ -62,21 +71,13 @@ namespace AlienEngine
                 // Does this support generic types? On Mono 2.4.3 it does
                 // On .Net it doesn't.
                 // http://msdn.microsoft.com/en-us/library/5s4920fa.aspx
-                stride = Marshal.SizeOf(Type);
+                Stride = Marshal.SizeOf(Type);
             }
         }
 
         #endregion
 
         #region Public Members
-
-        /// <summary>
-        /// Gets the size of the type in bytes or 0 for non-blittable types.
-        /// </summary>
-        /// <remarks>
-        /// This property returns 0 for non-blittable types.
-        /// </remarks>
-        public static int Stride { get { return stride; } }
 
         #region Check
 
@@ -120,12 +121,15 @@ namespace AlienEngine
                 return false;
 
             FieldInfo[] fields = type.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+            
             Debug.Indent();
+            
             foreach (FieldInfo field in fields)
             {
                 if (!CheckType(field.FieldType))
                     return false;
             }
+
             Debug.Unindent();
 
             return Stride != 0;
@@ -138,11 +142,7 @@ namespace AlienEngine
             StructLayoutAttribute[] attr = (StructLayoutAttribute[])
                 type.GetCustomAttributes(typeof(StructLayoutAttribute), true);
 
-            if ((attr == null) ||
-                (attr != null && attr.Length > 0 && attr[0].Value != LayoutKind.Explicit && attr[0].Pack != 1))
-                return false;
-
-            return true;
+            return !(attr.Length > 0 && attr[0].Value != LayoutKind.Explicit && attr[0].Pack != 1);
         }
 
         #endregion
@@ -201,7 +201,7 @@ namespace AlienEngine
         /// <param name="type">An instance of the type to check.</param>
         /// <returns>True if T is blittable; false otherwise.</returns>
         [CLSCompliant(false)]
-        public static bool Check<T>(T[, ,] type)
+        public static bool Check<T>(T[,,] type)
         {
             return BlittableValueType<T>.Check();
         }
@@ -276,7 +276,7 @@ namespace AlienEngine
         /// <returns>An integer, specifying the size of the type in bytes.</returns>
         /// <exception cref="System.ArgumentException">Occurs when type is not blittable.</exception>
         [CLSCompliant(false)]
-        public static int StrideOf<T>(T[, ,] type)
+        public static int StrideOf<T>(T[,,] type)
         {
             if (!Check(type))
                 throw new ArgumentException("type");
