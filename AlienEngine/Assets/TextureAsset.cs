@@ -3,6 +3,7 @@ using System;
 using System.IO;
 using System.Text;
 using AlienEngine.Core.Imaging.DevIL;
+using AlienEngine.Core.Resources;
 using ZeroFormatter;
 using Image = AlienEngine.Imaging.Image;
 
@@ -12,7 +13,7 @@ namespace AlienEngine.Core.Assets
     public class TextureAsset : IAsset
     {
         private const string Ext = "aetexture";
-        
+
         [Index(0)]
         public virtual string Source { get; protected set; }
 
@@ -26,7 +27,8 @@ namespace AlienEngine.Core.Assets
         public string Extension => Ext;
 
         public TextureAsset()
-        { }
+        {
+        }
 
         /// <summary>
         /// Checks if a file is a serialized <see cref="TextureAsset"/>.
@@ -54,41 +56,13 @@ namespace AlienEngine.Core.Assets
             try
             {
                 TextureAsset asset = new TextureAsset();
+                asset.Source = textureFile;
 
                 Image img = new Image(textureFile);
 
                 ImageData imgData = img.DevilImage.GetImageData(0);
 
-                asset.Data = new TextureData
-                {
-                    BitsPerPixel = imgData.BitsPerPixel,
-                    BytesPerPixel = imgData.BytesPerPixel,
-                    ChannelCount = imgData.ChannelCount,
-                    CompressedData = imgData.CompressedData,
-                    CubeFace = imgData.CubeFace,
-                    Data = imgData.Data,
-                    DataType = imgData.DataType,
-                    Depth = imgData.Depth,
-                    Duration = imgData.Duration,
-                    DxtcFormat = imgData.DxtcFormat,
-                    Format = imgData.Format,
-                    HasDxtcData = imgData.HasDXTCData,
-                    HasPaletteData = imgData.HasPaletteData,
-                    Height = imgData.Height,
-                    IsCubeMap = imgData.IsCubeMap,
-                    IsSphereMap = imgData.IsSphereMap,
-                    OffsetX = imgData.OffsetX,
-                    OffsetY = imgData.OffsetY,
-                    Origin = imgData.Origin,
-                    PaletteBaseType = imgData.PaletteBaseType,
-                    PaletteBytesPerPixel = imgData.PaletteBytesPerPixel,
-                    PaletteColumnCount = imgData.PaletteColumnCount,
-                    PaletteData = imgData.PaletteData,
-                    PaletteType = imgData.PaletteType,
-                    PlaneSize = imgData.PlaneSize,
-                    SizeOfData = imgData.SizeOfData,
-                    Width = imgData.Width
-                };
+                asset.Data = TextureData.FromDevilImageData(imgData);
 
                 return asset;
             }
@@ -114,6 +88,11 @@ namespace AlienEngine.Core.Assets
             {
                 throw new Exception($"The file at \"{filePath}\" already exists");
             }
+        }
+
+        public IResource ToResource()
+        {
+            return new AlienEngine.Imaging.Texture(new Image(Data.ToDevilImage()));
         }
     }
 }
