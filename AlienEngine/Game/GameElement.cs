@@ -56,8 +56,8 @@ namespace AlienEngine
         {
             if (_gameElements.ContainsKey(name))
                 return _gameElements[name];
-            else
-                return null;
+
+            return null;
         }
 
         /// <summary>
@@ -244,6 +244,11 @@ namespace AlienEngine
         /// </summary>
         public GameElementCollection Childs => _childs;
 
+        /// <summary>
+        /// The list of attached <see cref="Component"/>s to this <see cref="GameElement"/>.
+        /// </summary>
+        public List<Component> Components => _attachedComponents;
+        
         /// <summary>
         /// The name of this <see cref="GameElement"/>.
         /// </summary>
