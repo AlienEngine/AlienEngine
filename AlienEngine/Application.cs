@@ -40,9 +40,13 @@ namespace AlienEngine
         {
             if (_instance == null)
             {
+                // Initialize game settings
+                GameSettings.PreLoad();
+
                 // Create the game window
                 _window = new GameWindow(GameSettings.GameWindowSize, GameSettings.GameWindowTitle);
 
+                // Store this instance
                 _instance = this;
             }
         }
@@ -58,8 +62,8 @@ namespace AlienEngine
 
         public void Start()
         {
-            if (Game.Instance.Running) return;
-            else _run();
+            if (!Game.Instance.Running)
+                _run();
         }
 
         private void _run()

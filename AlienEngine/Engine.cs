@@ -4,6 +4,7 @@ using AlienEngine.Core.Imaging.DevIL.Unmanaged;
 using AlienEngine.Core.Graphics.OpenGL;
 using AlienEngine.Core.Resources;
 using AlienEngine.Core.Assets;
+using AlienEngine.Core.Game;
 
 namespace AlienEngine.Core
 {
@@ -68,6 +69,13 @@ namespace AlienEngine.Core
                 // --------------------
                 // Initialize assets manager
                 AssetsManager.Initialize();
+                // --------------------
+
+                // --------------------
+                // Game Settings
+                // --------------------
+                // Initialize game settings
+                GameSettings.Initialize();
                 // --------------------
                 
                 _started = true;
