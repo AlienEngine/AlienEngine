@@ -26,7 +26,7 @@ namespace AlienEngine.Core.Physics.Ik
             //For single bone constraints, J has 2 3x3 matrices. M^-1 (W below) is a 6x6 matrix with 2 3x3 block diagonal matrices.
             //To compute the whole denominator,
             Matrix3f linearW;
-            Matrix3f.CreateScale(TargetBone.inverseMass, out linearW);
+            Matrix3f.CreateScale3D(TargetBone.inverseMass, out linearW);
             Matrix3f linear;
             Matrix3f.Multiply(ref linearJacobian, ref linearW, out linear); //Compute J * M^-1 for linear component
             Matrix3f.MultiplyByTransposed(ref linear, ref linearJacobian, out linear); //Compute (J * M^-1) * JT for linear component

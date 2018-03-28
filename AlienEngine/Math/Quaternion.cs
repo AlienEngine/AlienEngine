@@ -712,9 +712,9 @@ namespace AlienEngine
         /// <param name="quaternion">Quaternion based on the rotation matrix.</param>
         public static void FromRotationMatrix(ref Matrix4f rotation, out Quaternion quaternion)
         {
-            Matrix3f downsizedMatrix;
-            Matrix3f.FromMatrix4f(ref rotation, out downsizedMatrix);
-            FromRotationMatrix(ref downsizedMatrix, out quaternion);
+            Matrix3f downSizedMatrix;
+            Matrix3f.FromMatrix4f(ref rotation, out downSizedMatrix);
+            FromRotationMatrix(ref downSizedMatrix, out quaternion);
         }
 
         /// <summary>
@@ -731,7 +731,7 @@ namespace AlienEngine
             float t_root = 0.0f;
             Quaternion t_return = Zero;
 
-            if (t_trace > 0.0)
+            if (t_trace > 0.0f)
             {   // |w| > 1/2
                 t_root = MathHelper.Sqrt(t_trace + 1.0);
                 t_return.W = 0.5f * t_root;

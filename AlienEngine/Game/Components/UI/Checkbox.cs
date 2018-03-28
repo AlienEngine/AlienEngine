@@ -100,5 +100,26 @@ namespace AlienEngine
         }
 
         #endregion
+
+        #region Dispose pattern
+
+        private bool _disposedValue;
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+
+            if (_disposedValue) return;
+
+            if (disposing)
+            {
+                CheckedTexture?.Dispose();
+                CheckedTexture = null;
+            }
+
+            _disposedValue = true;
+        }
+
+        #endregion
     }
 }

@@ -1,4 +1,5 @@
 #region License
+
 // Copyright (C) 2017 AlienGames
 // 
 // This library is free software; you can redistribute it and/or
@@ -15,6 +16,7 @@
 // License along with this library; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301
 // USA
+
 #endregion
 
 using System;
@@ -175,7 +177,7 @@ namespace AlienEngine
         /// <summary>
         /// Initializes a new instance of the <see cref="Matrix3f"/> struct.
         /// </summary>
-        /// <param name="a">The value used to populate the matrix</param>
+        /// <param name="row">The <see cref="Vector3f"/> to use for all rows.</param>
         public Matrix3f(Vector3f row)
         {
             M11 = row.X;
@@ -192,7 +194,24 @@ namespace AlienEngine
         /// <summary>
         /// Initializes a new instance of the <see cref="Matrix3f"/> struct.
         /// </summary>
-        /// <param name="a">The value used to populate the matrix</param>
+        /// <param name="matrix">The <see cref="Matrix4f"/> to copy.</param>
+        public Matrix3f(Matrix4f matrix)
+        {
+            M11 = matrix.M11;
+            M12 = matrix.M12;
+            M13 = matrix.M13;
+            M21 = matrix.M21;
+            M22 = matrix.M22;
+            M23 = matrix.M23;
+            M31 = matrix.M31;
+            M32 = matrix.M32;
+            M33 = matrix.M33;
+        }
+        
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Matrix3f"/> struct.
+        /// </summary>
+        /// <param name="matrix">The <see cref="Matrix3f"/> to copy.</param>
         public Matrix3f(Matrix3f matrix)
         {
             M11 = matrix.M11;
@@ -229,6 +248,7 @@ namespace AlienEngine
         #endregion
 
         #region Methods
+
         /// <summary>
         /// Creates a matrix which contains information on how to translate.
         /// </summary>
@@ -247,7 +267,7 @@ namespace AlienEngine
         /// </summary>
         /// <param name="angle">Amount to rotate in radians (counter-clockwise).</param>
         /// <returns>A Matrix3f object that contains the rotation matrix.</returns>
-        public static Matrix3f CreateRotation(float angle)
+        public static Matrix3f CreateRotation2D(float angle)
         {
             float cos = MathHelper.Cos(angle);
             float sin = MathHelper.Sin(angle);
@@ -256,6 +276,141 @@ namespace AlienEngine
                 new Vector3f(cos, sin, 0f),
                 new Vector3f(-sin, cos, 0f),
                 Vector3f.UnitZ);
+        }
+
+        /// <summary>
+        /// Creates a matrix which contains information on how to rotate.
+        /// </summary>
+        /// <param name="angle">Amount to rotate in radians (counter-clockwise).</param>
+        /// <returns>A Matrix3f object that contains the rotation matrix.</returns>
+        public static Matrix3f CreateRotation3D(float angle)
+        {
+            return CreateRotation(angle, angle, angle);
+        }
+
+        /// <summary>
+        /// Builds a rotation matrix for a rotation.
+        /// </summary>
+        /// <param name="angleX">Angle on X axis in radians.</param>
+        /// <param name="angleY">Angle on Y axis in radians.</param>
+        /// <param name="angleZ">Angle on Z axis in radians.</param>
+        /// <param name="result">The resulting Matrix4f instance.</param>
+        public static void CreateRotation(float angleX, float angleY, float angleZ, out Matrix3f result)
+        {
+            result = CreateRotation(angleX, angleY, angleZ);
+        }
+
+        /// <summary>
+        /// Builds a rotation matrix for a rotation.
+        /// </summary>
+        /// <param name="vector">A vetor of counter-clockwise angles in radians.</param>
+        /// <param name="result">The resulting Matrix4f instance.</param>
+        public static Matrix3f CreateRotation(Vector3f vector)
+        {
+            return CreateRotation(vector.X, vector.Y, vector.Z);
+        }
+
+        /// <summary>
+        /// Builds a rotation matrix for a rotation.
+        /// </summary>
+        /// <param name="angleX">X rotation in radians.</param>
+        /// <param name="angleY">Y rotation in radians.</param>
+        /// <param name="angleZ">Z rotation in radians.</param>
+        /// <returns>The resulting Matrix4f instance.</returns>
+        public static Matrix3f CreateRotation(float angleX, float angleY, float angleZ)
+        {
+            Matrix3f rXY = CreateRotationZ(angleZ);
+            Matrix3f rXZ = CreateRotationY(angleY);
+            Matrix3f rYZ = CreateRotationX(angleX);
+
+            return (rYZ * rXZ) * rXY;
+        }
+
+        /// <summary>
+        /// Builds a rotation matrix for a rotation around the x-axis.
+        /// </summary>
+        /// <param name="angle">The counter-clockwise angle in radians.</param>
+        /// <param name="result">The resulting Matrix4f instance.</param>
+        public static void CreateRotationX(float angle, out Matrix3f result)
+        {
+            float cos = MathHelper.Cos(angle);
+            float sin = MathHelper.Sin(angle);
+
+            result = Identity;
+            result.M22 = +cos;
+            result.M23 = +sin;
+            result.M32 = -sin;
+            result.M33 = +cos;
+        }
+
+        /// <summary>
+        /// Builds a rotation matrix for a rotation around the x-axis.
+        /// </summary>
+        /// <param name="angle">The counter-clockwise angle in radians.</param>
+        /// <returns>The resulting Matrix4f instance.</returns>
+        public static Matrix3f CreateRotationX(float angle)
+        {
+            Matrix3f result;
+            CreateRotationX(angle, out result);
+            return result;
+        }
+
+        /// <summary>
+        /// Builds a rotation matrix for a rotation around the y-axis.
+        /// </summary>
+        /// <param name="angle">The counter-clockwise angle in radians.</param>
+        /// <param name="result">The resulting Matrix4f instance.</param>
+        public static void CreateRotationY(float angle, out Matrix3f result)
+        {
+            float cos = MathHelper.Cos(angle);
+            float sin = MathHelper.Sin(angle);
+
+            result = Identity;
+            result.M11 = +cos;
+            result.M13 = -sin;
+            result.M31 = +sin;
+            result.M33 = +cos;
+        }
+
+        /// <summary>
+        /// Builds a rotation matrix for a rotation around the y-axis.
+        /// </summary>
+        /// <param name="angle">The counter-clockwise angle in radians.</param>
+        /// <returns>The resulting Matrix4f instance.</returns>
+        public static Matrix3f CreateRotationY(float angle)
+        {
+            Matrix3f result;
+            CreateRotationY(angle, out result);
+            return result;
+        }
+
+        /// <summary>
+        /// Builds a rotation matrix for a rotation around the z-axis.
+        /// </summary>
+        /// <param name="angle">The counter-clockwise angle in radians.</param>
+        /// <param name="result">The resulting Matrix4f instance.</param>
+        public static void CreateRotationZ(float angle, out Matrix3f result)
+        {
+            float cos = MathHelper.Cos(angle);
+            float sin = MathHelper.Sin(angle);
+
+            result = Identity;
+            result.M11 = +cos;
+            result.M12 = +sin;
+            result.M21 = -sin;
+            result.M22 = +cos;
+        }
+
+        /// <summary>
+        /// Builds a rotation matrix for a rotation around the z-axis.
+        /// </summary>
+        /// <param name="angle">The counter-clockwise angle in radians.</param>
+        /// <returns>The resulting Matrix4f instance.</returns>
+        public static Matrix3f CreateRotationZ(float angle)
+        {
+            Matrix3f result;
+            CreateRotationZ(angle, out result);
+            return result;
         }
 
         /// <summary>
@@ -332,11 +487,33 @@ namespace AlienEngine
             subMatrixCode = -1;
             return 0;
         }
+
         #endregion
 
         #region Public Members
 
         #region Properties
+
+        /// <summary>
+        /// Gets if this matrix is an identity matrix.
+        /// </summary>
+        public bool IsIdentity
+        {
+            get
+            {
+                float epsilon = MathHelper.BigEpsilon;
+
+                return (M12 <= epsilon && M12 >= -epsilon &&
+                        M13 <= epsilon && M13 >= -epsilon &&
+                        M21 <= epsilon && M21 >= -epsilon &&
+                        M23 <= epsilon && M23 >= -epsilon &&
+                        M31 <= epsilon && M31 >= -epsilon &&
+                        M32 <= epsilon && M32 >= -epsilon &&
+                        M11 <= 1.0f + epsilon && M11 >= 1.0f - epsilon &&
+                        M22 <= 1.0f + epsilon && M22 >= 1.0f - epsilon &&
+                        M33 <= 1.0f + epsilon && M33 >= 1.0f - epsilon);
+            }
+        }
 
         /// <summary>
         /// Gets or sets the backward vector of the matrix.
@@ -553,16 +730,34 @@ namespace AlienEngine
         {
             get
             {
-                if (row == 0) { return Row0; }
-                if (row == 1) { return Row1; }
-                if (row == 2) { return Row2; }
+                if (row == 0)
+                {
+                    return Row0;
+                }
+                if (row == 1)
+                {
+                    return Row1;
+                }
+                if (row == 2)
+                {
+                    return Row2;
+                }
                 throw new ArgumentOutOfRangeException();
             }
             set
             {
-                if (row == 0) { Row0 = value; }
-                else if (row == 1) { Row1 = value; }
-                else if (row == 2) { Row2 = value; }
+                if (row == 0)
+                {
+                    Row0 = value;
+                }
+                else if (row == 1)
+                {
+                    Row1 = value;
+                }
+                else if (row == 2)
+                {
+                    Row2 = value;
+                }
                 else throw new ArgumentOutOfRangeException();
             }
         }
@@ -582,9 +777,18 @@ namespace AlienEngine
         {
             get
             {
-                if (row == 0) { return Row0[column]; }
-                if (row == 1) { return Row1[column]; }
-                if (row == 2) { return Row2[column]; }
+                if (row == 0)
+                {
+                    return Row0[column];
+                }
+                if (row == 1)
+                {
+                    return Row1[column];
+                }
+                if (row == 2)
+                {
+                    return Row2[column];
+                }
                 throw new ArgumentOutOfRangeException();
             }
             set
@@ -908,10 +1112,22 @@ namespace AlienEngine
         /// </summary>
         /// <param name="scale">Value to use in the diagonal.</param>
         /// <returns>Scaling matrix.</returns>
-        public static Matrix3f CreateScale(float scale)
+        public static Matrix3f CreateScale2D(float scale)
         {
             Matrix3f matrix;
-            CreateScale(scale, out matrix);
+            CreateScale2D(scale, out matrix);
+            return matrix;
+        }
+
+        /// <summary>
+        /// Constructs a uniform scaling matrix.
+        /// </summary>
+        /// <param name="scale">Value to use in the diagonal.</param>
+        /// <returns>Scaling matrix.</returns>
+        public static Matrix3f CreateScale3D(float scale)
+        {
+            Matrix3f matrix;
+            CreateScale3D(scale, out matrix);
             return matrix;
         }
 
@@ -920,11 +1136,21 @@ namespace AlienEngine
         /// </summary>
         /// <param name="scale">Value to use in the diagonal.</param>
         /// <param name="matrix">Scaling matrix.</param>
-        public static void CreateScale(float scale, out Matrix3f matrix)
+        public static void CreateScale2D(float scale, out Matrix3f matrix)
         {
-            matrix = new Matrix3f { M11 = scale, M22 = scale, M33 = scale };
+            matrix = new Matrix3f {M11 = scale, M22 = scale, M33 = 1.0f};
         }
 
+        /// <summary>
+        /// Constructs a uniform scaling matrix.
+        /// </summary>
+        /// <param name="scale">Value to use in the diagonal.</param>
+        /// <param name="matrix">Scaling matrix.</param>
+        public static void CreateScale3D(float scale, out Matrix3f matrix)
+        {
+            matrix = new Matrix3f {M11 = scale, M22 = scale, M33 = scale};
+        }
+        
         /// <summary>
         /// Constructs a uniform scaling matrix.
         /// </summary>
@@ -944,13 +1170,15 @@ namespace AlienEngine
         /// <param name="matrix">Scaling matrix.</param>
         public static void CreateScale(ref Vector3f scale, out Matrix3f matrix)
         {
-            matrix = new Matrix3f { M11 = scale.X, M22 = scale.Y, M33 = scale.Z };
+            matrix = new Matrix3f {M11 = scale.X, M22 = scale.Y, M33 = scale.Z};
         }
 
         /// <summary>
         /// Constructs a uniform scaling matrix.
         /// </summary>
-        /// <param name="scale">Value to use in the diagonal.</param>
+        /// <param name="x">The scale at the X axis.</param>
+        /// <param name="y">The scale at the Y axis.</param>
+        /// <param name="z">The scale at the Z axis.</param>
         /// <returns>Scaling matrix.</returns>
         public static Matrix3f CreateScale(float x, float y, float z)
         {
@@ -968,7 +1196,7 @@ namespace AlienEngine
         /// <param name="matrix">Scaling matrix.</param>
         public static void CreateScale(float x, float y, float z, out Matrix3f matrix)
         {
-            matrix = new Matrix3f { M11 = x, M22 = y, M33 = z };
+            matrix = new Matrix3f {M11 = x, M22 = y, M33 = z};
         }
 
         /// <summary>
@@ -1314,9 +1542,8 @@ namespace AlienEngine
         /// <param name="b">Created 4x4 matrix.</param>
         public static void ToMatrix4f(ref Matrix3f a, out Matrix4f b)
         {
-#if !WINDOWS
-            b = new Matrix4f();
-#endif
+            b = Matrix4f.Zero;
+
             b.M11 = a.M11;
             b.M12 = a.M12;
             b.M13 = a.M13;
@@ -1329,13 +1556,13 @@ namespace AlienEngine
             b.M32 = a.M32;
             b.M33 = a.M33;
 
-            b.M44 = 1;
-            b.M14 = 0;
-            b.M24 = 0;
-            b.M34 = 0;
-            b.M41 = 0;
-            b.M42 = 0;
-            b.M43 = 0;
+            b.M44 = 1.0f;
+            b.M14 = 0.0f;
+            b.M24 = 0.0f;
+            b.M34 = 0.0f;
+            b.M41 = 0.0f;
+            b.M42 = 0.0f;
+            b.M43 = 0.0f;
         }
 
         /// <summary>
@@ -1442,7 +1669,15 @@ namespace AlienEngine
                     m33 = 1 / matrix.M33;
                     break;
                 default: //Completely singular.
-                    m11 = 0; m12 = 0; m13 = 0; m21 = 0; m22 = 0; m23 = 0; m31 = 0; m32 = 0; m33 = 0;
+                    m11 = 0;
+                    m12 = 0;
+                    m13 = 0;
+                    m21 = 0;
+                    m22 = 0;
+                    m23 = 0;
+                    m31 = 0;
+                    m32 = 0;
+                    m33 = 0;
                     break;
             }
 
@@ -1599,10 +1834,10 @@ namespace AlienEngine
         /// <param name="axis">Axis around which to rotate.</param>
         /// <param name="angle">Amount to rotate.</param>
         /// <returns>Matrix representing the rotation.</returns>
-        public static Matrix3f FromAxisAngle(Vector3f axis, float angle)
+        public static Matrix3f CreateFromAxisAngle(Vector3f axis, float angle)
         {
             Matrix3f toReturn;
-            FromAxisAngle(ref axis, angle, out toReturn);
+            CreateFromAxisAngle(ref axis, angle, out toReturn);
             return toReturn;
         }
 
@@ -1612,7 +1847,7 @@ namespace AlienEngine
         /// <param name="axis">Axis around which to rotate.</param>
         /// <param name="angle">Amount to rotate.</param>
         /// <param name="result">Matrix representing the rotation.</param>
-        public static void FromAxisAngle(ref Vector3f axis, float angle, out Matrix3f result)
+        public static void CreateFromAxisAngle(ref Vector3f axis, float angle, out Matrix3f result)
         {
             float xx = axis.X * axis.X;
             float yy = axis.Y * axis.Y;
@@ -1621,8 +1856,8 @@ namespace AlienEngine
             float xz = axis.X * axis.Z;
             float yz = axis.Y * axis.Z;
 
-            float sinAngle = (float)System.Math.Sin(angle);
-            float oneMinusCosAngle = 1 - (float)System.Math.Cos(angle);
+            float sinAngle = (float) System.Math.Sin(angle);
+            float oneMinusCosAngle = 1 - (float) System.Math.Cos(angle);
 
             result.M11 = 1 + oneMinusCosAngle * (xx - 1);
             result.M21 = -axis.Z * sinAngle + oneMinusCosAngle * xy;
@@ -1635,6 +1870,121 @@ namespace AlienEngine
             result.M13 = -axis.Y * sinAngle + oneMinusCosAngle * xz;
             result.M23 = axis.X * sinAngle + oneMinusCosAngle * yz;
             result.M33 = 1 + oneMinusCosAngle * (zz - 1);
+        }
+
+        #endregion
+
+        #region CreateFromToMatrix
+
+        /// <summary>
+        /// Creates a rotation matrix that rotates a vector called "from" into another
+        /// vector called "to". Based on an algorithm by Tomas Moller and John Hudges:
+        /// <para>
+        /// "Efficiently Building a Matrix to Rotate One Vector to Another"
+        /// Journal of Graphics Tools, 4(4):1-4, 1999
+        /// </para>
+        /// </summary>
+        /// <param name="from">Starting vector</param>
+        /// <param name="to">Ending vector</param>
+        /// <returns>Rotation matrix to rotate from the start to end.</returns>
+        public static Matrix3f CreateFromToMatrix(Vector3f from, Vector3f to)
+        {
+            float e = Vector3f.Dot(from, to);
+            float f = (e < 0) ? -e : e;
+
+            Matrix3f m = Identity;
+
+            //"from" and "to" vectors almost parallel
+            if (f > 1.0f - 0.00001f)
+            {
+                Vector3f u, v; //Temp variables
+                Vector3f x; //Vector almost orthogonal to "from"
+
+                x.X = (from.X > 0.0f) ? from.X : -from.X;
+                x.Y = (from.Y > 0.0f) ? from.Y : -from.Y;
+                x.Z = (from.Z > 0.0f) ? from.Z : -from.Z;
+
+                if (x.X < x.Y)
+                {
+                    if (x.X < x.Z)
+                    {
+                        x.X = 1.0f;
+                        x.Y = 0.0f;
+                        x.Z = 0.0f;
+                    }
+                    else
+                    {
+                        x.X = 0.0f;
+                        x.Y = 0.0f;
+                        x.Z = 1.0f;
+                    }
+                }
+                else
+                {
+                    if (x.Y < x.Z)
+                    {
+                        x.X = 0.0f;
+                        x.Y = 1.0f;
+                        x.Z = 0.0f;
+                    }
+                    else
+                    {
+                        x.X = 0.0f;
+                        x.Y = 0.0f;
+                        x.Z = 1.0f;
+                    }
+                }
+
+                u.X = x.X - from.X;
+                u.Y = x.Y - from.Y;
+                u.Z = x.Z - from.Z;
+
+                v.X = x.X - to.X;
+                v.Y = x.Y - to.Y;
+                v.Z = x.Z - to.Z;
+
+                float c1 = 2.0f / Vector3f.Dot(u, u);
+                float c2 = 2.0f / Vector3f.Dot(v, v);
+                float c3 = c1 * c2 * Vector3f.Dot(u, v);
+
+                for (int i = 1; i < 4; i++)
+                {
+                    for (int j = 1; j < 4; j++)
+                    {
+                        //This is somewhat unreadable, but the indices for u, v vectors are "zero-based" while
+                        //matrix indices are "one-based" always subtract by one to index those
+                        m[i, j] = -c1 * u[i - 1] * u[j - 1] - c2 * v[i - 1] * v[j - 1] + c3 * v[i - 1] * u[j - 1];
+                    }
+                    m[i, i] += 1.0f;
+                }
+            }
+            else
+            {
+                //Most common case, unless "from" = "to" or "from" =- "to"
+                Vector3f v = Vector3f.Cross(from, to);
+
+                //Hand optimized version (9 mults less) by Gottfried Chen
+                float h = 1.0f / (1.0f + e);
+                float hvx = h * v.X;
+                float hvz = h * v.Z;
+                float hvxy = hvx * v.Y;
+                float hvxz = hvx * v.Z;
+                float hvyz = hvz * v.Y;
+
+                m.M11 = e + hvx * v.X;
+                m.M12 = hvxy - v.Z;
+                m.M13 = hvxz + v.Y;
+
+                m.M21 = hvxy + v.Z;
+                m.M22 = e + h * v.Y * v.Y;
+                m.M23 = hvyz - v.X;
+
+                m.M31 = hvxz - v.Y;
+                m.M32 = hvyz + v.X;
+                m.M33 = e + hvz * v.Z;
+            }
+
+            return m;
         }
 
         #endregion
@@ -1719,7 +2069,7 @@ namespace AlienEngine
         /// <returns></returns>
         public override bool Equals(object obj)
         {
-            return (obj is Matrix3f) && (Equals((Matrix3f)obj));
+            return (obj is Matrix3f) && (Equals((Matrix3f) obj));
         }
 
         /// <summary>
@@ -1747,7 +2097,7 @@ namespace AlienEngine
         /// <param name="value">The <see cref="System.String"/> value to convert.</param>
         void ILoadFromString.FromString(string value)
         {
-            string[] parts = value.Trim('[', ']').Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+            string[] parts = value.Trim('[', ']').Split(new char[] {','}, StringSplitOptions.RemoveEmptyEntries);
             Row0 = Vector3f.Parse(parts[0]);
             Row1 = Vector3f.Parse(parts[1]);
             Row2 = Vector3f.Parse(parts[2]);
@@ -1759,7 +2109,7 @@ namespace AlienEngine
         /// <returns></returns>
         public float[] ToArray()
         {
-            return new float[] { M11, M12, M13, M21, M22, M23, M31, M32, M33 };
+            return new float[] {M11, M12, M13, M21, M22, M23, M31, M32, M33};
         }
 
         /// <summary>

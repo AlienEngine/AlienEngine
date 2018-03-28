@@ -1,6 +1,9 @@
-﻿namespace AlienEngine
+﻿using System;
+using AlienEngine.Core.Game;
+
+namespace AlienEngine
 {
-    internal interface IComponent
+    internal interface IComponent: IDisposable
     {
         #region Component behavior
 

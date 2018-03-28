@@ -227,6 +227,7 @@ namespace AlienEngine
                             _value = _value.Length > 0 && _caretPositionInText > 0 ? _value.Remove(_caretPositionInText - 1, 1) : _value;
                             _caretPositionInText = MathHelper.Max(0, _caretPositionInText - 1);
                         }
+
                         Value = _value;
                         break;
                     case KeyCode.Delete:
@@ -239,6 +240,7 @@ namespace AlienEngine
                         {
                             Value = _value.Length > 0 && _caretPositionInText < _value.Length ? _value.Remove(_caretPositionInText, 1) : _value;
                         }
+
                         break;
                     case KeyCode.Left:
                         if (args.Shift)
@@ -255,6 +257,7 @@ namespace AlienEngine
                         {
                             _createSelectionRange(0, 0);
                         }
+
                         CaretPosition = MathHelper.Max(0, _caretPositionInText - 1);
                         break;
                     case KeyCode.Right:
@@ -272,6 +275,7 @@ namespace AlienEngine
                         {
                             _createSelectionRange(0, 0);
                         }
+
                         CaretPosition = MathHelper.Min(_value.Length, _caretPositionInText + 1);
                         break;
                     case KeyCode.Home:
@@ -286,6 +290,7 @@ namespace AlienEngine
                         {
                             _createSelectionRange(0, 0);
                         }
+
                         CaretPosition = 0;
                         break;
                     case KeyCode.End:
@@ -300,6 +305,7 @@ namespace AlienEngine
                         {
                             _createSelectionRange(0, 0);
                         }
+
                         CaretPosition = _value.Length;
                         break;
                     case KeyCode.A:
@@ -308,12 +314,14 @@ namespace AlienEngine
                             _createSelectionRange(0, _value.Length);
                             CaretPosition = _value.Length;
                         }
+
                         break;
                     case KeyCode.C:
                         if (args.Control)
                         {
                             Clipboard.Copy(_value.Substring(SelectedTextRange.Start, SelectedTextRange.Length));
                         }
+
                         break;
                     case KeyCode.X:
                         if (args.Control)
@@ -322,6 +330,7 @@ namespace AlienEngine
                             Value = _value.Remove(SelectedTextRange.Start, SelectedTextRange.Length);
                             _createSelectionRange(0, 0);
                         }
+
                         break;
                     case KeyCode.V:
                         if (args.Control)
@@ -332,10 +341,12 @@ namespace AlienEngine
                                 _value = _value.Remove(SelectedTextRange.Start, SelectedTextRange.Length);
                                 CaretPosition = SelectedTextRange.Start;
                             }
+
                             Value = _value.Insert(_caretPositionInText, text);
                             CaretPosition = _caretPositionInText + text.Length;
                             _createSelectionRange(0, 0);
                         }
+
                         break;
                 }
             }
@@ -381,7 +392,7 @@ namespace AlienEngine
                     RendererManager.Blending();
 
                     _colorShaderProgram.Bind();
-                    _colorShaderProgram.SetPosition(new Vector3f((float)_caretPositionInField.X, (float)_caretPositionInField.Y, 0));
+                    _colorShaderProgram.SetPosition(new Vector3f((float) _caretPositionInField.X, (float) _caretPositionInField.Y, 0));
                     _colorShaderProgram.SetColor(ForegroundColor);
                     _colorShaderProgram.SetProjectionMatrix(ProjectionMatrix);
                     _caret.Render();
@@ -429,16 +440,33 @@ namespace AlienEngine
             _drawCaret();
         }
 
+        private bool _disposedValue;
+
         protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);
 
-            if (HoverTexture != null)
-                HoverTexture.Dispose();
+            if (_disposedValue) return;
 
-            if (FocusTexture != null)
-                FocusTexture.Dispose();
+            if (disposing)
+            {
+                HoverTexture?.Dispose();
+                HoverTexture = null;
+
+                FocusTexture?.Dispose();
+                FocusTexture = null;
+
+                _caret?.Dispose();
+                _caret = null;
+
+                _selection?.Dispose();
+                _selection = null;
+
+                _content.Dispose();
+                _content = null;
+            }
+
+            _disposedValue = true;
         }
-
     }
 }

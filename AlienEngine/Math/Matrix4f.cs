@@ -1,4 +1,5 @@
 #region License
+
 // Copyright (C) 2017 AlienGames
 // 
 // This library is free software; you can redistribute it and/or
@@ -15,6 +16,7 @@
 // License along with this library; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301
 // USA
+
 #endregion
 
 using System;
@@ -24,7 +26,7 @@ using System.Runtime.InteropServices;
 namespace AlienEngine
 {
     /// <summary>
-    /// Represents a 4x4 matrix.
+    /// Represents a 4x4 row-major matrix.
     /// </summary>
     [Serializable]
     [TypeConverter(typeof(StructTypeConverter<Matrix4f>))]
@@ -289,6 +291,33 @@ namespace AlienEngine
         }
 
         /// <summary>
+        /// Constructs a new Matrix4f.
+        /// </summary>
+        /// <param name="rotMatrix">Rotation matrix to copy values from.</param>
+        public Matrix4f(Matrix3f rotMatrix)
+        {
+            this.M11 = rotMatrix.M11;
+            this.M12 = rotMatrix.M12;
+            this.M13 = rotMatrix.M13;
+            this.M14 = 0;
+
+            this.M21 = rotMatrix.M21;
+            this.M22 = rotMatrix.M22;
+            this.M23 = rotMatrix.M23;
+            this.M24 = 0;
+
+            this.M31 = rotMatrix.M31;
+            this.M32 = rotMatrix.M32;
+            this.M33 = rotMatrix.M33;
+            this.M34 = 0;
+
+            this.M41 = 0;
+            this.M42 = 0;
+            this.M43 = 0;
+            this.M44 = 1;
+        }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="Matrix4f"/> struct.
         /// </summary>
         /// <param name="values">An array of values used to populate the matrix.</param>
@@ -322,14 +351,39 @@ namespace AlienEngine
         #region Properties
 
         /// <summary>
+        /// Gets if this matrix is an identity matrix.
+        /// </summary>
+        public bool IsIdentity
+        {
+            get
+            {
+                float epsilon = MathHelper.BigEpsilon;
+
+                return (M12 <= epsilon && M12 >= -epsilon &&
+                        M13 <= epsilon && M13 >= -epsilon &&
+                        M14 <= epsilon && M14 >= -epsilon &&
+                        M21 <= epsilon && M21 >= -epsilon &&
+                        M23 <= epsilon && M23 >= -epsilon &&
+                        M24 <= epsilon && M24 >= -epsilon &&
+                        M31 <= epsilon && M31 >= -epsilon &&
+                        M32 <= epsilon && M32 >= -epsilon &&
+                        M34 <= epsilon && M34 >= -epsilon &&
+                        M41 <= epsilon && M41 >= -epsilon &&
+                        M42 <= epsilon && M42 >= -epsilon &&
+                        M43 <= epsilon && M43 >= -epsilon &&
+                        M11 <= 1.0f + epsilon && M11 >= 1.0f - epsilon &&
+                        M22 <= 1.0f + epsilon && M22 >= 1.0f - epsilon &&
+                        M33 <= 1.0f + epsilon && M33 >= 1.0f - epsilon &&
+                        M44 <= 1.0f + epsilon && M44 >= 1.0f - epsilon);
+            }
+        }
+
+        /// <summary>
         /// Gets or sets the backward vector of the matrix.
         /// </summary>
         public Vector3f Backward
         {
-            get
-            {
-                return new Vector3f(M31, M32, M33);
-            }
+            get { return new Vector3f(M31, M32, M33); }
             set
             {
                 M31 = value.X;
@@ -343,10 +397,7 @@ namespace AlienEngine
         /// </summary>
         public Vector3f Down
         {
-            get
-            {
-                return new Vector3f(-M21, -M22, -M23);
-            }
+            get { return new Vector3f(-M21, -M22, -M23); }
             set
             {
                 M21 = -value.X;
@@ -360,10 +411,7 @@ namespace AlienEngine
         /// </summary>
         public Vector3f Forward
         {
-            get
-            {
-                return new Vector3f(-M31, -M32, -M33);
-            }
+            get { return new Vector3f(-M31, -M32, -M33); }
             set
             {
                 M31 = -value.X;
@@ -377,10 +425,7 @@ namespace AlienEngine
         /// </summary>
         public Vector3f Left
         {
-            get
-            {
-                return new Vector3f(-M11, -M12, -M13);
-            }
+            get { return new Vector3f(-M11, -M12, -M13); }
             set
             {
                 M11 = -value.X;
@@ -394,10 +439,7 @@ namespace AlienEngine
         /// </summary>
         public Vector3f Right
         {
-            get
-            {
-                return new Vector3f(M11, M12, M13);
-            }
+            get { return new Vector3f(M11, M12, M13); }
             set
             {
                 M11 = value.X;
@@ -411,10 +453,7 @@ namespace AlienEngine
         /// </summary>
         public Vector3f Up
         {
-            get
-            {
-                return new Vector3f(M21, M22, M23);
-            }
+            get { return new Vector3f(M21, M22, M23); }
             set
             {
                 M21 = value.X;
@@ -654,6 +693,56 @@ namespace AlienEngine
             }
         }
 
+        /// <summary>
+        /// Gets the scaling factor of the transform.
+        /// </summary>
+        public Vector3f Scaling
+        {
+            get
+            {
+                Vector3f scale = new Vector3f(Row0.XYZ.Length, Row1.XYZ.Length, Row2.XYZ.Length);
+
+                // Handle negative scaling
+                return Determinant < 0 ? -scale : scale;
+            }
+        }
+
+        /// <summary>
+        /// Gets the rotation matrix from the transform.
+        /// </summary>
+        public Matrix4f Rotation
+        {
+            get
+            {
+                // Get rows
+                Vector3f
+                    row1 = Row0.XYZ,
+                    row2 = Row1.XYZ,
+                    row3 = Row2.XYZ;
+
+                // Remove scaling from the matrix
+                if (Math.Abs(Scaling.X) > MathHelper.BigEpsilon)
+                    row1 /= Scaling.X;
+
+                if (Math.Abs(Scaling.Y) > MathHelper.BigEpsilon)
+                    row2 /= Scaling.Y;
+
+                if (Math.Abs(Scaling.Z) > MathHelper.BigEpsilon)
+                    row3 /= Scaling.Z;
+
+                // Build 4x4 rotation matrix
+                return new Matrix4f(new Vector4f(row1, 0), new Vector4f(row2, 0), new Vector4f(row3, 0), Vector4f.UnitW);
+            }
+        }
+
+        /// <summary>
+        /// Gets the <see cref="Quaternion"/> orientation from the transform.
+        /// </summary>
+        public Quaternion Orientation
+        {
+            get { return Quaternion.FromRotationMatrix(Rotation); }
+        }
+
         #endregion
 
         #region Indexers
@@ -761,6 +850,46 @@ namespace AlienEngine
 
         #endregion
 
+        #region Decompose
+
+        /// <summary>
+        /// Decomposes a transformation matrix into its original scale, rotation, and translation components. The
+        /// scaling vector receives the scaling for the x, y, z axes. The rotation is returned as a hamilton quaternion. And
+        /// the translation is the output position for the x, y, z axes.
+        /// </summary>
+        /// <param name="scaling">Vector to hold the scaling component</param>
+        /// <param name="rotation">Quaternion to hold the rotation component</param>
+        /// <param name="translation">Vector to hold the translation component</param>
+        public void Decompose(out Vector3f scaling, out Quaternion rotation, out Vector3f translation)
+        {
+            // Extract the translation
+            translation = Translation;
+
+            // Extract the scaling factors
+            scaling = Scaling;
+            
+            // Extract orientation
+            rotation = Orientation;
+        }
+
+        /// <summary>
+        /// Decomposes a transformation matrix with no scaling. The rotation is returned as a hamilton
+        /// quaternion. The translation receives the output position for the x, y, z axes.
+        /// </summary>
+        /// <param name="rotation">Quaternion to hold the rotation component</param>
+        /// <param name="translation">Vector to hold the translation component</param>
+        public void DecomposeNoScaling(out Quaternion rotation, out Vector3f translation)
+        {
+
+            // Extract translation
+            translation = Translation;
+
+            // Extract orientation
+            rotation = Quaternion.FromRotationMatrix(ToMatrix3f());
+        }
+
+        #endregion
+
         #region GetTranslate
 
         /// <summary>
@@ -768,7 +897,7 @@ namespace AlienEngine
         /// </summary>
         public Vector3f GetTranslate()
         {
-            return new Vector3f(M41, M42, M43);
+            return Translation;
         }
 
         #endregion
@@ -780,7 +909,7 @@ namespace AlienEngine
         /// </summary>
         public Vector3f GetScale()
         {
-            return new Vector3f(Row0.Length, Row1.Length, Row2.Length);
+            return Scaling;
         }
 
         #endregion
@@ -789,22 +918,19 @@ namespace AlienEngine
 
         public Matrix4f GetRotationMatrix()
         {
-            var ret = Identity;
-
-            float l0 = Row0.Length, l1 = Row1.Length, l2 = Row2.Length;
-
-            ret.Row0 = new Vector4f(Row0.XYZ, 0) / ((l0 > 0) ? l0 : 1);
-            ret.Row1 = new Vector4f(Row1.XYZ, 0) / ((l1 > 0) ? l1 : 1);
-            ret.Row2 = new Vector4f(Row2.XYZ, 0) / ((l2 > 0) ? l2 : 1);
-
-            return ret;
+            return Rotation;
         }
 
         public Vector3f GetEulerAngles()
         {
-            return GetRotationMatrix().ToEulerAngles();
+            return Rotation.ToEulerAngles();
         }
 
+        public Quaternion GetOrientation()
+        {
+            return Orientation;
+        }
+        
         #endregion
 
         #region Translate
@@ -865,7 +991,7 @@ namespace AlienEngine
         }
 
         /// <summary>
-        /// Applies a rotation transformation to this matrix by vector <paramref name="v"/>.
+        /// Applies a rotation transformation to this matrix.
         /// </summary>
         /// <param name="angleX">Angle on X axis in radians.</param>
         /// <param name="angleY">Angle on Y axis in radians.</param>
@@ -944,40 +1070,63 @@ namespace AlienEngine
             float t = 1.0f - cos;
 
             // do the conversion math once
-            float tXX = t * axisX * axisX,
-                  tXY = t * axisX * axisY,
-                  tXZ = t * axisX * axisZ,
-                  tYY = t * axisY * axisY,
-                  tYZ = t * axisY * axisZ,
-                  tZZ = t * axisZ * axisZ;
+            float
+                tXX = t * axisX * axisX,
+                tXY = t * axisX * axisY,
+                tXZ = t * axisX * axisZ,
+                tYY = t * axisY * axisY,
+                tYZ = t * axisY * axisZ,
+                tZZ = t * axisZ * axisZ,
 
-            float sinX = sin * axisX,
-                  sinY = sin * axisY,
-                  sinZ = sin * axisZ;
+                sinX = sin * axisX,
+                sinY = sin * axisY,
+                sinZ = sin * axisZ;
 
             result.M11 = tXX + cos;
             result.M12 = tXY - sinZ;
             result.M13 = tXZ + sinY;
-            result.M14 = 0;
+            result.M14 = 0.0f;
 
             result.M21 = tXY + sinZ;
             result.M22 = tYY + cos;
             result.M23 = tYZ - sinX;
-            result.M24 = 0;
+            result.M24 = 0.0f;
 
             result.M31 = tXZ - sinY;
             result.M32 = tYZ + sinX;
             result.M33 = tZZ + cos;
-            result.M34 = 0;
+            result.M34 = 0.0f;
 
-            result.M41 = 0;
-            result.M42 = 0;
-            result.M43 = 0;
-            result.M44 = 1;
+            result.M41 = 0.0f;
+            result.M42 = 0.0f;
+            result.M43 = 0.0f;
+            result.M44 = 1.0f;
         }
 
         #endregion
 
+        #region CreateFromToMatrix
+
+        /// <summary>
+        /// Creates a rotation matrix that rotates a vector called "from" into another
+        /// vector called "to". Based on an algorithm by Tomas Moller and John Hudges:
+        /// <para>
+        /// "Efficiently Building a Matrix to Rotate One Vector to Another"         
+        /// Journal of Graphics Tools, 4(4):1-4, 1999
+        /// </para>
+        /// </summary>
+        /// <param name="from">Starting vector</param>
+        /// <param name="to">Ending vector</param>
+        /// <returns>Rotation matrix to rotate from the start to end.</returns>
+        public static Matrix4f CreateFromToMatrix(Vector3f from, Vector3f to)
+        {
+            Matrix3f m3 = Matrix3f.CreateFromToMatrix(from, to);
+
+            return new Matrix4f(m3);
+        }
+
+        #endregion
+        
         #region CreateFromQuaternion
 
         /// <summary>
@@ -1629,7 +1778,7 @@ namespace AlienEngine
 
             if (eye != target)
             {
-                Vector3f z = Vector3f.Normalize(Point3f.CreateVector(eye, target));
+                Vector3f z = Vector3f.Normalize(Point3f.CreateVector(target, eye));
                 Vector3f x = Vector3f.Normalize(Vector3f.Cross(up, z));
                 Vector3f y = Vector3f.Normalize(Vector3f.Cross(z, x));
 
@@ -1922,7 +2071,7 @@ namespace AlienEngine
         /// Gets the inversed matrix.
         /// </summary>
         /// <param name="m">The matrix to inverse.</param>
-        /// <returns>The inversed matrix.</returns>
+        /// <param name="inverse">The inverse of the matrix <paramref name="m"/></param>
         public static void Invert(ref Matrix4f m, out Matrix4f inverse)
         {
             inverse = m.Inversed;
@@ -1940,8 +2089,8 @@ namespace AlienEngine
 
             //Compute the upper left 3x3 determinant. Some potential for microoptimization here.
             float determinantInverse = 1 /
-                (m.M11 * m.M22 * m.M33 + m.M12 * m.M23 * m.M31 + m.M13 * m.M21 * m.M32 -
-                 m.M31 * m.M22 * m.M13 - m.M32 * m.M23 * m.M11 - m.M33 * m.M21 * m.M12);
+                                       (m.M11 * m.M22 * m.M33 + m.M12 * m.M23 * m.M31 + m.M13 * m.M21 * m.M32 -
+                                        m.M31 * m.M22 * m.M13 - m.M32 * m.M23 * m.M11 - m.M33 * m.M21 * m.M12);
 
             float m11 = (m.M22 * m.M33 - m.M23 * m.M32) * determinantInverse;
             float m12 = (m.M13 * m.M32 - m.M33 * m.M12) * determinantInverse;
@@ -2128,7 +2277,7 @@ namespace AlienEngine
         /// <returns>true if equals and false otherwise</returns>
         public override bool Equals(object obj)
         {
-            return (obj is Matrix4f) && (this.Equals((Matrix4f)obj));
+            return (obj is Matrix4f) && (this.Equals((Matrix4f) obj));
         }
 
         /// <summary>
@@ -2160,7 +2309,7 @@ namespace AlienEngine
         /// <param name="value">The <see cref="System.String"/> value to convert.</param>
         void ILoadFromString.FromString(string value)
         {
-            string[] parts = value.Trim('[', ']').Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+            string[] parts = value.Trim('[', ']').Split(new char[] {','}, StringSplitOptions.RemoveEmptyEntries);
             Row0 = Vector4f.Parse(parts[0]);
             Row1 = Vector4f.Parse(parts[1]);
             Row2 = Vector4f.Parse(parts[2]);
@@ -2284,7 +2433,7 @@ namespace AlienEngine
         /// </summary>
         public float[] ToArray()
         {
-            return new float[] { M11, M12, M13, M14, M21, M22, M23, M24, M31, M32, M33, M34, M41, M42, M43, M44 };
+            return new float[] {M11, M12, M13, M14, M21, M22, M23, M24, M31, M32, M33, M34, M41, M42, M43, M44};
         }
 
         /// <summary>
@@ -2292,7 +2441,7 @@ namespace AlienEngine
         /// </summary>
         public override string ToString()
         {
-            return string.Format("[{0},{1},{2},{3}]", Row0, Row1, Row2, Row3);
+            return $"[{Row0},{Row1},{Row2},{Row3}]";
         }
 
         #endregion

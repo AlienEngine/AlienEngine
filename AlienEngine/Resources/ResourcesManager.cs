@@ -21,7 +21,6 @@ namespace AlienEngine.Core.Resources
             _loadedResources = new Dictionary<string, IResource>();
             _disposableResources = new List<IDisposable>();
             _disposed = false;
-            OnDisposeResources = new Action(() => { });
         }
 
         internal static void AddOnDisposeEvent(Action e)

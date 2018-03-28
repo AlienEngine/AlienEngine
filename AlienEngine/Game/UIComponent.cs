@@ -3,15 +3,15 @@ using AlienEngine.Core.Rendering;
 using AlienEngine.Core.Resources;
 using AlienEngine.UI;
 using System;
+using AlienEngine.Core.Game;
 using AlienEngine.Shaders;
 using AlienEngine.Imaging;
 using AlienEngine.Core.Graphics.OpenGL;
 
 namespace AlienEngine
 {
-    public abstract class UIComponent : Component, IDisposable
+    public abstract class UIComponent : Component
     {
-
         /// <summary>
         /// The UI element's rectangle according to screen units
         /// and <see cref="Camera.Viewport"/>.
@@ -54,7 +54,8 @@ namespace AlienEngine
                         break;
                 }
 
-                return Rectangled.FromLTRB(position.X, Camera.Viewport.Height - position.Y - Size.Height, position.X + Size.Width, Camera.Viewport.Height - position.Y);
+                return Rectangled.FromLTRB(position.X, Camera.Viewport.Height - position.Y - Size.Height,
+                    position.X + Size.Width, Camera.Viewport.Height - position.Y);
             }
         }
 
@@ -203,9 +204,10 @@ namespace AlienEngine
         {
             CorrectedPosition = Position;
 
-            Camera = Core.Game.Game.Instance.CurrentScene.PrimaryCamera.GetComponent<Camera>();
+            Camera = SceneManager.CurrentScene.PrimaryCamera.GetComponent<Camera>();
 
-            Matrix4f projection = Matrix4f.CreateOrthographicOffCenter(0.0f, Camera.Viewport.Width, 0.0f, Camera.Viewport.Height, 0.0f, 1.0f);
+            Matrix4f projection = Matrix4f.CreateOrthographicOffCenter(0.0f, Camera.Viewport.Width, 0.0f,
+                Camera.Viewport.Height, 0.0f, 1.0f);
 
             switch (Anchor)
             {
@@ -253,7 +255,8 @@ namespace AlienEngine
                     break;
 
                 case Origin.Top:
-                    projection = Matrix4f.CreateTranslation(new Vector3f(-Size.Width / 2f, -Size.Height, 0)) * projection;
+                    projection = Matrix4f.CreateTranslation(new Vector3f(-Size.Width / 2f, -Size.Height, 0)) *
+                                 projection;
                     break;
 
                 case Origin.TopRight:
@@ -265,11 +268,13 @@ namespace AlienEngine
                     break;
 
                 case Origin.Center:
-                    projection = Matrix4f.CreateTranslation(new Vector3f(-Size.Width / 2f, -Size.Height / 2f, 0)) * projection;
+                    projection = Matrix4f.CreateTranslation(new Vector3f(-Size.Width / 2f, -Size.Height / 2f, 0)) *
+                                 projection;
                     break;
 
                 case Origin.MiddleRight:
-                    projection = Matrix4f.CreateTranslation(new Vector3f(-Size.Width, -Size.Height / 2f, 0)) * projection;
+                    projection = Matrix4f.CreateTranslation(new Vector3f(-Size.Width, -Size.Height / 2f, 0)) *
+                                 projection;
                     break;
 
                 case Origin.Bottom:
@@ -326,43 +331,28 @@ namespace AlienEngine
         }
 
         #region IDisposable Support
-        private bool _disposedValue = false; // Pour détecter les appels redondants
 
-        protected virtual void Dispose(bool disposing)
+        private bool _disposedValue;
+
+        protected new virtual void Dispose(bool disposing)
         {
-            if (!_disposedValue)
+            if (_disposedValue) return;
+
+            if (disposing)
             {
-                if (disposing)
-                {
-                    if (_coloredUIShader != null)
-                        _coloredUIShader.Dispose();
-
-                    if (_texturedUIShader != null)
-                        _texturedUIShader.Dispose();
-
-                    if (BackgroundTexture != null)
-                        BackgroundTexture.Dispose();
-                }
-
-                _disposedValue = true;
+                _coloredUIShader?.Dispose();
+                _coloredUIShader = null;
+                
+                _texturedUIShader?.Dispose();
+                _texturedUIShader = null;
+                
+                BackgroundTexture?.Dispose();
+                BackgroundTexture = null;
             }
+
+            _disposedValue = true;
         }
 
-        // TODO: remplacer un finaliseur seulement si la fonction Dispose(bool disposing) ci-dessus a du code pour libérer les ressources non managées.
-        // ~UIComponent() {
-        //   // Ne modifiez pas ce code. Placez le code de nettoyage dans Dispose(bool disposing) ci-dessus.
-        //   Dispose(false);
-        // }
-
-        // Ce code est ajouté pour implémenter correctement le modèle supprimable.
-        public void Dispose()
-        {
-            // Ne modifiez pas ce code. Placez le code de nettoyage dans Dispose(bool disposing) ci-dessus.
-            Dispose(true);
-            // TODO: supprimer les marques de commentaire pour la ligne suivante si le finaliseur est remplacé ci-dessus.
-            // GC.SuppressFinalize(this);
-        }
         #endregion
-
     }
 }

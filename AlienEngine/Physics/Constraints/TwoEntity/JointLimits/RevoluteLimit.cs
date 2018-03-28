@@ -367,9 +367,9 @@ namespace AlienEngine.Core.Physics.Constraints.TwoEntity.JointLimits
             Vector3f minPlaneNormal, maxPlaneNormal;
             //Rotate basisA y axis around the basisA primary axis.
             Matrix3f rotation;
-            Matrix3f.FromAxisAngle(ref basis.primaryAxis, minimumAngle + MathHelper.PiOver2, out rotation);
+            Matrix3f.CreateFromAxisAngle(ref basis.primaryAxis, minimumAngle + MathHelper.PiOver2, out rotation);
             Vector3f.Transform(ref basis.xAxis, ref rotation, out minPlaneNormal);
-            Matrix3f.FromAxisAngle(ref basis.primaryAxis, maximumAngle - MathHelper.PiOver2, out rotation);
+            Matrix3f.CreateFromAxisAngle(ref basis.primaryAxis, maximumAngle - MathHelper.PiOver2, out rotation);
             Vector3f.Transform(ref basis.xAxis, ref rotation, out maxPlaneNormal);
 
             //Compute the errors along the two normals.

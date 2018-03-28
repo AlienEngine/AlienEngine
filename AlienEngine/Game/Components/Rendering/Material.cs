@@ -71,9 +71,7 @@ namespace AlienEngine
             get { return _shader; }
             set
             {
-                if (_shader != null)
-                    _shader.Dispose();
-
+                _shader?.Dispose();
                 _shader = value;
             }
         }
@@ -82,33 +80,31 @@ namespace AlienEngine
         // TODO: Complete this implementation
         public void Use()
         {
-            var _camera = Game.Instance.CurrentScene.PrimaryCamera.GetComponent<Camera>();
-
             // Pre calculate all matrices
-            Matrix4f w_matrix = gameElement.WorldTransform.GetTransformation();
+            Matrix4f wMatrix = gameElement.WorldTransform.GetTransformation();
 
             if (RendererManager.IsShadowMapDepthPass)
             {
                 RendererManager.DepthShaderProgram.Bind();
 
-                RendererManager.DepthShaderProgram.SetUniform("w_matrix", w_matrix);
+                RendererManager.DepthShaderProgram.SetUniform("w_matrix", wMatrix);
             }
             else
             {
                 // Use the current shader program
                 ShaderProgram.Bind();
 
-                Matrix3f n_matrix = w_matrix.ToMatrix3f().Inversed.Transposed;
+                Matrix3f nMatrix = wMatrix.ToMatrix3f().Inversed.Transposed;
 
                 // Sets projection matrices uniforms values
-                ShaderProgram.SetUniform("w_matrix", w_matrix);
-                ShaderProgram.SetUniform("n_matrix", n_matrix);
+                ShaderProgram.SetUniform("w_matrix", wMatrix);
+                ShaderProgram.SetUniform("n_matrix", nMatrix);
 
                 // Sets lights informations
-                var ligths = Game.Instance.CurrentScene.Lights;
-                var max_nb = ligths.Length;
-                ShaderProgram.SetUniform("lights_nb", max_nb);
-                for (int i = 0; i < max_nb; i++)
+                var ligths = SceneManager.CurrentScene.Lights;
+                var maxNB = ligths.Length;
+                ShaderProgram.SetUniform("lights_nb", maxNB);
+                for (int i = 0; i < maxNB; i++)
                 {
                     var light = ligths[i].GetComponent<Light>();
                     ShaderProgram.SetUniform($"lights[{i}].Type", (int)light.Type);
@@ -240,6 +236,14 @@ namespace AlienEngine
             {
                 ShaderProgram.Unbind();
             }
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+            
+            _shader?.Dispose();
+            _shader = null;
         }
     }
 }

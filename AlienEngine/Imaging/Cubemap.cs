@@ -80,7 +80,7 @@ namespace AlienEngine.Imaging
         {
             if (!_loaded)
             {
-                _camera = Game.Instance.CurrentScene.PrimaryCamera.GetComponent<Camera>();
+                _camera = SceneManager.CurrentScene.PrimaryCamera.GetComponent<Camera>();
                 _program = new CubemapShaderProgram();
                 _cube = MeshFactory.CreateCube(Vector3f.One * -_camera.Far / 2, Vector3f.One * _camera.Far / 2);
 
@@ -146,13 +146,9 @@ namespace AlienEngine.Imaging
             _program.SetUniform("pcm_matrix", _camera.CubemapMatrix * _camera.ProjectionMatrix);
             _program.SetUniform("textureCubemap", GL.DIFFUSE_TEXTURE_UNIT_INDEX);
 
-            GL.BindVertexArray(_cube.VAO);
-
             Bind(GL.DIFFUSE_TEXTURE_UNIT_INDEX);
             _cube.Render();
             Unbind();
-
-            GL.BindVertexArray(0);
 
             RendererManager.RestoreState(RendererBackupMode.DepthMask);
             RendererManager.RestoreState(RendererBackupMode.FaceCulling);

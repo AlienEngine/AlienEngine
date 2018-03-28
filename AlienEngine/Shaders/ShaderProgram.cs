@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
+using AlienEngine.Core.Game;
 using AlienEngine.Core.Graphics.Buffers;
 using AlienEngine.Core.Graphics.Buffers.Data;
 using AlienEngine.Core.Rendering;
@@ -90,7 +91,7 @@ namespace AlienEngine.Core.Shaders
         private void _compile()
         {
             // Setting default globals
-            SetGlobal(GL.MAX_NUMBER_OF_LIGHTS, Math.Max(1, Game.Game.Instance.CurrentScene.Lights.Length).ToString());
+            SetGlobal(GL.MAX_NUMBER_OF_LIGHTS, Math.Max(1, SceneManager.CurrentScene.Lights.Length).ToString());
 
             _program = GL.CreateProgram();
 

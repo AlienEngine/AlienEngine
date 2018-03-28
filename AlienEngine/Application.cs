@@ -12,7 +12,7 @@ namespace AlienEngine
     public abstract class Application
     {
         #region Fields
-        
+
         /// <summary>
         /// The game window.
         /// </summary>
@@ -70,23 +70,32 @@ namespace AlienEngine
         {
             try
             {
-                // Initialize the game
-                Initialize();
-
-                // Show the game window
-                _window.Show();
-
                 // Run the game loop
                 _loop();
             }
             finally
             {
+				// Destroy the game
                 _destroy();
             }
         }
 
         private void _loop()
         {
+            if (Game.Instance.NeedReload)
+            {
+				// Reload the game
+                Reload();
+            }
+            else
+            {
+                // Initialize the game
+                Initialize();
+
+                // Show the game window
+                _window.Show();
+            }
+
             int frames = 0;
             int frameCounter = 0;
 
@@ -113,9 +122,9 @@ namespace AlienEngine
                 double deltaTime = passedTime / Time.SECOND;
 
                 unprocessedTime += passedTime;
-                frameCounter += (int)passedTime;
+                frameCounter += (int) passedTime;
 
-                Game.Instance.CurrentScene.BeforeUpdate();
+                Game.Instance.BeforeUpdate();
 
                 while (unprocessedTime >= frameTime)
                 {
@@ -144,7 +153,7 @@ namespace AlienEngine
                     unprocessedTime -= frameTime;
                 }
 
-                Game.Instance.CurrentScene.AfterUpdate();
+                Game.Instance.AfterUpdate();
 
                 if (rend)
                 {
@@ -163,12 +172,15 @@ namespace AlienEngine
                     }
                 }
             }
+            
+            if (Game.Instance.NeedReload)
+                _loop();
         }
 
         private void _stop()
         {
-            if (!Game.Instance.Running) return;
-            else Game.Instance.Stop();
+            if (Game.Instance.Running)
+                Game.Instance.Stop();
         }
 
         private void _destroy()
@@ -222,6 +234,15 @@ namespace AlienEngine
             RendererManager.Initialize();
         }
 
+        public virtual void Reload()
+        {
+            // Reload the game
+            Game.Instance.Reload();
+
+            // Initialize the renderer manager
+            // RendererManager.Initialize();
+        }
+        
         public void Render()
         {
             // Process rendering

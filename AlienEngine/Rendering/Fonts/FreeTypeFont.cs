@@ -12,7 +12,7 @@ using SharpFont;
 
 namespace AlienEngine.Core.Rendering.Fonts
 {
-    public class FreeTypeFont : IFont, IDisposable
+    public class FreeTypeFont : IFont
     {
         private Library _fontLibrary;
 

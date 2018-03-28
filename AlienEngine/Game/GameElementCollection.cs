@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace AlienEngine.Core.Game
 {
-    public class GameElementCollection : IEnumerable<GameElement>, IEnumerator<GameElement>, IDisposable
+    public class GameElementCollection : IEnumerable<GameElement>, IEnumerator<GameElement>
     {
         private int _key;
         private List<GameElement> _list;
@@ -16,18 +16,12 @@ namespace AlienEngine.Core.Game
 
         public GameElement Current
         {
-            get
-            {
-                return _list[_key];
-            }
+            get { return _list[_key]; }
         }
 
         object IEnumerator.Current
         {
-            get
-            {
-                return _list[_key];
-            }
+            get { return _list[_key]; }
         }
 
         public GameElement this[int index]
@@ -83,22 +77,31 @@ namespace AlienEngine.Core.Game
             _key = 0;
         }
 
+        public void Clear()
+        {
+            _list.Clear();
+        }
+
+        public GameElement[] ToArray()
+        {
+            return _list.ToArray();
+        }
+
         #region IDisposable Support
 
-        private bool disposedValue = false; // To detect redundant calls
+        private bool _disposedValue;
 
         protected virtual void Dispose(bool disposing)
         {
-            if (!disposedValue)
-            {
-                if (disposing)
-                {
-                    _list.Clear();
-                    _list = null;
-                }
+            if (_disposedValue) return;
 
-                disposedValue = true;
+            if (disposing)
+            {
+                _list.Clear();
+                _list = null;
             }
+
+            _disposedValue = true;
         }
 
         public void Dispose()

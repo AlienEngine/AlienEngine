@@ -5,10 +5,10 @@ using AlienEngine.Core.Resources;
 
 namespace AlienEngine.Core.Graphics.Buffers
 {
-    public class VBO<T> : IDisposable
-        where T : struct
+    public class VBO<T> : IDisposable where T : struct
     {
         #region Properties
+
         /// <summary>
         /// The ID of the vertex buffer object.
         /// </summary>
@@ -29,32 +29,34 @@ namespace AlienEngine.Core.Graphics.Buffers
         /// The type of data that is stored in the buffer (either int or float).
         /// </summary>
         public VertexAttribPointerType PointerType { get; private set; }
-        
+
         /// <summary>
         /// The length of data that is stored in the buffer.
         /// </summary>
         public int Count { get; private set; }
+
         #endregion
 
         #region Constructor and Destructor
+
         /// <summary>
         /// Creates a buffer object of type T with a specified length.
         /// This allows the array T[] to be larger than the actual size necessary to buffer.
         /// Useful for reusing resources and avoiding unnecessary GC action.
         /// </summary>
-        /// <param name="Data">An array of data of type T (which must be a struct) that will be buffered to the GPU.</param>
-        /// <param name="Length">The length of the valid data in the data array.</param>
-        /// <param name="Target">Specifies the target buffer object.</param>
-        /// <param name="Hint">Specifies the expected usage of the data store.</param>
-        public VBO(T[] Data, int Length, BufferTarget Target = BufferTarget.ArrayBuffer, BufferUsageHint Hint = BufferUsageHint.StaticDraw)
+        /// <param name="data">An array of data of type T (which must be a struct) that will be buffered to the GPU.</param>
+        /// <param name="length">The length of the valid data in the data array.</param>
+        /// <param name="target">Specifies the target buffer object.</param>
+        /// <param name="hint">Specifies the expected usage of the data store.</param>
+        public VBO(T[] data, int length, BufferTarget target = BufferTarget.ArrayBuffer, BufferUsageHint hint = BufferUsageHint.StaticDraw)
         {
-            Length = MathHelper.Clamp(Length, 0, Data.Length);
+            length = MathHelper.Clamp(length, 0, data.Length);
 
-            ID = GL.CreateVBO<T>(BufferTarget = Target, Data, Hint, Length);
+            ID = GL.CreateVBO<T>(BufferTarget = target, data, hint, length);
 
-            this.Size = (Data is int[] ? 1 : (Data is Vector2f[] ? 2 : (Data is Vector3f[] ? 3 : (Data is Vector4f[] ? 4 : 0))));
-            this.PointerType = (Data is int[] ? VertexAttribPointerType.Int : VertexAttribPointerType.Float);
-            this.Count = Length;
+            Size = (data is int[] ? 1 : (data is Vector2f[] ? 2 : (data is Vector3f[] ? 3 : (data is Vector4f[] ? 4 : 0))));
+            PointerType = (data is int[] ? VertexAttribPointerType.Int : VertexAttribPointerType.Float);
+            Count = length;
 
             ResourcesManager.AddDisposableResource(this);
         }
@@ -64,20 +66,20 @@ namespace AlienEngine.Core.Graphics.Buffers
         /// This allows the array T[] to be larger than the actual size necessary to buffer.
         /// Useful for reusing resources and avoiding unnecessary GC action.
         /// </summary>
-        /// <param name="Data">An array of data of type T (which must be a struct) that will be buffered to the GPU.</param>
-        /// <param name="Position">An offset into the Data array from which to begin buffering.</param>
-        /// <param name="Length">The length of the valid data in the data array.</param>
-        /// <param name="Target">Specifies the target buffer object.</param>
-        /// <param name="Hint">Specifies the expected usage of the data store.</param>
-        public VBO(T[] Data, int Position, int Length, BufferTarget Target = BufferTarget.ArrayBuffer, BufferUsageHint Hint = BufferUsageHint.StaticDraw)
+        /// <param name="data">An array of data of type T (which must be a struct) that will be buffered to the GPU.</param>
+        /// <param name="position">An offset into the Data array from which to begin buffering.</param>
+        /// <param name="length">The length of the valid data in the data array.</param>
+        /// <param name="target">Specifies the target buffer object.</param>
+        /// <param name="hint">Specifies the expected usage of the data store.</param>
+        public VBO(T[] data, int position, int length, BufferTarget target = BufferTarget.ArrayBuffer, BufferUsageHint hint = BufferUsageHint.StaticDraw)
         {
-            Length = MathHelper.Clamp(Length, 0, Data.Length);
+            length = MathHelper.Clamp(length, 0, data.Length);
 
-            ID = GL.CreateVBO<T>(BufferTarget = Target, Data, Hint, Position, Length);
+            ID = GL.CreateVBO<T>(BufferTarget = target, data, hint, position, length);
 
-            this.Size = (Data is int[] ? 1 : (Data is Vector2f[] ? 2 : (Data is Vector3f[] ? 3 : (Data is Vector4f[] ? 4 : 0))));
-            this.PointerType = (Data is int[] ? VertexAttribPointerType.Int : VertexAttribPointerType.Float);
-            this.Count = Length;
+            Size = (data is int[] ? 1 : (data is Vector2f[] ? 2 : (data is Vector3f[] ? 3 : (data is Vector4f[] ? 4 : 0))));
+            PointerType = (data is int[] ? VertexAttribPointerType.Int : VertexAttribPointerType.Float);
+            Count = length;
 
             ResourcesManager.AddDisposableResource(this);
         }
@@ -85,16 +87,16 @@ namespace AlienEngine.Core.Graphics.Buffers
         /// <summary>
         /// Creates a buffer object of type T.
         /// </summary>
-        /// <param name="Data">Specifies a pointer to data that will be copied into the data store for initialization.</param>
-        /// <param name="Target">Specifies the target buffer object.</param>
-        /// <param name="Hint">Specifies the expected usage of the data store.</param>
-        public VBO(T[] Data, BufferTarget Target = BufferTarget.ArrayBuffer, BufferUsageHint Hint = BufferUsageHint.StaticDraw)
+        /// <param name="data">Specifies a pointer to data that will be copied into the data store for initialization.</param>
+        /// <param name="target">Specifies the target buffer object.</param>
+        /// <param name="hint">Specifies the expected usage of the data store.</param>
+        public VBO(T[] data, BufferTarget target = BufferTarget.ArrayBuffer, BufferUsageHint hint = BufferUsageHint.StaticDraw)
         {
-            ID = GL.CreateVBO<T>(BufferTarget = Target, Data, Hint);
+            ID = GL.CreateVBO<T>(BufferTarget = target, data, hint);
 
-            Size = (Data is int[] ? 1 : (Data is Vector2f[] ? 2 : (Data is Vector3f[] ? 3 : (Data is Vector4f[] ? 4 : 0))));
-            PointerType = (Data is int[] ? VertexAttribPointerType.Int : VertexAttribPointerType.Float);
-            Count = Data.Length;
+            Size = (data is int[] ? 1 : (data is Vector2f[] ? 2 : (data is Vector3f[] ? 3 : (data is Vector4f[] ? 4 : 0))));
+            PointerType = (data is int[] ? VertexAttribPointerType.Int : VertexAttribPointerType.Float);
+            Count = data.Length;
 
             ResourcesManager.AddDisposableResource(this);
         }
@@ -102,9 +104,9 @@ namespace AlienEngine.Core.Graphics.Buffers
         /// <summary>
         /// Creates a static-read array buffer of type T.
         /// </summary>
-        /// <param name="Data">Specifies a pointer to data that will be copied into the data store for initialization.</param>
-        public VBO(T[] Data)
-            : this(Data, BufferTarget.ArrayBuffer, BufferUsageHint.StaticDraw)
+        /// <param name="data">Specifies a pointer to data that will be copied into the data store for initialization.</param>
+        public VBO(T[] data)
+            : this(data, BufferTarget.ArrayBuffer, BufferUsageHint.StaticDraw)
         {
         }
 
@@ -115,9 +117,11 @@ namespace AlienEngine.Core.Graphics.Buffers
         {
             Dispose(false);
         }
+
         #endregion
 
         #region BufferSubData
+
         /// <summary>
         /// Updates a subset of the buffer object's data store.
         /// </summary>
@@ -147,7 +151,7 @@ namespace AlienEngine.Core.Graphics.Buffers
         {
             if (BufferTarget != BufferTarget.ArrayBuffer && BufferTarget != BufferTarget.ElementArrayBuffer &&
                 BufferTarget != BufferTarget.PixelPackBuffer && BufferTarget != BufferTarget.PixelUnpackBuffer)
-                throw new InvalidOperationException(string.Format("BufferSubData cannot be called with a BufferTarget of type {0}", BufferTarget.ToString()));
+                throw new InvalidOperationException($"BufferSubData cannot be called with a BufferTarget of type {BufferTarget.ToString()}");
 
             GCHandle handle = GCHandle.Alloc(data, GCHandleType.Pinned);
 
@@ -161,9 +165,11 @@ namespace AlienEngine.Core.Graphics.Buffers
                 handle.Free();
             }
         }
+
         #endregion
 
         #region IDisposable
+
         /// <summary>
         /// Deletes this buffer from GPU memory.
         /// </summary>
@@ -181,6 +187,7 @@ namespace AlienEngine.Core.Graphics.Buffers
                 ID = 0;
             }
         }
+
         #endregion
     }
 }
