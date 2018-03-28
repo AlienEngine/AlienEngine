@@ -71,9 +71,7 @@ namespace AlienEngine
             get { return _shader; }
             set
             {
-                if (_shader != null)
-                    _shader.Dispose();
-
+                _shader?.Dispose();
                 _shader = value;
             }
         }
@@ -103,7 +101,7 @@ namespace AlienEngine
                 ShaderProgram.SetUniform("n_matrix", nMatrix);
 
                 // Sets lights informations
-                var ligths = Game.Instance.CurrentScene.Lights;
+                var ligths = SceneManager.CurrentScene.Lights;
                 var maxNB = ligths.Length;
                 ShaderProgram.SetUniform("lights_nb", maxNB);
                 for (int i = 0; i < maxNB; i++)

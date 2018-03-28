@@ -17,16 +17,6 @@ namespace AlienEngine.Core.Game
         private GameWindow _gameWindow = GameWindow.None;
 
         /// <summary>
-        /// The current scene.
-        /// </summary>
-        private Scene _currentScene;
-
-        /// <summary>
-        /// The list of <see cref="Scene"/>s in the <see cref="Game"/>.
-        /// </summary>
-        private List<Scene> _registeredScenes;
-
-        /// <summary>
         /// Define if the game has already started.
         /// </summary>
         private bool _hasStarted;
@@ -45,11 +35,6 @@ namespace AlienEngine.Core.Game
         /// The window who handle the game.
         /// </summary>
         public GameWindow Window => _gameWindow;
-
-        /// <summary>
-        /// The current scene.
-        /// </summary>
-        public Scene CurrentScene => _currentScene;
 
         /// <summary>
         /// Defines if the <see cref="Game"/> has already started.
@@ -78,7 +63,7 @@ namespace AlienEngine.Core.Game
         {
             if (_instance == null)
             {
-                _registeredScenes = new List<Scene>();
+                SceneManager.Initialize();
                 _instance = this;
             }
         }
@@ -88,9 +73,9 @@ namespace AlienEngine.Core.Game
         /// </summary>
         public virtual void Start()
         {
-            if (_currentScene != null)
+            if (SceneManager.CurrentScene != null)
             {
-                _currentScene.Start();
+                SceneManager.CurrentScene.Start();
                 _hasStarted = true;
                 _needReload = false;
             }
@@ -102,9 +87,9 @@ namespace AlienEngine.Core.Game
         /// </summary>
         public void Reload()
         {
-            if (_currentScene != null)
+            if (SceneManager.CurrentScene != null)
             {
-                _currentScene.Start();
+                SceneManager.CurrentScene.Start();
                 _hasStarted = true;
                 _needReload = false;
             }
@@ -116,42 +101,11 @@ namespace AlienEngine.Core.Game
         /// </summary>
         public virtual void Stop()
         {
-            if (_currentScene != null)
-                _currentScene.Stop();
+            if (SceneManager.CurrentScene != null)
+                SceneManager.CurrentScene.Stop();
 
             _hasStarted = false;
             _needReload = false;
-        }
-
-        /// <summary>
-        /// Loads a <see cref="Scene"/> in the <see cref="Game"/> and set it current.
-        /// </summary>
-        /// <param name="name">The name of the scene</param>
-        public void LoadScene(string name)
-        {
-            Scene scene;
-            if (_sceneIsRegistered(name, out scene))
-                _loadScene(scene);
-            else
-                // TODO: Create a GameException class.
-                throw new System.Exception("Can't load an unregistered scene.");
-        }
-
-        /// <summary>
-        /// Loads a <see cref="Scene"/> in the <see cref="Game"/> and set it current.
-        /// </summary>
-        /// <param name="index">The index of the scene</param>
-        public void LoadScene(int index)
-        {
-            try
-            {
-                _loadScene(_registeredScenes[index]);
-            }
-            catch (System.Exception e)
-            {
-                // TODO: Create a GameException class.
-                throw new System.Exception("An error occured when loading the scene.", e);
-            }
         }
 
         /// <summary>
@@ -160,7 +114,7 @@ namespace AlienEngine.Core.Game
         public void BeforeUpdate()
         {
             if (_hasStarted)
-                _currentScene.BeforeUpdate();
+                SceneManager.CurrentScene.BeforeUpdate();
         }
 
         /// <summary>
@@ -169,7 +123,7 @@ namespace AlienEngine.Core.Game
         public void Update()
         {
             if (_hasStarted)
-                _currentScene.Update();
+                SceneManager.CurrentScene.Update();
         }
 
         /// <summary>
@@ -178,7 +132,7 @@ namespace AlienEngine.Core.Game
         public void AfterUpdate()
         {
             if (_hasStarted)
-                _currentScene.AfterUpdate();
+                SceneManager.CurrentScene.AfterUpdate();
         }
 
         /// <summary>
@@ -187,7 +141,7 @@ namespace AlienEngine.Core.Game
         public void Render()
         {
             if (_hasStarted)
-                _currentScene.Render();
+                SceneManager.CurrentScene.Render();
         }
         
         /// <summary>
@@ -196,16 +150,6 @@ namespace AlienEngine.Core.Game
         public void Pause(bool state = true)
         {
             _isPaused = state;
-        }
-
-        /// <summary>
-        /// Adds a <see cref="Scene"/> in the <see cref="Game"/>.
-        /// </summary>
-        /// <param name="scene">The scene to add.</param>
-        protected int AddScene(Scene scene)
-        {
-            _registeredScenes.Add(scene);
-            return _registeredScenes.Count - 1;
         }
 
         internal void SetGameWindow(GameWindow w)
@@ -219,76 +163,14 @@ namespace AlienEngine.Core.Game
             Input.Refresh();
         }
 
-        private void _loadScene(Scene scene)
+        internal void SetNeedReload(bool state = true)
         {
-            _needReload = true;
-            _hasStarted = false;
-            
-            if (_currentScene != null)
-                _currentScene.Unload();
-
-            _currentScene = scene;
-
-            _currentScene.Load();
+            _needReload = state;
         }
 
-        /// <summary>
-        /// Checks if the given scene's name is registered
-        /// </summary>
-        /// <param name="name">The name of the scene.</param>
-        /// <returns></returns>
-        private bool _sceneIsRegistered(string name, out Scene scene)
+        internal void SetHasStarted(bool state = true)
         {
-            bool result = false;
-
-            scene = null;
-            
-            foreach (var  item in _registeredScenes)
-            {
-                if (item.Name == name)
-                {
-                    scene = item;
-                    result = true;
-                    break;
-                }
-            }
-
-            return result;
-        }
-
-        /// <summary>
-        /// Returns a registered <see cref="Scene"/>.
-        /// </summary>
-        /// <param name="name">The nme of the scene.</param>
-        private Scene _getRegisteredScene(string name)
-        {
-            foreach (Scene scene in _registeredScenes)
-            {
-                if (scene.Name == name)
-                    return scene;
-            }
-
-            return null;
-        }
-
-        /// <summary>
-        /// Returns the index of the <see cref="Scene"/>.
-        /// </summary>
-        /// <param name="name">The name of the scene.</param>
-        private int _getSceneIndex(string name)
-        {
-            var result = -1;
-
-            for (int i = 0, l = _registeredScenes.Count; i < l; i++)
-            {
-                if (_registeredScenes[i].Name == name)
-                {
-                    result = i;
-                    break;
-                }
-            }
-
-            return result;
+            _hasStarted = state;
         }
     }
 }

@@ -80,7 +80,7 @@ namespace AlienEngine.Imaging
         {
             if (!_loaded)
             {
-                _camera = Game.Instance.CurrentScene.PrimaryCamera.GetComponent<Camera>();
+                _camera = SceneManager.CurrentScene.PrimaryCamera.GetComponent<Camera>();
                 _program = new CubemapShaderProgram();
                 _cube = MeshFactory.CreateCube(Vector3f.One * -_camera.Far / 2, Vector3f.One * _camera.Far / 2);
 

@@ -457,16 +457,16 @@ namespace AlienEngine.Core.Rendering
             DepthTest(true, DepthFunction.Lequal);
 
             // Render the skybox
-            Camera _camera = Game.Game.Instance.CurrentScene.PrimaryCamera.GetComponent<Camera>();
+            Camera camera = SceneManager.CurrentScene.PrimaryCamera.GetComponent<Camera>();
 
-            switch (_camera.ClearScreenType)
+            switch (camera.ClearScreenType)
             {
                 case Camera.ClearScreenTypes.Color:
-                    GL.ClearColor(_camera.ClearColor);
+                    GL.ClearColor(camera.ClearColor);
                     break;
                 case Camera.ClearScreenTypes.Cubemap:
-                    if (_camera.Cubemap != null)
-                        _camera.Cubemap.Render();
+                    if (camera.Cubemap != null)
+                        camera.Cubemap.Render();
                     break;
             }
 

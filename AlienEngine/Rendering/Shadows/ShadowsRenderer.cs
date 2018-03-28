@@ -102,7 +102,7 @@ namespace AlienEngine.Core.Rendering.Shadows
                     break;
             }
 
-            var lights = Game.Game.Instance.CurrentScene.Lights;
+            var lights = SceneManager.CurrentScene.Lights;
             var splitsCount = _cascadedShadowMapSplits.Length;
 
             for (int i = 0, l = lights.Length; i < l; i++)
@@ -129,13 +129,13 @@ namespace AlienEngine.Core.Rendering.Shadows
                 
                 RendererManager.ShadowMapDepthPass();
 
-                var lights = Game.Game.Instance.CurrentScene.Lights;
+                var lights = SceneManager.CurrentScene.Lights;
                 
                 _shadowMaps[0].Begin();
     
                 var lightElement = lights[0];
                 var lightComponent = lightElement.GetComponent<Light>();
-                var cameraComponent = Game.Game.Instance.CurrentScene.PrimaryCamera.GetComponent<Camera>();
+                var cameraComponent = SceneManager.CurrentScene.PrimaryCamera.GetComponent<Camera>();
     
                 Matrix4f[] lightSpaceMatrices = new Matrix4f[_cascadedShadowMapSplits.Length];
     

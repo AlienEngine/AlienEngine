@@ -3,6 +3,7 @@ using AlienEngine.Core.Rendering;
 using AlienEngine.Core.Resources;
 using AlienEngine.UI;
 using System;
+using AlienEngine.Core.Game;
 using AlienEngine.Shaders;
 using AlienEngine.Imaging;
 using AlienEngine.Core.Graphics.OpenGL;
@@ -203,7 +204,7 @@ namespace AlienEngine
         {
             CorrectedPosition = Position;
 
-            Camera = Core.Game.Game.Instance.CurrentScene.PrimaryCamera.GetComponent<Camera>();
+            Camera = SceneManager.CurrentScene.PrimaryCamera.GetComponent<Camera>();
 
             Matrix4f projection = Matrix4f.CreateOrthographicOffCenter(0.0f, Camera.Viewport.Width, 0.0f,
                 Camera.Viewport.Height, 0.0f, 1.0f);
