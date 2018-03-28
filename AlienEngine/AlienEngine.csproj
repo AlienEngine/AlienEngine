@@ -743,7 +743,6 @@
     <Compile Include="Game\GameElement.cs" />
     <Compile Include="Graphics\Color4.cs" />
     <Compile Include="Imaging\Cubemap.cs" />
-    <Compile Include="Graphics\Geometry.cs" />
     <Compile Include="Graphics\MeshEntry.cs" />
     <Compile Include="Graphics\MeshFactory.cs" />
     <Compile Include="Graphics\MeshImporter.cs" />
