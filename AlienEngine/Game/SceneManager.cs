@@ -90,7 +90,7 @@ namespace AlienEngine.Core.Game
                 _loadScene(scene);
             else
                 // TODO: Create a GameException class.
-                throw new System.Exception("Can't load an unregistered scene.");
+                throw new Exception("Can't load an unregistered scene.");
         }
 
         /// <summary>
@@ -103,7 +103,7 @@ namespace AlienEngine.Core.Game
                 _loadScene(scene);
             else
                 // TODO: Create a GameException class.
-                throw new System.Exception("Can't load an unregistered scene.");
+                throw new Exception("Can't load an unregistered scene.");
         }
 
         /// <summary>
