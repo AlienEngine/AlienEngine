@@ -705,6 +705,7 @@
     <Compile Include="Physics\Vehicle\WheelSuspension.cs" />
     <Compile Include="Shaders\Samples\Vertex Shaders\ColoredUIVertexShader.cs" />
     <Compile Include="Shaders\Samples\Vertex Shaders\ShadowMapDepthVertexShader.cs" />
+    <Compile Include="UI\Clipboard.cs" />
     <Compile Include="UI\ListBoxChangeEventArgs.cs" />
     <Compile Include="UI\Origin.cs" />
     <Compile Include="Rendering\Fonts\Character.cs" />
@@ -772,6 +773,7 @@
     <Compile Include="Threading\SpinLock.cs" />
     <Compile Include="Threading\ThreadsManager.cs" />
     <Compile Include="UI\Anchor.cs" />
+    <Compile Include="Math\Range.cs" />
     <Compile Include="UI\TextChangeEventArgs.cs" />
     <Compile Include="Utils\ConvertX.cs" />
     <Compile Include="Utils\CPUInfo.cs" />

@@ -11,5 +11,7 @@
         float CalculateWidth(string text);
 
         Sizef CalculateSize(string text);
+
+        void SetPosition(Point2f position);
     }
 }

@@ -126,8 +126,9 @@ namespace AlienEngine.Imaging
                     PixelFormat.Bgra, PixelType.UnsignedByte, _image.Pixels);
 
                 // Set texture filters
-                GL.TexParameteri(TextureTarget, TextureParameterName.TextureMinFilter, TextureParameter.Linear);
+                GL.TexParameteri(TextureTarget, TextureParameterName.TextureMinFilter, TextureParameter.LinearMipMapLinear);
                 GL.TexParameteri(TextureTarget, TextureParameterName.TextureMagFilter, TextureParameter.Linear);
+                GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
 
                 // Make sure the texture will not be modified from the outside
                 GL.BindTexture(TextureTarget, 0);

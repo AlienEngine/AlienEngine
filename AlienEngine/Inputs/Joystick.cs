@@ -95,7 +95,7 @@ namespace AlienEngine.Core.Inputs
         {
             var states = GLFW.GetJoystickAxes(joystick);
 
-            return states != null ? states[(int)axis] : 0;
+            return states != null && states.Length > (int)axis ? states[(int)axis] : 0;
         }
 
         /// <summary>
