@@ -332,10 +332,15 @@ namespace AlienEngine.UnitTest.Math
         public void Column0PropertyTest()
         {
             Matrix4f matrix = new Matrix4f(3, 4, 7, 9, 5, 4, -1, 4, 8, 7, 8, 5, 4, 3, 0, 9);
-            Assert.AreEqual(new Vector4f(3, 5, 8, 4), matrix.Column0);
+            Assert.AreEqual(new Vector4f { X = 3, Y= 5, Z = 8, W = 4 }, matrix.Column0);
 
             matrix.Column0 = new Vector4f { X = 0, Y = 0, Z = 0, W = 0};
-            Assert.AreEqual(new Vector4f(0, 0, 0, 0), matrix.Column0);
+            Assert.AreEqual(new Vector4f { X = 0, Y = 0, Z = 0, W = 0 }, matrix.Column0);
+
+            Assert.AreEqual(matrix.Column0.X, matrix[0, 0]);
+            Assert.AreEqual(matrix.Column0.Y, matrix[1, 0]);
+            Assert.AreEqual(matrix.Column0.Z, matrix[2, 0]);
+            Assert.AreEqual(matrix.Column0.W, matrix[3, 0]);
         }
 
         [Test]
@@ -345,7 +350,12 @@ namespace AlienEngine.UnitTest.Math
             Assert.AreEqual(new Vector4f(4, 4, 7, 3), matrix.Column1);
 
             matrix.Column1 = new Vector4f { X = 0, Y = 0, Z = 0, W = 0 };
-            Assert.AreEqual(new Vector4f(0, 0, 0, 0), matrix.Column1);
+            Assert.AreEqual(new Vector4f { X = 0, Y = 0, Z = 0, W = 0 }, matrix.Column1);
+
+            Assert.AreEqual(matrix.Column1.X, matrix[0, 1]);
+            Assert.AreEqual(matrix.Column1.Y, matrix[1, 1]);
+            Assert.AreEqual(matrix.Column1.Z, matrix[2, 1]);
+            Assert.AreEqual(matrix.Column1.W, matrix[3, 1]);
         }
 
         [Test]
@@ -355,7 +365,12 @@ namespace AlienEngine.UnitTest.Math
             Assert.AreEqual(new Vector4f(7, -1, 8, 0), matrix.Column2);
 
             matrix.Column2 = new Vector4f { X = 0, Y = 0, Z = 0, W = 0 };
-            Assert.AreEqual(new Vector4f(0, 0, 0, 0), matrix.Column2);
+            Assert.AreEqual(new Vector4f { X = 0, Y = 0, Z = 0, W = 0 }, matrix.Column2);
+
+            Assert.AreEqual(matrix.Column2.X, matrix[0, 2]);
+            Assert.AreEqual(matrix.Column2.Y, matrix[1, 2]);
+            Assert.AreEqual(matrix.Column2.Z, matrix[2, 2]);
+            Assert.AreEqual(matrix.Column2.W, matrix[3, 2]);
         }
 
         [Test]
@@ -365,7 +380,12 @@ namespace AlienEngine.UnitTest.Math
             Assert.AreEqual(new Vector4f(9, 4, 5, 9), matrix.Column3);
 
             matrix.Column3 = new Vector4f { X = 0, Y = 0, Z = 0, W = 0 };
-            Assert.AreEqual(new Vector4f(0, 0, 0, 0), matrix.Column3);
+            Assert.AreEqual(new Vector4f { X = 0, Y = 0, Z = 0, W = 0 }, matrix.Column3);
+
+            Assert.AreEqual(matrix.Column3.X, matrix[0, 3]);
+            Assert.AreEqual(matrix.Column3.Y, matrix[1, 3]);
+            Assert.AreEqual(matrix.Column3.Z, matrix[2, 3]);
+            Assert.AreEqual(matrix.Column3.W, matrix[3, 3]);
         }
 
         [Test]
@@ -375,7 +395,12 @@ namespace AlienEngine.UnitTest.Math
             Assert.AreEqual(new Vector4f(3, 4, 7, 9), matrix.Row0);
 
             matrix.Row0 = new Vector4f { X = 0, Y = 0, Z = 0, W = 0 };
-            Assert.AreEqual(new Vector4f(0, 0, 0, 0), matrix.Row0);
+            Assert.AreEqual(new Vector4f { X = 0, Y = 0, Z = 0, W = 0 }, matrix.Row0);
+
+            Assert.AreEqual(matrix.Row0.X, matrix[0, 0]);
+            Assert.AreEqual(matrix.Row0.Y, matrix[0, 1]);
+            Assert.AreEqual(matrix.Row0.Z, matrix[0, 2]);
+            Assert.AreEqual(matrix.Row0.W, matrix[0, 3]);
         }
 
         [Test]
@@ -385,7 +410,12 @@ namespace AlienEngine.UnitTest.Math
             Assert.AreEqual(new Vector4f(5, 4, -1, 4), matrix.Row1);
 
             matrix.Row1 = new Vector4f { X = 0, Y = 0, Z = 0, W = 0 };
-            Assert.AreEqual(new Vector4f(0, 0, 0, 0), matrix.Row1);
+            Assert.AreEqual(new Vector4f { X = 0, Y = 0, Z = 0, W = 0 }, matrix.Row1);
+
+            Assert.AreEqual(matrix.Row1.X, matrix[1, 0]);
+            Assert.AreEqual(matrix.Row1.Y, matrix[1, 1]);
+            Assert.AreEqual(matrix.Row1.Z, matrix[1, 2]);
+            Assert.AreEqual(matrix.Row1.W, matrix[1, 3]);
         }
 
         [Test]
@@ -395,22 +425,83 @@ namespace AlienEngine.UnitTest.Math
             Assert.AreEqual(new Vector4f(8, 7, 8, 5), matrix.Row2);
 
             matrix.Row2 = new Vector4f { X = 0, Y = 0, Z = 0, W = 0 };
-            Assert.AreEqual(new Vector4f(0, 0, 0, 0), matrix.Row2);
+            Assert.AreEqual(new Vector4f { X = 0, Y = 0, Z = 0, W = 0 }, matrix.Row2);
+
+            Assert.AreEqual(matrix.Row2.X, matrix[2, 0]);
+            Assert.AreEqual(matrix.Row2.Y, matrix[2, 1]);
+            Assert.AreEqual(matrix.Row2.Z, matrix[2, 2]);
+            Assert.AreEqual(matrix.Row2.W, matrix[2, 3]);
         }
 
         [Test]
         public void Row3PropertyTest()
         {
             Matrix4f matrix = new Matrix4f(3, 4, 7, 9, 5, 4, -1, 4, 8, 7, 8, 5, 4, 3, 0, 9);
-            Assert.AreEqual(new Vector4f(4, 3, 0, 9), matrix.Row3);
+            Assert.AreEqual(new Vector4f { X = 4, Y= 3, Z = 0, W = 9 }, matrix.Row3);
 
             matrix.Row3 = new Vector4f { X = 0, Y = 0, Z = 0, W = 0 };
-            Assert.AreEqual(new Vector4f(0, 0, 0, 0), matrix.Row3);
+            Assert.AreEqual(new Vector4f { X = 0, Y = 0, Z = 0, W = 0 }, matrix.Row3);
+
+            Assert.AreEqual(matrix.Row3.X, matrix[3, 0]);
+            Assert.AreEqual(matrix.Row3.Y, matrix[3, 1]);
+            Assert.AreEqual(matrix.Row3.Z, matrix[3, 2]);
+            Assert.AreEqual(matrix.Row3.W, matrix[3, 3]);
         }
 
+        [Test]
         public void TranslationPropertyTest()
         {
+            Matrix4f matrix = new Matrix4f(3, 4, 7, 9, 5, 4, -1, 4, 8, 7, 8, 5, 4, 3, 0, 9);
+            Assert.AreEqual(new Vector3f { X = 4, Y = 3, Z = 0 }, matrix.Translation);
 
+            matrix.Translation = new Vector3f { X = 0, Y = 0, Z = 0};
+            Assert.AreEqual(new Vector3f { X = 0, Y = 0, Z = 0 }, matrix.Translation);
+
+            Assert.AreEqual(matrix.Translation.X, matrix[3, 0]);
+            Assert.AreEqual(matrix.Translation.Y, matrix[3, 1]);
+            Assert.AreEqual(matrix.Translation.Z, matrix[3, 2]);
+        }
+
+        [Test]
+        public void TestIndexer()
+        {
+            float[] values = new float[] { 1.0f, 2.0f, 3.0f, 5.0f, 0.0f, -5.0f, .5f, 100.25f, .3f, .35f, .025f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f };
+
+            Matrix4f m = Matrix4f.Identity;
+            Vector4f v = Vector4f.One;
+
+            for (int i = 0; i < 5; i++)
+            {
+                for (int j = 0; j < 5; j++)
+                {
+                    if (i == 4)
+                    {
+                        Assert.Throws<IndexOutOfRangeException>(() => m[i] = new Vector4f());
+                        Assert.Throws<IndexOutOfRangeException>(() =>
+                        {
+                            var f = m[i];
+                        });
+                    }
+
+                    if (i == 4 || j == 4)
+                    {
+                        Assert.Throws<IndexOutOfRangeException>(() => m[i, j] = 0);
+                        Assert.Throws<IndexOutOfRangeException>(() =>
+                        {
+                            var f = m[i, j];
+                        });
+                    }
+                    else
+                    {
+                        float value = values[(i * 4) + j];
+                        m[i, j] = value;
+                        Assert.AreEqual(value, m[i, j]);
+
+                        m[i] = v;
+                        Assert.AreEqual(v, m[i]);
+                    }
+                }
+            }
         }
 
     }
