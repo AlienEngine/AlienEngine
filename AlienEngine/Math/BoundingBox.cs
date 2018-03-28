@@ -231,5 +231,12 @@ namespace AlienEngine
             boundingBox.Max.Z = boundingSphere.Center.Z + boundingSphere.Radius;
         }
 
+        /// <summary>
+        /// Return a string representation of this <see cref="BoundingBox"/>.
+        /// </summary>
+        public override string ToString()
+        {
+            return $"[{Min}]-[{Max}]";
+        }
     }
 }
