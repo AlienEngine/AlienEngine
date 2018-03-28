@@ -12,11 +12,6 @@ namespace AlienEngine
         #region Private Fields
 
         /// <summary>
-        /// Defines if the button's state is hover.
-        /// </summary>
-        private bool _isHover;
-
-        /// <summary>
         /// Define if the button's state is pressed.
         /// </summary>
         private bool _isPressed;
@@ -24,7 +19,7 @@ namespace AlienEngine
         /// <summary>
         /// The text label of the button.
         /// </summary>
-        private Label2D _label;
+        private Text _label;
 
         /// <summary>
         /// The text of the button.
@@ -36,19 +31,9 @@ namespace AlienEngine
         #region Public Fields
 
         /// <summary>
-        /// The button's background <see cref="Color4"/> when the mouse is over.
-        /// </summary>
-        public Color4 HoverColor;
-
-        /// <summary>
         /// The button's background <see cref="Color4"/> when it is pressed.
         /// </summary>
         public Color4 PressColor;
-
-        /// <summary>
-        /// The button's background <see cref="Texture"/> when the mouse is over.
-        /// </summary>
-        public Texture HoverTexture;
 
         /// <summary>
         /// The button's background <see cref="Texture"/> when it is pressed.
@@ -57,11 +42,11 @@ namespace AlienEngine
 
         public string Text
         {
-            get => _text;
+            get { return _text; }
             set
             {
                 _text = value;
-                _label.Text = _text;
+                _label.Value = _text;
             }
         }
 
@@ -97,16 +82,14 @@ namespace AlienEngine
 
         public Button()
         {
-            _label = new Label2D();
-
-            OnAttach += () => gameElement.AttachComponent(_label);
+            _label = new Text();
 
             ResourcesManager.AddDisposableResource(this);
         }
 
         public override void Start()
         {
-            InitUI();
+            base.Start();
 
             _label.Anchor = Anchor;
             _label.BackgroundColor = Color4.Transparent;
@@ -121,21 +104,20 @@ namespace AlienEngine
             _label.Position = Position;
             _label.Scale = Scale;
             _label.Size = Size;
-            _label.Text = Text;
+            _label.Value = Text;
             _label.TextAlignement = TextAlignement;
             _label.TextWrapMode = TextWrapMode;
 
-            Input.AddMouseMoveEvent((sender, args) =>
-            {
-                _isHover = Enabled && !Input.MouseIsGrabbed && Rectangled.Contains(args.Location);
-            });
+            _label.Start();
         }
 
         public override void Update()
         {
-            _isPressed = _isHover && Input.Holding(MouseButton.Left);
+            base.Update();
 
-            if (_isHover)
+            _isPressed = IsHover && Input.Holding(MouseButton.Left);
+
+            if (IsHover)
             {
                 if (Input.Released(MouseButton.Left))
                 {
@@ -155,20 +137,22 @@ namespace AlienEngine
                     MiddleClick?.Invoke();
                 }
             }
+
+            _label.Update();
         }
 
-        new public void RenderColoredQuad()
+        public new void RenderColoredQuad()
         {
-            Color4 color = _isPressed ? PressColor : (_isHover ? HoverColor : BackgroundColor);
+            Color4 color = _isPressed ? PressColor : (IsHover ? HoverColor : BackgroundColor);
 
             if (color == Color4.Transparent) return;
 
             RenderColoredQuad(color);
         }
 
-        new public void RenderTexturedQuad()
+        public new void RenderTexturedQuad()
         {
-            Texture texture = _isPressed ? PressTexture : (_isHover ? HoverTexture : BackgroundTexture);
+            Texture texture = _isPressed ? PressTexture : (IsHover ? HoverTexture : BackgroundTexture);
 
             if (texture == null) return;
 
@@ -181,17 +165,31 @@ namespace AlienEngine
                 RenderTexturedQuad();
             else
                 RenderColoredQuad();
+
+            _label.Render();
         }
+
+        private bool _disposedValue;
 
         protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);
 
-            if (HoverTexture != null)
-                HoverTexture.Dispose();
+            if (_disposedValue) return;
 
-            if (PressTexture != null)
-                PressTexture.Dispose();
+            if (disposing)
+            {
+                HoverTexture?.Dispose();
+                HoverTexture = null;
+
+                PressTexture?.Dispose();
+                PressTexture = null;
+
+                _label?.Dispose();
+                _label = null;
+            }
+
+            _disposedValue = true;
         }
     }
 }

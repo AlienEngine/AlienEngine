@@ -1,11 +1,11 @@
-﻿using AlienEngine.Core.Graphics.DevIL;
-using AlienEngine.Core.Graphics.DevIL.Unmanaged;
+﻿using AlienEngine.Core.Imaging.DevIL;
+using AlienEngine.Core.Imaging.DevIL.Unmanaged;
 using AlienEngine.Core.Resources;
 using System;
 using System.Drawing;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using DevILImage = AlienEngine.Core.Graphics.DevIL.Image;
+using DevILImage = AlienEngine.Core.Imaging.DevIL.Image;
 
 namespace AlienEngine.Imaging
 {
@@ -111,6 +111,23 @@ namespace AlienEngine.Imaging
 
             // Dispose the importer
             importer.Dispose();
+
+            // Populate fields
+            _x = offsetX;
+            _y = offsetY;
+            _z = offsetZ;
+            _d = depth;
+            _f = format;
+            _t = type;
+
+            // Register this resource as a disposable resource
+            ResourcesManager.AddDisposableResource(this);
+        }
+        
+        internal Image(DevILImage img, int offsetX = 0, int offsetY = 0, int offsetZ = 0, int depth = 1,
+            DataFormat format = DataFormat.BGRA, DataType type = DataType.UnsignedByte)
+        {
+            _i = img;
 
             // Populate fields
             _x = offsetX;
@@ -292,7 +309,7 @@ namespace AlienEngine.Imaging
 
         #region IDisposable Support
 
-        private bool disposedValue = false; // To detect redundant calls
+        private bool _disposedValue = false; // To detect redundant calls
 
         /// <summary>
         /// Disposes this instance of <see cref="Image"/>.
@@ -300,14 +317,14 @@ namespace AlienEngine.Imaging
         /// <param name="disposing">Define if we are disposing unmanaged resources.</param>
         protected virtual void Dispose(bool disposing)
         {
-            if (!disposedValue)
+            if (!_disposedValue)
             {
                 if (_i != null)
                 {
                     _i.Dispose();
                 }
 
-                disposedValue = true;
+                _disposedValue = true;
             }
         }
 

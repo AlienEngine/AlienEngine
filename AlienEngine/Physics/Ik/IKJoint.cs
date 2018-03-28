@@ -78,7 +78,7 @@ namespace AlienEngine.Core.Physics.Ik
 
             if (!ConnectionA.Pinned)
             {
-                Matrix3f.CreateScale(ConnectionA.inverseMass, out linearW);
+                Matrix3f.CreateScale3D(ConnectionA.inverseMass, out linearW);
                 Matrix3f.Multiply(ref linearJacobianA, ref linearW, out linearA); //Compute J * M^-1 for linear component
                 Matrix3f.MultiplyByTransposed(ref linearA, ref linearJacobianA, out linearA); //Compute (J * M^-1) * JT for linear component
 
@@ -94,7 +94,7 @@ namespace AlienEngine.Core.Physics.Ik
 
             if (!ConnectionB.Pinned)
             {
-                Matrix3f.CreateScale(ConnectionB.inverseMass, out linearW);
+                Matrix3f.CreateScale3D(ConnectionB.inverseMass, out linearW);
                 Matrix3f.Multiply(ref linearJacobianB, ref linearW, out linearB); //Compute J * M^-1 for linear component
                 Matrix3f.MultiplyByTransposed(ref linearB, ref linearJacobianB, out linearB); //Compute (J * M^-1) * JT for linear component
 

@@ -254,7 +254,7 @@ namespace AlienEngine.Core.Physics.Constraints.SingleEntity
             //COMPUTE EFFECTIVE MASS MATRIX
             //Transforms a change in velocity to a change in momentum when multiplied.
             Matrix3f linearComponent;
-            Matrix3f.CreateScale(entity.inverseMass, out linearComponent);
+            Matrix3f.CreateScale3D(entity.inverseMass, out linearComponent);
             Matrix3f rACrossProduct;
             Matrix3f.CreateCrossProduct(ref r, out rACrossProduct);
             Matrix3f angularComponentA;

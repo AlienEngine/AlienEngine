@@ -8,35 +8,42 @@ namespace AlienEngine
     /// </summary>
     public abstract class Component : IComponent
     {
+        // The enabled state of the component
         private bool _enabled = true;
+
+        // Define if the component has already started
+        private bool _started = false;
+
+        // The game element who handling this component.
         private GameElement _gameElement = null;
 
         /// <summary>
         /// The <see cref="GameElement"/> in which
         /// this <see cref="Component"/> is attached.
         /// </summary>
-        protected GameElement gameElement
-        {
-            get { return _gameElement; }
-        }
+        protected GameElement gameElement => _gameElement;
 
         /// <summary>
-        /// Gets a boolean defining if this <see cref="Component"/>.
+        /// Gets a boolean defining if this <see cref="Component"/>
         /// is enabled or not.
         /// </summary>
-        protected bool Enabled
-        {
-            get { return _enabled; }
-        }
+        protected bool Enabled => _enabled;
 
         /// <summary>
-        /// Enable this <see cref="Component"/>.
+        /// Gets a boolean defining if this <see cref="GameElement"/>
+        /// has started or not.
         /// </summary>
-        protected void Enable()
-        {
-            Enable(true);
-        }
+        protected bool Started => _started;
 
+        /// <summary>
+        /// Returns the <see cref="GameElement"/> in which
+        /// this <see cref="Component"/> is attached.
+        /// </summary>
+        public GameElement GetGameElement()
+        {
+            return _gameElement;
+        }
+        
         /// <summary>
         /// Disable this <see cref="Component"/>.
         /// </summary>
@@ -49,7 +56,7 @@ namespace AlienEngine
         /// Enable or disable this <see cref="Component"/>.
         /// </summary>
         /// <param name="value">true to enable, false otherwise.</param>
-        protected void Enable(bool value)
+        protected void Enable(bool value = true)
         {
             _enabled = value;
         }
@@ -143,13 +150,24 @@ namespace AlienEngine
             return _gameElement != null ? _gameElement.HasComponent(component) : false;
         }
 
+        /// <summary>
+        /// The event used to define the action to execute when this
+        /// <see cref="Component"/> is attached on a <see cref="GameElement"/>.
+        /// </summary>
         protected event Action OnAttach;
 
+        /// <summary>
+        /// Call all actions defined in the <see cref="OnAttach"/> event.
+        /// </summary>
         internal void TriggerAttachEvent()
         {
             OnAttach?.Invoke();
         }
 
+        /// <summary>
+        /// Defines the <see cref="GameElement"/> of this <see cref="Component"/>.
+        /// </summary>
+        /// <param name="gameElement">The <see cref="GameElement"/> who use this <see cref="Component"/>.</param>
         internal void SetGameElement(GameElement gameElement)
         {
             _gameElement = gameElement;
@@ -157,30 +175,52 @@ namespace AlienEngine
 
         #region Overriden Methods
 
+        /// <summary>
+        /// Triggered when the <see cref="GameElement"/> of this
+        /// <see cref="Component"/> is starting.
+        /// </summary>
         public virtual void Start()
         {
+            _started = true;
         }
 
+        /// <summary>
+        /// Triggered before the <see cref="GameElement"/> of this
+        /// <see cref="Component"/> is updated.
+        /// </summary>
         public virtual void BeforeUpdate()
         {
         }
 
+        /// <summary>
+        /// Triggered when the <see cref="GameElement"/> of this
+        /// <see cref="Component"/> is updating.
+        /// </summary>
         public virtual void Update()
         {
         }
 
+        /// <summary>
+        /// Triggered after the <see cref="GameElement"/> of this
+        /// <see cref="Component"/> is updated.
+        /// </summary>
         public virtual void AfterUpdate()
         {
         }
 
+        /// <summary>
+        /// Triggered when the <see cref="GameElement"/> of this
+        /// <see cref="Component"/> is stopping.
+        /// </summary>
         public virtual void Stop()
         {
+            _started = false;
         }
 
         #region Physics triggers
 
         /// <summary>
-        /// Trigerred when the <see cref="Collider"/> of this
+        /// Triggered when the <see cref="Collider"/> of this
         /// <see cref="GameElement"/> hit another.
         /// </summary>
         /// <param name="element">The other collider.</param>
@@ -189,7 +229,7 @@ namespace AlienEngine
         }
 
         /// <summary>
-        /// Trigerred when the <see cref="Collider"/> of this
+        /// Triggered when the <see cref="Collider"/> of this
         /// <see cref="GameElement"/> enter in another.
         /// </summary>
         /// <param name="element">The other collider.</param>
@@ -198,7 +238,7 @@ namespace AlienEngine
         }
 
         /// <summary>
-        /// Trigerred when the <see cref="Collider"/> of this
+        /// Triggered when the <see cref="Collider"/> of this
         /// <see cref="GameElement"/> is in another.
         /// </summary>
         /// <param name="element">The other collider.</param>
@@ -207,7 +247,7 @@ namespace AlienEngine
         }
 
         /// <summary>
-        /// Trigerred when the <see cref="Collider"/> of this
+        /// Triggered when the <see cref="Collider"/> of this
         /// <see cref="GameElement"/> exit out another.
         /// </summary>
         /// <param name="element">The other collider.</param>
@@ -218,5 +258,14 @@ namespace AlienEngine
         #endregion
 
         #endregion
+
+        protected virtual void Dispose(bool disposing)
+        { }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
     }
 }

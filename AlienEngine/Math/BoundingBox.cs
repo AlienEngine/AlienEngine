@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace AlienEngine
 {
@@ -20,6 +19,11 @@ namespace AlienEngine
         /// Location with the highest X, Y, and Z coordinates in the axis-aligned bounding box.
         /// </summary>
         public Vector3f Max;
+
+        /// <summary>
+        /// Location of the center of this axis-aligned bounding box.
+        /// </summary>
+        public Vector3f Center => (Max + Min) / 2;
 
         /// <summary>
         /// Constructs a bounding box from the specified minimum and maximum.
@@ -140,27 +144,37 @@ namespace AlienEngine
         /// <returns>Bounding box which contains the list of points.</returns>
         public static BoundingBox CreateFromPoints(IList<Vector3f> points)
         {
+            return CreateFromPoints(points.ToArray());
+        }
+
+        /// <summary>
+        /// Creates the smallest possible bounding box that contains a list of points.
+        /// </summary>
+        /// <param name="points">Points to enclose with a bounding box.</param>
+        /// <returns>Bounding box which contains the array of points.</returns>
+        public static BoundingBox CreateFromPoints(params Vector3f[] points)
+        {
             BoundingBox aabb;
-            if (points.Count == 0)
+            if (points.Length == 0)
                 throw new Exception("Cannot construct a bounding box from an empty list.");
             aabb.Min = points[0];
             aabb.Max = aabb.Min;
-            for (int i = points.Count - 1; i >= 1; i--)
+            for (int i = points.Length - 1; i >= 1; i--)
             {
                 Vector3f v = points[i];
                 if (v.X < aabb.Min.X)
                     aabb.Min.X = v.X;
-                else if (v.X > aabb.Max.X)
+                if (v.X > aabb.Max.X)
                     aabb.Max.X = v.X;
 
                 if (v.Y < aabb.Min.Y)
                     aabb.Min.Y = v.Y;
-                else if (v.Y > aabb.Max.Y)
+                if (v.Y > aabb.Max.Y)
                     aabb.Max.Y = v.Y;
 
                 if (v.Z < aabb.Min.Z)
                     aabb.Min.Z = v.Z;
-                else if (v.Z > aabb.Max.Z)
+                if (v.Z > aabb.Max.Z)
                     aabb.Max.Z = v.Z;
             }
             return aabb;
@@ -222,5 +236,12 @@ namespace AlienEngine
             boundingBox.Max.Z = boundingSphere.Center.Z + boundingSphere.Radius;
         }
 
+        /// <summary>
+        /// Return a string representation of this <see cref="BoundingBox"/>.
+        /// </summary>
+        public override string ToString()
+        {
+            return $"[{Min}]-[{Max}]";
+        }
     }
 }

@@ -1,6 +1,8 @@
-﻿namespace AlienEngine.Core.Rendering.Fonts
+﻿using System;
+
+namespace AlienEngine.Core.Rendering.Fonts
 {
-    public interface IFont
+    public interface IFont: IDisposable
     {
         FontRendererConfiguration Configuration { get; }
 
@@ -11,5 +13,7 @@
         float CalculateWidth(string text);
 
         Sizef CalculateSize(string text);
+
+        void SetPosition(Point2f position);
     }
 }

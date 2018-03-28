@@ -1,4 +1,5 @@
 #region License
+
 // Copyright (C) 2017 AlienGames
 // 
 // This library is free software; you can redistribute it and/or
@@ -15,6 +16,7 @@
 // License along with this library; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301
 // USA
+
 #endregion
 
 using System;
@@ -36,20 +38,17 @@ namespace AlienEngine
         /// <summary>
         /// The X component of the Vector3f.
         /// </summary>
-        [Index(0)]
-        public float X;
+        [Index(0)] public float X;
 
         /// <summary>
         /// The Y component of the Vector3f.
         /// </summary>
-        [Index(1)]
-        public float Y;
+        [Index(1)] public float Y;
 
         /// <summary>
         /// The Z component of the Vector3f.
         /// </summary>
-        [Index(2)]
-        public float Z;
+        [Index(2)] public float Z;
 
         /// <summary>
         /// Defines a unit-length Vector3f that points towards the X-axis.
@@ -133,8 +132,8 @@ namespace AlienEngine
         /// <param name="v">The Vector2d to copy components from.</param>
         public Vector3f(Vector2d vec)
         {
-            X = (float)vec.X;
-            Y = (float)vec.Y;
+            X = (float) vec.X;
+            Y = (float) vec.Y;
             Z = 0f;
         }
 
@@ -177,9 +176,9 @@ namespace AlienEngine
         /// <param name="v">The Vector3d to copy components from.</param>
         public Vector3f(Vector3d vec)
         {
-            X = (float)vec.X;
-            Y = (float)vec.Y;
-            Z = (float)vec.Z;
+            X = (float) vec.X;
+            Y = (float) vec.Y;
+            Z = (float) vec.Z;
         }
 
         /// <summary>
@@ -221,9 +220,9 @@ namespace AlienEngine
         /// <param name="v">The Vector4d to copy components from.</param>
         public Vector3f(Vector4d vec)
         {
-            X = (float)vec.X;
-            Y = (float)vec.Y;
-            Z = (float)vec.Z;
+            X = (float) vec.X;
+            Y = (float) vec.Y;
+            Z = (float) vec.Z;
         }
 
         /// <summary>
@@ -303,7 +302,7 @@ namespace AlienEngine
         }
 
         /// <summary>
-        /// Gets the normalized instance of t <see cref="Vector3f"/>.
+        /// Gets the normalized instance of this <see cref="Vector3f"/>.
         /// </summary>
         public Vector3f Normalized
         {
@@ -322,6 +321,16 @@ namespace AlienEngine
                 Y *= scale;
                 Z *= scale;
             }
+        }
+
+        /// <summary>
+        /// Negates the vector.
+        /// </summary>
+        public void Negate()
+        {
+            X = -X;
+            Y = -Y;
+            Z = -Z;
         }
 
         /// <summary>
@@ -684,9 +693,12 @@ namespace AlienEngine
         /// <returns>The clamped vector</returns>
         public static Vector3f Clamp(Vector3f vec, Vector3f min, Vector3f max)
         {
-            vec.X = vec.X < min.X ? min.X : vec.X > max.X ? max.X : vec.X;
-            vec.Y = vec.Y < min.Y ? min.Y : vec.Y > max.Y ? max.Y : vec.Y;
-            vec.Z = vec.Z < min.Z ? min.Z : vec.Z > max.Z ? max.Z : vec.Z;
+            vec.X = vec.X < min.X ? min.X :
+                vec.X > max.X ? max.X : vec.X;
+            vec.Y = vec.Y < min.Y ? min.Y :
+                vec.Y > max.Y ? max.Y : vec.Y;
+            vec.Z = vec.Z < min.Z ? min.Z :
+                vec.Z > max.Z ? max.Z : vec.Z;
             return vec;
         }
 
@@ -699,9 +711,12 @@ namespace AlienEngine
         /// <param name="result">The clamped vector</param>
         public static void Clamp(ref Vector3f vec, ref Vector3f min, ref Vector3f max, out Vector3f result)
         {
-            result.X = vec.X < min.X ? min.X : vec.X > max.X ? max.X : vec.X;
-            result.Y = vec.Y < min.Y ? min.Y : vec.Y > max.Y ? max.Y : vec.Y;
-            result.Z = vec.Z < min.Z ? min.Z : vec.Z > max.Z ? max.Z : vec.Z;
+            result.X = vec.X < min.X ? min.X :
+                vec.X > max.X ? max.X : vec.X;
+            result.Y = vec.Y < min.Y ? min.Y :
+                vec.Y > max.Y ? max.Y : vec.Y;
+            result.Z = vec.Z < min.Z ? min.Z :
+                vec.Z > max.Z ? max.Z : vec.Z;
         }
 
         /// <summary>
@@ -925,12 +940,23 @@ namespace AlienEngine
         /// <param name="result">Row vector product of the transformation.</param>
         public static void Transform(ref Vector2f v, ref Matrix2x3f matrix, out Vector3f result)
         {
-#if !WINDOWS
             result = new Vector3f();
-#endif
             result.X = v.X * matrix.M11 + v.Y * matrix.M21;
             result.Y = v.X * matrix.M12 + v.Y * matrix.M22;
             result.Z = v.X * matrix.M13 + v.Y * matrix.M23;
+        }
+
+        /// <summary>
+        /// Transforms the vector by the matrix.
+        /// </summary>
+        /// <param name="v">Vector2 to transform.  Considered to be a row vector for purposes of multiplication.</param>
+        /// <param name="matrix">Matrix to use as the transformation.</param>
+        /// <param name="result">Row vector product of the transformation.</param>
+        public static Vector3f Transform(Vector2f v, Matrix2x3f matrix)
+        {
+            var result = new Vector3f();
+            Transform(ref v, ref matrix, out result);
+            return result;
         }
 
         /// <summary>
@@ -941,12 +967,23 @@ namespace AlienEngine
         /// <param name="result">Column vector product of the transformation.</param>
         public static void Transform(ref Vector2f v, ref Matrix3x2f matrix, out Vector3f result)
         {
-#if !WINDOWS
             result = new Vector3f();
-#endif
             result.X = matrix.M11 * v.X + matrix.M12 * v.Y;
             result.Y = matrix.M21 * v.X + matrix.M22 * v.Y;
             result.Z = matrix.M31 * v.X + matrix.M32 * v.Y;
+        }
+
+        /// <summary>
+        /// Transforms the vector by the matrix.
+        /// </summary>
+        /// <param name="v">Vector2 to transform.  Considered to be a row vector for purposes of multiplication.</param>
+        /// <param name="matrix">Matrix to use as the transformation.</param>
+        /// <param name="result">Row vector product of the transformation.</param>
+        public static Vector3f Transform(Vector2f v, Matrix3x2f matrix)
+        {
+            var result = new Vector3f();
+            Transform(ref v, ref matrix, out result);
+            return result;
         }
 
         /// <summary>
@@ -973,9 +1010,8 @@ namespace AlienEngine
             float vX = v.X;
             float vY = v.Y;
             float vZ = v.Z;
-#if !WINDOWS
+
             result = new Vector3f();
-#endif
             result.X = vX * matrix.M11 + vY * matrix.M21 + vZ * matrix.M31;
             result.Y = vX * matrix.M12 + vY * matrix.M22 + vZ * matrix.M32;
             result.Z = vX * matrix.M13 + vY * matrix.M23 + vZ * matrix.M33;
@@ -1005,9 +1041,8 @@ namespace AlienEngine
             float vX = v.X;
             float vY = v.Y;
             float vZ = v.Z;
-#if !WINDOWS
+
             result = new Vector3f();
-#endif
             result.X = vX * matrix.M11 + vY * matrix.M12 + vZ * matrix.M13;
             result.Y = vX * matrix.M21 + vY * matrix.M22 + vZ * matrix.M23;
             result.Z = vX * matrix.M31 + vY * matrix.M32 + vZ * matrix.M33;
@@ -1024,9 +1059,24 @@ namespace AlienEngine
             float vX = v.X;
             float vY = v.Y;
             float vZ = v.Z;
+
+            result = new Vector3f();
             result.X = vX * matrix.M11 + vY * matrix.M21 + vZ * matrix.M31 + matrix.M41;
             result.Y = vX * matrix.M12 + vY * matrix.M22 + vZ * matrix.M32 + matrix.M42;
             result.Z = vX * matrix.M13 + vY * matrix.M23 + vZ * matrix.M33 + matrix.M43;
+        }
+
+        /// <summary>
+        /// Transforms the vector by the matrix.
+        /// </summary>
+        /// <param name="v">Vector to transform.</param>
+        /// <param name="matrix">Matrix to use as the transformation.</param>
+        /// <param name="result">Row vector product of the transformation.</param>
+        public static Vector3f Transform(Vector3f v, Matrix4f matrix)
+        {
+            var result = new Vector3f();
+            Transform(ref v, ref matrix, out result);
+            return result;
         }
 
         /// <summary>
@@ -1127,16 +1177,16 @@ namespace AlienEngine
         public static void TransformVector(ref Vector3f vec, ref Matrix4f mat, out Vector3f result)
         {
             result.X = vec.X * mat.M11 +
-                vec.Y * mat.M21 +
-                vec.Z * mat.M31;
+                       vec.Y * mat.M21 +
+                       vec.Z * mat.M31;
 
             result.Y = vec.X * mat.M12 +
-                vec.Y * mat.M22 +
-                vec.Z * mat.M32;
+                       vec.Y * mat.M22 +
+                       vec.Z * mat.M32;
 
             result.Z = vec.X * mat.M13 +
-                vec.Y * mat.M23 +
-                vec.Z * mat.M33;
+                       vec.Y * mat.M23 +
+                       vec.Z * mat.M33;
         }
 
         /// <summary>Transform a Position by the given Matrix</summary>
@@ -1159,19 +1209,19 @@ namespace AlienEngine
         public static void TransformPosition(ref Vector3f pos, ref Matrix4f mat, out Vector3f result)
         {
             result.X = pos.X * mat.M11 +
-                pos.Y * mat.M21 +
-                pos.Z * mat.M31 +
-                mat.M41;
+                       pos.Y * mat.M21 +
+                       pos.Z * mat.M31 +
+                       mat.M41;
 
             result.Y = pos.X * mat.M12 +
-                pos.Y * mat.M22 +
-                pos.Z * mat.M32 +
-                mat.M42;
+                       pos.Y * mat.M22 +
+                       pos.Z * mat.M32 +
+                       mat.M42;
 
             result.Z = pos.X * mat.M13 +
-                pos.Y * mat.M23 +
-                pos.Z * mat.M33 +
-                mat.M43;
+                       pos.Y * mat.M23 +
+                       pos.Z * mat.M33 +
+                       mat.M43;
         }
 
         /// <summary>
@@ -1408,9 +1458,9 @@ namespace AlienEngine
             //Result.Normalize();
             return result;
         }
-        
+
         #endregion
-        
+
         /// <summary>
         /// Gets or sets an Vector2f with the X and Y components of this instance.
         /// </summary>
@@ -1612,6 +1662,17 @@ namespace AlienEngine
         }
 
         /// <summary>
+        /// Divides the specified instances members by members.
+        /// </summary>
+        /// <param name="left">Left operand.</param>
+        /// <param name="right">Right operand.</param>
+        /// <returns>Result of division.</returns>
+        public static Vector3f operator /(Vector3f left, Vector3f right)
+        {
+            return Divide(left, right);
+        }
+
+        /// <summary>
         /// Multiplies an instance by a scalar.
         /// </summary>
         /// <param name="vec">The instance.</param>
@@ -1682,7 +1743,7 @@ namespace AlienEngine
         /// <param name="v">The instance.</param>
         /// <returns>A pointer to the first element of v.</returns>
         [CLSCompliant(false)]
-        unsafe public static explicit operator float* (Vector3f v)
+        public static unsafe explicit operator float*(Vector3f v)
         {
             return &v.X;
         }
@@ -1696,7 +1757,7 @@ namespace AlienEngine
         {
             unsafe
             {
-                return (IntPtr)(&v.X);
+                return (IntPtr) (&v.X);
             }
         }
 
@@ -1739,7 +1800,7 @@ namespace AlienEngine
             if (!(obj is Vector3f))
                 return false;
 
-            return this.Equals((Vector3f)obj);
+            return this.Equals((Vector3f) obj);
         }
 
         /// <summary>Indicates whether the current vector is equal to another vector.</summary>
@@ -1759,7 +1820,7 @@ namespace AlienEngine
         /// <param name="value">The <see cref="System.String"/> value to convert.</param>
         void ILoadFromString.FromString(string value)
         {
-            var parts = value.Trim('(', ')').Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+            var parts = value.Trim('(', ')').Split(new char[] {','}, StringSplitOptions.RemoveEmptyEntries);
             float.TryParse(parts[0].Trim(), out X);
             float.TryParse(parts[1].Trim(), out Y);
             float.TryParse(parts[2].Trim(), out Z);
@@ -1774,7 +1835,7 @@ namespace AlienEngine
         {
             var result = Zero as ILoadFromString;
             result.FromString(s);
-            return (Vector3f)result;
+            return (Vector3f) result;
         }
 
         /// <summary>
@@ -1783,7 +1844,7 @@ namespace AlienEngine
         /// <returns></returns>
         public override string ToString()
         {
-            return String.Format("({0} , {1} , {2})", X, Y, Z);
+            return $"({X} , {Y} , {Z})";
         }
 
         /// <summary>
@@ -1791,7 +1852,7 @@ namespace AlienEngine
         /// </summary>
         public float[] ToArray()
         {
-            return new float[] { X, Y, Z };
+            return new float[] {X, Y, Z};
         }
     }
 }

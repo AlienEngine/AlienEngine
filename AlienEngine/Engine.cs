@@ -1,8 +1,10 @@
 ﻿using AlienEngine.Core.Audio;
 using AlienEngine.Core.Audio.OpenAL;
-using AlienEngine.Core.Graphics.DevIL.Unmanaged;
+using AlienEngine.Core.Imaging.DevIL.Unmanaged;
 using AlienEngine.Core.Graphics.OpenGL;
 using AlienEngine.Core.Resources;
+using AlienEngine.Core.Assets;
+using AlienEngine.Core.Game;
 
 namespace AlienEngine.Core
 {
@@ -62,6 +64,20 @@ namespace AlienEngine.Core
                 AL.DistanceModel(ALDistanceModel.None);
                 // --------------------
 
+                // --------------------
+                // Assets Manager
+                // --------------------
+                // Initialize assets manager
+                AssetsManager.Initialize();
+                // --------------------
+
+                // --------------------
+                // Game Settings
+                // --------------------
+                // Initialize game settings
+                GameSettings.Initialize();
+                // --------------------
+                
                 _started = true;
             }
         }

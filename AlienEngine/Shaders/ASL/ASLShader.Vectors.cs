@@ -77,6 +77,7 @@ namespace AlienEngine.ASL
             public static ivec2 operator -(ivec2 left, ivec2 right) { throw new NotImplementedException(); }
             public static ivec2 operator *(ivec2 left, ivec2 right) { throw new NotImplementedException(); }
             public static ivec2 operator /(ivec2 left, ivec2 right) { throw new NotImplementedException(); }
+            public static vec2 operator /(float left, ivec2 right) { throw new NotImplementedException(); }
 
             public static implicit operator vec2(ivec2 v) { throw new NotImplementedException(); }
 
@@ -767,12 +768,14 @@ namespace AlienEngine.ASL
             public static vec3 operator -(vec3 left, vec3 right) { throw new NotImplementedException(); }
             public static vec3 operator -(vec3 vec) { throw new NotImplementedException(); }
             public static vec3 operator *(vec3 left, vec3 right) { throw new NotImplementedException(); }
-            public static vec3 operator *(vec3 left, float right) { throw new NotImplementedException(); }
-            public static vec3 operator -(vec3 left, float right) { throw new NotImplementedException(); }
+            public static vec3 operator /(vec3 left, vec3 right) { throw new NotImplementedException(); }
             public static vec3 operator *(float left, vec3 right) { throw new NotImplementedException(); }
             public static vec3 operator -(float left, vec3 right) { throw new NotImplementedException(); }
-            public static vec3 operator /(vec3 left, vec3 right) { throw new NotImplementedException(); }
+            public static vec3 operator +(float left, vec3 right) { throw new NotImplementedException(); }
             public static vec3 operator /(vec3 left, float right) { throw new NotImplementedException(); }
+            public static vec3 operator *(vec3 left, float right) { throw new NotImplementedException(); }
+            public static vec3 operator -(vec3 left, float right) { throw new NotImplementedException(); }
+            public static vec3 operator +(vec3 left, float right) { throw new NotImplementedException(); }
 
             public vec2 xx { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
             public vec2 xy { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }

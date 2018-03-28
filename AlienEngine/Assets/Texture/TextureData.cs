@@ -1,4 +1,6 @@
-﻿using AlienEngine.Core.Graphics.DevIL;
+﻿using AlienEngine.Core.Imaging.DevIL;
+using DevilImage = AlienEngine.Core.Imaging.DevIL.Image;
+using AlienEngine.Core.Imaging.DevIL.Unmanaged;
 using AlienEngine.Imaging;
 using ZeroFormatter;
 
@@ -89,6 +91,55 @@ namespace AlienEngine.Core.Assets.Texture
         public virtual bool IsSphereMap { get; set; }
 
         public TextureData()
-        { }
+        {
+        }
+
+        internal static TextureData FromDevilImageData(ImageData imgData)
+        {
+            return new TextureData
+            {
+                BitsPerPixel = imgData.BitsPerPixel,
+                BytesPerPixel = imgData.BytesPerPixel,
+                ChannelCount = imgData.ChannelCount,
+                CompressedData = imgData.CompressedData,
+                CubeFace = imgData.CubeFace,
+                Data = imgData.Data,
+                DataType = imgData.DataType,
+                Depth = imgData.Depth,
+                Duration = imgData.Duration,
+                DxtcFormat = imgData.DxtcFormat,
+                Format = imgData.Format,
+                HasDxtcData = imgData.HasDXTCData,
+                HasPaletteData = imgData.HasPaletteData,
+                Height = imgData.Height,
+                IsCubeMap = imgData.IsCubeMap,
+                IsSphereMap = imgData.IsSphereMap,
+                OffsetX = imgData.OffsetX,
+                OffsetY = imgData.OffsetY,
+                Origin = imgData.Origin,
+                PaletteBaseType = imgData.PaletteBaseType,
+                PaletteBytesPerPixel = imgData.PaletteBytesPerPixel,
+                PaletteColumnCount = imgData.PaletteColumnCount,
+                PaletteData = imgData.PaletteData,
+                PaletteType = imgData.PaletteType,
+                PlaneSize = imgData.PlaneSize,
+                SizeOfData = imgData.SizeOfData,
+                Width = imgData.Width
+            };
+        }
+        
+        internal DevilImage ToDevilImage()
+        {
+            var id = IL.GenerateImage();
+            
+            IL.BindImage(id);
+            IL.SetDxtcFormat(DxtcFormat);
+            IL.SetOriginLocation(Origin);
+            IL.SetDuration(Duration);
+            IL.SetPixels(OffsetX, OffsetY, 0, Width, Height, Depth, Format, DataType, Data);
+                
+            return new DevilImage(id);
+        }
+
     }
 }

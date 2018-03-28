@@ -47,7 +47,17 @@ namespace AlienEngine
             {
                 _material.Use();
                 _mesh.Render();
+                _material.Unuse();
             }
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            _material.Dispose();
+            _material = null;
+            
+            _mesh.Dispose();
+            _mesh = null;
         }
     }
 }

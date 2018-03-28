@@ -1,4 +1,6 @@
-﻿using AlienEngine.Core.Game;
+﻿using System;
+using AlienEngine.Core.Game;
+using AlienEngine.Core.Rendering;
 using AlienEngine.Imaging;
 
 namespace AlienEngine
@@ -8,7 +10,7 @@ namespace AlienEngine
         #region Static members
 
         public static readonly Camera None =
-            new Camera(Vector3f.Zero, Vector3f.Zero, 1.0f, 1.0f, 2.0f) {Viewport = Sizei.One};
+            new Camera(Vector3f.Zero, Vector3f.Zero, 1.0f, 1.0f, 2.0f) {Viewport = Rectangle.Zero};
 
         #endregion
 
@@ -28,7 +30,7 @@ namespace AlienEngine
         private Matrix4f _viewMatrix;
         private Matrix4f _cubemapMatrix;
 
-        private Sizei _viewportSize;
+        private Rectangle _viewport;
 
         private Cubemap _cubemap;
         private Color4 _clearColor;
@@ -87,10 +89,10 @@ namespace AlienEngine
         /// </summary>
         public Vector3f Forward
         {
-            get { return _forward; }
+            get { return -_forward; }
             set
             {
-                _forward = value;
+                _forward = -value;
                 _shouldUpdate = true;
             }
         }
@@ -109,14 +111,14 @@ namespace AlienEngine
         }
 
         /// <summary>
-        /// Gets or sets the field of view.
+        /// Gets or sets the field of view angle (in degrees).
         /// </summary>
         public float FieldOfView
         {
-            get { return _fov; }
+            get { return MathHelper.Rad2Deg(_fov); }
             set
             {
-                _fov = value;
+                _fov = MathHelper.Deg2Rad(value);
                 _shouldUpdate = true;
             }
         }
@@ -150,12 +152,12 @@ namespace AlienEngine
         /// <summary>
         /// Gets or sets the viewport size.
         /// </summary>
-        public Sizei Viewport
+        public Rectangle Viewport
         {
-            get { return _viewportSize; }
+            get { return _viewport; }
             set
             {
-                _viewportSize = value;
+                _viewport = value;
                 _shouldUpdate = true;
             }
         }
@@ -163,42 +165,27 @@ namespace AlienEngine
         /// <summary>
         /// Gets the projection matrix.
         /// </summary>
-        public Matrix4f ProjectionMatrix
-        {
-            get { return _projectionMatrix; }
-        }
+        public Matrix4f ProjectionMatrix => _projectionMatrix;
 
         /// <summary>
         /// Gets the view matrix.
         /// </summary>
-        public Matrix4f ViewMatrix
-        {
-            get { return _viewMatrix; }
-        }
+        public Matrix4f ViewMatrix => _viewMatrix;
 
         /// <summary>
         /// Gets the cubemap matrix.
         /// </summary>
-        public Matrix4f CubemapMatrix
-        {
-            get { return _cubemapMatrix; }
-        }
+        public Matrix4f CubemapMatrix => _cubemapMatrix;
 
         /// <summary>
         /// Gets the backward vector.
         /// </summary>
-        public Vector3f Backward
-        {
-            get { return -Forward; }
-        }
+        public Vector3f Backward => -Forward;
 
         /// <summary>
         /// Gets the down vector.
         /// </summary>
-        public Vector3f Down
-        {
-            get { return -Up; }
-        }
+        public Vector3f Down => -Up;
 
         /// <summary>
         /// Gets the left vector.
@@ -207,7 +194,7 @@ namespace AlienEngine
         {
             get
             {
-                Vector3f left = Forward.Cross(Up);
+                Vector3f left = _forward.Cross(_up);
                 left.Normalize();
                 return left;
             }
@@ -220,7 +207,7 @@ namespace AlienEngine
         {
             get
             {
-                Vector3f right = Up.Cross(Forward);
+                Vector3f right = _up.Cross(_forward);
                 right.Normalize();
                 return right;
             }
@@ -275,6 +262,11 @@ namespace AlienEngine
             set { _isPrimary = value; }
         }
 
+        /// <summary>
+        /// Gets the aspect ratio of this <see cref="Camera"/>.
+        /// </summary>
+        public float AspectRatio => (float) _viewport.Width / _viewport.Height;
+
         #endregion
 
         #region Constructors
@@ -298,6 +290,13 @@ namespace AlienEngine
             {
                 gameElement.LocalTransform.OnAllChange += (_old, _new) => { _shouldUpdate = true; };
             }
+
+            RendererManager.OnViewportChange += _onViewportChange;
+        }
+
+        private void _onViewportChange(object sender, ViewportChangedEventArgs viewportChangedEventArgs)
+        {
+            Viewport = viewportChangedEventArgs.New;
         }
 
         #endregion
@@ -485,6 +484,19 @@ namespace AlienEngine
                 _setViewMatrix();
                 _setCubemapMatrix();
 
+                if (IsPrimary)
+                {
+                    RendererManager.CameraData.DepthDistances = new Vector2f(Near, Far);
+                    RendererManager.CameraData.Position = gameElement.WorldTransform.Translation;
+                    RendererManager.CameraData.Rotation = RollPicthYaw;
+
+                    RendererManager.MatricesData.Projection = ProjectionMatrix;
+                    RendererManager.MatricesData.InversedProjection = ProjectionMatrix.Inversed;
+                    RendererManager.MatricesData.View = ViewMatrix;
+                    RendererManager.MatricesData.InversedView = ViewMatrix.Inversed;
+                    RendererManager.MatricesData.Cubemap = CubemapMatrix;
+                }
+
                 _shouldUpdate = false;
             }
         }
@@ -493,7 +505,7 @@ namespace AlienEngine
         /// Sets the viewport size of this <see cref="Camera"/>.
         /// </summary>
         /// <param name="size">The new viewport <see cref="Sizef"/>.</param>
-        public void SetViewportSize(Sizei size)
+        public void SetViewport(Rectangle size)
         {
             Viewport = size;
         }
@@ -504,8 +516,8 @@ namespace AlienEngine
         /// <param name="width">The new width.</param>
         public void SetViewportWidth(int width)
         {
-            Sizei v = new Sizei(width, _viewportSize.Height);
-            Viewport = v;
+            Sizei v = new Sizei(width, _viewport.Height);
+            _viewport.Size = v;
         }
 
         /// <summary>
@@ -514,8 +526,8 @@ namespace AlienEngine
         /// <param name="height">The new height.</param>
         public void SetViewportHeight(int height)
         {
-            Sizei v = new Sizei(_viewportSize.Width, height);
-            Viewport = v;
+            Sizei v = new Sizei(_viewport.Width, height);
+            _viewport.Size = v;
         }
 
         /// <summary>
@@ -535,12 +547,17 @@ namespace AlienEngine
 
         private void _setProjectionMatrix()
         {
-            if (ProjectionType == ProjectionTypes.Perspective)
-                _projectionMatrix =
-                    Matrix4f.CreatePerspectiveFieldOfView(_fov, _viewportSize.Width / _viewportSize.Height, _near,
-                        _far);
-            else
-                _projectionMatrix = Matrix4f.CreateOrthographic(_viewportSize.Width, _viewportSize.Height, _near, _far);
+            switch (ProjectionType)
+            {
+                case ProjectionTypes.Perspective:
+                    _projectionMatrix = Matrix4f.CreatePerspectiveFieldOfView(_fov, AspectRatio, _near, _far);
+                    break;
+                case ProjectionTypes.Orthogonal:
+                    _projectionMatrix = Matrix4f.CreateOrthographic(_viewport.Width, _viewport.Height, _near, _far);
+                    break;
+                default:
+                    throw new InvalidOperationException($"The projection type of this camera is invalid: {ProjectionType}");
+            }
         }
 
         private void _setViewMatrix()

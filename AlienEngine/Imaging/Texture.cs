@@ -1,7 +1,9 @@
-﻿using AlienEngine.Core.Graphics.DevIL;
+﻿using AlienEngine.Core.Imaging.DevIL;
 using AlienEngine.Core.Graphics.OpenGL;
 using AlienEngine.Core.Resources;
 using System;
+using AlienEngine.Core.Assets;
+using AlienEngine.Core.Game;
 using SharpFont;
 
 namespace AlienEngine.Imaging
@@ -10,7 +12,7 @@ namespace AlienEngine.Imaging
     /// An AlienEngine texture, used by <see cref="Material"/>
     /// and rendered in the <see cref="Scene"/>.
     /// </summary>
-    public class Texture : IDisposable
+    public class Texture : IResource
     {
         #region Fields
 
@@ -46,7 +48,7 @@ namespace AlienEngine.Imaging
             TextureTarget = target;
 
             if (!string.IsNullOrEmpty(filename))
-                LoadImage(filename);
+                Load(filename);
 
             // Register this resource as a disposable resource
             ResourcesManager.AddDisposableResource(this);
@@ -58,7 +60,7 @@ namespace AlienEngine.Imaging
             TextureID = 0;
             TextureTarget = target;
 
-            LoadImage(image);
+            Load(image);
 
             // Register this resource as a disposable resource
             ResourcesManager.AddDisposableResource(this);
@@ -94,7 +96,7 @@ namespace AlienEngine.Imaging
             GL.BindTexture(TextureTarget, 0);
         }
         
-        public bool LoadImage(Image image)
+        public bool Load(Image image)
         {
             // Release the previously loaded texture
             Clear();
@@ -125,8 +127,15 @@ namespace AlienEngine.Imaging
                     PixelFormat.Bgra, PixelType.UnsignedByte, _image.Pixels);
 
                 // Set texture filters
-                GL.TexParameteri(TextureTarget, TextureParameterName.TextureMinFilter, TextureParameter.Linear);
+                if (GL.IsExtensionSupported(GL.EXT.TextureFilterAnisotropic))
+                {
+                    // Enable anisotropic filtering
+                    GL.TexParameterf(TextureTarget, TextureParameterName.MaxAnisotropyExt, GameSettings.AnisotropyLevel);
+                }
+                
+                GL.TexParameteri(TextureTarget, TextureParameterName.TextureMinFilter, TextureParameter.LinearMipMapLinear);
                 GL.TexParameteri(TextureTarget, TextureParameterName.TextureMagFilter, TextureParameter.Linear);
+                GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
 
                 // Make sure the texture will not be modified from the outside
                 GL.BindTexture(TextureTarget, 0);
@@ -141,9 +150,9 @@ namespace AlienEngine.Imaging
             return ret;
         }
 
-        public bool LoadImage(string filename)
+        public bool Load(string filename)
         {
-            return LoadImage(Image.FromFile(filename));
+            return Load(Image.FromFile(filename));
         }
 
         private void _applyFilters()
@@ -174,14 +183,14 @@ namespace AlienEngine.Imaging
 
         #region IDisposable Support
 
-        private bool disposedValue = false; // To detect redundant calls
+        private bool _disposedValue = false; // To detect redundant calls
 
         protected virtual void Dispose(bool disposing)
         {
-            if (!disposedValue)
+            if (!_disposedValue)
             {
                 Clear();
-                disposedValue = true;
+                _disposedValue = true;
             }
         }
 

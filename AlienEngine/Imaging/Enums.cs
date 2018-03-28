@@ -20,7 +20,7 @@
 * THE SOFTWARE.
 */
 
-using AlienEngine.Core.Graphics.DevIL.Unmanaged;
+using AlienEngine.Core.Imaging.DevIL.Unmanaged;
 
 namespace AlienEngine.Imaging
 {

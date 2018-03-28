@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using AlienEngine.Core.Graphics.Buffers;
 using AlienEngine.Core.Shaders;
 using AlienEngine.Imaging;
 
@@ -13,24 +15,24 @@ namespace AlienEngine.Core.Graphics.OpenGL
         #region Preallocated Memory
 
         // pre-allocate the float[] for matrix and array data
-        private static float[] float1 = new float[1];
-
-        private static float[] matrix4Float = new float[16];
-        private static float[] matrix3Float = new float[9];
-        private static float[] vector2Float = new float[2];
-        private static float[] vector3Float = new float[3];
-        private static float[] vector4Float = new float[4];
-        private static double[] double1 = new double[1];
-        private static uint[] uint1 = new uint[1];
-        private static int[] int1 = new int[1];
-        private static bool[] bool1 = new bool[1];
+        private static float[] _float1 = new float[1];
+        private static float[] _matrix4Float = new float[16];
+        private static float[] _matrix3Float = new float[9];
+        private static float[] _vector2Float = new float[2];
+        private static float[] _vector3Float = new float[3];
+        private static float[] _vector4Float = new float[4];
+        private static double[] _double1 = new double[1];
+        private static uint[] _uint1 = new uint[1];
+        private static int[] _int1 = new int[1];
+        private static bool[] _bool1 = new bool[1];
 
         #endregion
 
         #region Private Fields
 
-        private static int version = 0;
-        private static uint currentProgram = 0;
+        private static Dictionary<string, bool> _supportedExtensions = new Dictionary<string, bool>();
+        private static int _version = 0;
+        private static uint _currentProgram = 0;
 
         #endregion
 
@@ -42,31 +44,21 @@ namespace AlienEngine.Core.Graphics.OpenGL
         [CLSCompliant(false)]
         public static uint CurrentProgram
         {
-            get { return currentProgram; }
+            get { return _currentProgram; }
         }
 
         #endregion
 
         #region OpenGL Helpers (Type Safe Equivalents or Shortcuts)
 
-        public static void Color3(Color3 color)
-        {
-            Color3(color.R, color.G, color.B);
-        }
-
-        public static void Color4(Color4 color)
-        {
-            Color4(color.R, color.G, color.B, color.A);
-        }
-        
         /// <summary>
         /// Returns the boolean value of a selected parameter.
         /// </summary>
         /// <param name="pname">A parameter that returns a single boolean.</param>
         public static bool GetBoolean(GetPName pname)
         {
-            GetBooleanv(pname, bool1);
-            return bool1[0];
+            GetBooleanv(pname, _bool1);
+            return _bool1[0];
         }
 
         public static void ClearColor(Color4 color)
@@ -81,6 +73,17 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <param name="pname">Specifies the name of a single-values texture parameter.</param>
         /// <param name="param">Specifies the value of pname.</param>
         public static void TexParameteri(TextureTarget target, TextureParameterName pname, TextureParameter param)
+        {
+            TexParameteri(target, pname, (int) param);
+        }
+
+        /// <summary>
+        /// Set a scalar texture parameter.
+        /// </summary>
+        /// <param name="target">Specificies the target for which the texture is bound.</param>
+        /// <param name="pname">Specifies the name of a single-values texture parameter.</param>
+        /// <param name="param">Specifies the value of pname.</param>
+        public static void TexParameteri(TextureTarget target, TextureParameterName pname, DepthTextureMode param)
         {
             TexParameteri(target, pname, (int) param);
         }
@@ -105,10 +108,10 @@ namespace AlienEngine.Core.Graphics.OpenGL
         [CLSCompliant(false)]
         public static string GetProgramInfoLog(UInt32 program)
         {
-            GL.GetProgramiv(program, GetProgramParameterName.InfoLogLength, int1);
-            if (int1[0] == 0) return String.Empty;
+            GL.GetProgramiv(program, GetProgramParameterName.InfoLogLength, _int1);
+            if (_int1[0] == 0) return String.Empty;
             string log = string.Empty;
-            GL.GetProgramInfoLog(program, int1[0], out int1[0], out log);
+            GL.GetProgramInfoLog(program, _int1[0], out _int1[0], out log);
             return log;
         }
 
@@ -119,10 +122,10 @@ namespace AlienEngine.Core.Graphics.OpenGL
         [CLSCompliant(false)]
         public static string GetShaderInfoLog(UInt32 shader)
         {
-            GL.GetShaderiv(shader, ShaderParameter.InfoLogLength, int1);
-            if (int1[0] == 0) return String.Empty;
+            GL.GetShaderiv(shader, ShaderParameter.InfoLogLength, _int1);
+            if (_int1[0] == 0) return String.Empty;
             string log = string.Empty;
-            GL.GetShaderInfoLog(shader, int1[0], out int1[0], out log);
+            GL.GetShaderInfoLog(shader, _int1[0], out _int1[0], out log);
             return log;
         }
 
@@ -134,8 +137,8 @@ namespace AlienEngine.Core.Graphics.OpenGL
         [CLSCompliant(false)]
         public static void ShaderSource(UInt32 shader, string source)
         {
-            int1[0] = source.Length;
-            GL.ShaderSource(shader, 1, new string[] {source}, int1);
+            _int1[0] = source.Length;
+            GL.ShaderSource(shader, 1, new string[] {source}, _int1);
         }
 
         /// <summary>
@@ -169,8 +172,7 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <param name="size">Specifies the size in bytes of the buffer object's new data store.</param>
         /// <param name="data">Specifies a pointer to data that will be copied into the data store for initialization, or NULL if no data is to be copied.</param>
         /// <param name="usage">Specifies expected usage pattern of the data store.</param>
-        public static void BufferData<T>(BufferTarget target, Int32 position, Int32 size, [In, Out] T[] data,
-            BufferUsageHint usage)
+        public static void BufferData<T>(BufferTarget target, Int32 position, Int32 size, [In, Out] T[] data, BufferUsageHint usage)
             where T : struct
         {
             GCHandle data_ptr = GCHandle.Alloc(data, GCHandleType.Pinned);
@@ -242,8 +244,7 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <param name="length">The length of the VBO (will take the first 'length' elements from data).</param>
         /// <returns>The buffer ID of the VBO on success, 0 on failure.</returns>
         [CLSCompliant(false)]
-        public static uint CreateVBO<T>(BufferTarget target, [In, Out] T[] data, BufferUsageHint hint, int position,
-            int length)
+        public static uint CreateVBO<T>(BufferTarget target, [In, Out] T[] data, BufferUsageHint hint, int position, int length)
             where T : struct
         {
             uint vboHandle = GL.GenBuffer();
@@ -267,11 +268,9 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <param name="hint">Specifies expected usage pattern of the data store.</param>
         /// <returns>The buffer ID of the VBO on success, 0 on failure.</returns>
         [CLSCompliant(false)]
-        public static uint CreateInterleavedVBO(BufferTarget target, Vector3f[] data1, Vector3f[] data2,
-            BufferUsageHint hint)
+        public static uint CreateInterleavedVBO(BufferTarget target, Vector3f[] data1, Vector3f[] data2, BufferUsageHint hint)
         {
-            if (data2.Length != data1.Length)
-                throw new Exception("Data lengths must be identical to construct an interleaved VBO.");
+            if (data2.Length != data1.Length) throw new Exception("Data lengths must be identical to construct an interleaved VBO.");
 
             float[] interleaved = new float[data1.Length * 6];
 
@@ -299,11 +298,9 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <param name="hint">Specifies expected usage pattern of the data store.</param>
         /// <returns>The buffer ID of the VBO on success, 0 on failure.</returns>
         [CLSCompliant(false)]
-        public static uint CreateInterleavedVBO(BufferTarget target, Vector3f[] data1, Vector3f[] data2,
-            Vector2f[] data3, BufferUsageHint hint)
+        public static uint CreateInterleavedVBO(BufferTarget target, Vector3f[] data1, Vector3f[] data2, Vector2f[] data3, BufferUsageHint hint)
         {
-            if (data2.Length != data1.Length || data3.Length != data1.Length)
-                throw new Exception("Data lengths must be identical to construct an interleaved VBO.");
+            if (data2.Length != data1.Length || data3.Length != data1.Length) throw new Exception("Data lengths must be identical to construct an interleaved VBO.");
 
             float[] interleaved = new float[data1.Length * 8];
 
@@ -334,11 +331,9 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <param name="hint">Specifies expected usage pattern of the data store.</param>
         /// <returns>The buffer ID of the VBO on success, 0 on failure.</returns>
         [CLSCompliant(false)]
-        public static uint CreateInterleavedVBO(BufferTarget target, Vector3f[] data1, Vector3f[] data2,
-            Vector3f[] data3, BufferUsageHint hint)
+        public static uint CreateInterleavedVBO(BufferTarget target, Vector3f[] data1, Vector3f[] data2, Vector3f[] data3, BufferUsageHint hint)
         {
-            if (data2.Length != data1.Length || data3.Length != data1.Length)
-                throw new Exception("Data lengths must be identical to construct an interleaved VBO.");
+            if (data2.Length != data1.Length || data3.Length != data1.Length) throw new Exception("Data lengths must be identical to construct an interleaved VBO.");
 
             float[] interleaved = new float[data1.Length * 9];
 
@@ -371,8 +366,7 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <param name="hint">Specifies expected usage pattern of the data store.</param>
         /// <returns>The buffer ID of the VBO on success, 0 on failure.</returns>
         [CLSCompliant(false)]
-        public static uint CreateInterleavedVBO(BufferTarget target, Vector3f[] data1, Vector3f[] data2,
-            Vector3f[] data3, Vector2f[] data4, BufferUsageHint hint)
+        public static uint CreateInterleavedVBO(BufferTarget target, Vector3f[] data1, Vector3f[] data2, Vector3f[] data3, Vector2f[] data4, BufferUsageHint hint)
         {
             if (data2.Length != data1.Length || data3.Length != data1.Length || data4.Length != data1.Length)
             {
@@ -415,8 +409,7 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <param name="eboHandle">The element buffer handle.</param>
         /// <returns>The vertex array object (VAO) ID.</returns>
         [CLSCompliant(false)]
-        public static uint CreateVAO(ShaderProgram program, uint vbo, int[] sizes, VertexAttribPointerType[] types,
-            BufferTarget[] targets, string[] names, int stride, uint eboHandle)
+        public static uint CreateVAO(ShaderProgram program, uint vbo, int[] sizes, VertexAttribPointerType[] types, BufferTarget[] targets, string[] names, int stride, uint eboHandle)
         {
             uint vaoHandle = GL.GenVertexArray();
             GL.BindVertexArray(vaoHandle);
@@ -443,14 +436,14 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <returns>The current OpenGL version, or 0 on an error.</returns>
         public static int Version()
         {
-            if (version != 0) return version; // cache the version information
+            if (_version != 0) return _version; // cache the version information
 
             try
             {
                 string versionString = GL.GetString(StringName.Version);
 
-                version = int.Parse(versionString.Substring(0, versionString.IndexOf('.')));
-                return GL.version;
+                _version = int.Parse(versionString.Substring(0, versionString.IndexOf('.')));
+                return GL._version;
             }
             catch (Exception)
             {
@@ -524,9 +517,9 @@ namespace AlienEngine.Core.Graphics.OpenGL
         [CLSCompliant(false)]
         public static void DeleteBuffer(uint buffer)
         {
-            uint1[0] = buffer;
-            DeleteBuffers(1, uint1);
-            uint1[0] = 0;
+            _uint1[0] = buffer;
+            DeleteBuffers(1, _uint1);
+            _uint1[0] = 0;
         }
 
         /// <summary>
@@ -537,9 +530,9 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <param name="param">The Vector2f to load into the shader uniform.</param>
         public static void Uniform2(int location, Vector2f data)
         {
-            vector2Float[0] = data.X;
-            vector2Float[1] = data.Y;
-            GL.Uniform2fv(location, 1, vector2Float);
+            _vector2Float[0] = data.X;
+            _vector2Float[1] = data.Y;
+            GL.Uniform2fv(location, 1, _vector2Float);
         }
 
         /// <summary>
@@ -550,10 +543,10 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <param name="param">The Vector2f to load into the shader uniform.</param>
         public static void Uniform3(int location, Vector3f data)
         {
-            vector3Float[0] = data.X;
-            vector3Float[1] = data.Y;
-            vector3Float[2] = data.Z;
-            GL.Uniform3fv(location, 1, vector3Float);
+            _vector3Float[0] = data.X;
+            _vector3Float[1] = data.Y;
+            _vector3Float[2] = data.Z;
+            GL.Uniform3fv(location, 1, _vector3Float);
         }
 
         /// <summary>
@@ -564,10 +557,10 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <param name="param">The Vector2f to load into the shader uniform.</param>
         public static void Uniform3(int location, Color3 data)
         {
-            vector3Float[0] = data.R;
-            vector3Float[1] = data.G;
-            vector3Float[2] = data.B;
-            GL.Uniform3fv(location, 1, vector3Float);
+            _vector3Float[0] = data.R;
+            _vector3Float[1] = data.G;
+            _vector3Float[2] = data.B;
+            GL.Uniform3fv(location, 1, _vector3Float);
         }
 
         /// <summary>
@@ -578,11 +571,11 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <param name="param">The Vector2f to load into the shader uniform.</param>
         public static void Uniform4(int location, Vector4f data)
         {
-            vector4Float[0] = data.X;
-            vector4Float[1] = data.Y;
-            vector4Float[2] = data.Z;
-            vector4Float[3] = data.W;
-            GL.Uniform4fv(location, 1, vector4Float);
+            _vector4Float[0] = data.X;
+            _vector4Float[1] = data.Y;
+            _vector4Float[2] = data.Z;
+            _vector4Float[3] = data.W;
+            GL.Uniform4fv(location, 1, _vector4Float);
         }
 
         /// <summary>
@@ -593,11 +586,11 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <param name="param">The Vector2f to load into the shader uniform.</param>
         public static void Uniform4(int location, Color4 data)
         {
-            vector4Float[0] = data.R;
-            vector4Float[1] = data.G;
-            vector4Float[2] = data.B;
-            vector4Float[3] = data.A;
-            GL.Uniform4fv(location, 1, vector4Float);
+            _vector4Float[0] = data.R;
+            _vector4Float[1] = data.G;
+            _vector4Float[2] = data.B;
+            _vector4Float[3] = data.A;
+            GL.Uniform4fv(location, 1, _vector4Float);
         }
 
         /// <summary>
@@ -608,11 +601,11 @@ namespace AlienEngine.Core.Graphics.OpenGL
         /// <param name="param">The Vector2f to load into the shader uniform.</param>
         public static void Uniform4(int location, Quaternion data)
         {
-            vector4Float[0] = data.X;
-            vector4Float[1] = data.Y;
-            vector4Float[2] = data.Z;
-            vector4Float[3] = data.W;
-            GL.Uniform4fv(location, 1, vector4Float);
+            _vector4Float[0] = data.X;
+            _vector4Float[1] = data.Y;
+            _vector4Float[2] = data.Z;
+            _vector4Float[3] = data.W;
+            GL.Uniform4fv(location, 1, _vector4Float);
         }
 
         /// <summary>
@@ -624,24 +617,24 @@ namespace AlienEngine.Core.Graphics.OpenGL
         public static void UniformMatrix4(int location, Matrix4f param)
         {
             // use the statically allocated float[] for setting the uniform
-            matrix4Float[0] = param[0].X;
-            matrix4Float[1] = param[0].Y;
-            matrix4Float[2] = param[0].Z;
-            matrix4Float[3] = param[0].W;
-            matrix4Float[4] = param[1].X;
-            matrix4Float[5] = param[1].Y;
-            matrix4Float[6] = param[1].Z;
-            matrix4Float[7] = param[1].W;
-            matrix4Float[8] = param[2].X;
-            matrix4Float[9] = param[2].Y;
-            matrix4Float[10] = param[2].Z;
-            matrix4Float[11] = param[2].W;
-            matrix4Float[12] = param[3].X;
-            matrix4Float[13] = param[3].Y;
-            matrix4Float[14] = param[3].Z;
-            matrix4Float[15] = param[3].W;
+            _matrix4Float[0] = param[0].X;
+            _matrix4Float[1] = param[0].Y;
+            _matrix4Float[2] = param[0].Z;
+            _matrix4Float[3] = param[0].W;
+            _matrix4Float[4] = param[1].X;
+            _matrix4Float[5] = param[1].Y;
+            _matrix4Float[6] = param[1].Z;
+            _matrix4Float[7] = param[1].W;
+            _matrix4Float[8] = param[2].X;
+            _matrix4Float[9] = param[2].Y;
+            _matrix4Float[10] = param[2].Z;
+            _matrix4Float[11] = param[2].W;
+            _matrix4Float[12] = param[3].X;
+            _matrix4Float[13] = param[3].Y;
+            _matrix4Float[14] = param[3].Z;
+            _matrix4Float[15] = param[3].W;
 
-            GL.UniformMatrix4fv(location, 1, false, matrix4Float);
+            GL.UniformMatrix4fv(location, 1, false, _matrix4Float);
         }
 
         /// <summary>
@@ -653,17 +646,17 @@ namespace AlienEngine.Core.Graphics.OpenGL
         public static void UniformMatrix3(int location, Matrix3f param)
         {
             // use the statically allocated float[] for setting the uniform
-            matrix3Float[0] = param[0].X;
-            matrix3Float[1] = param[0].Y;
-            matrix3Float[2] = param[0].Z;
-            matrix3Float[3] = param[1].X;
-            matrix3Float[4] = param[1].Y;
-            matrix3Float[5] = param[1].Z;
-            matrix3Float[6] = param[2].X;
-            matrix3Float[7] = param[2].Y;
-            matrix3Float[8] = param[2].Z;
+            _matrix3Float[0] = param[0].X;
+            _matrix3Float[1] = param[0].Y;
+            _matrix3Float[2] = param[0].Z;
+            _matrix3Float[3] = param[1].X;
+            _matrix3Float[4] = param[1].Y;
+            _matrix3Float[5] = param[1].Z;
+            _matrix3Float[6] = param[2].X;
+            _matrix3Float[7] = param[2].Y;
+            _matrix3Float[8] = param[2].Z;
 
-            GL.UniformMatrix3fv(location, 1, false, matrix3Float);
+            GL.UniformMatrix3fv(location, 1, false, _matrix3Float);
         }
 
         /// <summary>
@@ -701,6 +694,32 @@ namespace AlienEngine.Core.Graphics.OpenGL
         public static void DeleteVertexArray(uint vao)
         {
             GL.DeleteVertexArrays(1, new uint[] {vao});
+        }
+
+        public static bool IsExtensionSupported(string extension)
+        {
+            if (_supportedExtensions.ContainsKey(extension))
+                return _supportedExtensions[extension];
+
+            // The extension was not found
+            bool found = false;
+
+            GetIntegerv(GetPName.NumExtensions, out int numberOfExtensions);
+            for (uint i = 0; i < numberOfExtensions; i++)
+            {
+                string ext = GetStringi(StringNameIndexed.Extensions, i);
+                
+                if (extension.Equals(ext))
+                {
+                    // The extension is supported by our hardware and driver
+                    found = true;
+                    break;
+                }
+            }
+
+            _supportedExtensions[extension] = found;
+
+            return found;
         }
 
         //public static void VertexPointer(int size, VertexPointerType type, int stride, int pointer)

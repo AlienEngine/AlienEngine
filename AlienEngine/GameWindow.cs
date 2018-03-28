@@ -353,6 +353,8 @@ namespace AlienEngine.Core
 
             // Set the aspect ratio
             // GLFW.SetWindowAspectRatio(Handle, GameSettings.GameWindowAspectRatio[0], GameSettings.GameWindowAspectRatio[1]);
+
+            Cursor = new Cursor(Cursor.CursorType.Arrow);
         }
 
         private void OnResize(Window window, int width, int height)
@@ -373,7 +375,10 @@ namespace AlienEngine.Core
         private void OnFramebufferSizeChange(Window window, int width, int height)
         {
             var size = new Sizei(width, height);
-            RendererManager.SetViewport(Point2i.Zero, size);
+            if (GameSettings.GameWindowHasAspectRatio)
+                RendererManager.SetViewportWithAspectRatio(size);
+            else
+                RendererManager.SetViewport(Point2i.Zero, size);
             FramebufferSizeChange?.Invoke(this, new ResizeEventArgs(size, FramebufferSize));
             _framebufferSize = size;
         }
@@ -418,11 +423,7 @@ namespace AlienEngine.Core
         public Rectangle Rectangle
         {
             get { return new Rectangle(Position, Size); }
-            set
-            {
-                Position = value.Location;
-                Size = value.Size;
-            }
+            set { SetRectangle(value); }
         }
 
         /// <summary>
@@ -481,11 +482,7 @@ namespace AlienEngine.Core
         public Sizei Size
         {
             get { return _size; }
-            set
-            {
-                _size = value;
-                GLFW.SetWindowSize(Handle, value.Width, value.Height);
-            }
+            set { SetSize(value); }
         }
 
         /// <summary>
@@ -526,6 +523,26 @@ namespace AlienEngine.Core
         public void SetPosition(Point2i position)
         {
             GLFW.SetWindowPos(Handle, position.X, position.Y);
+        }
+
+        /// <summary>
+        /// Sets the current window size.
+        /// </summary>
+        /// <param name="size">The new size.</param>
+        public void SetSize(Sizei size)
+        {
+            _size = size;
+            GLFW.SetWindowSize(Handle, size.Width, size.Height);
+        }
+
+        /// <summary>
+        /// Sets the current window size and position.
+        /// </summary>
+        /// <param name="rectangle">The new size.</param>
+        public void SetRectangle(Rectangle rectangle)
+        {
+            SetPosition(rectangle.Location);
+            SetSize(rectangle.Size);
         }
 
         /// <summary>

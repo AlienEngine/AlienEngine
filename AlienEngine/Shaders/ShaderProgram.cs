@@ -5,6 +5,10 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
+using AlienEngine.Core.Game;
+using AlienEngine.Core.Graphics.Buffers;
+using AlienEngine.Core.Graphics.Buffers.Data;
+using AlienEngine.Core.Rendering;
 
 namespace AlienEngine.Core.Shaders
 {
@@ -61,11 +65,14 @@ namespace AlienEngine.Core.Shaders
         {
             uint shader = GL.CreateShader(type);
 
-            StringBuilder globalsString = new StringBuilder();
+            // Normalize line ending
+            source = string.Join ("\n", source.Split (new char[] { '\r', '\n' }));
+
+            StringBuilder globalsString = new StringBuilder ();
             foreach (var g in _globals)
                 globalsString.AppendLine("#define " + g.Key + " " + g.Value);
 
-            string fullsrc = Regex.Replace(source, @"\#version (.+)\r\n", "#version $1\r\n" + globalsString);
+            string fullsrc = Regex.Replace (source, @"\#version (.+)\n", "#version $1\n" + globalsString);
 
             GL.ShaderSource(shader, fullsrc);
 
@@ -84,7 +91,7 @@ namespace AlienEngine.Core.Shaders
         private void _compile()
         {
             // Setting default globals
-            SetGlobal(GL.MAX_NUMBER_OF_LIGHTS, Math.Max(1, Game.Game.Instance.CurrentScene.Lights.Length).ToString());
+            SetGlobal(GL.MAX_NUMBER_OF_LIGHTS, Math.Max(1, SceneManager.CurrentScene.Lights.Length).ToString());
 
             _program = GL.CreateProgram();
 
@@ -152,7 +159,14 @@ namespace AlienEngine.Core.Shaders
             _uniformLocationsCache = new Dictionary<string, int>();
             _valuesMap = new Dictionary<string, object>();
 
+            OnCompile += _onCompile;
+            
             ResourcesManager.AddDisposableResource(this);
+        }
+
+        private void _onCompile()
+        {
+            RendererManager.MatricesUBO.Bind(this);
         }
 
         #endregion

@@ -104,9 +104,19 @@ namespace AlienEngine.Core.Shaders.Samples
         // --------------------
         #endregion
 
-        [In] vec3 normal;
-        [In] vec2 uv;
-        [In] vec3 position;
+        #region Fragment shader inputs
+        [InterfaceBlock("fs_in")]
+        [In]
+        struct VS_OUT
+        {
+            public vec3 normal;
+            public vec2 uv;
+            public vec3 position;
+            public vec4 fragPosLightSpace;
+        };
+
+        VS_OUT fs_in;
+        #endregion
 
         #region Lights
         // Lights
@@ -125,27 +135,20 @@ namespace AlienEngine.Core.Shaders.Samples
         #endregion
 
         #region Camera informations
-        //[Uniform]
-        //[InterfaceBlock]
-        //[Layout(UniformLayout.Shared)]
-        //struct CameraInformations
-        //{
-        //    // Position
-        //    public vec3 c_position;
-        //    // Rotation
-        //    public vec3 c_rotation;
-        //    // Near/Far planes distances
-        //    public vec2 c_depthDistances;
-        //}
-        // Position
         [Uniform]
-        vec3 c_position;
-        // Rotation
-        [Uniform]
-        vec3 c_rotation;
-        // Near and Far planes distances
-        [Uniform]
-        vec2 c_depthDistances;
+        [InterfaceBlock("camera")]
+        [Layout(UniformLayout.STD140)]
+        struct Camera
+        {
+            // Position
+            public vec3 position;
+            // Rotation
+            public vec3 rotation;
+            // Near/Far planes distances
+            public vec2 depthDistances;
+        }
+
+        private Camera camera;
         #endregion
 
         vec3 CalcLightInternal(LightState light, vec3 direction, vec3 normal, vec2 uv)
@@ -185,7 +188,7 @@ namespace AlienEngine.Core.Shaders.Samples
 
             if (materialState.hasColorSpecular)
             {
-                vec3 vertexToEye = normalize(c_position - position);
+                vec3 vertexToEye = normalize(camera.position - fs_in.position);
                 vec3 lv = -direction + vertexToEye;
                 vec3 halfway = lv / length(lv);
                 //vec3 lightReflect = normalize(reflect(direction, normal));
@@ -203,7 +206,8 @@ namespace AlienEngine.Core.Shaders.Samples
                 }
             }
 
-            vec3 color = (AmbientColor + DiffuseColor + SpecularColor) * light.Intensity;
+            vec3 color = AmbientColor +
+                         (DiffuseColor + SpecularColor) * light.Intensity;
 
             return color;
         }
@@ -215,7 +219,7 @@ namespace AlienEngine.Core.Shaders.Samples
 
         vec3 CalcPointLight(LightState light, vec3 normal, vec2 uv)
         {
-            vec3 LightDirection = position - light.Position;
+            vec3 LightDirection = fs_in.position - light.Position;
             float Distance = length(LightDirection);
             LightDirection = normalize(LightDirection);
 
@@ -229,7 +233,7 @@ namespace AlienEngine.Core.Shaders.Samples
 
         vec3 CalcSpotLight(LightState light, vec3 normal, vec2 uv)
         {
-            vec3 LightToPixel = normalize(position - light.Position);
+            vec3 LightToPixel = normalize(fs_in.position - light.Position);
             float SpotFactor = max(0.0f, dot(LightToPixel, normalize(light.Direction)));
 
             float SpotAttenuation = pow(SpotFactor, light.FallOffExponent);
@@ -243,15 +247,15 @@ namespace AlienEngine.Core.Shaders.Samples
         {
             if (materialState.hasTextureDiffuse)
             {
-                vec4 textureDiffuse = texture(materialState.textureDiffuse, uv);
+                vec4 textureDiffuse = texture(materialState.textureDiffuse, fs_in.uv);
                 if (textureDiffuse.a < 0.1f)
                 {
                     __output("discard");
                 }
             }
 
-            vec3 _normal = normalize(normal);
-            vec2 _uv = uv * materialState.textureTilling;
+            vec3 _normal = normalize(fs_in.normal);
+            vec2 _uv = fs_in.uv * materialState.textureTilling;
             vec3 _totalLight = new vec3(0);
 
             for (int i = 0; i < lights_nb; i++)
