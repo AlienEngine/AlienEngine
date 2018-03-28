@@ -50,5 +50,14 @@ namespace AlienEngine
                 _material.Unuse();
             }
         }
+
+        protected override void Dispose(bool disposing)
+        {
+            _material.Dispose();
+            _material = null;
+            
+            _mesh.Dispose();
+            _mesh = null;
+        }
     }
 }

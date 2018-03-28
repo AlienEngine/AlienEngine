@@ -169,15 +169,27 @@ namespace AlienEngine
             _label.Render();
         }
 
+        private bool _disposedValue;
+
         protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);
 
-            if (HoverTexture != null)
-                HoverTexture.Dispose();
+            if (_disposedValue) return;
 
-            if (PressTexture != null)
-                PressTexture.Dispose();
+            if (disposing)
+            {
+                HoverTexture?.Dispose();
+                HoverTexture = null;
+
+                PressTexture?.Dispose();
+                PressTexture = null;
+
+                _label?.Dispose();
+                _label = null;
+            }
+
+            _disposedValue = true;
         }
     }
 }

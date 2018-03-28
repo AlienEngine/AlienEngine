@@ -23,7 +23,7 @@ namespace AlienEngine
         public TextWrapMode TextWrapMode;
 
         public FontType FontType;
-        
+
         public float CharacterSpacing;
 
         public float LineSpacing;
@@ -112,6 +112,23 @@ namespace AlienEngine
         internal Sizef GetTextSize(string value)
         {
             return _fontEngine.CalculateSize(value);
+        }
+
+        private bool _disposedValue;
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+
+            if (_disposedValue) return;
+
+            if (disposing)
+            {
+                _fontEngine?.Dispose();
+                _fontEngine = null;
+            }
+
+            _disposedValue = true;
         }
     }
 }

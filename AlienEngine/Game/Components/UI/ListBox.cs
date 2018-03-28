@@ -7,7 +7,7 @@ using AlienEngine.UI;
 
 namespace AlienEngine
 {
-    public class ListBox: UIComponent, IPostRenderable
+    public class ListBox : UIComponent, IPostRenderable
     {
         private Text _selectedLabel;
 
@@ -46,7 +46,7 @@ namespace AlienEngine
         public Texture ItemHoverTexture;
 
         public Color4 ButtonBackgroundColor;
-        
+
         public Color4 ButtonHoverColor;
 
         public Color4 ButtonPressedColor;
@@ -137,10 +137,7 @@ namespace AlienEngine
             _button.FontPath = FontPath;
             _button.FontSize = FontSize;
             _button.Text = "";
-            _button.LeftClick += () =>
-            {
-                _isChoosing = true;
-            };
+            _button.LeftClick += () => { _isChoosing = true; };
 
             _button.Start();
 
@@ -201,8 +198,46 @@ namespace AlienEngine
             _button.Render();
 
             if (_isChoosing)
-                for (int i = 0, l =_lines.Count; i < l; i++)
+                for (int i = 0, l = _lines.Count; i < l; i++)
                     _lines[i].Render();
+        }
+
+        private bool _disposedValue;
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+
+            if (_disposedValue) return;
+
+            if (disposing)
+            {
+                _selectedLabel?.Dispose();
+                _selectedLabel = null;
+
+                _lines.Clear();
+                _lines = null;
+
+                _button?.Dispose();
+                _button = null;
+
+                ItemBackgroundTexture?.Dispose();
+                ItemBackgroundTexture = null;
+
+                ItemHoverTexture?.Dispose();
+                ItemHoverTexture = null;
+
+                ButtonBackgroundTexture?.Dispose();
+                ButtonBackgroundTexture = null;
+
+                ButtonHoverTexture?.Dispose();
+                ButtonHoverTexture = null;
+
+                ButtonPressedTexture?.Dispose();
+                ButtonPressedTexture = null;
+            }
+
+            _disposedValue = true;
         }
     }
 }

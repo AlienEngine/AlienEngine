@@ -339,14 +339,14 @@ namespace AlienEngine
 
             if (disposing)
             {
-                if (_coloredUIShader != null)
-                    _coloredUIShader.Dispose();
-
-                if (_texturedUIShader != null)
-                    _texturedUIShader.Dispose();
-
-                if (BackgroundTexture != null)
-                    BackgroundTexture.Dispose();
+                _coloredUIShader?.Dispose();
+                _coloredUIShader = null;
+                
+                _texturedUIShader?.Dispose();
+                _texturedUIShader = null;
+                
+                BackgroundTexture?.Dispose();
+                BackgroundTexture = null;
             }
 
             _disposedValue = true;
