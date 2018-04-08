@@ -40,7 +40,7 @@ namespace AlienEngine.Core.Assets
         /// The list of childs in this <see cref="MeshAsset"/>.
         /// </summary>
         [Index(1)]
-        public virtual List<MeshData> Childs { get; protected set; }
+        public virtual List<MeshAssetData> Childs { get; protected set; }
 
         /// <summary>
         /// The type of data handled by this asset.
@@ -49,14 +49,14 @@ namespace AlienEngine.Core.Assets
         public AssetTypes Type => AssetTypes.Mesh;
 
         /// <summary>
-        /// Gets the merged <see cref="MeshData"/>.
+        /// Gets the merged <see cref="MeshAssetData"/>.
         /// </summary>
         [IgnoreFormat]
-        public MeshData Merged
+        public MeshAssetData Merged
         {
             get
             {
-                MeshData result = new MeshData(Source);
+                MeshAssetData result = new MeshAssetData(Source);
                 foreach (var mesh in Childs)
                 {
                     result.Vertices.AddRange(mesh.Vertices);
@@ -74,7 +74,7 @@ namespace AlienEngine.Core.Assets
         {
             _loadedTextures = new List<string>();
 
-            Childs = new List<MeshData>();
+            Childs = new List<MeshAssetData>();
 
             Source = string.Empty;
         }
@@ -91,7 +91,7 @@ namespace AlienEngine.Core.Assets
         /// Add a new child in the list.
         /// </summary>
         /// <param name="child">The child to add.</param>
-        private void AddChild(MeshData child)
+        private void AddChild(MeshAssetData child)
         {
             child.SetParent(this);
             Childs.Add(child);
@@ -99,7 +99,7 @@ namespace AlienEngine.Core.Assets
 
         private static MeshAsset ComputeAssetChildrens(ref Scene scene, ref MeshAsset element, Node node)
         {
-            var tempAsset = new MeshData(node.Name);
+            var tempAsset = new MeshAssetData(node.Name);
 
             if (node.HasMeshes)
             {
@@ -152,7 +152,7 @@ namespace AlienEngine.Core.Assets
 
         private static void _initMaterials(Assimp.Material material)
         {
-            var materialData = new MaterialData();
+            var materialData = new MaterialAssetData();
 
             if (material.HasBlendMode)
             {
@@ -402,7 +402,7 @@ namespace AlienEngine.Core.Assets
 
             materialData.PropertyCount = material.PropertyCount;
 
-            materialData.ShaderData = new ShaderData()
+            materialData.ShaderAssetData = new ShaderAssetData()
             {
                 VertexShader = new ASLShaderCompiler(new DiffuseVertexShader()).Shader,
                 FragmentShader = new ASLShaderCompiler(new DiffuseFragmentShader()).Shader

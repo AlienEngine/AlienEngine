@@ -5,9 +5,9 @@ using ZeroFormatter;
 namespace AlienEngine.Core.Assets.Material
 {
     [ZeroFormattable]
-    public class MaterialData
+    public class MaterialAssetData
     {
-        public virtual ShaderData ShaderData { get; set; }
+        public virtual ShaderAssetData ShaderAssetData { get; set; }
         public virtual MaterialBlendMode BlendMode { get; set; }
         public virtual float BumpScaling { get; set; }
         public virtual Color4 ColorAmbient { get; set; }
@@ -62,7 +62,7 @@ namespace AlienEngine.Core.Assets.Material
         public virtual string TextureReflection { get; set; }
         public virtual string TextureSpecular { get; set; }
 
-        public MaterialData()
+        public MaterialAssetData()
         { }
     }
 }

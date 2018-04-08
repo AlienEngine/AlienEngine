@@ -3,7 +3,7 @@
 namespace AlienEngine.Core.Assets.Material
 {
     [ZeroFormattable]
-    public class ShaderData
+    public class ShaderAssetData
     {
         [Index(0)]
         public virtual string VertexShader { get; set; }
@@ -20,7 +20,7 @@ namespace AlienEngine.Core.Assets.Material
         [Index(4)]
         public virtual string TesselationEvaluationShader { get; set; }
         
-        public ShaderData()
+        public ShaderAssetData()
         { }
     }
 }

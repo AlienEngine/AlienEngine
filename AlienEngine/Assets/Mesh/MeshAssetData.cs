@@ -5,37 +5,37 @@ using ZeroFormatter;
 namespace AlienEngine.Core.Assets.Mesh
 {
     [ZeroFormattable]
-    public class MeshData
+    public class MeshAssetData
     {
         /// <summary>
-        /// The name of this <see cref="MeshData"/>.
+        /// The name of this <see cref="MeshAssetData"/>.
         /// </summary>
         [Index(0)]
         public virtual string Name { get; protected set; }
 
         /// <summary>
-        /// Gets the parent <see cref="MeshData"/> of this one.
+        /// Gets the parent <see cref="MeshAssetData"/> of this one.
         /// </summary>
         /// <remarks>
-        /// If this <see cref="MeshData"/> is the root node, then <see cref="Parent"/> = <see cref="null"/>.
+        /// If this <see cref="MeshAssetData"/> is the root node, then <see cref="Parent"/> = <see cref="null"/>.
         /// </remarks>
         [IgnoreFormat]
         public virtual MeshAsset Parent { get; protected set; }
 
         /// <summary>
-        /// The list of mesh vertices in this <see cref="MeshData"/>.
+        /// The list of mesh vertices in this <see cref="MeshAssetData"/>.
         /// </summary>
         [Index(1)]
         public virtual List<Vertex> Vertices { get; protected set; }
 
         /// <summary>
-        /// The list of mesh indices in this <see cref="MeshData"/>.
+        /// The list of mesh indices in this <see cref="MeshAssetData"/>.
         /// </summary>
         [Index(2)]
         public virtual List<int> Indices { get; protected set; }
 
         /// <summary>
-        /// Gets a list of vertices positions in this <see cref="MeshData"/>.
+        /// Gets a list of vertices positions in this <see cref="MeshAssetData"/>.
         /// </summary>
         [IgnoreFormat]
         public Vector3f[] VerticesPositions
@@ -53,7 +53,7 @@ namespace AlienEngine.Core.Assets.Mesh
         }
 
         /// <summary>
-        /// Gets a list of vertices normals in this <see cref="MeshData"/>.
+        /// Gets a list of vertices normals in this <see cref="MeshAssetData"/>.
         /// </summary>
         [IgnoreFormat]
         public Vector3f[] VerticesNormals
@@ -71,7 +71,7 @@ namespace AlienEngine.Core.Assets.Mesh
         }
 
         /// <summary>
-        /// Gets a list of vertices texture coordinates in this <see cref="MeshData"/>.
+        /// Gets a list of vertices texture coordinates in this <see cref="MeshAssetData"/>.
         /// </summary>
         [IgnoreFormat]
         public Vector2f[] VerticesUvs
@@ -91,7 +91,7 @@ namespace AlienEngine.Core.Assets.Mesh
         /// <summary>
         /// Constructs a new mesh data.
         /// </summary>
-        public MeshData()
+        public MeshAssetData()
         {
             Name = string.Empty;
             Parent = null;
@@ -104,13 +104,13 @@ namespace AlienEngine.Core.Assets.Mesh
         /// Constructs a new mesh data.
         /// </summary>
         /// <param name="name">The name of the mesh.</param>
-        public MeshData(string name): this()
+        public MeshAssetData(string name): this()
         {
             Name = name;
         }
 
         /// <summary>
-        /// Sets the parent <see cref="MeshAsset"/> of this <see cref="MeshData"/>.
+        /// Sets the parent <see cref="MeshAsset"/> of this <see cref="MeshAssetData"/>.
         /// </summary>
         /// <param name="parent"></param>
         public void SetParent(MeshAsset parent)
