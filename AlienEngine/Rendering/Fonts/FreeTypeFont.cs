@@ -60,20 +60,15 @@ namespace AlienEngine.Core.Rendering.Fonts
             _fontLibrary = new Library();
 
             StyleFlags fontStyle = StyleFlags.None;
-            switch (configuration.FontStyle)
+
+            if (configuration.FontStyle.HasFlag(FontStyle.Bold))
             {
-                case FontStyle.Bold:
-                    fontStyle = StyleFlags.Bold;
-                    break;
-                case FontStyle.Italic:
-                    fontStyle = StyleFlags.Italic;
-                    break;
-                case FontStyle.Regular:
-                    fontStyle = StyleFlags.None;
-                    break;
-                default:
-                    Debug.WriteLine("Invalid style flag chosen for FreeTypeFont: " + configuration.FontStyle);
-                    break;
+                fontStyle |= StyleFlags.Bold;
+            }
+
+            if (configuration.FontStyle.HasFlag(FontStyle.Italic))
+            {
+                fontStyle |= StyleFlags.Italic;
             }
 
             // Get total number of faces in a font file
@@ -90,7 +85,7 @@ namespace AlienEngine.Core.Rendering.Fonts
                 tempFace = _fontLibrary.NewFace(fontPath, i);
 
                 // If we've found the style, exit loop
-                if (tempFace.StyleFlags == fontStyle)
+                if (tempFace.StyleFlags.HasFlag(fontStyle))
                     break;
 
                 // Dispose temp face and keep searching
