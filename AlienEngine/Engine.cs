@@ -77,7 +77,7 @@ namespace AlienEngine.Core
                 // Initialize game settings
                 GameSettings.Initialize();
                 // --------------------
-                
+
                 _started = true;
             }
         }
