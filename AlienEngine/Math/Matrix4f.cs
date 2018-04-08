@@ -383,12 +383,12 @@ namespace AlienEngine
         /// </summary>
         public Vector3f Backward
         {
-            get { return new Vector3f(M31, M32, M33); }
+            get { return new Vector3f(-M13, -M23, -M33); }
             set
             {
-                M31 = value.X;
-                M32 = value.Y;
-                M33 = value.Z;
+                M13 = -value.X;
+                M23 = -value.Y;
+                M33 = -value.Z;
             }
         }
 
@@ -397,12 +397,12 @@ namespace AlienEngine
         /// </summary>
         public Vector3f Down
         {
-            get { return new Vector3f(-M21, -M22, -M23); }
+            get { return new Vector3f(-M12, -M22, -M32); }
             set
             {
-                M21 = -value.X;
+                M12 = -value.X;
                 M22 = -value.Y;
-                M23 = -value.Z;
+                M32 = -value.Z;
             }
         }
 
@@ -411,12 +411,12 @@ namespace AlienEngine
         /// </summary>
         public Vector3f Forward
         {
-            get { return new Vector3f(-M31, -M32, -M33); }
+            get { return new Vector3f(M13, M23, M33); }
             set
             {
-                M31 = -value.X;
-                M32 = -value.Y;
-                M33 = -value.Z;
+                M13 = value.X;
+                M23 = value.Y;
+                M33 = value.Z;
             }
         }
 
@@ -425,12 +425,12 @@ namespace AlienEngine
         /// </summary>
         public Vector3f Left
         {
-            get { return new Vector3f(-M11, -M12, -M13); }
+            get { return new Vector3f(-M11, -M21, -M31); }
             set
             {
                 M11 = -value.X;
-                M12 = -value.Y;
-                M13 = -value.Z;
+                M21 = -value.Y;
+                M31 = -value.Z;
             }
         }
 
@@ -439,12 +439,12 @@ namespace AlienEngine
         /// </summary>
         public Vector3f Right
         {
-            get { return new Vector3f(M11, M12, M13); }
+            get { return new Vector3f(M11, M21, M31); }
             set
             {
                 M11 = value.X;
-                M12 = value.Y;
-                M13 = value.Z;
+                M21 = value.Y;
+                M31 = value.Z;
             }
         }
 
@@ -453,12 +453,12 @@ namespace AlienEngine
         /// </summary>
         public Vector3f Up
         {
-            get { return new Vector3f(M21, M22, M23); }
+            get { return new Vector3f(M12, M22, M32); }
             set
             {
-                M21 = value.X;
+                M12 = value.X;
                 M22 = value.Y;
-                M23 = value.Z;
+                M32 = value.Z;
             }
         }
 
@@ -1290,6 +1290,17 @@ namespace AlienEngine
         /// <summary>
         /// Creates a translation matrix.
         /// </summary>
+        /// <param name="t">X, Y, and Z translation.</param>
+        /// <param name="result">The resulting Matrix4f instance.</param>
+        public static void CreateTranslation(float t, out Matrix4f result)
+        {
+            result = Identity;
+            result.Translation = new Vector3f(t);
+        }
+
+        /// <summary>
+        /// Creates a translation matrix.
+        /// </summary>
         /// <param name="x">X translation.</param>
         /// <param name="y">Y translation.</param>
         /// <param name="z">Z translation.</param>
@@ -1297,7 +1308,7 @@ namespace AlienEngine
         public static void CreateTranslation(float x, float y, float z, out Matrix4f result)
         {
             result = Identity;
-            result.Row3 = new Vector4f(x, y, z, 1.0f);
+            result.Translation = new Vector3f(x, y, z);
         }
 
         /// <summary>
@@ -1308,6 +1319,18 @@ namespace AlienEngine
         public static void CreateTranslation(ref Vector3f vector, out Matrix4f result)
         {
             CreateTranslation(vector.X, vector.Y, vector.Z, out result);
+        }
+
+        /// <summary>
+        /// Creates a translation matrix.
+        /// </summary>
+        /// <param name="t">X, Y, and Z translation.</param>
+        /// <returns>The resulting Matrix4f instance.</returns>
+        public static Matrix4f CreateTranslation(float t)
+        {
+            Matrix4f result;
+            CreateTranslation(t, out result);
+            return result;
         }
 
         /// <summary>
@@ -1473,9 +1496,9 @@ namespace AlienEngine
             float invTB = 1.0f / (top - bottom);
             float invFN = 1.0f / (zFar - zNear);
 
-            result.M11 = +2 * invRL;
-            result.M22 = +2 * invTB;
-            result.M33 = -2 * invFN;
+            result.M11 = +2.0f * invRL;
+            result.M22 = +2.0f * invTB;
+            result.M33 = -2.0f * invFN;
 
             result.M41 = -(right + left) * invRL;
             result.M42 = -(top + bottom) * invTB;
@@ -1782,22 +1805,13 @@ namespace AlienEngine
                 Vector3f x = Vector3f.Normalize(Vector3f.Cross(up, z));
                 Vector3f y = Vector3f.Normalize(Vector3f.Cross(z, x));
 
-                result.M11 = x.X;
-                result.M12 = y.X;
-                result.M13 = z.X;
-                result.M14 = 0;
-                result.M21 = x.Y;
-                result.M22 = y.Y;
-                result.M23 = z.Y;
-                result.M24 = 0;
-                result.M31 = x.Z;
-                result.M32 = y.Z;
-                result.M33 = z.Z;
-                result.M34 = 0;
+                result.Right = x;
+                result.Up = y;
+                result.Forward = z;
+                
                 result.M41 = -((x.X * eye.X) + (x.Y * eye.Y) + (x.Z * eye.Z));
                 result.M42 = -((y.X * eye.X) + (y.Y * eye.Y) + (y.Z * eye.Z));
                 result.M43 = -((z.X * eye.X) + (z.Y * eye.Y) + (z.Z * eye.Z));
-                result.M44 = 1;
             }
 
             return result;
@@ -1840,11 +1854,11 @@ namespace AlienEngine
                 r.Normalize();
 
                 Vector3f u = Vector3f.Cross(f, r);
+                u.Normalize();
 
-                result.Column0 = new Vector4f(r, 0.0f);
-                result.Column1 = new Vector4f(u, 0.0f);
-                result.Column2 = new Vector4f(f, 0.0f);
-                result.Column3 = Vector4f.UnitW;
+                result.Right = r;
+                result.Up = u;
+                result.Forward = f;
             }
 
             return result;
