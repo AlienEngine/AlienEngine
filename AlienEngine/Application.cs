@@ -75,7 +75,7 @@ namespace AlienEngine
             }
             finally
             {
-				// Destroy the game
+                // Destroy the game
                 _destroy();
             }
         }
@@ -84,7 +84,7 @@ namespace AlienEngine
         {
             if (Game.Instance.NeedReload)
             {
-				// Reload the game
+                // Reload the game
                 Reload();
             }
             else
@@ -122,7 +122,7 @@ namespace AlienEngine
                 double deltaTime = passedTime / Time.SECOND;
 
                 unprocessedTime += passedTime;
-                frameCounter += (int) passedTime;
+                frameCounter += (int)passedTime;
 
                 Game.Instance.BeforeUpdate();
 
@@ -172,7 +172,7 @@ namespace AlienEngine
                     }
                 }
             }
-            
+
             if (Game.Instance.NeedReload)
                 _loop();
         }
@@ -242,7 +242,7 @@ namespace AlienEngine
             // Initialize the renderer manager
             // RendererManager.Initialize();
         }
-        
+
         public void Render()
         {
             // Process rendering
