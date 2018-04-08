@@ -212,11 +212,6 @@ namespace AlienEngine.Core.Game
                 GameWindowTitle = _config.SectionedResult["Window"]["Title"];
             else
                 GameWindowTitle = "AlienEngine Game";
-
-            if (int.TryParse(_config.SectionedResult["Game"]["FPS"], out _int1))
-                GameFps = _int1;
-            else
-                GameFps = 60;
         }
 
         /// <summary>
@@ -227,6 +222,11 @@ namespace AlienEngine.Core.Game
         {
             int _int1, _int2;
             float _float1;
+
+            if (int.TryParse(_config.SectionedResult["Game"]["FPS"], out _int1))
+                GameFps = _int1;
+            else
+                GameFps = 60;
 
             if (int.TryParse(_config.SectionedResult["Rendering"]["GammaCorrectionEnabled"], out _int1))
                 GammaCorrectionEnabled = _int1 == 1;
