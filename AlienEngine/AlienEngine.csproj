@@ -197,10 +197,10 @@
     <Compile Include="Assets\AssetsManager.cs" />
     <Compile Include="Assets\AssetTypes.cs" />
     <Compile Include="Assets\IAsset.cs" />
-    <Compile Include="Assets\Material\MaterialData.cs" />
-    <Compile Include="Assets\Material\ShaderData.cs" />
+    <Compile Include="Assets\Material\MaterialAssetData.cs" />
+    <Compile Include="Assets\Material\ShaderAssetData.cs" />
     <Compile Include="Assets\MeshAsset.cs" />
-    <Compile Include="Assets\Mesh\MeshData.cs" />
+    <Compile Include="Assets\Mesh\MeshAssetData.cs" />
     <Compile Include="Assets\TextureAsset.cs" />
     <Compile Include="Assets\Texture\TextureData.cs" />
     <Compile Include="Assets\Texture\TextureFilterMode.cs" />
