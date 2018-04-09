@@ -283,9 +283,11 @@
     <Compile Include="Inputs\JoystickButton.cs" />
     <Compile Include="Inputs\JoystickState.cs" />
     <Compile Include="IO\FileSystemManager.cs" />
+    <Compile Include="Rendering\ClearScreenTypes.cs" />
     <Compile Include="Rendering\IRenderer.cs" />
     <Compile Include="Rendering\MaterialBlendMode.cs" />
     <Compile Include="Rendering\MaterialShadingMode.cs" />
+    <Compile Include="Rendering\ProjectionTypes.cs" />
     <Compile Include="Rendering\Shadows\DirectionalShadowMap.cs" />
     <Compile Include="Rendering\Shadows\IShadowMap.cs" />
     <Compile Include="Rendering\Shadows\OmnidirectionalShadowMap.cs" />

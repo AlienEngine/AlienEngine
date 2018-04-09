@@ -41,22 +41,6 @@ namespace AlienEngine
 
         #endregion
 
-        #region Enums
-
-        public enum ClearScreenTypes
-        {
-            Color,
-            Cubemap
-        }
-
-        public enum ProjectionTypes
-        {
-            Perspective,
-            Orthogonal
-        }
-
-        #endregion
-
         #region Properties
 
         /// <summary>
