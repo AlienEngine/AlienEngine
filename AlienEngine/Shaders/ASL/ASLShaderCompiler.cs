@@ -1,13 +1,15 @@
-using ICSharpCode.Decompiler;
-using ICSharpCode.Decompiler.Ast;
-using Mono.Cecil;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using ICSharpCode.Decompiler;
+using ICSharpCode.Decompiler.CSharp;
+using ICSharpCode.Decompiler.CSharp.Syntax;
+using ICSharpCode.Decompiler.TypeSystem;
+using Mono.Cecil;
 
-namespace AlienEngine.ASL
+namespace AlienEngine.Shaders.ASL
 {
     public class ASLShaderCompiler
     {
@@ -49,21 +51,49 @@ namespace AlienEngine.ASL
         internal static KeyValuePair<MethodDefinition, KeyValuePair<string, string>> CreateMethodString(TypeDefinition s, MethodDefinition m)
         {
             if (s == null)
-                throw new ArgumentNullException("s");
+                throw new ArgumentNullException(nameof(s));
 
             if (m == null)
-                throw new ArgumentNullException("m");
+                throw new ArgumentNullException(nameof(m));
 
-            var ctx = new DecompilerContext(s.Module)
+            var settings = new DecompilerSettings()
             {
-                CurrentType = s,
-                CurrentMethod = m,
+                DecompileMemberBodies = true,
+                UsingStatement = false,
+                UsingDeclarations = false,
+                MakeAssignmentExpressions = true,
+                ExpressionTrees = true
+            };
+            settings.CSharpFormattingOptions.SpaceBeforeMethodCallParentheses = false;
+            var typeSys = new DecompilerTypeSystem(m.Module);
+
+            var decompiler = new CSharpDecompiler(typeSys, settings)
+            {
                 CancellationToken = CancellationToken.None
             };
+            
+            var tree = decompiler.Decompile(m);
 
-            var d = AstMethodBodyBuilder.CreateMethodBody(m, ctx);
+            BlockStatement methodBody = BlockStatement.Null;
+            
+            foreach (AstNode node in tree.Members)
+            {
+                if (node is MethodDeclaration methodDeclaration)
+                {
+                    methodBody = methodDeclaration.Body;
+                    break;
+                }
 
-            var glsl = new ASLShader.GLSLVisitor(d, ctx);
+                if (node is ConstructorDeclaration constructorDeclaration)
+                {
+                    methodBody = constructorDeclaration.Body;
+                }
+            }
+            
+            if (methodBody == BlockStatement.Null)
+                throw new Exception("Unable to find a method declaration in the syntax tree.");
+            
+            var glsl = new ASLShader.GLSLVisitor(methodBody, null);
 
             var sig = ASLShader.GLSLVisitor.GetSignature(m);
             var code = glsl.Result;
@@ -79,10 +109,7 @@ namespace AlienEngine.ASL
 
         #region Public Members
 
-        public string Shader
-        {
-            get { return _sb.ToString(); }
-        }
+        public string Shader => _sb.ToString();
 
         #endregion
 
@@ -103,7 +130,7 @@ namespace AlienEngine.ASL
             if (_shaderSource.Version != string.Empty)
             {
                 _sb.Append("#version ");
-                _sb.AppendLine(_shaderSource.Version.ToString());
+                _sb.AppendLine(_shaderSource.Version);
             }
 
             foreach (string ext in _shaderSource.GetExtensions())
@@ -137,7 +164,7 @@ namespace AlienEngine.ASL
                             break;
                     }
                 }
-                
+
                 var output = _shaderSource.GetType().GetCustomAttributes(typeof(GeometryShader.LayoutOutAttribute), true).Select(a => a as GeometryShader.LayoutOutAttribute).ToList();
                 if (output.Count > 0)
                 {
@@ -179,6 +206,7 @@ namespace AlienEngine.ASL
                 _sb.AppendLine();
                 _emitStructure(type);
             }
+
             _sb.AppendLine();
         }
 
@@ -200,11 +228,11 @@ namespace AlienEngine.ASL
                         if (args.Value is IEnumerable<CustomAttributeArgument>)
                         {
                             var parameters = new List<string>();
-                            foreach (var arg in (IEnumerable<CustomAttributeArgument>)args.Value)
+                            foreach (var arg in (IEnumerable<CustomAttributeArgument>) args.Value)
                             {
                                 if (arg.Type.Is<RenderShader.UniformLayout>())
                                 {
-                                    switch ((RenderShader.UniformLayout)arg.Value)
+                                    switch ((RenderShader.UniformLayout) arg.Value)
                                     {
                                         case RenderShader.UniformLayout.Shared:
                                             parameters.Add("shared");
@@ -224,9 +252,11 @@ namespace AlienEngine.ASL
                                     }
                                 }
                             }
+
                             _sb.Append($"layout({string.Join(", ", parameters.ToArray())}) ");
                         }
                     }
+
                     _sb.Append("uniform ");
                 }
                 else
@@ -281,7 +311,7 @@ namespace AlienEngine.ASL
             {
                 if (method.Key.DeclaringType.MetadataToken.ToInt32() != shader_type.MetadataToken)
                     continue;
-                
+
                 _sb.AppendLine();
                 _sb.Append(method.Value.Value);
             }
@@ -303,11 +333,11 @@ namespace AlienEngine.ASL
                 if (args.Value is IEnumerable<CustomAttributeArgument>)
                 {
                     var parameters = new List<string>();
-                    foreach (var arg in (IEnumerable<CustomAttributeArgument>)args.Value)
+                    foreach (var arg in (IEnumerable<CustomAttributeArgument>) args.Value)
                     {
                         if (arg.Type.Is<RenderShader.UniformLayout>())
                         {
-                            switch ((RenderShader.UniformLayout)arg.Value)
+                            switch ((RenderShader.UniformLayout) arg.Value)
                             {
                                 case RenderShader.UniformLayout.Shared:
                                     parameters.Add("shared");
@@ -327,6 +357,7 @@ namespace AlienEngine.ASL
                             }
                         }
                     }
+
                     _sb.Append($"layout({string.Join(", ", parameters.ToArray())}) ");
                 }
             }
@@ -341,7 +372,7 @@ namespace AlienEngine.ASL
                 {
                     if (_shaderSource is VertexShader)
                     {
-                        var location = (int)field.LayoutAttribute.Properties.First(p => p.Name == "Location").Argument.Value;
+                        var location = (int) field.LayoutAttribute.Properties.First(p => p.Name == "Location").Argument.Value;
                         _sb.Append($"layout(location = {location}) ");
                     }
                     else if (_shaderSource is FragmentShader)
@@ -354,7 +385,7 @@ namespace AlienEngine.ASL
                             {
                                 if (input.Type.Is<FragmentShader.InputLayout>())
                                 {
-                                    switch ((FragmentShader.InputLayout)input.Value)
+                                    switch ((FragmentShader.InputLayout) input.Value)
                                     {
                                         case FragmentShader.InputLayout.OriginUpperLeft:
                                             parameters.Add("origin_upper_left");
@@ -365,10 +396,12 @@ namespace AlienEngine.ASL
                                     }
                                 }
                             }
+
                             _sb.Append($"layout({string.Join(", ", parameters.ToArray())}) ");
                         }
                     }
                 }
+
                 _sb.Append("in ");
             }
             else if (field.AttributeType.IsOut())
@@ -381,12 +414,13 @@ namespace AlienEngine.ASL
                         var locationProp = field.LayoutAttribute.Properties.Where(p => p.Name == "Location");
                         var indexProp = field.LayoutAttribute.Properties.Where(p => p.Name == "Index");
                         if (locationProp.Any())
-                            layouts.Add("location = " + (int)locationProp.First().Argument.Value);
+                            layouts.Add("location = " + (int) locationProp.First().Argument.Value);
                         if (indexProp.Any())
-                            layouts.Add("index = " + (int)indexProp.First().Argument.Value);
+                            layouts.Add("index = " + (int) indexProp.First().Argument.Value);
                         _sb.Append($"layout({string.Join(", ", layouts.ToArray())}) ");
                     }
                 }
+
                 _sb.Append("out ");
             }
             else if (field.AttributeType.IsUniform())
@@ -397,11 +431,11 @@ namespace AlienEngine.ASL
                     if (args.Value is IEnumerable<CustomAttributeArgument>)
                     {
                         var parameters = new List<string>();
-                        foreach (var arg in (IEnumerable<CustomAttributeArgument>)args.Value)
+                        foreach (var arg in (IEnumerable<CustomAttributeArgument>) args.Value)
                         {
                             if (arg.Type.Is<RenderShader.UniformLayout>())
                             {
-                                switch ((RenderShader.UniformLayout)arg.Value)
+                                switch ((RenderShader.UniformLayout) arg.Value)
                                 {
                                     case RenderShader.UniformLayout.Shared:
                                         parameters.Add("shared");
@@ -421,10 +455,12 @@ namespace AlienEngine.ASL
                                 }
                             }
                         }
+
                         _sb.AppendLine($"layout({string.Join(", ", parameters.ToArray())}) uniform;");
                         return;
                     }
                 }
+
                 _sb.Append("uniform ");
             }
             else

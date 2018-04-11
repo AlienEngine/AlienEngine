@@ -1,6 +1,6 @@
 using Mono.Cecil;
 
-namespace AlienEngine.ASL
+namespace AlienEngine.Shaders.ASL
 {
     internal sealed class ASLShaderVariable
     {

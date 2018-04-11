@@ -1,6 +1,6 @@
 using System;
 
-namespace AlienEngine.ASL
+namespace AlienEngine.Shaders.ASL
 {
     public abstract partial class ASLShader
     {
@@ -2194,6 +2194,7 @@ namespace AlienEngine.ASL
             public float this[int item] { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
 
             public static vec4 operator +(vec4 left, vec4 right) { throw new NotImplementedException(); }
+            public static vec4 operator +(float left, vec4 right) { throw new NotImplementedException(); }
             public static vec4 operator -(vec4 left, vec4 right) { throw new NotImplementedException(); }
             public static vec4 operator *(vec4 left, vec4 right) { throw new NotImplementedException(); }
             public static vec4 operator *(vec4 left, float right) { throw new NotImplementedException(); }

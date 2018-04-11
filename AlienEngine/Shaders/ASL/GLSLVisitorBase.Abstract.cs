@@ -1,7 +1,7 @@
-using ICSharpCode.NRefactory.CSharp;
 using System.Text;
+using ICSharpCode.Decompiler.CSharp.Syntax;
 
-namespace AlienEngine.ASL
+namespace AlienEngine.Shaders.ASL
 {
     internal abstract partial class GLSLVisitorBase
     {

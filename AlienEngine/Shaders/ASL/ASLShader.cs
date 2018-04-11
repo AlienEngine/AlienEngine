@@ -5,7 +5,7 @@ using System.Reflection;
 using Mono.Cecil;
 using System.Collections.Generic;
 
-namespace AlienEngine.ASL
+namespace AlienEngine.Shaders.ASL
 {
     public abstract partial class ASLShader
     {
@@ -132,22 +132,26 @@ namespace AlienEngine.ASL
                 if (field.HasCustomAttributes)
                 {
                     var attrs = field.CustomAttributes.Where(a => a.AttributeType.IsUniform() && !a.AttributeType.IsBuiltIn());
-                    if (attrs.Count() > 0)
+                    var customAttributes = attrs as CustomAttribute[] ?? attrs.ToArray();
+                    if (customAttributes.Any())
                     {
-                        var attr = attrs.First();
-                        var type = GLSL.ToGLSL(field.FieldType);
+                        var attr = customAttributes.First();
                         var isArray = field.FieldType.IsArray;
+                        var type = GLSL.ToGLSL(isArray ? field.FieldType.Name.Trim('[', ']') : field.FieldType.Name);
                         var arrayAttr = field.CustomAttributes.Where(a => a.AttributeType.Is<ArraySizeAttribute>());
-                        var arraySize = (isArray && arrayAttr.Count() > 0 && arrayAttr.First().HasConstructorArguments) ? arrayAttr.First().ConstructorArguments.First().Value.ToString() : string.Empty;
+                        var attributes = arrayAttr as CustomAttribute[] ?? arrayAttr.ToArray();
+                        var arraySize = (isArray && attributes.Any() && attributes.First().HasConstructorArguments) ? attributes.First().ConstructorArguments.First().Value.ToString() : string.Empty;
                         var name = field.Name;
                         var commentAttr = field.CustomAttributes.Where(a => a.AttributeType.Is<CommentAttribute>());
-                        var u_comment = (commentAttr.Count() > 0 && commentAttr.First().HasConstructorArguments) ? commentAttr.First().ConstructorArguments.First().Value.ToString() : string.Empty;
-                        var d_comment = DebugMode ? field.DeclaringType.FullName + "." + field.Name : string.Empty;
+                        var userComments = commentAttr as CustomAttribute[] ?? commentAttr.ToArray();
+                        var uComments = (userComments.Any() && userComments.First().HasConstructorArguments) ? userComments.First().ConstructorArguments.First().Value.ToString() : string.Empty;
+                        var dComments = DebugMode ? field.DeclaringType.FullName + "." + field.Name : string.Empty;
                         var layoutAttr = (this is VertexShader) ? field.CustomAttributes.Where(a => a.AttributeType.Is<VertexShader.LayoutAttribute>()) :
                             ((this is FragmentShader) ? field.CustomAttributes.Where(a => a.AttributeType.Is<FragmentShader.LayoutAttribute>()) :
                             ((this is GeometryShader) ? field.CustomAttributes.Where(a => a.AttributeType.Is<GeometryShader.LayoutAttribute>()) : null));
-                        var layout = (layoutAttr != null && layoutAttr.Count() > 0) ? layoutAttr.First() : null;
-                        yield return new ASLShaderVariable(type, isArray, arraySize, name, u_comment, d_comment, attr.AttributeType, layout);
+                        var layoutAttributes = layoutAttr as CustomAttribute[] ?? layoutAttr.ToArray();
+                        var layout = (layoutAttributes.Any()) ? layoutAttributes.First() : null;
+                        yield return new ASLShaderVariable(type, isArray, arraySize, name, uComments, dComments, attr.AttributeType, layout);
                     }
                 }
             }
@@ -163,7 +167,7 @@ namespace AlienEngine.ASL
                     if (attrs.Count() > 0)
                     {
                         var attr = attrs.First();
-                        var type = GLSL.ToGLSL(field.FieldType);
+                        var type = GLSL.ToGLSL(field.FieldType.Name);
                         var isArray = field.FieldType.IsArray;
                         var arrayAttr = field.CustomAttributes.Where(a => a.AttributeType.Is<ArraySizeAttribute>());
                         var arraySize = (isArray && arrayAttr.Count() > 0 && arrayAttr.First().HasConstructorArguments) ? arrayAttr.First().ConstructorArguments.First().Value.ToString() : string.Empty;
@@ -191,7 +195,7 @@ namespace AlienEngine.ASL
                     if (attrs.Count() > 0)
                     {
                         var attr = attrs.First();
-                        var type = GLSL.ToGLSL(field.FieldType);
+                        var type = GLSL.ToGLSL(field.FieldType.Name);
                         var isArray = field.FieldType.IsArray;
                         var arrayAttr = field.CustomAttributes.Where(a => a.AttributeType.Is<ArraySizeAttribute>());
                         var arraySize = (isArray && arrayAttr.Count() > 0 && arrayAttr.First().HasConstructorArguments) ? arrayAttr.First().ConstructorArguments.First().Value.ToString() : string.Empty;
@@ -214,29 +218,30 @@ namespace AlienEngine.ASL
             {
                 var isInterfaceBlock = structure.HasCustomAttributes && structure.HasAttribute<InterfaceBlockAttribute>();
                 TypeReference interfaceBlockType = null;
-                var interfaceBlockAttribute = isInterfaceBlock ? structure.CustomAttributes.Where(a => a.AttributeType.Is<InterfaceBlockAttribute>()).First() : null;
+                var interfaceBlockAttribute = isInterfaceBlock ? structure.CustomAttributes.First(a => a.AttributeType.Is<InterfaceBlockAttribute>()) : null;
                 var interfaceBlockNamespace = isInterfaceBlock && interfaceBlockAttribute.ConstructorArguments.Count > 0 ? interfaceBlockAttribute.ConstructorArguments.First().Value.ToString() : string.Empty;
 
                 if (isInterfaceBlock)
                 {
                     var attrs = structure.CustomAttributes.Where(a => a.AttributeType.IsIn() || a.AttributeType.IsOut() || a.AttributeType.IsUniform());
-                    if (attrs.Count() == 0)
+                    var customAttributes = attrs as CustomAttribute[] ?? attrs.ToArray();
+                    if (!customAttributes.Any())
                         throw new ASLException("ASL Error: An interface block have to have a qualifier which can be in, out or uniform.");
-                    if (attrs.Count() > 1)
+                    if (customAttributes.Count() > 1)
                         throw new ASLException("ASL Error: An interface block have to have only one qualifier, which can be in, out or uniform.");
-                    interfaceBlockType = attrs.First().AttributeType;
+                    interfaceBlockType = customAttributes.First().AttributeType;
                 }
 
                 List<ASLShaderVariable> fields = new List<ASLShaderVariable>();
                 foreach (var field in structure.Fields)
                 {
-                    var type = GLSL.ToGLSL(field.FieldType);
+                    var type = GLSL.ToGLSL(field.FieldType.Name);
                     var isArray = field.FieldType.IsArray;
                     var arrayAttr = field.CustomAttributes.Where(a => a.AttributeType.Is<ArraySizeAttribute>());
-                    var arraySize = (isArray && arrayAttr.Count() > 0 && arrayAttr.First().HasConstructorArguments) ? arrayAttr.First().ConstructorArguments.First().Value.ToString() : string.Empty;
+                    var arraySize = (isArray && arrayAttr.Any() && arrayAttr.First().HasConstructorArguments) ? arrayAttr.First().ConstructorArguments.First().Value.ToString() : string.Empty;
                     var name = field.Name;
                     var commentAttr = field.CustomAttributes.Where(a => a.AttributeType.Is<CommentAttribute>());
-                    var u_comment = (commentAttr.Count() > 0 && commentAttr.First().HasConstructorArguments) ? commentAttr.First().ConstructorArguments.First().Value.ToString() : string.Empty;
+                    var u_comment = (commentAttr.Any() && commentAttr.First().HasConstructorArguments) ? commentAttr.First().ConstructorArguments.First().Value.ToString() : string.Empty;
                     var d_comment = DebugMode ? field.DeclaringType.FullName + "." + field.Name : string.Empty;
                     TypeReference attrType = null;
                     if (isInterfaceBlock)
@@ -244,7 +249,7 @@ namespace AlienEngine.ASL
                         var attrs = field.CustomAttributes.Where(a => a.AttributeType.IsIn() || a.AttributeType.IsOut() || a.AttributeType.IsUniform());
                         if (attrs.Count() > 1)
                             throw new ASLException("ASL Error: An interface block member have to have only one qualifier, which can be in, out or uniform, according to the interface block qualifier.");
-                        if (attrs.Count() > 0)
+                        if (attrs.Any())
                         {
                             if ((interfaceBlockType.IsIn() && (attrs.First().AttributeType.IsOut() || attrs.First().AttributeType.IsUniform())) || (interfaceBlockType.IsUniform() && (attrs.First().AttributeType.IsOut() || attrs.First().AttributeType.IsIn())) || (interfaceBlockType.IsOut() && (attrs.First().AttributeType.IsIn() || attrs.First().AttributeType.IsUniform())))
                                 throw new ASLException("ASL Error: An interface block member have to have (if he has one) a similar qualifier than the interface block.");
@@ -254,14 +259,14 @@ namespace AlienEngine.ASL
                     var varLayoutAttr = (this is VertexShader) ? field.CustomAttributes.Where(a => a.AttributeType.Is<VertexShader.LayoutAttribute>()) :
                         ((this is FragmentShader) ? field.CustomAttributes.Where(a => a.AttributeType.Is<FragmentShader.LayoutAttribute>()) :
                         ((this is GeometryShader) ? field.CustomAttributes.Where(a => a.AttributeType.Is<GeometryShader.LayoutAttribute>()) : null));
-                    var varLayout = (varLayoutAttr != null && varLayoutAttr.Count() > 0) ? varLayoutAttr.First() : null;
+                    var varLayout = (varLayoutAttr != null && varLayoutAttr.Any()) ? varLayoutAttr.First() : null;
                     fields.Add(new ASLShaderVariable(type, isArray, arraySize, name, u_comment, d_comment, attrType, varLayout));
                 }
 
                 var layoutAttr = (this is VertexShader) ? structure.CustomAttributes.Where(a => a.AttributeType.Is<VertexShader.LayoutAttribute>()) :
                     ((this is FragmentShader) ? structure.CustomAttributes.Where(a => a.AttributeType.Is<FragmentShader.LayoutAttribute>()) :
                     ((this is GeometryShader) ? structure.CustomAttributes.Where(a => a.AttributeType.Is<GeometryShader.LayoutAttribute>()) : null));
-                var layout = (layoutAttr != null && layoutAttr.Count() > 0) ? layoutAttr.First() : null;
+                var layout = (layoutAttr != null && layoutAttr.Any()) ? layoutAttr.First() : null;
 
                 yield return new ASLShaderStruct(structure.Name, isInterfaceBlock, interfaceBlockType, interfaceBlockNamespace, fields, layout);
             }

@@ -1,6 +1,6 @@
 #pragma warning disable
 
-namespace AlienEngine.ASL
+namespace AlienEngine.Shaders.ASL
 {
     public abstract partial class VertexShader : RenderShader
     {

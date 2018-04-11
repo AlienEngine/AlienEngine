@@ -1,7 +1,7 @@
 ﻿using Mono.Cecil;
 using System.Collections.Generic;
 
-namespace AlienEngine.ASL
+namespace AlienEngine.Shaders.ASL
 {
     internal sealed class ASLShaderStruct
     {

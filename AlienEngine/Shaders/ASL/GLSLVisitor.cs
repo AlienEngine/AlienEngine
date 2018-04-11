@@ -1,14 +1,16 @@
-using ICSharpCode.Decompiler;
-using ICSharpCode.Decompiler.Ast.Transforms;
-using ICSharpCode.NRefactory.CSharp;
-using Mono.Cecil;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using ICSharpCode.Decompiler.CSharp;
+using ICSharpCode.Decompiler.CSharp.Syntax;
+using ICSharpCode.Decompiler.CSharp.Transforms;
+using ICSharpCode.Decompiler.Semantics;
+using ICSharpCode.Decompiler.TypeSystem;
+using Mono.Cecil;
 
-namespace AlienEngine.ASL
+namespace AlienEngine.Shaders.ASL
 {
     public abstract partial class ASLShader
     {
@@ -16,26 +18,65 @@ namespace AlienEngine.ASL
         {
             private readonly HashSet<Tuple<string, string>> _functions = new HashSet<Tuple<string, string>>();
 
-            public IEnumerable<Tuple<string, string>> Functions
-            {
-                get { return _functions; }
-            }
+            public IEnumerable<Tuple<string, string>> Functions => _functions;
 
-            public static void ValidateType(TypeReference t)
+            public static void ValidateType(string t)
             {
                 GLSL.ToGLSL(t); // throws if t is not valid
             }
 
+            public static string ToGLSLParamType(IParameter p)
+            {
+                var t = GLSL.ToGLSL(p.Type.Name);
+                if (p.IsRef)
+                    return $"{(p.IsOut ? "out " : "inout ")}{t}";
+
+                return t;
+            }
+            
             public static string ToGLSLParamType(ParameterDefinition p)
             {
-                var t = GLSL.ToGLSL(p.ParameterType.Resolve());
+                var t = GLSL.ToGLSL(p.ParameterType.Name);
                 if (p.ParameterType.IsByReference)
-                    return (p.IsOut ? "out " : "inout ") + t;
+                    return $"{(p.IsOut ? "out " : "inout ")}{t}";
 
                 return t;
             }
 
             public string Result { get; private set; }
+
+            public static string GetParameterString(IMethod m)
+            {
+                var sig = string.Empty;
+
+                var parameters = m.Parameters;
+                if (parameters.Count > 0)
+                {
+                    sig = parameters.Take(parameters.Count - 1).Aggregate(sig, (current, v) =>
+                    {
+                        var vArraySize = string.Empty;
+                        if (v.Type.Kind == TypeKind.Array && v.HasCustomAttributes())
+                        {
+                            var attr = v.Attributes.First(a => a.AttributeType.Is<ArraySizeAttribute>());
+                            vArraySize = attr.Constructor.Parameters.First().ConstantValue.ToString();
+                        }
+
+                        return $"{current}{ToGLSLParamType(v)}{(v.Type.IsArray() ? $"[{vArraySize}]" : string.Empty)} {v.Name}, ";
+                    });
+
+                    var l = parameters.Last();
+                    var lArraySize = string.Empty;
+                    if (l.Type.IsArray() && l.HasCustomAttributes())
+                    {
+                        var attr = l.Attributes.First(a => a.AttributeType.Is<ArraySizeAttribute>());
+                        lArraySize = attr.Constructor.Parameters.First().ConstantValue.ToString();
+                    }
+
+                    sig += $"{ToGLSLParamType(l)}{(l.Type.IsArray() ? $"[{lArraySize}]" : string.Empty)} {l.Name}";
+                }
+
+                return sig;
+            }
 
             public static string GetParameterString(MethodDefinition m)
             {
@@ -46,27 +87,40 @@ namespace AlienEngine.ASL
                 {
                     sig = parameters.Take(parameters.Count - 1).Aggregate(sig, (current, v) =>
                     {
-                        var v_arraySize = string.Empty;
+                        var vArraySize = string.Empty;
                         if (v.ParameterType.IsArray && v.HasCustomAttributes)
                         {
-                            var attr = v.CustomAttributes.Where(a => a.AttributeType.Is<ArraySizeAttribute>()).First();
-                            v_arraySize = attr.ConstructorArguments.First().Value.ToString();
+                            var attr = v.CustomAttributes.First(a => a.AttributeType.Is<ArraySizeAttribute>());
+                            vArraySize = attr.ConstructorArguments.First().Value.ToString();
                         }
 
-                        return current + ToGLSLParamType(v) + (v.ParameterType.IsArray ? "[" + v_arraySize + "]" : string.Empty) + " " + v.Name + ", ";
+                        return $"{current}{ToGLSLParamType(v)}{(v.ParameterType.IsArray ? $"[{vArraySize}]" : string.Empty)} {v.Name}, ";
                     });
 
                     var l = parameters.Last();
-                    var l_arraySize = string.Empty;
+                    var lArraySize = string.Empty;
                     if (l.ParameterType.IsArray && l.HasCustomAttributes)
                     {
-                        var attr = l.CustomAttributes.Where(a => a.AttributeType.Is<ArraySizeAttribute>()).First();
-                        l_arraySize = attr.ConstructorArguments.First().Value.ToString();
+                        var attr = l.CustomAttributes.First(a => a.AttributeType.Is<ArraySizeAttribute>());
+                        lArraySize = attr.ConstructorArguments.First().Value.ToString();
                     }
-                    sig += ToGLSLParamType(l) + (l.ParameterType.IsArray ? "[" + l_arraySize + "]" : string.Empty) + " " + l.Name;
+
+                    sig += $"{ToGLSLParamType(l)}{(l.ParameterType.IsArray ? $"[{lArraySize}]" : string.Empty)} {l.Name}";
                 }
 
                 return sig;
+            }
+
+            internal static string GetSignature(IMethod m)
+            {
+                var arraySize = string.Empty;
+                if (m.ReturnType.IsArray() && m.ReturnTypeAttributes.Count > 0)
+                {
+                    var attr = m.ReturnTypeAttributes.First(a => a.AttributeType.Is<ArraySizeAttribute>());
+                    arraySize = attr.Constructor.Parameters.First().ConstantValue.ToString();
+                }
+
+                return $"{GLSL.ToGLSL(m.ReturnType.Name)}{(m.ReturnType.Kind == TypeKind.Array ? $"[{arraySize}]" : string.Empty)} {m.Name}({GetParameterString(m)})";
             }
 
             internal static string GetSignature(MethodDefinition m)
@@ -74,25 +128,24 @@ namespace AlienEngine.ASL
                 var arraySize = string.Empty;
                 if (m.ReturnType.IsArray && m.MethodReturnType.HasCustomAttributes)
                 {
-                    var attr = m.MethodReturnType.CustomAttributes.Where(a => a.AttributeType.Is<ArraySizeAttribute>()).First();
+                    var attr = m.MethodReturnType.CustomAttributes.First(a => a.AttributeType.Is<ArraySizeAttribute>());
                     arraySize = attr.ConstructorArguments.First().Value.ToString();
                 }
-                return GLSL.ToGLSL(m.ReturnType) + (m.ReturnType.IsArray ? "[" + arraySize + "]" : string.Empty)
-                    + " " +
-                    m.Name + "(" + GetParameterString(m) + ")";
+
+                return $"{GLSL.ToGLSL(m.ReturnType.Name)}{(m.ReturnType.IsArray ? $"[{arraySize}]" : string.Empty)} {m.Name}({GetParameterString(m)})";
             }
 
-            private void RegisterMethod(MethodDefinition m)
+            private void RegisterMethod(IMethod m)
             {
                 AddDependency(m);
-                _functions.Add(new Tuple<string, string>(GetSignature(m), m.DeclaringType.FullName + "." + m.Name));
+                _functions.Add(new Tuple<string, string>(GetSignature(m), $"{m.DeclaringType.FullName}.{m.Name}"));
             }
 
-            public GLSLVisitor(BlockStatement block, DecompilerContext ctx)
+            public GLSLVisitor(BlockStatement block, TransformContext ctx)
             {
-                var trans1 = new ReplaceMethodCallsWithOperators(ctx);
+                var trans1 = new ReplaceMethodCallsWithOperators();
                 var trans2 = new RenameLocals();
-                ((IAstTransform)trans1).Run(block);
+                ((IAstTransform) trans1).Run(block, ctx);
                 trans2.Run(block);
 
                 Result = block.AcceptVisitor(this, 0).ToString();
@@ -173,14 +226,18 @@ namespace AlienEngine.ASL
                 if (!(memberReferenceExpression.Target is ThisReferenceExpression) && !(memberReferenceExpression.Target is BaseReferenceExpression))
                     result.Append(memberReferenceExpression.Target.AcceptVisitor(this, data)).Append(".");
 
-                var def = memberReferenceExpression.Annotation<IMemberDefinition>();
-                if (def != null)
-                    return result.Append(def.Name);
+                var mdef = memberReferenceExpression.Annotation<IMemberDefinition>();
+                if (mdef != null)
+                    return result.Append(mdef.Name);
 
                 var fref = memberReferenceExpression.Annotation<FieldReference>();
                 if (fref != null)
                     return result.Append(fref.Name);
 
+                var rref = memberReferenceExpression.GetSymbol();
+                if (rref != null)
+                    return result.Append(rref.Name);
+                
                 var iref = memberReferenceExpression.MemberNameToken.AcceptVisitor(this, data);
                 if (iref.Length > 0)
                     return result.Append(iref);
@@ -192,16 +249,17 @@ namespace AlienEngine.ASL
             {
                 var result = new StringBuilder();
 
-                var mref = invocationExpression.Annotation<MethodReference>();
-                var m = mref != null ? mref.Resolve() : invocationExpression.Annotation<MethodDefinition>();
+                if (!(invocationExpression.GetSymbol() is IMethod m))
+                    throw new ASLException("An error occured when parsing ASL code.");
 
-                if (m.DeclaringType.MetadataToken.ToInt32() == typeof(ASLShader).MetadataToken)
+                if (m.DeclaringType.FullName == typeof(ASLShader).FullName)
                 {
                     if (m.Name == "__output")
                     {
                         return result.Append(ArgsToString(invocationExpression.Arguments));
                     }
-                    else return result.Append(m.Name).Append("(").Append(ArgsToString(invocationExpression.Arguments)).Append(")");
+                    
+                    return result.Append(m.Name).Append("(").Append(ArgsToString(invocationExpression.Arguments)).Append(")");
                 }
 
                 RegisterMethod(m);
@@ -219,13 +277,13 @@ namespace AlienEngine.ASL
 
             public override StringBuilder VisitMemberType(MemberType memberType, int data)
             {
-                return new StringBuilder(GLSL.ToGLSL(memberType.Annotation<TypeReference>()));
+                return new StringBuilder(GLSL.ToGLSL(memberType.Annotation<TypeReference>().Name));
             }
 
             public override StringBuilder VisitSimpleType(SimpleType simpleType, int data)
             {
                 // this cast might not work for all cases...
-                ValidateType((TypeReference)simpleType.Annotation<MemberReference>());
+                ValidateType(simpleType.Annotation<TypeResolveResult>().Type.Name);
                 return new StringBuilder(simpleType.ToString());
             }
 
@@ -233,9 +291,9 @@ namespace AlienEngine.ASL
             {
                 var result = new StringBuilder();
 
-                if (primitiveExpression.Value is float)
+                if (primitiveExpression.Value is float f)
                 {
-                    var s = ((float)primitiveExpression.Value).ToString(CultureInfo.InvariantCulture.NumberFormat);
+                    var s = f.ToString(CultureInfo.InvariantCulture.NumberFormat);
                     result.Append(s);
                     if (!s.Contains("."))
                         result.Append(".0");
@@ -244,9 +302,9 @@ namespace AlienEngine.ASL
                     return result;
                 }
 
-                if (primitiveExpression.Value is double)
+                if (primitiveExpression.Value is double d)
                 {
-                    var s = ((double)primitiveExpression.Value).ToString(CultureInfo.InvariantCulture.NumberFormat);
+                    var s = d.ToString(CultureInfo.InvariantCulture.NumberFormat);
                     result.Append(s);
                     if (!s.Contains("."))
                         result.Append(".0");
@@ -255,22 +313,19 @@ namespace AlienEngine.ASL
                     return result;
                 }
 
-                if (primitiveExpression.Value is uint)
+                if (primitiveExpression.Value is uint u)
                 {
-                    var s = ((uint)primitiveExpression.Value).ToString(CultureInfo.InvariantCulture.NumberFormat);
+                    var s = u.ToString(CultureInfo.InvariantCulture.NumberFormat);
                     result.Append(s).Append("u");
                     return result;
                 }
 
-                if (primitiveExpression.Value is bool)
+                if (primitiveExpression.Value is bool b)
                 {
-                    if ((bool)primitiveExpression.Value)
-                        result.Append("true");
-                    else result.Append("false");
-                    return result;
+                    return result.Append(b ? "true" : "false");
                 }
 
-                return result.Append(primitiveExpression.Value.ToString());
+                return result.Append(primitiveExpression.Value);
             }
 
             public override StringBuilder VisitCastExpression(CastExpression castExpression, int data)
@@ -290,9 +345,12 @@ namespace AlienEngine.ASL
                 {
                     // TODO: check if lhs is a gen(D)Type and only apply the rule in that case
                     // replace with mod(lhs, rhs) statement
-                    var r = new StringBuilder("mod(");
+                    var r = new StringBuilder();
+                    r.Append("mod(");
                     r.Append(binaryOperatorExpression.Left.AcceptVisitor(this, data));
-                    r.Append(", ").Append(binaryOperatorExpression.Right.AcceptVisitor(this, data)).Append(")");
+                    r.Append(", ");
+                    r.Append(binaryOperatorExpression.Right.AcceptVisitor(this, data));
+                    r.Append(")");
                     return r;
                 }
 
@@ -419,19 +477,23 @@ namespace AlienEngine.ASL
                 var result = new StringBuilder();
                 const string brackets = "[]";
 
-                var type = variableDeclarationStatement.Type.AcceptVisitor(this, data);
+                var t = variableDeclarationStatement.Type;
+                var type = t.AcceptVisitor(this, data);
                 foreach (var v in variableDeclarationStatement.Variables)
                 {
                     var varName = v.AcceptVisitor(this, data);
                     if (variableDeclarationStatement.Type is ComposedType)
                     {
                         if (type.ToString().EndsWith(brackets))
+                        {
                             type.Remove(type.Length - brackets.Length, brackets.Length);
+                        }
+
                         if (!varName.ToString().EndsWith(brackets))
                         {
                             varName.Append(brackets[0]);
                             // TODO: Find a way to get the size of the array here...
-                            //varName.Append(((ArrayInitializerExpression)v.Initializer).Elements.Count);
+                            varName.Append(((ArrayInitializerExpression) v.Initializer).Elements.Count);
                             varName.Append(brackets[1]);
                         }
                     }
@@ -446,11 +508,12 @@ namespace AlienEngine.ASL
                             {
                                 varName.Append(brackets[0]);
                                 // TODO: Find a way to get the size of the array here...
-                                //varName.Append(((ArrayInitializerExpression)v.Initializer).Elements.Count);
+                                varName.Append(((ArrayInitializerExpression) v.Initializer).Elements.Count);
                                 varName.Append(brackets[1]);
                             }
                         }
                     }
+
                     result.Append(type).Append(" ").Append(varName).Append(";");
                 }
 
@@ -569,19 +632,19 @@ namespace AlienEngine.ASL
                 for (var i = 0; i < initializerCount; i++)
                 {
                     var initializer = initializers[i];
-                    result.Append(initializer.AcceptVisitor(this, data));
+                    result.Append(initializer.AcceptVisitor(this, data).ToString().Trim(',', ';'));
 
                     if (i != initializerCount - 1)
                         result.Append(", ");
                 }
-
+                
                 result.Append(";");
 
                 var condition = forStatement.Condition;
                 if (condition != null)
                 {
                     result.Append(" ");
-                    result.Append(condition.AcceptVisitor(this, data));
+                    result.Append(condition.AcceptVisitor(this, data).ToString().Trim(',', ';'));
                 }
 
                 result.Append(";");
@@ -595,7 +658,7 @@ namespace AlienEngine.ASL
                 for (var i = 0; i < iteratorCount; i++)
                 {
                     var iterator = iterators[i];
-                    result.Append(iterator.AcceptVisitor(this, data));
+                    result.Append(iterator.AcceptVisitor(this, data).ToString().Trim(',', ';'));
 
                     if (i != iteratorCount - 1)
                         result.Append(", ");
@@ -638,6 +701,7 @@ namespace AlienEngine.ASL
                 {
                     result.Append(a.AcceptVisitor(this, data)).Append(",");
                 }
+
                 result.Remove(result.Length - 1, 1).Append("]");
 
                 return result;
@@ -647,8 +711,8 @@ namespace AlienEngine.ASL
             {
                 var result = new StringBuilder();
                 var t = arrayCreateExpression.Arguments.Count > 0
-                ? arrayCreateExpression.Arguments.First().AcceptVisitor(this, data)
-                : new StringBuilder().Append(arrayCreateExpression.Initializer.Elements.Count);
+                    ? arrayCreateExpression.Arguments.First().AcceptVisitor(this, data)
+                    : new StringBuilder().Append(arrayCreateExpression.Initializer.Elements.Count);
 
                 result.Append(arrayCreateExpression.Type.AcceptVisitor(this, data));
                 result.Append("[");
@@ -663,6 +727,7 @@ namespace AlienEngine.ASL
                         result.Append(item.AcceptVisitor(this, data));
                         result.Append(",");
                     }
+
                     result.Remove(result.Length - 1, 1);
                 }
 
@@ -688,19 +753,19 @@ namespace AlienEngine.ASL
             public override StringBuilder VisitIdentifier(Identifier identifier, int data)
             {
                 var result = new StringBuilder();
-                var ilVar = identifier.Parent.FirstChild.Annotation<ICSharpCode.Decompiler.ILAst.ILVariable>();
-                if (ilVar != null && ilVar.Type.IsArray)
-                {
-                    switch (identifier.Name)
-                    {
-                        case "Length":
-                        case "LongLength":
-                            result.Append("length()");
-                            break;
+                var ilVar = identifier.Parent.FirstChild.Annotation<ICSharpCode.Decompiler.IL.ILVariable>();
 
-                        default:
-                            throw new ASLException("ASL doesn't support member \"" + identifier.Name + "\" from arrays.");
-                    }
+                if (ilVar == null || ilVar.Type.Kind != ICSharpCode.Decompiler.TypeSystem.TypeKind.Array) return result;
+
+                switch (identifier.Name)
+                {
+                    case "Length":
+                    case "LongLength":
+                        result.Append("length()");
+                        break;
+
+                    default:
+                        throw new ASLException($"ASL doesn\'t support member \"{identifier.Name}\" from arrays.");
                 }
 
                 return result;

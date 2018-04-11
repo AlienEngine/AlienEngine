@@ -1,11 +1,46 @@
-using ICSharpCode.NRefactory.CSharp;
 using System;
 using System.Text;
+using ICSharpCode.Decompiler.CSharp.Syntax;
 
-namespace AlienEngine.ASL
+namespace AlienEngine.Shaders.ASL
 {
     internal abstract partial class GLSLVisitorBase
     {
+        public StringBuilder VisitWhitespace(WhitespaceNode whitespaceNode, int data)
+        {
+            throw new NotImplementedException();
+        }
+
+        public StringBuilder VisitText(TextNode textNode, int data)
+        {
+            throw new NotImplementedException();
+        }
+
+        public StringBuilder VisitPreProcessorDirective(PreProcessorDirective preProcessorDirective, int data)
+        {
+            throw new NotImplementedException();
+        }
+
+        public StringBuilder VisitDocumentationReference(DocumentationReference documentationReference, int data)
+        {
+            throw new NotImplementedException();
+        }
+
+        public StringBuilder VisitNullNode(AstNode nullNode, int data)
+        {
+            throw new NotImplementedException();
+        }
+
+        public StringBuilder VisitErrorNode(AstNode errorNode, int data)
+        {
+            throw new NotImplementedException();
+        }
+
+        public StringBuilder VisitOutVarDeclarationExpression(OutVarDeclarationExpression expression, int data)
+        {
+            throw new NotSupportedException();
+        }
+
         public StringBuilder VisitDelegateDeclaration(DelegateDeclaration delegateDeclaration, int data)
         {
             throw new NotSupportedException();
@@ -101,7 +136,7 @@ namespace AlienEngine.ASL
             throw new NotSupportedException();
         }
 
-        public StringBuilder VisitSyntaxTree(SyntaxTree SyntaxTree, int data)
+        public StringBuilder VisitSyntaxTree(SyntaxTree syntaxTree, int data)
         {
             throw new NotSupportedException();
         }

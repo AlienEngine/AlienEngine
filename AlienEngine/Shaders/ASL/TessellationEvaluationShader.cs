@@ -1,8 +1,8 @@
 #pragma warning disable
 
-namespace AlienEngine.ASL
+namespace AlienEngine.Shaders.ASL
 {
-    public abstract class TessellationEvaluationShader : ASLShader
+    public abstract class TessellationEvaluationShader : Shaders.ASL.ASLShader
     {
         [In]
         [BuiltIn]

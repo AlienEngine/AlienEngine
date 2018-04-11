@@ -1,7 +1,7 @@
 using System;
 using System.Runtime.Serialization;
 
-namespace AlienEngine.ASL
+namespace AlienEngine.Shaders.ASL
 {
     [Serializable]
     internal class ASLException : Exception

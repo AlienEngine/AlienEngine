@@ -1,4 +1,4 @@
-﻿using AlienEngine.ASL;
+﻿using AlienEngine.Shaders.ASL;
 using AlienEngine.Core.Graphics.OpenGL;
 using AlienEngine.Core.Resources;
 using System;

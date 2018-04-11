@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
-using ICSharpCode.Decompiler.Ast.Transforms;
-using ICSharpCode.NRefactory.CSharp;
+using ICSharpCode.Decompiler.CSharp.Syntax;
+using ICSharpCode.Decompiler.CSharp.Transforms;
 
-namespace AlienEngine.ASL
+namespace AlienEngine.Shaders.ASL
 {
-    internal sealed class RenameLocals : IAstTransform
+    internal sealed class RenameLocals
     {
         private int _ctr;
 
@@ -14,19 +14,20 @@ namespace AlienEngine.ASL
         public void Run(AstNode node)
         {
             if (node == null)
-                throw new ArgumentNullException("node");
+                throw new ArgumentNullException(nameof(node));
 
-            var initializer = node as VariableInitializer;
-            if (initializer != null)
+            if (node is VariableInitializer initializer)
             {
-                var newName = "_loc" + _ctr++;
-                _locals[initializer.Name] = newName;
-                initializer.ReplaceWith(new VariableInitializer(newName, initializer.Initializer));
+                if (!_locals.ContainsValue(initializer.Name))
+                {
+                    var newName = $"_loc{_ctr++}";
+                    _locals[initializer.Name] = newName;
+                    initializer.ReplaceWith(new VariableInitializer(newName, initializer.Initializer.Detach()));
+                }
             }
             else
             {
-                var identifier = node as IdentifierExpression;
-                if (identifier != null)
+                if (node is IdentifierExpression identifier)
                 {
                     string newName;
                     if (_locals.TryGetValue(identifier.Identifier, out newName))
@@ -34,7 +35,7 @@ namespace AlienEngine.ASL
                 }
             }
 
-            foreach (var c in node.Children)
+            foreach (var c in node.Descendants)
                 Run(c);
         }
     }

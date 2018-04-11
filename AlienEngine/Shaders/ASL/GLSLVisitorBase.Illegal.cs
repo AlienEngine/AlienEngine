@@ -1,10 +1,8 @@
-using ICSharpCode.NRefactory.CSharp;
-using ICSharpCode.NRefactory.PatternMatching;
-using System;
 using System.Text;
-using Attribute = ICSharpCode.NRefactory.CSharp.Attribute;
+using ICSharpCode.Decompiler.CSharp.Syntax;
+using ICSharpCode.Decompiler.CSharp.Syntax.PatternMatching;
 
-namespace AlienEngine.ASL
+namespace AlienEngine.Shaders.ASL
 {
     internal abstract partial class GLSLVisitorBase
     {
@@ -178,6 +176,11 @@ namespace AlienEngine.ASL
             throw new ASLException("ASL does not have exceptions.");
         }
 
+        public StringBuilder VisitThrowExpression(ThrowExpression throwStatement, int data)
+        {
+            throw new ASLException("ASL does not have exceptions.");
+        }
+
         public StringBuilder VisitTryCatchStatement(TryCatchStatement tryCatchStatement, int data)
         {
             throw new ASLException("ASL does not have exceptions.");
@@ -216,36 +219,6 @@ namespace AlienEngine.ASL
         public StringBuilder VisitDefaultValueExpression(DefaultValueExpression defaultValueExpression, int data)
         {
             throw new ASLException("ASL does not support default constructors.");
-        }
-
-        public StringBuilder VisitWhitespace(WhitespaceNode whitespaceNode, int data)
-        {
-            throw new NotImplementedException();
-        }
-
-        public StringBuilder VisitText(TextNode textNode, int data)
-        {
-            throw new NotImplementedException();
-        }
-
-        public StringBuilder VisitPreProcessorDirective(PreProcessorDirective preProcessorDirective, int data)
-        {
-            throw new NotImplementedException();
-        }
-
-        public StringBuilder VisitDocumentationReference(DocumentationReference documentationReference, int data)
-        {
-            throw new NotImplementedException();
-        }
-
-        public StringBuilder VisitNullNode(AstNode nullNode, int data)
-        {
-            throw new NotImplementedException();
-        }
-
-        public StringBuilder VisitErrorNode(AstNode errorNode, int data)
-        {
-            throw new NotImplementedException();
         }
 
         public StringBuilder VisitFixedFieldDeclaration(FixedFieldDeclaration fixedFieldDeclaration, int data)

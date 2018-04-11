@@ -1,12 +1,13 @@
-using ICSharpCode.NRefactory.CSharp;
-using Mono.Cecil;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using ICSharpCode.Decompiler.CSharp.Syntax;
+using ICSharpCode.Decompiler.TypeSystem;
+using Mono.Cecil;
 
-namespace AlienEngine.ASL
+namespace AlienEngine.Shaders.ASL
 {
     internal abstract partial class GLSLVisitorBase : IAstVisitor<int, StringBuilder>
     {
@@ -16,7 +17,7 @@ namespace AlienEngine.ASL
 
         protected VariableDeclarationStatement ToTemp(Expression e)
         {
-            return new VariableDeclarationStatement(null, "__tmp" + _tempCounter++, e.Clone());
+            return new VariableDeclarationStatement(null, $"__tmp{_tempCounter++}", e.Clone());
         }
 
         protected StringBuilder ArgsToString(ICollection<Expression> args)
@@ -48,15 +49,15 @@ namespace AlienEngine.ASL
             return res;
         }
 
-        private static Type GetType(TypeDefinition td)
+        private static Type GetType(ITypeDefinition td)
         {
-            var qualifiedName = Assembly.CreateQualifiedName(td.Module.Assembly.FullName, td.FullName);
+            var qualifiedName = Assembly.CreateQualifiedName(td.ParentAssembly.FullAssemblyName, td.FullName);
             return Type.GetType(qualifiedName, true);
         }
 
-        protected void AddDependency(MethodDefinition m)
+        protected void AddDependency(IMethod m)
         {
-            var dependency = m.DeclaringType.Resolve();
+            var dependency = m.DeclaringType.GetDefinition();
             Dependencies.Add(GetType(dependency));
         }
     }

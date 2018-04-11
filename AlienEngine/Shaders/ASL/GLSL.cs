@@ -1,29 +1,29 @@
-using Mono.Cecil;
 using System;
 using System.Collections.Generic;
+using ICSharpCode.Decompiler.TypeSystem;
+using Mono.Cecil;
 
-namespace AlienEngine.ASL
+namespace AlienEngine.Shaders.ASL
 {
     public abstract partial class ASLShader
     {
         internal static class GLSL
         {
-            internal static string ToGLSL(TypeReference t)
+            internal static string ToGLSL(string t)
             {
-                var typeDef = t.Resolve();
-                Type type = null;
+                Type type;
 
-                if (TypeMap.TryGetValue(typeDef.Name, out type))
+                if (TypeMap.TryGetValue(t, out type))
                     return ToGLSL(type);
 
-                return typeDef.Name;
+                return t;
             }
 
             internal static string ToGLSL(Type t)
             {
                 string glslName;
                 if (!Type.TryGetValue(t, out glslName))
-                    throw new ASLException("ASL Error: " + t + " is currently not supported by GLSL module.");
+                    throw new ASLException($"ASL Error: {t} is currently not supported by GLSL module.");
 
                 return glslName;
             }

@@ -1,4 +1,4 @@
-﻿using AlienEngine.ASL;
+﻿using AlienEngine.Shaders.ASL;
 
 namespace AlienEngine.Core.Shaders.Samples
 {
