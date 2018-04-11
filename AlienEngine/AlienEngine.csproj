@@ -251,6 +251,10 @@
     <Compile Include="Game\Components\UI\ListBox.cs" />
     <Compile Include="Game\Components\UI\Text.cs" />
     <Compile Include="Game\Components\UI\TextInput.cs" />
+    <Compile Include="Game\FrameScript.cs" />
+    <Compile Include="Game\IFrameScript.cs" />
+    <Compile Include="Game\IRenderScript.cs" />
+    <Compile Include="Game\RenderScript.cs" />
     <Compile Include="Game\SceneManager.cs" />
     <Compile Include="Game\Shaders\DiffuseShaderProgram.cs" />
     <Compile Include="Game\Shaders\DiffuseSpecularEmissiveShaderProgram.cs" />

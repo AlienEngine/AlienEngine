@@ -2,6 +2,7 @@
 using AlienEngine.Core.Rendering;
 using AlienEngine.Core.Threading;
 using System;
+using System.Collections.Generic;
 using AlienEngine.Core.Resources;
 
 namespace AlienEngine.Core.Game
@@ -70,6 +71,10 @@ namespace AlienEngine.Core.Game
         /// </summary>
         private ParallelLooper _parallelLooper;
 
+        private List<FrameScript> _frameScripts;
+
+        private List<RenderScript> _renderScripts;
+
         /// <summary>
         /// The name of this <see cref="Scene"/>.
         /// </summary>
@@ -123,6 +128,10 @@ namespace AlienEngine.Core.Game
         /// </summary>
         public GameElement PrimaryCamera => _primaryCamera;
 
+        public List<FrameScript> FrameScripts => _frameScripts;
+
+        public List<RenderScript> RenderScripts => _renderScripts;
+
         /// <summary>
         /// Creates a new scene.
         /// </summary>
@@ -142,6 +151,8 @@ namespace AlienEngine.Core.Game
             _audioReverbZones = new GameElementCollection();
             _audioListener = null;
             _primaryCamera = _dummyCamera;
+            _frameScripts = new List<FrameScript>();
+            _renderScripts = new List<RenderScript>();
 
             // Register this in the resource manager
             ResourcesManager.AddDisposableResource(this);
@@ -185,7 +196,7 @@ namespace AlienEngine.Core.Game
 
             gameElement.OnAddToScene(this);
 
-            OnAddGameElement();
+            OnAddGameElement(gameElement);
         }
 
         /// <summary>
@@ -226,7 +237,7 @@ namespace AlienEngine.Core.Game
 
             gameElement.OnRemoveFromScene(this);
 
-            OnRemoveGameElement();
+            OnRemoveGameElement(gameElement);
         }
 
         /// <summary>
@@ -249,12 +260,43 @@ namespace AlienEngine.Core.Game
                 _audioListener = l;
         }
 
+        public void AddFrameScript(FrameScript script)
+        {
+            _frameScripts.Add(script);
+            script.SetParentScene(this);
+        }
+
+        public void RemoveFrameScript(FrameScript script)
+        {
+            _frameScripts.Remove(script);
+            script.SetParentScene(null);
+        }
+
+        public void AddRenderScript(RenderScript script)
+        {
+            _renderScripts.Add(script);
+            script.SetParentScene(this);
+        }
+
+        public void RemoveRenderScript(RenderScript script)
+        {
+            _renderScripts.Remove(script);
+            script.SetParentScene(null);
+        }
+
         /// <summary>
         /// Initialize the <see cref="Scene"/> when loading it in
         /// the <see cref="Game"/>.
         /// </summary>
         public virtual void Load()
         {
+            RenderScript[] arrayRenderScripts = _renderScripts.ToArray();
+
+            for (int i = 0, l = arrayRenderScripts.Length; i < l; i++)
+                arrayRenderScripts[i].Load();
+
+            arrayRenderScripts = null;
+            
             // Setup Physics
             _loadPhysics();
         }
@@ -265,6 +307,13 @@ namespace AlienEngine.Core.Game
         /// </summary>
         public virtual void Unload()
         {
+            RenderScript[] arrayRenderScripts = _renderScripts.ToArray();
+
+            for (int i = 0, l = arrayRenderScripts.Length; i < l; i++)
+                arrayRenderScripts[i].Unload();
+
+            arrayRenderScripts = null;
+            
             // Unload physics.
             _unloadPhysics();
             
@@ -288,12 +337,7 @@ namespace AlienEngine.Core.Game
         /// </summary>
         public virtual void Start()
         {
-            GameElement[] arrayGameElements = _gameElements.ToArray();
-
-            for (int i = 0, l = arrayGameElements.Length; i < l; i++)
-                arrayGameElements[i].Start();
-
-            arrayGameElements = null;
+            _gameElements.Start();
         }
 
         /// <summary>
@@ -301,12 +345,14 @@ namespace AlienEngine.Core.Game
         /// </summary>
         public virtual void BeforeUpdate()
         {
-            GameElement[] arrayGameElements = _gameElements.ToArray();
+            FrameScript[] arrayFrameScripts = _frameScripts.ToArray();
 
-            for (int i = 0, l = arrayGameElements.Length; i < l; i++)
-                arrayGameElements[i].BeforeUpdate();
+            for (int i = 0, l = arrayFrameScripts.Length; i < l; i++)
+                arrayFrameScripts[i].BeforeUpdate();
 
-            arrayGameElements = null;
+            arrayFrameScripts = null;
+
+            _gameElements.BeforeUpdate();
         }
 
         /// <summary>
@@ -314,12 +360,14 @@ namespace AlienEngine.Core.Game
         /// </summary>
         public virtual void Update()
         {
-            GameElement[] arrayGameElements = _gameElements.ToArray();
+            FrameScript[] arrayFrameScripts = _frameScripts.ToArray();
 
-            for (int i = 0, l = arrayGameElements.Length; i < l; i++)
-                arrayGameElements[i].Update();
+            for (int i = 0, l = arrayFrameScripts.Length; i < l; i++)
+                arrayFrameScripts[i].Update();
 
-            arrayGameElements = null;
+            arrayFrameScripts = null;
+
+            _gameElements.Update();
         }
 
         /// <summary>
@@ -327,29 +375,26 @@ namespace AlienEngine.Core.Game
         /// </summary>
         public virtual void AfterUpdate()
         {
-            GameElement[] arrayGameElements = _gameElements.ToArray();
+            FrameScript[] arrayFrameScripts = _frameScripts.ToArray();
 
-            for (int i = 0, l = arrayGameElements.Length; i < l; i++)
-                arrayGameElements[i].AfterUpdate();
+            for (int i = 0, l = arrayFrameScripts.Length; i < l; i++)
+                arrayFrameScripts[i].AfterUpdate();
 
-            arrayGameElements = null;
+            arrayFrameScripts = null;
+
+            _gameElements.AfterUpdate();
         }
 
         public virtual void Stop()
         {
-            GameElement[] arrayGameElements = _gameElements.ToArray();
-
-            for (int i = 0, l = arrayGameElements.Length; i < l; i++)
-                arrayGameElements[i].Stop();
-
-            arrayGameElements = null;
+            _gameElements.Stop();
         }
 
         /// <summary>
         /// Action executed when a <see cref="GameElement"/> is
         /// added in the <see cref="Scene"/>.
         /// </summary>
-        protected virtual void OnAddGameElement()
+        protected virtual void OnAddGameElement(GameElement gameElement)
         {
         }
 
@@ -357,18 +402,24 @@ namespace AlienEngine.Core.Game
         /// Action executed when a <see cref="GameElement"/> is
         /// removed from the <see cref="Scene"/>.
         /// </summary>
-        protected virtual void OnRemoveGameElement()
+        protected virtual void OnRemoveGameElement(GameElement gameElement)
         {
         }
 
         protected virtual void BeforeRender()
         {
+            RenderScript[] arrayRenderScripts = _renderScripts.ToArray();
+
+            for (int i = 0, l = arrayRenderScripts.Length; i < l; i++)
+                arrayRenderScripts[i].BeforeRender();
+
+            arrayRenderScripts = null;
         }
 
         /// <summary>
         /// Renders the current scene.
         /// </summary>
-        internal void Render()
+        public void Render()
         {
             BeforeRender();
             RendererManager.RenderAll();
@@ -377,6 +428,12 @@ namespace AlienEngine.Core.Game
 
         protected virtual void AfterRender()
         {
+            RenderScript[] arrayRenderScripts = _renderScripts.ToArray();
+
+            for (int i = 0, l = arrayRenderScripts.Length; i < l; i++)
+                arrayRenderScripts[i].AfterRender();
+
+            arrayRenderScripts = null;
         }
 
         /// <summary>
@@ -426,9 +483,8 @@ namespace AlienEngine.Core.Game
         /// </summary>
         private void _loadPhysics()
         {
-            if (_parallelLooper != null)
-                _parallelLooper.Dispose();
-            
+            _parallelLooper?.Dispose();
+
             _parallelLooper = new ParallelLooper();
 
             // This section lets the engine know that it can make use of multithreaded systems
@@ -441,8 +497,14 @@ namespace AlienEngine.Core.Game
                 }
             }
 
-            _space = new Space(_parallelLooper);
-            _space.ForceUpdater.Gravity = VectorHelper.Down * 9.81f;
+            _space = new Space(_parallelLooper)
+            {
+                ForceUpdater =
+                {
+                    Gravity = VectorHelper.Down * 9.81f,
+                    TimeStepSettings = {TimeStepDuration = 1.0f / GameSettings.GameFps}
+                }
+            };
         }
 
         /// <summary>

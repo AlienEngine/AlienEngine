@@ -1,9 +1,8 @@
-﻿using System;
-using AlienEngine.Core.Game;
+﻿using AlienEngine.Core.Game;
 
 namespace AlienEngine
 {
-    internal interface IComponent: IDisposable
+    internal interface IComponent: IFrameScript
     {
         #region Component behavior
 
@@ -12,21 +11,6 @@ namespace AlienEngine
         /// Initialize your component with this method.
         /// </summary>
         void Start();
-
-        /// <summary>
-        /// Trigerred just before the frame update.
-        /// </summary>
-        void BeforeUpdate();
-
-        /// <summary>
-        /// Triggered during the frame update.
-        /// </summary>
-        void Update();
-
-        /// <summary>
-        /// Trigerred just after the frame update.
-        /// </summary>
-        void AfterUpdate();
 
         /// <summary>
         /// Trigerred when the <see cref="Game"/> is being stopped.

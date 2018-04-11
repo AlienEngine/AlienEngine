@@ -9,20 +9,11 @@ namespace AlienEngine.Core.Game
         private int _key;
         private List<GameElement> _list;
 
-        public int Length
-        {
-            get { return _list.Count; }
-        }
+        public int Length => _list.Count;
 
-        public GameElement Current
-        {
-            get { return _list[_key]; }
-        }
+        public GameElement Current => _list[_key];
 
-        object IEnumerator.Current
-        {
-            get { return _list[_key]; }
-        }
+        object IEnumerator.Current => _list[_key];
 
         public GameElement this[int index]
         {
@@ -82,6 +73,57 @@ namespace AlienEngine.Core.Game
             _list.Clear();
         }
 
+        public void BeforeUpdate()
+        {
+            GameElement[] arrayGameElements = ToArray();
+
+            for (int i = 0, l = arrayGameElements.Length; i < l; i++)
+                arrayGameElements[i].BeforeUpdate();
+
+            arrayGameElements = null;
+        }
+
+        public void Start()
+        {
+            GameElement[] arrayGameElements = ToArray();
+
+            for (int i = 0, l = arrayGameElements.Length; i < l; i++)
+                arrayGameElements[i].Start();
+
+            arrayGameElements = null;
+        }
+        
+        public void Update()
+        {
+            GameElement[] arrayGameElements = ToArray();
+
+            for (int i = 0, l = arrayGameElements.Length; i < l; i++)
+                arrayGameElements[i].Update();
+
+            arrayGameElements = null;
+        }
+
+        public void AfterUpdate()
+        {
+            GameElement[] arrayGameElements = ToArray();
+
+            for (int i = 0, l = arrayGameElements.Length; i < l; i++)
+                arrayGameElements[i].AfterUpdate();
+
+            arrayGameElements = null;
+        }
+
+
+        public void Stop()
+        {
+            GameElement[] arrayGameElements = ToArray();
+
+            for (int i = 0, l = arrayGameElements.Length; i < l; i++)
+                arrayGameElements[i].Stop();
+
+            arrayGameElements = null;
+        }
+        
         public GameElement[] ToArray()
         {
             return _list.ToArray();

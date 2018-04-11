@@ -43,7 +43,7 @@ namespace AlienEngine
         {
             return _gameElement;
         }
-        
+
         /// <summary>
         /// Disable this <see cref="Component"/>.
         /// </summary>
@@ -184,6 +184,10 @@ namespace AlienEngine
             _started = true;
         }
 
+        public void Load()
+        {
+        }
+
         /// <summary>
         /// Triggered before the <see cref="GameElement"/> of this
         /// <see cref="Component"/> is updated.
@@ -205,6 +209,10 @@ namespace AlienEngine
         /// <see cref="Component"/> is updated.
         /// </summary>
         public virtual void AfterUpdate()
+        {
+        }
+
+        public void Unload()
         {
         }
 
@@ -260,7 +268,8 @@ namespace AlienEngine
         #endregion
 
         protected virtual void Dispose(bool disposing)
-        { }
+        {
+        }
 
         public void Dispose()
         {
