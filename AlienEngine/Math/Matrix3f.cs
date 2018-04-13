@@ -520,8 +520,8 @@ namespace AlienEngine
         /// </summary>
         public Vector3f Backward
         {
-            get { return Row2; }
-            set { Row2 = value; }
+            get { return -Column2; }
+            set { Column2 = -value; }
         }
 
         /// <summary>
@@ -529,8 +529,8 @@ namespace AlienEngine
         /// </summary>
         public Vector3f Down
         {
-            get { return -Row1; }
-            set { Row1 = -value; }
+            get { return -Column1; }
+            set { Column1 = -value; }
         }
 
         /// <summary>
@@ -538,8 +538,8 @@ namespace AlienEngine
         /// </summary>
         public Vector3f Forward
         {
-            get { return -Row2; }
-            set { Row2 = -value; }
+            get { return Column2; }
+            set { Column2 = value; }
         }
 
         /// <summary>
@@ -547,8 +547,8 @@ namespace AlienEngine
         /// </summary>
         public Vector3f Left
         {
-            get { return -Row0; }
-            set { Row0 = -value; }
+            get { return -Column0; }
+            set { Column0 = -value; }
         }
 
         /// <summary>
@@ -556,8 +556,8 @@ namespace AlienEngine
         /// </summary>
         public Vector3f Right
         {
-            get { return Row0; }
-            set { Row0 = value; }
+            get { return Column0; }
+            set { Column0 = value; }
         }
 
         /// <summary>
@@ -565,8 +565,8 @@ namespace AlienEngine
         /// </summary>
         public Vector3f Up
         {
-            get { return Row1; }
-            set { Row1 = value; }
+            get { return Column1; }
+            set { Column1 = value; }
         }
 
         /// <summary>
