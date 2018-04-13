@@ -11,11 +11,11 @@ namespace AlienEngine
         /// Starting position of the ray.
         /// </summary>
         public Vector3f Position;
+
         /// <summary>
         /// Direction in which the ray points.
         /// </summary>
         public Vector3f Direction;
-
 
         /// <summary>
         /// Constructs a new ray.
@@ -24,11 +24,9 @@ namespace AlienEngine
         /// <param name="direction">Direction in which the ray points.</param>
         public Ray(Vector3f position, Vector3f direction)
         {
-            this.Position = position;
-            this.Direction = direction;
+            Position = position;
+            Direction = direction;
         }
-
-
 
         /// <summary>
         /// Determines if and when the ray intersects the bounding box.
@@ -43,8 +41,8 @@ namespace AlienEngine
             {
                 if (Position.X < boundingBox.Min.X || Position.X > boundingBox.Max.X)
                 {
-                    //If the ray isn't pointing along the axis at all, and is outside of the box's interval, then it
-                    //can't be intersecting.
+                    // If the ray isn't pointing along the axis at all, and is outside of the box's interval, then it
+                    // can't be intersecting.
                     t = 0;
                     return false;
                 }
@@ -60,20 +58,22 @@ namespace AlienEngine
                     t1 = t2;
                     t2 = temp;
                 }
-                tmin = Math.Max(tmin, t1);
-                tmax = Math.Min(tmax, t2);
+
+                tmin = MathHelper.Max(tmin, t1);
+                tmax = MathHelper.Min(tmax, t2);
                 if (tmin > tmax)
                 {
                     t = 0;
                     return false;
                 }
             }
+
             if (Math.Abs(Direction.Y) < MathHelper.Epsilon)
             {
                 if (Position.Y < boundingBox.Min.Y || Position.Y > boundingBox.Max.Y)
                 {
-                    //If the ray isn't pointing along the axis at all, and is outside of the box's interval, then it
-                    //can't be intersecting.
+                    // If the ray isn't pointing along the axis at all, and is outside of the box's interval, then it
+                    // can't be intersecting.
                     t = 0;
                     return false;
                 }
@@ -89,20 +89,22 @@ namespace AlienEngine
                     t1 = t2;
                     t2 = temp;
                 }
-                tmin = Math.Max(tmin, t1);
-                tmax = Math.Min(tmax, t2);
+
+                tmin = MathHelper.Max(tmin, t1);
+                tmax = MathHelper.Min(tmax, t2);
                 if (tmin > tmax)
                 {
                     t = 0;
                     return false;
                 }
             }
+
             if (Math.Abs(Direction.Z) < MathHelper.Epsilon)
             {
                 if (Position.Z < boundingBox.Min.Z || Position.Z > boundingBox.Max.Z)
                 {
-                    //If the ray isn't pointing along the axis at all, and is outside of the box's interval, then it
-                    //can't be intersecting.
+                    // If the ray isn't pointing along the axis at all, and is outside of the box's interval, then it
+                    // can't be intersecting.
                     t = 0;
                     return false;
                 }
@@ -118,14 +120,16 @@ namespace AlienEngine
                     t1 = t2;
                     t2 = temp;
                 }
-                tmin = Math.Max(tmin, t1);
-                tmax = Math.Min(tmax, t2);
+
+                tmin = MathHelper.Max(tmin, t1);
+                tmax = MathHelper.Min(tmax, t2);
                 if (tmin > tmax)
                 {
                     t = 0;
                     return false;
                 }
             }
+
             t = tmin;
             return true;
         }
@@ -156,6 +160,7 @@ namespace AlienEngine
                 t = 0;
                 return false;
             }
+
             float distanceAlongNormal;
             Vector3f.Dot(ref Position, ref plane.Normal, out distanceAlongNormal);
             distanceAlongNormal += plane.D;
@@ -183,6 +188,11 @@ namespace AlienEngine
         {
             Vector3f.Multiply(ref Direction, t, out v);
             Vector3f.Add(ref v, ref Position, out v);
+        }
+
+        public override string ToString()
+        {
+            return $"Ray[{Position} {Direction}]";
         }
     }
 }
