@@ -71,8 +71,14 @@ namespace AlienEngine.Core.Game
         /// </summary>
         private ParallelLooper _parallelLooper;
 
+        /// <summary>
+        /// The list of <see cref="FrameScript"/> registered in this scene.
+        /// </summary>
         private List<FrameScript> _frameScripts;
 
+        /// <summary>
+        /// The list of <see cref="RenderScript"/> registered in this scene.
+        /// </summary>
         private List<RenderScript> _renderScripts;
 
         /// <summary>
@@ -128,9 +134,25 @@ namespace AlienEngine.Core.Game
         /// </summary>
         public GameElement PrimaryCamera => _primaryCamera;
 
+        /// <summary>
+        /// The list of <see cref="FrameScript"/> registered in this <see cref="Scene"/>.
+        /// </summary>
         public List<FrameScript> FrameScripts => _frameScripts;
 
+        /// <summary>
+        /// The list of <see cref="RenderScript"/> registered in this <see cref="Scene"/>.
+        /// </summary>
         public List<RenderScript> RenderScripts => _renderScripts;
+
+        /// <summary>
+        /// Event triggered when a <see cref="GameElement"/> is added in this <see cref="Scene"/>.
+        /// </summary>
+        public event Action<GameElement> GameElementAdded;
+
+        /// <summary>
+        /// Event triggered when a <see cref="GameElement"/> is removed in this <see cref="Scene"/>.
+        /// </summary>
+        public event Action<GameElement> GameElementRemoved;
 
         /// <summary>
         /// Creates a new scene.
@@ -260,24 +282,40 @@ namespace AlienEngine.Core.Game
                 _audioListener = l;
         }
 
+        /// <summary>
+        /// Adds a <see cref="FrameScript"/> in this <see cref="Scene"/>.
+        /// </summary>
+        /// <param name="script">The framescript to add.</param>
         public void AddFrameScript(FrameScript script)
         {
             _frameScripts.Add(script);
             script.SetParentScene(this);
         }
 
+        /// <summary>
+        /// Removes a <see cref="FrameScript"/> from this <see cref="Scene"/>.
+        /// </summary>
+        /// <param name="script">The framescript to remove.</param>
         public void RemoveFrameScript(FrameScript script)
         {
             _frameScripts.Remove(script);
             script.SetParentScene(null);
         }
 
+        /// <summary>
+        /// Adds a <see cref="RenderScript"/> in this <see cref="Scene"/>.
+        /// </summary>
+        /// <param name="script">The renderscript to add.</param>
         public void AddRenderScript(RenderScript script)
         {
             _renderScripts.Add(script);
             script.SetParentScene(this);
         }
 
+        /// <summary>
+        /// Removes a <see cref="RenderScript"/> from this <see cref="Scene"/>.
+        /// </summary>
+        /// <param name="script">The renderscript to remove.</param>
         public void RemoveRenderScript(RenderScript script)
         {
             _renderScripts.Remove(script);
@@ -385,6 +423,9 @@ namespace AlienEngine.Core.Game
             _gameElements.AfterUpdate();
         }
 
+        /// <summary>
+        /// Stops the  <see cref="Scene"/>.
+        /// </summary>
         public virtual void Stop()
         {
             _gameElements.Stop();
@@ -396,6 +437,7 @@ namespace AlienEngine.Core.Game
         /// </summary>
         protected virtual void OnAddGameElement(GameElement gameElement)
         {
+            GameElementAdded?.Invoke(gameElement);
         }
 
         /// <summary>
@@ -404,8 +446,12 @@ namespace AlienEngine.Core.Game
         /// </summary>
         protected virtual void OnRemoveGameElement(GameElement gameElement)
         {
+            GameElementRemoved?.Invoke(gameElement);
         }
 
+        /// <summary>
+        /// Executes actions before the render process.
+        /// </summary>
         protected virtual void BeforeRender()
         {
             RenderScript[] arrayRenderScripts = _renderScripts.ToArray();
@@ -426,6 +472,9 @@ namespace AlienEngine.Core.Game
             AfterRender();
         }
 
+        /// <summary>
+        /// Executes actions after the render process.
+        /// </summary>
         protected virtual void AfterRender()
         {
             RenderScript[] arrayRenderScripts = _renderScripts.ToArray();
