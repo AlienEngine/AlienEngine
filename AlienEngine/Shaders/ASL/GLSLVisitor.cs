@@ -58,7 +58,7 @@ namespace AlienEngine.Shaders.ASL
                         if (v.Type.Kind == TypeKind.Array && v.HasCustomAttributes())
                         {
                             var attr = v.Attributes.First(a => a.AttributeType.Is<ArraySizeAttribute>());
-                            vArraySize = attr.Constructor.Parameters.First().ConstantValue.ToString();
+                            vArraySize = attr.PositionalArguments[0].ConstantValue.ToString();
                         }
 
                         return $"{current}{ToGLSLParamType(v)}{(v.Type.IsArray() ? $"[{vArraySize}]" : string.Empty)} {v.Name}, ";
@@ -69,7 +69,7 @@ namespace AlienEngine.Shaders.ASL
                     if (l.Type.IsArray() && l.HasCustomAttributes())
                     {
                         var attr = l.Attributes.First(a => a.AttributeType.Is<ArraySizeAttribute>());
-                        lArraySize = attr.Constructor.Parameters.First().ConstantValue.ToString();
+                        lArraySize = attr.PositionalArguments[0].ConstantValue.ToString();
                     }
 
                     sig += $"{ToGLSLParamType(l)}{(l.Type.IsArray() ? $"[{lArraySize}]" : string.Empty)} {l.Name}";
