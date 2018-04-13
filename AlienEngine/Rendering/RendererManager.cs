@@ -461,12 +461,11 @@ namespace AlienEngine.Core.Rendering
 
             switch (camera.ClearScreenType)
             {
-                case Camera.ClearScreenTypes.Color:
+                case ClearScreenTypes.Color:
                     GL.ClearColor(camera.ClearColor);
                     break;
-                case Camera.ClearScreenTypes.Cubemap:
-                    if (camera.Cubemap != null)
-                        camera.Cubemap.Render();
+                case ClearScreenTypes.Cubemap:
+                    camera.Cubemap?.Render();
                     break;
             }
 
