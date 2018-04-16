@@ -17,7 +17,7 @@ namespace AlienEngine
         /// <summary>
         /// Represent the number of ticks in one second.
         /// </summary>
-        public const int SECOND = 1000;
+        public const double SECOND = 1000;
 
         /// <summary>
         /// The delta time between two frames.
