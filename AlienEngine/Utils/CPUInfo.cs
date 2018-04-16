@@ -45,7 +45,7 @@ namespace AlienEngine.Core.Utils
         public static byte CPUExtendedModel = 0;
         public static byte CPUStepping = 0;
 
-        public static uint CPUSpeed = 0;                // in Mhz.
+        public static uint CPUSpeed = 0; // in Mhz.
 
         public enum VendorCompanies : byte
         {
@@ -103,158 +103,171 @@ namespace AlienEngine.Core.Utils
         // Returned in CPUID(1).EDX
         private enum StandardFlags1_EDX : uint
         {
-            FPU = Bits.Bit00,			        // Bit 00 = Floating point on chip
-            VME = Bits.Bit01,			        // Bit 01 = Virtual Mode Extension
-            DE = Bits.Bit02,		                // Bit 02 = Debugging Extension
-            PSE = Bits.Bit03,			        // Bit 03 = Page Size Extension
-            TSC = Bits.Bit04,			        // Bit 04 = Time Stamp Counter
-            MSR = Bits.Bit05,			        // Bit 05 = Model Specific Registers
-            PAE = Bits.Bit06,			        // Bit 06 = Physical Address Extension
-            MCE = Bits.Bit07,			        // Bit 07 = Machine Check Exception
-            CX8 = Bits.Bit08,			        // Bit 08 = CMPXCHG8 Instruction Support
-            APIC = Bits.Bit09,		            // Bit 09 = APIC Support
+            FPU = Bits.Bit00, // Bit 00 = Floating point on chip
+            VME = Bits.Bit01, // Bit 01 = Virtual Mode Extension
+            DE = Bits.Bit02, // Bit 02 = Debugging Extension
+            PSE = Bits.Bit03, // Bit 03 = Page Size Extension
+            TSC = Bits.Bit04, // Bit 04 = Time Stamp Counter
+            MSR = Bits.Bit05, // Bit 05 = Model Specific Registers
+            PAE = Bits.Bit06, // Bit 06 = Physical Address Extension
+            MCE = Bits.Bit07, // Bit 07 = Machine Check Exception
+            CX8 = Bits.Bit08, // Bit 08 = CMPXCHG8 Instruction Support
+            APIC = Bits.Bit09, // Bit 09 = APIC Support
+
             // Bit 10 = Reserved
-            FSC = Bits.Bit11,			        // Bit 11 = Fast System Call
-            MTRR = Bits.Bit12,		            // Bit 12 = Memory Type Range Registers
-            PGE = Bits.Bit13,			        // Bit 13 = Page Global Enable
-            MCA = Bits.Bit14,			        // Bit 14 = Machine Check Architecture
-            CMOV = Bits.Bit15,		            // Bit 15 = Conditional Move Instruction Support
-            PAT = Bits.Bit16,			        // Bit 16 = Page Attribute Table
-            PSE36 = Bits.Bit17,		            // Bit 17 = 36bit Page Size Extension
-            SERIAL = Bits.Bit18,		            // Bit 18 = Processor Serial Number
-            CLFSH = Bits.Bit19,                  // Bit 19 = CLFLUSH Instruction Support
+            FSC = Bits.Bit11, // Bit 11 = Fast System Call
+            MTRR = Bits.Bit12, // Bit 12 = Memory Type Range Registers
+            PGE = Bits.Bit13, // Bit 13 = Page Global Enable
+            MCA = Bits.Bit14, // Bit 14 = Machine Check Architecture
+            CMOV = Bits.Bit15, // Bit 15 = Conditional Move Instruction Support
+            PAT = Bits.Bit16, // Bit 16 = Page Attribute Table
+            PSE36 = Bits.Bit17, // Bit 17 = 36bit Page Size Extension
+            SERIAL = Bits.Bit18, // Bit 18 = Processor Serial Number
+            CLFSH = Bits.Bit19, // Bit 19 = CLFLUSH Instruction Support
+
             // Bit 20 = Reserved
-            DS = Bits.Bit21,			            // Bit 21 = Debug Store
-            ACPI = Bits.Bit22,		            // Bit 22 = CPU Thermal and Speed Control
-            MMX = Bits.Bit23,			        // Bit 23 = MMX Support
-            FXSR = Bits.Bit24,		            // Bit 24 = Fast Floating Point Save and Restore
-            SSE = Bits.Bit25,			        // Bit 25 = Streaming SIMD Support
-            SSE2 = Bits.Bit26,		            // Bit 26 = Streaming SIMD 2 Support
-            SS = Bits.Bit27,			            // Bit 27 = Self-Snoop
-            HTT = Bits.Bit28,			        // Bit 28 = Hyper-Threading Technology
-            TM = Bits.Bit29,			            // Bit 29 = Thermal Monitor
-            IA64 = Bits.Bit30,                   // Bit 30 = IA64 Processor Emulating x86
-            SBF = Bits.Bit31		                // Bit 31 = Signal Break on FERR
+            DS = Bits.Bit21, // Bit 21 = Debug Store
+            ACPI = Bits.Bit22, // Bit 22 = CPU Thermal and Speed Control
+            MMX = Bits.Bit23, // Bit 23 = MMX Support
+            FXSR = Bits.Bit24, // Bit 24 = Fast Floating Point Save and Restore
+            SSE = Bits.Bit25, // Bit 25 = Streaming SIMD Support
+            SSE2 = Bits.Bit26, // Bit 26 = Streaming SIMD 2 Support
+            SS = Bits.Bit27, // Bit 27 = Self-Snoop
+            HTT = Bits.Bit28, // Bit 28 = Hyper-Threading Technology
+            TM = Bits.Bit29, // Bit 29 = Thermal Monitor
+            IA64 = Bits.Bit30, // Bit 30 = IA64 Processor Emulating x86
+            SBF = Bits.Bit31 // Bit 31 = Signal Break on FERR
         }
 
         // Returned by CPUID(1).ECX
         private enum StandardFlags1_ECX : uint
         {
-            SSE3 = Bits.Bit00,                   // Bit 00 = SSE3
-            PCLMULQDQ = Bits.Bit01,              // Bit 01 = PCLMULQDQ Support
-            DS64 = Bits.Bit02,                   // Bit 02 = Debug Store 64bit
-            MONITOR = Bits.Bit03,                // Bit 03 = MONITOR and MWAIT instructions
-            DSCPL = Bits.Bit04,                  // Bit 04 = Debug Store CPL Qualified
-            VMX = Bits.Bit05,                    // Bit 05 = Virtual Machine eXtensions
-            SMX = Bits.Bit06,                    // Bit 06 = Safer Mode Extensions
-            ESS = Bits.Bit07,                    // Bit 07 = Enhanced SpeedStep
-            TM2 = Bits.Bit08,                    // Bit 08 = Thermal Monitor 2
-            SSSE3 = Bits.Bit09,                  // Bit 09 = Supplemental SSE3
-            CNXTID = Bits.Bit10,                 // Bit 10 = L1 Context ID
+            SSE3 = Bits.Bit00, // Bit 00 = SSE3
+            PCLMULQDQ = Bits.Bit01, // Bit 01 = PCLMULQDQ Support
+            DS64 = Bits.Bit02, // Bit 02 = Debug Store 64bit
+            MONITOR = Bits.Bit03, // Bit 03 = MONITOR and MWAIT instructions
+            DSCPL = Bits.Bit04, // Bit 04 = Debug Store CPL Qualified
+            VMX = Bits.Bit05, // Bit 05 = Virtual Machine eXtensions
+            SMX = Bits.Bit06, // Bit 06 = Safer Mode Extensions
+            ESS = Bits.Bit07, // Bit 07 = Enhanced SpeedStep
+            TM2 = Bits.Bit08, // Bit 08 = Thermal Monitor 2
+            SSSE3 = Bits.Bit09, // Bit 09 = Supplemental SSE3
+            CNXTID = Bits.Bit10, // Bit 10 = L1 Context ID
+
             // Bit 11 = Reserved
-            FMA = Bits.Bit12,                    // Bit 12 = Fused Multiply Add
-            CX16 = Bits.Bit13,                   // Bit 13 = CMPXCHG16B
-            XTPR = Bits.Bit14,                   // Bit 14 = XTPR Update Control
-            PDCM = Bits.Bit15,                   // Bit 15 = Perfmon and Debug Capability
+            FMA = Bits.Bit12, // Bit 12 = Fused Multiply Add
+            CX16 = Bits.Bit13, // Bit 13 = CMPXCHG16B
+            XTPR = Bits.Bit14, // Bit 14 = XTPR Update Control
+            PDCM = Bits.Bit15, // Bit 15 = Perfmon and Debug Capability
+
             // Bit 16 = Reserved
-            PCID = Bits.Bit17,                   // Bit 17 = Process Context Identifiers
-            DCA = Bits.Bit18,                    // Bit 18 = Direct Cache Access
-            SSE4_1 = Bits.Bit19,                 // Bit 19 = SSE4.1
-            SSE4_2 = Bits.Bit20,                 // Bit 20 = SSE4.2
-            X2APIC = Bits.Bit21,                 // Bit 21 = Extended xAPIC Support
-            MOVBE = Bits.Bit22,                  // Bit 22 = MOVBE Instruction
-            POPCNT = Bits.Bit23,                 // Bit 23 = POPCNT Instruction
-            TSCDEADLINE = Bits.Bit24,            // Bit 24 = Time Stamp Counter Deadline
-            AES = Bits.Bit25,                    // Bit 25 = AES Instruction Extensions
-            XSAVE = Bits.Bit26,                  // Bit 26 = XSAVE/XSTOR States
-            OSXSAVE = Bits.Bit27,                // Bit 27 = OS-Enabled Extended State Management
-            AVX = Bits.Bit28,                    // Bit 28 = Advanced Vector Extensions
-            F16C = Bits.Bit29,                   // Bit 29 = Half-Precision Convert
-            RDRAND = Bits.Bit30,					// Bit 30 = Read Random Number
-            HV = Bits.Bit31						// Bit 31 = HyperVisor Present (and intercepting this bit, to advertise its presence)
+            PCID = Bits.Bit17, // Bit 17 = Process Context Identifiers
+            DCA = Bits.Bit18, // Bit 18 = Direct Cache Access
+            SSE4_1 = Bits.Bit19, // Bit 19 = SSE4.1
+            SSE4_2 = Bits.Bit20, // Bit 20 = SSE4.2
+            X2APIC = Bits.Bit21, // Bit 21 = Extended xAPIC Support
+            MOVBE = Bits.Bit22, // Bit 22 = MOVBE Instruction
+            POPCNT = Bits.Bit23, // Bit 23 = POPCNT Instruction
+            TSCDEADLINE = Bits.Bit24, // Bit 24 = Time Stamp Counter Deadline
+            AES = Bits.Bit25, // Bit 25 = AES Instruction Extensions
+            XSAVE = Bits.Bit26, // Bit 26 = XSAVE/XSTOR States
+            OSXSAVE = Bits.Bit27, // Bit 27 = OS-Enabled Extended State Management
+            AVX = Bits.Bit28, // Bit 28 = Advanced Vector Extensions
+            F16C = Bits.Bit29, // Bit 29 = Half-Precision Convert
+            RDRAND = Bits.Bit30, // Bit 30 = Read Random Number
+            HV = Bits.Bit31 // Bit 31 = HyperVisor Present (and intercepting this bit, to advertise its presence)
         }
 
         // Returned by CPUID(7).EBX; Information taken from http://sandpile.org/x86/cpuid.htm
         private enum StandardFlags7_EBX : uint
         {
-            FSGSBASE = Bits.Bit00,               // Bit 00 = CR4.FSGSBASE and [RD|WR][FS|GS]BASE
-            TSC_ADJUST = Bits.Bit01,             // Bit 01 = TSC_ADJUST
-            SGX = Bits.Bit02,                // Bit 02 = CR4.SEE, PRMRR, ENCLS and ENCLU, standard level 0000_0012h
-            BMI1 = Bits.Bit03,               // Bit 03 = BMI1 and TZCNT
-            HLE = Bits.Bit04,                // Bit 04 = XAQUIRE:, XRELEASE:, XTEST
-            AVX2 = Bits.Bit05,               // Bit 05 = AVX2 (including VSIB)
-            FPDP = Bits.Bit06,               // Bit 06 = FP_DP for non-control instructions only if unmasked exception(s)
-            SMEP = Bits.Bit07,               // Bit 07 = CR4.SMEP
-            BMI2 = Bits.Bit08,               // Bit 08 = BMI2
-            ERMS = Bits.Bit09,               // Bit 09 = enhanced REP MOVSB/STOSB (while MISC_ENABLE.FSE=1)
-            INVPCID = Bits.Bit10,                // Bit 10 = INVPCID
-            RTM = Bits.Bit11,                // Bit 11 = XBEGIN, XABORT, XEND, XTEST, DR7.RTM, DR6.RTM
-            PQM = Bits.Bit12,                // Bit 12 = platform quality of service monitoring
-            FPCSDS = Bits.Bit13,             // Bit 13 = FP_CS and FP_DS always saved as 0000h
-            MPX = Bits.Bit14,                // Bit 14 = XCR0.Breg, XCR0.BNDCSR, BNDCFGS/BNDCFGU/BNDSTATUS and BND0...BND3, BND:, MPX
-            PQE = Bits.Bit15,                // Bit 15 = platform quality of service enforcement
-            AVX512F = Bits.Bit16,                // Bit 16 = AVX512F, EVEX, ZMM0...31, K0...7, modifiers, VSIB512, disp8*N
-            AVX512DQ = Bits.Bit17,               // Bit 17 = AVX512DQ
-            RDSEED = Bits.Bit18,             // Bit 18 = RDSEED
-            ADX = Bits.Bit19,                // Bit 19 = ADCX and ADOX
-            SMAP = Bits.Bit20,               // Bit 20 = CR4.SMAP, CLAC and STAC
-            AVX512IFMA = Bits.Bit21,             // Bit 21 = AVX512IFMA
-            PCOMMIT = Bits.Bit22,                // Bit 22 = PCOMMIT
-            CLFLUSHOPT = Bits.Bit23,             // Bit 23 = CLFLUSHOPT
-            CLWB = Bits.Bit24,               // Bit 24 = CLWB
-            PT = Bits.Bit25,             // Bit 25 = processor trace, standard level 0000_0014h
-            AVX512PF = Bits.Bit26,               // Bit 26 = AVX512PF
-            AVX512ER = Bits.Bit27,               // Bit 27 = AVX512ER
-            AVX512CD = Bits.Bit28,               // Bit 28 = AVX512CD
-            SHA = Bits.Bit29,                // Bit 29 = SHA
-            AVX512BW = Bits.Bit30,               // Bit 30 = AVX512BW
-            AVX512VL = Bits.Bit31                // Bit 31 = AVX512VL
+            FSGSBASE = Bits.Bit00, // Bit 00 = CR4.FSGSBASE and [RD|WR][FS|GS]BASE
+            TSC_ADJUST = Bits.Bit01, // Bit 01 = TSC_ADJUST
+            SGX = Bits.Bit02, // Bit 02 = CR4.SEE, PRMRR, ENCLS and ENCLU, standard level 0000_0012h
+            BMI1 = Bits.Bit03, // Bit 03 = BMI1 and TZCNT
+            HLE = Bits.Bit04, // Bit 04 = XAQUIRE:, XRELEASE:, XTEST
+            AVX2 = Bits.Bit05, // Bit 05 = AVX2 (including VSIB)
+            FPDP = Bits.Bit06, // Bit 06 = FP_DP for non-control instructions only if unmasked exception(s)
+            SMEP = Bits.Bit07, // Bit 07 = CR4.SMEP
+            BMI2 = Bits.Bit08, // Bit 08 = BMI2
+            ERMS = Bits.Bit09, // Bit 09 = enhanced REP MOVSB/STOSB (while MISC_ENABLE.FSE=1)
+            INVPCID = Bits.Bit10, // Bit 10 = INVPCID
+            RTM = Bits.Bit11, // Bit 11 = XBEGIN, XABORT, XEND, XTEST, DR7.RTM, DR6.RTM
+            PQM = Bits.Bit12, // Bit 12 = platform quality of service monitoring
+            FPCSDS = Bits.Bit13, // Bit 13 = FP_CS and FP_DS always saved as 0000h
+            MPX = Bits.Bit14, // Bit 14 = XCR0.Breg, XCR0.BNDCSR, BNDCFGS/BNDCFGU/BNDSTATUS and BND0...BND3, BND:, MPX
+            PQE = Bits.Bit15, // Bit 15 = platform quality of service enforcement
+            AVX512F = Bits.Bit16, // Bit 16 = AVX512F, EVEX, ZMM0...31, K0...7, modifiers, VSIB512, disp8*N
+            AVX512DQ = Bits.Bit17, // Bit 17 = AVX512DQ
+            RDSEED = Bits.Bit18, // Bit 18 = RDSEED
+            ADX = Bits.Bit19, // Bit 19 = ADCX and ADOX
+            SMAP = Bits.Bit20, // Bit 20 = CR4.SMAP, CLAC and STAC
+            AVX512IFMA = Bits.Bit21, // Bit 21 = AVX512IFMA
+            PCOMMIT = Bits.Bit22, // Bit 22 = PCOMMIT
+            CLFLUSHOPT = Bits.Bit23, // Bit 23 = CLFLUSHOPT
+            CLWB = Bits.Bit24, // Bit 24 = CLWB
+            PT = Bits.Bit25, // Bit 25 = processor trace, standard level 0000_0014h
+            AVX512PF = Bits.Bit26, // Bit 26 = AVX512PF
+            AVX512ER = Bits.Bit27, // Bit 27 = AVX512ER
+            AVX512CD = Bits.Bit28, // Bit 28 = AVX512CD
+            SHA = Bits.Bit29, // Bit 29 = SHA
+            AVX512BW = Bits.Bit30, // Bit 30 = AVX512BW
+            AVX512VL = Bits.Bit31 // Bit 31 = AVX512VL
         }
 
         // Returned by CPUID(7).ECX
         private enum StandardFlags7_ECX : uint
         {
-            PREFETCHWT1 = Bits.Bit00,            // Bit 00 = PREFETCHWT1
-            AVX512VBMI = Bits.Bit01,         // Bit 01 = AVX512VBMI
-            UMIP = Bits.Bit02,           // Bit 02 = CR4.UMIP for #GP on SGDT, SIDT, SLDT, STR, and SMSW if CPL>0
-            PKU = Bits.Bit03,            // Bit 03 = XCR0.PKRU, CR4.PKE, PKRU, RDPKRU/WRPKRU, PxE.PK, #PF.PK
-            OSPKE = Bits.Bit04,          // Bit 04 = non-privileged read-only copy of current CR4.PKE value
-                                                // Bits 05-06 = Reserved			
-            CET = Bits.Bit07,            // Bit 07 = CR4.CET, XSS.CET_{U,S}, {U,S}_CET MSRs, PL{0,1,2,3}_SSP MSRs, 
-                                                // IST_SSP MSR and 8-entry interrupt SSP table, #CP, SSP, TSS32.SSP,INCSSP,
-                                                // RDSSP, SAVESSP, RSTORSSP, SETSSBSY, CLRSSBSY, WRSS, WRUSS, ENDBR32, ENDBR64, CALL/JMP Rv + no track (3Eh)
-                                                // Bits 08-13 = Reserved
-            AVX512VPDQ = Bits.Bit14,         // Bit 14 = VPOPCNT{D,Q}
-                                                    // Bit 15 = Reserved
-            VA57 = Bits.Bit16,           // Bit 16 = 5-level paging, CR4.VA57
-                                                // Bits 17-21 = Reserved
-            RDPID = Bits.Bit22,          // Bit 22 = RDPID, TSC_AUX
-                                                // Bits 23-29 = Reserved
-            SGX_LC = Bits.Bit30              // Bit 30 = SGX launch configuration
-                                                    // Bit 31 = Reserved
+            PREFETCHWT1 = Bits.Bit00, // Bit 00 = PREFETCHWT1
+            AVX512VBMI = Bits.Bit01, // Bit 01 = AVX512VBMI
+            UMIP = Bits.Bit02, // Bit 02 = CR4.UMIP for #GP on SGDT, SIDT, SLDT, STR, and SMSW if CPL>0
+            PKU = Bits.Bit03, // Bit 03 = XCR0.PKRU, CR4.PKE, PKRU, RDPKRU/WRPKRU, PxE.PK, #PF.PK
+            OSPKE = Bits.Bit04, // Bit 04 = non-privileged read-only copy of current CR4.PKE value
+
+            // Bits 05-06 = Reserved			
+            CET = Bits.Bit07, // Bit 07 = CR4.CET, XSS.CET_{U,S}, {U,S}_CET MSRs, PL{0,1,2,3}_SSP MSRs, 
+
+            // IST_SSP MSR and 8-entry interrupt SSP table, #CP, SSP, TSS32.SSP,INCSSP,
+            // RDSSP, SAVESSP, RSTORSSP, SETSSBSY, CLRSSBSY, WRSS, WRUSS, ENDBR32, ENDBR64, CALL/JMP Rv + no track (3Eh)
+            // Bits 08-13 = Reserved
+            AVX512VPDQ = Bits.Bit14, // Bit 14 = VPOPCNT{D,Q}
+
+            // Bit 15 = Reserved
+            VA57 = Bits.Bit16, // Bit 16 = 5-level paging, CR4.VA57
+
+            // Bits 17-21 = Reserved
+            RDPID = Bits.Bit22, // Bit 22 = RDPID, TSC_AUX
+
+            // Bits 23-29 = Reserved
+            SGX_LC = Bits.Bit30 // Bit 30 = SGX launch configuration
+            // Bit 31 = Reserved
         }
 
         // Returned by CPUID(7).EDX
         private enum StandardFlags7_EDX : uint
         {
             // Bits 00-01 = Reserved
-            AVX512QVNNIW = Bits.Bit02,           // Bit 02 = VP4DPWSSD[S]
-            AVX512QFMA = Bits.Bit03          // Bit 03 = V4F[N]MADD{PS,SS}
-                                                    // Bits 04-31 = Reserved
+            AVX512QVNNIW = Bits.Bit02, // Bit 02 = VP4DPWSSD[S]
+
+            AVX512QFMA = Bits.Bit03 // Bit 03 = V4F[N]MADD{PS,SS}
+            // Bits 04-31 = Reserved
         }
 
         // Returned in CPUID(0x80000001).EDX (Intel)
         private enum IntelExtendedFlags1_EDX : uint
         {
             // Bits 00-10 = Reserved
-            SYSCALLSYSRET = Bits.Bit11,          // Bit 11 = The processor supports the SYSCALL and SYSRET instructions
+            SYSCALLSYSRET = Bits.Bit11, // Bit 11 = The processor supports the SYSCALL and SYSRET instructions
+
             // Bits 12-19 = Reserved
-            NX = Bits.Bit20,                     // Bit 20 = Execution Disable Bit
+            NX = Bits.Bit20, // Bit 20 = Execution Disable Bit
+
             // Bits 21-25 = Reserved
-            PAGE1GB = Bits.Bit26,                // Bit 26 = The processor supports 1-GB pages
-            RDTSCP = Bits.Bit27,                 // Bit 27 = The processor supports RDTSCP and IA32_TSC_AUX
+            PAGE1GB = Bits.Bit26, // Bit 26 = The processor supports 1-GB pages
+            RDTSCP = Bits.Bit27, // Bit 27 = The processor supports RDTSCP and IA32_TSC_AUX
+
             // Bit 28 = Reserved
-            INTEL64 = Bits.Bit29,                // Bit 29 = The processor supports Intel® 64 Architecture extensions to the IA-32 Architecture
+            INTEL64 = Bits.Bit29, // Bit 29 = The processor supports Intel® 64 Architecture extensions to the IA-32 Architecture
             // Bit 30 = Reserved
             // Bit 31 = Reserved
         }
@@ -262,7 +275,7 @@ namespace AlienEngine.Core.Utils
         // Returned in CPUID(0x80000001).ECX (Intel)
         private enum IntelExtendedFlags1_ECX : uint
         {
-            LAHFSAHF = Bits.Bit00,               // Bit 00 = LAHF and SAHF instruction support
+            LAHFSAHF = Bits.Bit00, // Bit 00 = LAHF and SAHF instruction support
             // Bits 01-31 = Reserved
         }
 
@@ -280,7 +293,8 @@ namespace AlienEngine.Core.Utils
             // Bit 08 = CMPXCHG8B, same as CPUID(1).EDX
             // Bit 09 = APIC, same as CPUID(1).EDX
             // Bit 10 = Reserved
-            SYSCALLSYSRET = Bits.Bit11,          // Bit 11 = SYSCALL and SYSRET instructions
+            SYSCALLSYSRET = Bits.Bit11, // Bit 11 = SYSCALL and SYSRET instructions
+
             // Bit 12 = MTRR, same as CPUID(1).EDX
             // Bit 13 = PGE, same as CPUID(1).EDX
             // Bit 14 = MCA, same as CPUID(1).EDX
@@ -289,52 +303,60 @@ namespace AlienEngine.Core.Utils
             // Bit 17 = PSE36, same as CPUID(1).EDX
             // Bit 18 = Reserved
             // Bit 19 = Reserved
-            NX = Bits.Bit20,                     // Bit 20 = No Execute page protection
+            NX = Bits.Bit20, // Bit 20 = No Execute page protection
+
             // Bit 21 = Reserved
-            MMXEXT = Bits.Bit22,                 // Bit 22 = AMD MMX Extensions
+            MMXEXT = Bits.Bit22, // Bit 22 = AMD MMX Extensions
+
             // Bit 23 = MMX, same as CPUID(1).EDX
             // Bit 24 = FXSR, same as CPUID(1).EDX
-            FFXSR = Bits.Bit25,                  // Bit 25 = Fast FXSR
-            PAGE1GB = Bits.Bit26,                // Bit 26 = 1 GB large page support
-            RDTSCP = Bits.Bit27,                 // Bit 27 = RDTSCP instruction support
+            FFXSR = Bits.Bit25, // Bit 25 = Fast FXSR
+            PAGE1GB = Bits.Bit26, // Bit 26 = 1 GB large page support
+            RDTSCP = Bits.Bit27, // Bit 27 = RDTSCP instruction support
+
             // Bit 28 = Reserved
-            LM = Bits.Bit29,                     // Bit 29 = Long Mode
-            THREEDNOWEXT = Bits.Bit30,           // Bit 30 = 3DNOW! Extension Instructions
-            THREEDNOW = Bits.Bit31               // Bit 31 = 3DNOW! Instructions
+            LM = Bits.Bit29, // Bit 29 = Long Mode
+            THREEDNOWEXT = Bits.Bit30, // Bit 30 = 3DNOW! Extension Instructions
+            THREEDNOW = Bits.Bit31 // Bit 31 = 3DNOW! Instructions
         }
 
         // Returned in CPUID(0x80000001).ECX (AMD)
         private enum AMDExtendedFlags1_ECX : uint
         {
-            LAHFSAHF = Bits.Bit00,               // Bit 00 = LAHF and SAHF instruction support in 64-bit mode
-            CMPLEGACY = Bits.Bit01,              // Bit 01 = Core multi-processing legacy mode
-            SVM = Bits.Bit02,                    // Bit 02 = Secure Virtual Machine
-            EXTAPICSPACE = Bits.Bit03,           // Bit 03 = extended APIC space
-            ALTMOVCR8 = Bits.Bit04,              // Bit 04 = LOCK MOV CR0 means MOV CR8
-            ABM = Bits.Bit05,                    // Bit 05 = advanced bit manipulation. LZCNT instruction support
-            SSE4A = Bits.Bit06,                  // Bit 06 = EXTRQ, INSERTQ, MOVNTSS, and MOVNTSD instruction support
-            MISALIGNSSE = Bits.Bit07,            // Bit 07 = misaligned SSE mode
-            THREEDNOWPREFETCH = Bits.Bit08,      // Bit 08 = 3DNowPrefetch
-            OSVW = Bits.Bit09,                   // Bit 09 = OS visible workaround
-            IBS = Bits.Bit10,                    // Bit 10 = instruction based sampling
-            XOP = Bits.Bit11,                    // Bit 11 = extended operation support
-            SKINIT = Bits.Bit12,                 // Bit 12 = SKINIT and STGI are supported
-            WDT = Bits.Bit13,                    // Bit 13 = watchdog timer support
+            LAHFSAHF = Bits.Bit00, // Bit 00 = LAHF and SAHF instruction support in 64-bit mode
+            CMPLEGACY = Bits.Bit01, // Bit 01 = Core multi-processing legacy mode
+            SVM = Bits.Bit02, // Bit 02 = Secure Virtual Machine
+            EXTAPICSPACE = Bits.Bit03, // Bit 03 = extended APIC space
+            ALTMOVCR8 = Bits.Bit04, // Bit 04 = LOCK MOV CR0 means MOV CR8
+            ABM = Bits.Bit05, // Bit 05 = advanced bit manipulation. LZCNT instruction support
+            SSE4A = Bits.Bit06, // Bit 06 = EXTRQ, INSERTQ, MOVNTSS, and MOVNTSD instruction support
+            MISALIGNSSE = Bits.Bit07, // Bit 07 = misaligned SSE mode
+            THREEDNOWPREFETCH = Bits.Bit08, // Bit 08 = 3DNowPrefetch
+            OSVW = Bits.Bit09, // Bit 09 = OS visible workaround
+            IBS = Bits.Bit10, // Bit 10 = instruction based sampling
+            XOP = Bits.Bit11, // Bit 11 = extended operation support
+            SKINIT = Bits.Bit12, // Bit 12 = SKINIT and STGI are supported
+            WDT = Bits.Bit13, // Bit 13 = watchdog timer support
+
             // Bit 14 = Reserved
-            LWP = Bits.Bit15,                    // Bit 15 = lightweight profiling support
-            FMA4 = Bits.Bit16,                   // Bit 16 = 4-operand FMA instruction support
-            TCE = Bits.Bit17,					// Bit 17 = translation cache extension***
+            LWP = Bits.Bit15, // Bit 15 = lightweight profiling support
+            FMA4 = Bits.Bit16, // Bit 16 = 4-operand FMA instruction support
+            TCE = Bits.Bit17, // Bit 17 = translation cache extension***
+
             // Bit 18 = Reserved
-            NODEID = Bits.Bit19,                 // Bit 19 = Indicates support for MSRC001_100C[NodeId, NodesPerProcessor]
+            NODEID = Bits.Bit19, // Bit 19 = Indicates support for MSRC001_100C[NodeId, NodesPerProcessor]
+
             // Bit 20 = Reserved
-            TBM = Bits.Bit21,                    // Bit 21 = trailing bit manipulation instruction
-            TOPOLOGYEXT = Bits.Bit22,            // Bit 22 = topology extensions support
-            PERFCTREXTCORE = Bits.Bit23,         // Bit 23 = core performance counter extensions support***
-            PERFCTREXTNB = Bits.Bit24,			// Bit 24 = NB performance counter extensions support***
+            TBM = Bits.Bit21, // Bit 21 = trailing bit manipulation instruction
+            TOPOLOGYEXT = Bits.Bit22, // Bit 22 = topology extensions support
+            PERFCTREXTCORE = Bits.Bit23, // Bit 23 = core performance counter extensions support***
+            PERFCTREXTNB = Bits.Bit24, // Bit 24 = NB performance counter extensions support***
+
             // Bit 25 = Reserved
-            DATABREAKPOINTEXT = Bits.Bit26,		// Bit 26 = data breakpoint support***
-            PERFTSC = Bits.Bit27,				// Bit 27 = performance time-stamp counter supported***
-            PERFCTREXTL2I = Bits.Bit28			// Bit 28 = L2I performance counter extensions support***
+            DATABREAKPOINTEXT = Bits.Bit26, // Bit 26 = data breakpoint support***
+            PERFTSC = Bits.Bit27, // Bit 27 = performance time-stamp counter supported***
+
+            PERFCTREXTL2I = Bits.Bit28 // Bit 28 = L2I performance counter extensions support***
             // Bit 29-31 = Reserved
         }
 
@@ -485,7 +507,7 @@ namespace AlienEngine.Core.Utils
             edx = __reg_edx();
             eax = __reg_eax();
 
-            return ((ulong)edx << 32 | eax);
+            return ((ulong) edx << 32 | eax);
         }
 
         private static uint MaxStandardFunction
@@ -559,7 +581,6 @@ namespace AlienEngine.Core.Utils
                         return VendorCompanies.Vortex;
                     default:
                         return VendorCompanies.Unknown;
-
                 }
             }
         }
@@ -751,12 +772,12 @@ namespace AlienEngine.Core.Utils
             {
                 uint _processorSignature = ProcessorSignature;
 
-                CPUStepping = (byte)((_processorSignature >> 0) & 0x0F);
-                CPUModel = (byte)((_processorSignature >> 4) & 0x0F);
-                CPUFamily = (byte)((_processorSignature >> 8) & 0x0F);
-                CPUType = (byte)((_processorSignature >> 12) & 0x03);
-                CPUExtendedModel = (byte)((_processorSignature >> 16) & 0x0F);
-                CPUExtendedFamily = (byte)((_processorSignature >> 20) & 0xFF);
+                CPUStepping = (byte) ((_processorSignature >> 0) & 0x0F);
+                CPUModel = (byte) ((_processorSignature >> 4) & 0x0F);
+                CPUFamily = (byte) ((_processorSignature >> 8) & 0x0F);
+                CPUType = (byte) ((_processorSignature >> 12) & 0x03);
+                CPUExtendedModel = (byte) ((_processorSignature >> 16) & 0x0F);
+                CPUExtendedFamily = (byte) ((_processorSignature >> 20) & 0xFF);
 
                 RegistryKey RKey = Registry.LocalMachine.OpenSubKey(@"HARDWARE\DESCRIPTION\System\CentralProcessor\0");
                 CPUSpeed = ConvertX.ToUInt(RKey.GetValue("~MHz").ToString(), 0, "", "", 0);
@@ -768,138 +789,137 @@ namespace AlienEngine.Core.Utils
 
                 _edx = StandardCPUID1_EDX;
 
-                FeatureFlags.Add("CPU_FPU", (_edx & (uint)StandardFlags1_EDX.FPU) > 0);
-                FeatureFlags.Add("CPU_VME", (_edx & (uint)StandardFlags1_EDX.VME) > 0);
-                FeatureFlags.Add("CPU_DE", (_edx & (uint)StandardFlags1_EDX.DE) > 0);
-                FeatureFlags.Add("CPU_PSE", (_edx & (uint)StandardFlags1_EDX.PSE) > 0);
-                FeatureFlags.Add("CPU_TSC", (_edx & (uint)StandardFlags1_EDX.TSC) > 0);
-                FeatureFlags.Add("CPU_MSR", (_edx & (uint)StandardFlags1_EDX.MSR) > 0);
-                FeatureFlags.Add("CPU_PAE", (_edx & (uint)StandardFlags1_EDX.PAE) > 0);
-                FeatureFlags.Add("CPU_MCE", (_edx & (uint)StandardFlags1_EDX.MCE) > 0);
-                FeatureFlags.Add("CPU_CX8", (_edx & (uint)StandardFlags1_EDX.CX8) > 0);
-                FeatureFlags.Add("CPU_APIC", (_edx & (uint)StandardFlags1_EDX.APIC) > 0);
-                FeatureFlags.Add("CPU_FSC", (_edx & (uint)StandardFlags1_EDX.FSC) > 0);
-                FeatureFlags.Add("CPU_MTRR", (_edx & (uint)StandardFlags1_EDX.MTRR) > 0);
-                FeatureFlags.Add("CPU_PGE", (_edx & (uint)StandardFlags1_EDX.PGE) > 0);
-                FeatureFlags.Add("CPU_MCA", (_edx & (uint)StandardFlags1_EDX.MCA) > 0);
-                FeatureFlags.Add("CPU_CMOV", (_edx & (uint)StandardFlags1_EDX.CMOV) > 0);
-                FeatureFlags.Add("CPU_PAT", (_edx & (uint)StandardFlags1_EDX.PAT) > 0);
-                FeatureFlags.Add("CPU_PSE36", (_edx & (uint)StandardFlags1_EDX.PSE36) > 0);
-                FeatureFlags.Add("CPU_SERIAL", (_edx & (uint)StandardFlags1_EDX.SERIAL) > 0);
-                FeatureFlags.Add("CPU_CLFSH", (_edx & (uint)StandardFlags1_EDX.CLFSH) > 0);
-                FeatureFlags.Add("CPU_DS", (_edx & (uint)StandardFlags1_EDX.DS) > 0);
-                FeatureFlags.Add("CPU_ACPI", (_edx & (uint)StandardFlags1_EDX.ACPI) > 0);
-                FeatureFlags.Add("CPU_MMX", (_edx & (uint)StandardFlags1_EDX.MMX) > 0);
-                FeatureFlags.Add("CPU_FXSR", (_edx & (uint)StandardFlags1_EDX.FXSR) > 0);
-                FeatureFlags.Add("CPU_SSE", (_edx & (uint)StandardFlags1_EDX.SSE) > 0);
-                FeatureFlags.Add("CPU_SSE2", (_edx & (uint)StandardFlags1_EDX.SSE2) > 0);
-                FeatureFlags.Add("CPU_SS", (_edx & (uint)StandardFlags1_EDX.SS) > 0);
-                FeatureFlags.Add("CPU_HTT", (_edx & (uint)StandardFlags1_EDX.HTT) > 0);
-                FeatureFlags.Add("CPU_TM", (_edx & (uint)StandardFlags1_EDX.TM) > 0);
-                FeatureFlags.Add("CPU_IA64", (_edx & (uint)StandardFlags1_EDX.IA64) > 0);
-                FeatureFlags.Add("CPU_SBF", (_edx & (uint)StandardFlags1_EDX.SBF) > 0);
+                FeatureFlags.Add("CPU_FPU", (_edx & (uint) StandardFlags1_EDX.FPU) > 0);
+                FeatureFlags.Add("CPU_VME", (_edx & (uint) StandardFlags1_EDX.VME) > 0);
+                FeatureFlags.Add("CPU_DE", (_edx & (uint) StandardFlags1_EDX.DE) > 0);
+                FeatureFlags.Add("CPU_PSE", (_edx & (uint) StandardFlags1_EDX.PSE) > 0);
+                FeatureFlags.Add("CPU_TSC", (_edx & (uint) StandardFlags1_EDX.TSC) > 0);
+                FeatureFlags.Add("CPU_MSR", (_edx & (uint) StandardFlags1_EDX.MSR) > 0);
+                FeatureFlags.Add("CPU_PAE", (_edx & (uint) StandardFlags1_EDX.PAE) > 0);
+                FeatureFlags.Add("CPU_MCE", (_edx & (uint) StandardFlags1_EDX.MCE) > 0);
+                FeatureFlags.Add("CPU_CX8", (_edx & (uint) StandardFlags1_EDX.CX8) > 0);
+                FeatureFlags.Add("CPU_APIC", (_edx & (uint) StandardFlags1_EDX.APIC) > 0);
+                FeatureFlags.Add("CPU_FSC", (_edx & (uint) StandardFlags1_EDX.FSC) > 0);
+                FeatureFlags.Add("CPU_MTRR", (_edx & (uint) StandardFlags1_EDX.MTRR) > 0);
+                FeatureFlags.Add("CPU_PGE", (_edx & (uint) StandardFlags1_EDX.PGE) > 0);
+                FeatureFlags.Add("CPU_MCA", (_edx & (uint) StandardFlags1_EDX.MCA) > 0);
+                FeatureFlags.Add("CPU_CMOV", (_edx & (uint) StandardFlags1_EDX.CMOV) > 0);
+                FeatureFlags.Add("CPU_PAT", (_edx & (uint) StandardFlags1_EDX.PAT) > 0);
+                FeatureFlags.Add("CPU_PSE36", (_edx & (uint) StandardFlags1_EDX.PSE36) > 0);
+                FeatureFlags.Add("CPU_SERIAL", (_edx & (uint) StandardFlags1_EDX.SERIAL) > 0);
+                FeatureFlags.Add("CPU_CLFSH", (_edx & (uint) StandardFlags1_EDX.CLFSH) > 0);
+                FeatureFlags.Add("CPU_DS", (_edx & (uint) StandardFlags1_EDX.DS) > 0);
+                FeatureFlags.Add("CPU_ACPI", (_edx & (uint) StandardFlags1_EDX.ACPI) > 0);
+                FeatureFlags.Add("CPU_MMX", (_edx & (uint) StandardFlags1_EDX.MMX) > 0);
+                FeatureFlags.Add("CPU_FXSR", (_edx & (uint) StandardFlags1_EDX.FXSR) > 0);
+                FeatureFlags.Add("CPU_SSE", (_edx & (uint) StandardFlags1_EDX.SSE) > 0);
+                FeatureFlags.Add("CPU_SSE2", (_edx & (uint) StandardFlags1_EDX.SSE2) > 0);
+                FeatureFlags.Add("CPU_SS", (_edx & (uint) StandardFlags1_EDX.SS) > 0);
+                FeatureFlags.Add("CPU_HTT", (_edx & (uint) StandardFlags1_EDX.HTT) > 0);
+                FeatureFlags.Add("CPU_TM", (_edx & (uint) StandardFlags1_EDX.TM) > 0);
+                FeatureFlags.Add("CPU_IA64", (_edx & (uint) StandardFlags1_EDX.IA64) > 0);
+                FeatureFlags.Add("CPU_SBF", (_edx & (uint) StandardFlags1_EDX.SBF) > 0);
 
                 _ecx = StandardCPUID1_ECX;
 
-                FeatureFlags.Add("CPU_SSE3", (_ecx & (uint)StandardFlags1_ECX.SSE3) > 0);
-                FeatureFlags.Add("CPU_PCLMULQDQ", (_ecx & (uint)StandardFlags1_ECX.PCLMULQDQ) > 0);
-                FeatureFlags.Add("CPU_DS64", (_ecx & (uint)StandardFlags1_ECX.DS64) > 0);
-                FeatureFlags.Add("CPU_MONITOR", (_ecx & (uint)StandardFlags1_ECX.MONITOR) > 0);
-                FeatureFlags.Add("CPU_DSCPL", (_ecx & (uint)StandardFlags1_ECX.DSCPL) > 0);
-                FeatureFlags.Add("CPU_VMX", (_ecx & (uint)StandardFlags1_ECX.VMX) > 0);
-                FeatureFlags.Add("CPU_SMX", (_ecx & (uint)StandardFlags1_ECX.SMX) > 0);
-                FeatureFlags.Add("CPU_ESS", (_ecx & (uint)StandardFlags1_ECX.ESS) > 0);
-                FeatureFlags.Add("CPU_TM2", (_ecx & (uint)StandardFlags1_ECX.TM2) > 0);
-                FeatureFlags.Add("CPU_SSSE3", (_ecx & (uint)StandardFlags1_ECX.SSSE3) > 0);
-                FeatureFlags.Add("CPU_CNXTID", (_ecx & (uint)StandardFlags1_ECX.CNXTID) > 0);
-                FeatureFlags.Add("CPU_FMA", (_ecx & (uint)StandardFlags1_ECX.FMA) > 0);
-                FeatureFlags.Add("CPU_CX16", (_ecx & (uint)StandardFlags1_ECX.CX16) > 0);
-                FeatureFlags.Add("CPU_XTPR", (_ecx & (uint)StandardFlags1_ECX.XTPR) > 0);
-                FeatureFlags.Add("CPU_PDCM", (_ecx & (uint)StandardFlags1_ECX.PDCM) > 0);
-                FeatureFlags.Add("CPU_PCID", (_ecx & (uint)StandardFlags1_ECX.PCID) > 0);
-                FeatureFlags.Add("CPU_DCA", (_ecx & (uint)StandardFlags1_ECX.DCA) > 0);
-                FeatureFlags.Add("CPU_SSE4_1", (_ecx & (uint)StandardFlags1_ECX.SSE4_1) > 0);
-                FeatureFlags.Add("CPU_SSE4_2", (_ecx & (uint)StandardFlags1_ECX.SSE4_2) > 0);
-                FeatureFlags.Add("CPU_X2APIC", (_ecx & (uint)StandardFlags1_ECX.X2APIC) > 0);
-                FeatureFlags.Add("CPU_MOVBE", (_ecx & (uint)StandardFlags1_ECX.MOVBE) > 0);
-                FeatureFlags.Add("CPU_POPCNT", (_ecx & (uint)StandardFlags1_ECX.POPCNT) > 0);
-                FeatureFlags.Add("CPU_TSCDEADLINE", (_ecx & (uint)StandardFlags1_ECX.TSCDEADLINE) > 0);
-                FeatureFlags.Add("CPU_AES", (_ecx & (uint)StandardFlags1_ECX.AES) > 0);
-                FeatureFlags.Add("CPU_XSAVE", (_ecx & (uint)StandardFlags1_ECX.XSAVE) > 0);
-                FeatureFlags.Add("CPU_OSXSAVE", (_ecx & (uint)StandardFlags1_ECX.OSXSAVE) > 0);
-                FeatureFlags.Add("CPU_AVX", (_ecx & (uint)StandardFlags1_ECX.AVX) > 0);
-                FeatureFlags.Add("CPU_F16C", (_ecx & (uint)StandardFlags1_ECX.F16C) > 0);
-                FeatureFlags.Add("CPU_RDRAND", (_ecx & (uint)StandardFlags1_ECX.RDRAND) > 0);
-                FeatureFlags.Add("CPU_HV", (_ecx & (uint)StandardFlags1_ECX.HV) > 0);
+                FeatureFlags.Add("CPU_SSE3", (_ecx & (uint) StandardFlags1_ECX.SSE3) > 0);
+                FeatureFlags.Add("CPU_PCLMULQDQ", (_ecx & (uint) StandardFlags1_ECX.PCLMULQDQ) > 0);
+                FeatureFlags.Add("CPU_DS64", (_ecx & (uint) StandardFlags1_ECX.DS64) > 0);
+                FeatureFlags.Add("CPU_MONITOR", (_ecx & (uint) StandardFlags1_ECX.MONITOR) > 0);
+                FeatureFlags.Add("CPU_DSCPL", (_ecx & (uint) StandardFlags1_ECX.DSCPL) > 0);
+                FeatureFlags.Add("CPU_VMX", (_ecx & (uint) StandardFlags1_ECX.VMX) > 0);
+                FeatureFlags.Add("CPU_SMX", (_ecx & (uint) StandardFlags1_ECX.SMX) > 0);
+                FeatureFlags.Add("CPU_ESS", (_ecx & (uint) StandardFlags1_ECX.ESS) > 0);
+                FeatureFlags.Add("CPU_TM2", (_ecx & (uint) StandardFlags1_ECX.TM2) > 0);
+                FeatureFlags.Add("CPU_SSSE3", (_ecx & (uint) StandardFlags1_ECX.SSSE3) > 0);
+                FeatureFlags.Add("CPU_CNXTID", (_ecx & (uint) StandardFlags1_ECX.CNXTID) > 0);
+                FeatureFlags.Add("CPU_FMA", (_ecx & (uint) StandardFlags1_ECX.FMA) > 0);
+                FeatureFlags.Add("CPU_CX16", (_ecx & (uint) StandardFlags1_ECX.CX16) > 0);
+                FeatureFlags.Add("CPU_XTPR", (_ecx & (uint) StandardFlags1_ECX.XTPR) > 0);
+                FeatureFlags.Add("CPU_PDCM", (_ecx & (uint) StandardFlags1_ECX.PDCM) > 0);
+                FeatureFlags.Add("CPU_PCID", (_ecx & (uint) StandardFlags1_ECX.PCID) > 0);
+                FeatureFlags.Add("CPU_DCA", (_ecx & (uint) StandardFlags1_ECX.DCA) > 0);
+                FeatureFlags.Add("CPU_SSE4_1", (_ecx & (uint) StandardFlags1_ECX.SSE4_1) > 0);
+                FeatureFlags.Add("CPU_SSE4_2", (_ecx & (uint) StandardFlags1_ECX.SSE4_2) > 0);
+                FeatureFlags.Add("CPU_X2APIC", (_ecx & (uint) StandardFlags1_ECX.X2APIC) > 0);
+                FeatureFlags.Add("CPU_MOVBE", (_ecx & (uint) StandardFlags1_ECX.MOVBE) > 0);
+                FeatureFlags.Add("CPU_POPCNT", (_ecx & (uint) StandardFlags1_ECX.POPCNT) > 0);
+                FeatureFlags.Add("CPU_TSCDEADLINE", (_ecx & (uint) StandardFlags1_ECX.TSCDEADLINE) > 0);
+                FeatureFlags.Add("CPU_AES", (_ecx & (uint) StandardFlags1_ECX.AES) > 0);
+                FeatureFlags.Add("CPU_XSAVE", (_ecx & (uint) StandardFlags1_ECX.XSAVE) > 0);
+                FeatureFlags.Add("CPU_OSXSAVE", (_ecx & (uint) StandardFlags1_ECX.OSXSAVE) > 0);
+                FeatureFlags.Add("CPU_AVX", (_ecx & (uint) StandardFlags1_ECX.AVX) > 0);
+                FeatureFlags.Add("CPU_F16C", (_ecx & (uint) StandardFlags1_ECX.F16C) > 0);
+                FeatureFlags.Add("CPU_RDRAND", (_ecx & (uint) StandardFlags1_ECX.RDRAND) > 0);
+                FeatureFlags.Add("CPU_HV", (_ecx & (uint) StandardFlags1_ECX.HV) > 0);
 
                 _ebx = StandardCPUID7_EBX;
 
-                FeatureFlags.Add("CPU_FSGSBASE", (_ebx & (uint)StandardFlags7_EBX.FSGSBASE) > 0);
-                FeatureFlags.Add("CPU_TSC_ADJUST", (_ebx & (uint)StandardFlags7_EBX.TSC_ADJUST) > 0);
-                FeatureFlags.Add("CPU_SGX", (_ebx & (uint)StandardFlags7_EBX.SGX) > 0);
-                FeatureFlags.Add("CPU_BMI1", (_ebx & (uint)StandardFlags7_EBX.BMI1) > 0);
-                FeatureFlags.Add("CPU_HLE", (_ebx & (uint)StandardFlags7_EBX.HLE) > 0);
-                FeatureFlags.Add("CPU_AVX2", (_ebx & (uint)StandardFlags7_EBX.AVX2) > 0);
-                FeatureFlags.Add("CPU_FPDP", (_ebx & (uint)StandardFlags7_EBX.FPDP) > 0);
-                FeatureFlags.Add("CPU_SMEP", (_ebx & (uint)StandardFlags7_EBX.SMEP) > 0);
-                FeatureFlags.Add("CPU_BMI2", (_ebx & (uint)StandardFlags7_EBX.BMI2) > 0);
-                FeatureFlags.Add("CPU_ERMS", (_ebx & (uint)StandardFlags7_EBX.ERMS) > 0);
-                FeatureFlags.Add("CPU_INVPCID", (_ebx & (uint)StandardFlags7_EBX.INVPCID) > 0);
-                FeatureFlags.Add("CPU_RTM", (_ebx & (uint)StandardFlags7_EBX.RTM) > 0);
-                FeatureFlags.Add("CPU_PQM", (_ebx & (uint)StandardFlags7_EBX.PQM) > 0);
-                FeatureFlags.Add("CPU_FPCSDS", (_ebx & (uint)StandardFlags7_EBX.FPCSDS) > 0);
-                FeatureFlags.Add("CPU_MPX", (_ebx & (uint)StandardFlags7_EBX.MPX) > 0);
-                FeatureFlags.Add("CPU_PQE", (_ebx & (uint)StandardFlags7_EBX.PQE) > 0);
-                FeatureFlags.Add("CPU_AVX512F", (_ebx & (uint)StandardFlags7_EBX.AVX512F) > 0);
-                FeatureFlags.Add("CPU_AVX512DQ", (_ebx & (uint)StandardFlags7_EBX.AVX512DQ) > 0);
-                FeatureFlags.Add("CPU_RDSEED", (_ebx & (uint)StandardFlags7_EBX.RDSEED) > 0);
-                FeatureFlags.Add("CPU_ADX", (_ebx & (uint)StandardFlags7_EBX.ADX) > 0);
-                FeatureFlags.Add("CPU_SMAP", (_ebx & (uint)StandardFlags7_EBX.SMAP) > 0);
-                FeatureFlags.Add("CPU_AVX512IFMA", (_ebx & (uint)StandardFlags7_EBX.AVX512IFMA) > 0);
-                FeatureFlags.Add("CPU_PCOMMIT", (_ebx & (uint)StandardFlags7_EBX.PCOMMIT) > 0);
-                FeatureFlags.Add("CPU_CLFLUSHOPT", (_ebx & (uint)StandardFlags7_EBX.CLFLUSHOPT) > 0);
-                FeatureFlags.Add("CPU_CLWB", (_ebx & (uint)StandardFlags7_EBX.CLWB) > 0);
-                FeatureFlags.Add("CPU_PT", (_ebx & (uint)StandardFlags7_EBX.PT) > 0);
-                FeatureFlags.Add("CPU_AVX512PF", (_ebx & (uint)StandardFlags7_EBX.AVX512PF) > 0);
-                FeatureFlags.Add("CPU_AVX512ER", (_ebx & (uint)StandardFlags7_EBX.AVX512ER) > 0);
-                FeatureFlags.Add("CPU_AVX512CD", (_ebx & (uint)StandardFlags7_EBX.AVX512CD) > 0);
-                FeatureFlags.Add("CPU_SHA", (_ebx & (uint)StandardFlags7_EBX.SHA) > 0);
-                FeatureFlags.Add("CPU_AVX512BW", (_ebx & (uint)StandardFlags7_EBX.AVX512BW) > 0);
-                FeatureFlags.Add("CPU_AVX512VL", (_ebx & (uint)StandardFlags7_EBX.AVX512VL) > 0);
+                FeatureFlags.Add("CPU_FSGSBASE", (_ebx & (uint) StandardFlags7_EBX.FSGSBASE) > 0);
+                FeatureFlags.Add("CPU_TSC_ADJUST", (_ebx & (uint) StandardFlags7_EBX.TSC_ADJUST) > 0);
+                FeatureFlags.Add("CPU_SGX", (_ebx & (uint) StandardFlags7_EBX.SGX) > 0);
+                FeatureFlags.Add("CPU_BMI1", (_ebx & (uint) StandardFlags7_EBX.BMI1) > 0);
+                FeatureFlags.Add("CPU_HLE", (_ebx & (uint) StandardFlags7_EBX.HLE) > 0);
+                FeatureFlags.Add("CPU_AVX2", (_ebx & (uint) StandardFlags7_EBX.AVX2) > 0);
+                FeatureFlags.Add("CPU_FPDP", (_ebx & (uint) StandardFlags7_EBX.FPDP) > 0);
+                FeatureFlags.Add("CPU_SMEP", (_ebx & (uint) StandardFlags7_EBX.SMEP) > 0);
+                FeatureFlags.Add("CPU_BMI2", (_ebx & (uint) StandardFlags7_EBX.BMI2) > 0);
+                FeatureFlags.Add("CPU_ERMS", (_ebx & (uint) StandardFlags7_EBX.ERMS) > 0);
+                FeatureFlags.Add("CPU_INVPCID", (_ebx & (uint) StandardFlags7_EBX.INVPCID) > 0);
+                FeatureFlags.Add("CPU_RTM", (_ebx & (uint) StandardFlags7_EBX.RTM) > 0);
+                FeatureFlags.Add("CPU_PQM", (_ebx & (uint) StandardFlags7_EBX.PQM) > 0);
+                FeatureFlags.Add("CPU_FPCSDS", (_ebx & (uint) StandardFlags7_EBX.FPCSDS) > 0);
+                FeatureFlags.Add("CPU_MPX", (_ebx & (uint) StandardFlags7_EBX.MPX) > 0);
+                FeatureFlags.Add("CPU_PQE", (_ebx & (uint) StandardFlags7_EBX.PQE) > 0);
+                FeatureFlags.Add("CPU_AVX512F", (_ebx & (uint) StandardFlags7_EBX.AVX512F) > 0);
+                FeatureFlags.Add("CPU_AVX512DQ", (_ebx & (uint) StandardFlags7_EBX.AVX512DQ) > 0);
+                FeatureFlags.Add("CPU_RDSEED", (_ebx & (uint) StandardFlags7_EBX.RDSEED) > 0);
+                FeatureFlags.Add("CPU_ADX", (_ebx & (uint) StandardFlags7_EBX.ADX) > 0);
+                FeatureFlags.Add("CPU_SMAP", (_ebx & (uint) StandardFlags7_EBX.SMAP) > 0);
+                FeatureFlags.Add("CPU_AVX512IFMA", (_ebx & (uint) StandardFlags7_EBX.AVX512IFMA) > 0);
+                FeatureFlags.Add("CPU_PCOMMIT", (_ebx & (uint) StandardFlags7_EBX.PCOMMIT) > 0);
+                FeatureFlags.Add("CPU_CLFLUSHOPT", (_ebx & (uint) StandardFlags7_EBX.CLFLUSHOPT) > 0);
+                FeatureFlags.Add("CPU_CLWB", (_ebx & (uint) StandardFlags7_EBX.CLWB) > 0);
+                FeatureFlags.Add("CPU_PT", (_ebx & (uint) StandardFlags7_EBX.PT) > 0);
+                FeatureFlags.Add("CPU_AVX512PF", (_ebx & (uint) StandardFlags7_EBX.AVX512PF) > 0);
+                FeatureFlags.Add("CPU_AVX512ER", (_ebx & (uint) StandardFlags7_EBX.AVX512ER) > 0);
+                FeatureFlags.Add("CPU_AVX512CD", (_ebx & (uint) StandardFlags7_EBX.AVX512CD) > 0);
+                FeatureFlags.Add("CPU_SHA", (_ebx & (uint) StandardFlags7_EBX.SHA) > 0);
+                FeatureFlags.Add("CPU_AVX512BW", (_ebx & (uint) StandardFlags7_EBX.AVX512BW) > 0);
+                FeatureFlags.Add("CPU_AVX512VL", (_ebx & (uint) StandardFlags7_EBX.AVX512VL) > 0);
 
                 _ecx = StandardCPUID7_ECX;
 
-                FeatureFlags.Add("CPU_PREFETCHWT1", (_ecx & (uint)StandardFlags7_ECX.PREFETCHWT1) > 0);
-                FeatureFlags.Add("CPU_AVX512VBMI", (_ecx & (uint)StandardFlags7_ECX.AVX512VBMI) > 0);
-                FeatureFlags.Add("CPU_UMIP", (_ecx & (uint)StandardFlags7_ECX.UMIP) > 0);
-                FeatureFlags.Add("CPU_PKU", (_ecx & (uint)StandardFlags7_ECX.PKU) > 0);
-                FeatureFlags.Add("CPU_OSPKE", (_ecx & (uint)StandardFlags7_ECX.OSPKE) > 0);
-                FeatureFlags.Add("CPU_CET", (_ecx & (uint)StandardFlags7_ECX.CET) > 0);
-                FeatureFlags.Add("CPU_AVX512VPDQ", (_ecx & (uint)StandardFlags7_ECX.AVX512VPDQ) > 0);
-                FeatureFlags.Add("CPU_VA57", (_ecx & (uint)StandardFlags7_ECX.VA57) > 0);
-                FeatureFlags.Add("CPU_RDPID", (_ecx & (uint)StandardFlags7_ECX.RDPID) > 0);
-                FeatureFlags.Add("CPU_SGX_LC", (_ecx & (uint)StandardFlags7_ECX.SGX_LC) > 0);
+                FeatureFlags.Add("CPU_PREFETCHWT1", (_ecx & (uint) StandardFlags7_ECX.PREFETCHWT1) > 0);
+                FeatureFlags.Add("CPU_AVX512VBMI", (_ecx & (uint) StandardFlags7_ECX.AVX512VBMI) > 0);
+                FeatureFlags.Add("CPU_UMIP", (_ecx & (uint) StandardFlags7_ECX.UMIP) > 0);
+                FeatureFlags.Add("CPU_PKU", (_ecx & (uint) StandardFlags7_ECX.PKU) > 0);
+                FeatureFlags.Add("CPU_OSPKE", (_ecx & (uint) StandardFlags7_ECX.OSPKE) > 0);
+                FeatureFlags.Add("CPU_CET", (_ecx & (uint) StandardFlags7_ECX.CET) > 0);
+                FeatureFlags.Add("CPU_AVX512VPDQ", (_ecx & (uint) StandardFlags7_ECX.AVX512VPDQ) > 0);
+                FeatureFlags.Add("CPU_VA57", (_ecx & (uint) StandardFlags7_ECX.VA57) > 0);
+                FeatureFlags.Add("CPU_RDPID", (_ecx & (uint) StandardFlags7_ECX.RDPID) > 0);
+                FeatureFlags.Add("CPU_SGX_LC", (_ecx & (uint) StandardFlags7_ECX.SGX_LC) > 0);
 
                 _edx = StandardCPUID7_EDX;
 
-                FeatureFlags.Add("CPU_AVX512QVNNIW", (_edx & (uint)StandardFlags7_EDX.AVX512QVNNIW) > 0);
-                FeatureFlags.Add("CPU_AVX512QFMA", (_edx & (uint)StandardFlags7_EDX.AVX512QFMA) > 0);
-
+                FeatureFlags.Add("CPU_AVX512QVNNIW", (_edx & (uint) StandardFlags7_EDX.AVX512QVNNIW) > 0);
+                FeatureFlags.Add("CPU_AVX512QFMA", (_edx & (uint) StandardFlags7_EDX.AVX512QFMA) > 0);
             }
 
             if (_vendorcompany == VendorCompanies.Intel)
             {
                 uint _edx = ExtendedCPUID1_EDX;
 
-                FeatureFlags.Add("CPU_INTEL_SYSCALLSYSRET", (_edx & (uint)IntelExtendedFlags1_EDX.SYSCALLSYSRET) > 0);
-                FeatureFlags.Add("CPU_INTEL_NX", (_edx & (uint)IntelExtendedFlags1_EDX.NX) > 0);
-                FeatureFlags.Add("CPU_INTEL_PAGE1GB", (_edx & (uint)IntelExtendedFlags1_EDX.PAGE1GB) > 0);
-                FeatureFlags.Add("CPU_INTEL_RDTSCP", (_edx & (uint)IntelExtendedFlags1_EDX.RDTSCP) > 0);
-                FeatureFlags.Add("CPU_INTEL_INTEL64", (_edx & (uint)IntelExtendedFlags1_EDX.INTEL64) > 0);
+                FeatureFlags.Add("CPU_INTEL_SYSCALLSYSRET", (_edx & (uint) IntelExtendedFlags1_EDX.SYSCALLSYSRET) > 0);
+                FeatureFlags.Add("CPU_INTEL_NX", (_edx & (uint) IntelExtendedFlags1_EDX.NX) > 0);
+                FeatureFlags.Add("CPU_INTEL_PAGE1GB", (_edx & (uint) IntelExtendedFlags1_EDX.PAGE1GB) > 0);
+                FeatureFlags.Add("CPU_INTEL_RDTSCP", (_edx & (uint) IntelExtendedFlags1_EDX.RDTSCP) > 0);
+                FeatureFlags.Add("CPU_INTEL_INTEL64", (_edx & (uint) IntelExtendedFlags1_EDX.INTEL64) > 0);
 
                 uint _ecx = ExtendedCPUID1_ECX;
 
-                FeatureFlags.Add("CPU_INTEL_LAHFSAHF", (_ecx & (uint)IntelExtendedFlags1_ECX.LAHFSAHF) > 0);
+                FeatureFlags.Add("CPU_INTEL_LAHFSAHF", (_ecx & (uint) IntelExtendedFlags1_ECX.LAHFSAHF) > 0);
             }
 
             if (_vendorcompany == VendorCompanies.AMD)
@@ -907,44 +927,44 @@ namespace AlienEngine.Core.Utils
                 uint _edx = ExtendedCPUID1_EDX;
 
                 // Returned in CPUID:0x80000001.EDX (AMD)
-                FeatureFlags.Add("CPU_AMD_SYSCALLSYSRET", (_edx & (uint)AMDExtendedFlags1_EDX.SYSCALLSYSRET) > 0);
-                FeatureFlags.Add("CPU_AMD_NX", (_edx & (uint)AMDExtendedFlags1_EDX.NX) > 0);
-                FeatureFlags.Add("CPU_AMD_MMXEXT", (_edx & (uint)AMDExtendedFlags1_EDX.MMXEXT) > 0);
-                FeatureFlags.Add("CPU_AMD_FFXSR", (_edx & (uint)AMDExtendedFlags1_EDX.FFXSR) > 0);
-                FeatureFlags.Add("CPU_AMD_PAGE1GB", (_edx & (uint)AMDExtendedFlags1_EDX.PAGE1GB) > 0);
-                FeatureFlags.Add("CPU_AMD_RDTSCP", (_edx & (uint)AMDExtendedFlags1_EDX.RDTSCP) > 0);
-                FeatureFlags.Add("CPU_AMD_LM", (_edx & (uint)AMDExtendedFlags1_EDX.LM) > 0);
-                FeatureFlags.Add("CPU_AMD_3DNOW", (_edx & (uint)AMDExtendedFlags1_EDX.THREEDNOW) > 0);
-                FeatureFlags.Add("CPU_AMD_3DNOWEXT", (_edx & (uint)AMDExtendedFlags1_EDX.THREEDNOWEXT) > 0);
+                FeatureFlags.Add("CPU_AMD_SYSCALLSYSRET", (_edx & (uint) AMDExtendedFlags1_EDX.SYSCALLSYSRET) > 0);
+                FeatureFlags.Add("CPU_AMD_NX", (_edx & (uint) AMDExtendedFlags1_EDX.NX) > 0);
+                FeatureFlags.Add("CPU_AMD_MMXEXT", (_edx & (uint) AMDExtendedFlags1_EDX.MMXEXT) > 0);
+                FeatureFlags.Add("CPU_AMD_FFXSR", (_edx & (uint) AMDExtendedFlags1_EDX.FFXSR) > 0);
+                FeatureFlags.Add("CPU_AMD_PAGE1GB", (_edx & (uint) AMDExtendedFlags1_EDX.PAGE1GB) > 0);
+                FeatureFlags.Add("CPU_AMD_RDTSCP", (_edx & (uint) AMDExtendedFlags1_EDX.RDTSCP) > 0);
+                FeatureFlags.Add("CPU_AMD_LM", (_edx & (uint) AMDExtendedFlags1_EDX.LM) > 0);
+                FeatureFlags.Add("CPU_AMD_3DNOW", (_edx & (uint) AMDExtendedFlags1_EDX.THREEDNOW) > 0);
+                FeatureFlags.Add("CPU_AMD_3DNOWEXT", (_edx & (uint) AMDExtendedFlags1_EDX.THREEDNOWEXT) > 0);
 
                 uint _ecx = ExtendedCPUID1_ECX;
 
                 // Returned in CPUID:0x80000001.ECX (AMD)
-                FeatureFlags.Add("CPU_AMD_LAHFSAHF", (_ecx & (uint)AMDExtendedFlags1_ECX.LAHFSAHF) > 0);
-                FeatureFlags.Add("CPU_AMD_CMPLEGACY", (_ecx & (uint)AMDExtendedFlags1_ECX.CMPLEGACY) > 0);
-                FeatureFlags.Add("CPU_AMD_SVM", (_ecx & (uint)AMDExtendedFlags1_ECX.SVM) > 0);
-                FeatureFlags.Add("CPU_AMD_EXTAPICSPACE", (_ecx & (uint)AMDExtendedFlags1_ECX.EXTAPICSPACE) > 0);
-                FeatureFlags.Add("CPU_AMD_ALTMOVCR8", (_ecx & (uint)AMDExtendedFlags1_ECX.ALTMOVCR8) > 0);
-                FeatureFlags.Add("CPU_AMD_ABM", (_ecx & (uint)AMDExtendedFlags1_ECX.ABM) > 0);
-                FeatureFlags.Add("CPU_AMD_SSE4A", (_ecx & (uint)AMDExtendedFlags1_ECX.SSE4A) > 0);
-                FeatureFlags.Add("CPU_AMD_MISALIGNSSE", (_ecx & (uint)AMDExtendedFlags1_ECX.MISALIGNSSE) > 0);
-                FeatureFlags.Add("CPU_AMD_3DNOWPREFETCH", (_ecx & (uint)AMDExtendedFlags1_ECX.THREEDNOWPREFETCH) > 0);
-                FeatureFlags.Add("CPU_AMD_OSVW", (_ecx & (uint)AMDExtendedFlags1_ECX.OSVW) > 0);
-                FeatureFlags.Add("CPU_AMD_IBS", (_ecx & (uint)AMDExtendedFlags1_ECX.IBS) > 0);
-                FeatureFlags.Add("CPU_AMD_XOP", (_ecx & (uint)AMDExtendedFlags1_ECX.XOP) > 0);
-                FeatureFlags.Add("CPU_AMD_SKINIT", (_ecx & (uint)AMDExtendedFlags1_ECX.SKINIT) > 0);
-                FeatureFlags.Add("CPU_AMD_WDT", (_ecx & (uint)AMDExtendedFlags1_ECX.WDT) > 0);
-                FeatureFlags.Add("CPU_AMD_LWP", (_ecx & (uint)AMDExtendedFlags1_ECX.LWP) > 0);
-                FeatureFlags.Add("CPU_AMD_FMA4", (_ecx & (uint)AMDExtendedFlags1_ECX.FMA4) > 0);
-                FeatureFlags.Add("CPU_AMD_TCE", (_ecx & (uint)AMDExtendedFlags1_ECX.TCE) > 0);
-                FeatureFlags.Add("CPU_AMD_NODEID", (_ecx & (uint)AMDExtendedFlags1_ECX.NODEID) > 0);
-                FeatureFlags.Add("CPU_AMD_TBM", (_ecx & (uint)AMDExtendedFlags1_ECX.TBM) > 0);
-                FeatureFlags.Add("CPU_AMD_TOPOLOGYEXT", (_ecx & (uint)AMDExtendedFlags1_ECX.TOPOLOGYEXT) > 0);
-                FeatureFlags.Add("CPU_AMD_PERFCTREXTCORE", (_ecx & (uint)AMDExtendedFlags1_ECX.PERFCTREXTCORE) > 0);
-                FeatureFlags.Add("CPU_AMD_PERFCTREXTNB", (_ecx & (uint)AMDExtendedFlags1_ECX.PERFCTREXTNB) > 0);
-                FeatureFlags.Add("CPU_AMD_DATABREAKPOINTEXT", (_ecx & (uint)AMDExtendedFlags1_ECX.DATABREAKPOINTEXT) > 0);
-                FeatureFlags.Add("CPU_AMD_PERFTSC", (_ecx & (uint)AMDExtendedFlags1_ECX.PERFTSC) > 0);
-                FeatureFlags.Add("CPU_AMD_PERFCTREXTL2I", (_ecx & (uint)AMDExtendedFlags1_ECX.PERFCTREXTL2I) > 0);
+                FeatureFlags.Add("CPU_AMD_LAHFSAHF", (_ecx & (uint) AMDExtendedFlags1_ECX.LAHFSAHF) > 0);
+                FeatureFlags.Add("CPU_AMD_CMPLEGACY", (_ecx & (uint) AMDExtendedFlags1_ECX.CMPLEGACY) > 0);
+                FeatureFlags.Add("CPU_AMD_SVM", (_ecx & (uint) AMDExtendedFlags1_ECX.SVM) > 0);
+                FeatureFlags.Add("CPU_AMD_EXTAPICSPACE", (_ecx & (uint) AMDExtendedFlags1_ECX.EXTAPICSPACE) > 0);
+                FeatureFlags.Add("CPU_AMD_ALTMOVCR8", (_ecx & (uint) AMDExtendedFlags1_ECX.ALTMOVCR8) > 0);
+                FeatureFlags.Add("CPU_AMD_ABM", (_ecx & (uint) AMDExtendedFlags1_ECX.ABM) > 0);
+                FeatureFlags.Add("CPU_AMD_SSE4A", (_ecx & (uint) AMDExtendedFlags1_ECX.SSE4A) > 0);
+                FeatureFlags.Add("CPU_AMD_MISALIGNSSE", (_ecx & (uint) AMDExtendedFlags1_ECX.MISALIGNSSE) > 0);
+                FeatureFlags.Add("CPU_AMD_3DNOWPREFETCH", (_ecx & (uint) AMDExtendedFlags1_ECX.THREEDNOWPREFETCH) > 0);
+                FeatureFlags.Add("CPU_AMD_OSVW", (_ecx & (uint) AMDExtendedFlags1_ECX.OSVW) > 0);
+                FeatureFlags.Add("CPU_AMD_IBS", (_ecx & (uint) AMDExtendedFlags1_ECX.IBS) > 0);
+                FeatureFlags.Add("CPU_AMD_XOP", (_ecx & (uint) AMDExtendedFlags1_ECX.XOP) > 0);
+                FeatureFlags.Add("CPU_AMD_SKINIT", (_ecx & (uint) AMDExtendedFlags1_ECX.SKINIT) > 0);
+                FeatureFlags.Add("CPU_AMD_WDT", (_ecx & (uint) AMDExtendedFlags1_ECX.WDT) > 0);
+                FeatureFlags.Add("CPU_AMD_LWP", (_ecx & (uint) AMDExtendedFlags1_ECX.LWP) > 0);
+                FeatureFlags.Add("CPU_AMD_FMA4", (_ecx & (uint) AMDExtendedFlags1_ECX.FMA4) > 0);
+                FeatureFlags.Add("CPU_AMD_TCE", (_ecx & (uint) AMDExtendedFlags1_ECX.TCE) > 0);
+                FeatureFlags.Add("CPU_AMD_NODEID", (_ecx & (uint) AMDExtendedFlags1_ECX.NODEID) > 0);
+                FeatureFlags.Add("CPU_AMD_TBM", (_ecx & (uint) AMDExtendedFlags1_ECX.TBM) > 0);
+                FeatureFlags.Add("CPU_AMD_TOPOLOGYEXT", (_ecx & (uint) AMDExtendedFlags1_ECX.TOPOLOGYEXT) > 0);
+                FeatureFlags.Add("CPU_AMD_PERFCTREXTCORE", (_ecx & (uint) AMDExtendedFlags1_ECX.PERFCTREXTCORE) > 0);
+                FeatureFlags.Add("CPU_AMD_PERFCTREXTNB", (_ecx & (uint) AMDExtendedFlags1_ECX.PERFCTREXTNB) > 0);
+                FeatureFlags.Add("CPU_AMD_DATABREAKPOINTEXT", (_ecx & (uint) AMDExtendedFlags1_ECX.DATABREAKPOINTEXT) > 0);
+                FeatureFlags.Add("CPU_AMD_PERFTSC", (_ecx & (uint) AMDExtendedFlags1_ECX.PERFTSC) > 0);
+                FeatureFlags.Add("CPU_AMD_PERFCTREXTL2I", (_ecx & (uint) AMDExtendedFlags1_ECX.PERFCTREXTL2I) > 0);
             }
 
             if (_vendorcompany == VendorCompanies.Intel)
@@ -959,57 +979,57 @@ namespace AlienEngine.Core.Utils
                     uint _ecx = __reg_ecx();
                     uint _edx = __reg_edx();
 
-                    byte _nroftimestoreadall = (byte)((_eax >> 00) & 0xFF);
+                    byte _nroftimestoreadall = (byte) ((_eax >> 00) & 0xFF);
 
                     for (byte counter = 0; counter < _nroftimestoreadall; counter++)
                     {
                         // Check if _eax is a valid descriptor
                         if (((_eax >> 31) & 0x01) == 0)
                         {
-                            _cachedescriptor = (byte)((_eax >> 08) & 0xFF);
+                            _cachedescriptor = (byte) ((_eax >> 08) & 0xFF);
                             AddCacheDescriptor(_cachedescriptor);
-                            _cachedescriptor = (byte)((_eax >> 16) & 0xFF);
+                            _cachedescriptor = (byte) ((_eax >> 16) & 0xFF);
                             AddCacheDescriptor(_cachedescriptor);
-                            _cachedescriptor = (byte)((_eax >> 24) & 0xFF);
+                            _cachedescriptor = (byte) ((_eax >> 24) & 0xFF);
                             AddCacheDescriptor(_cachedescriptor);
                         }
 
                         // Check if _ebx is a valid descriptor
                         if (((_ebx >> 31) & 0x01) == 0)
                         {
-                            _cachedescriptor = (byte)((_ebx >> 00) & 0xFF);
+                            _cachedescriptor = (byte) ((_ebx >> 00) & 0xFF);
                             AddCacheDescriptor(_cachedescriptor);
-                            _cachedescriptor = (byte)((_ebx >> 08) & 0xFF);
+                            _cachedescriptor = (byte) ((_ebx >> 08) & 0xFF);
                             AddCacheDescriptor(_cachedescriptor);
-                            _cachedescriptor = (byte)((_ebx >> 16) & 0xFF);
+                            _cachedescriptor = (byte) ((_ebx >> 16) & 0xFF);
                             AddCacheDescriptor(_cachedescriptor);
-                            _cachedescriptor = (byte)((_ebx >> 24) & 0xFF);
+                            _cachedescriptor = (byte) ((_ebx >> 24) & 0xFF);
                             AddCacheDescriptor(_cachedescriptor);
                         }
 
                         // Check if _ecx is a valid descriptor
                         if (((_ecx >> 31) & 0x01) == 0)
                         {
-                            _cachedescriptor = (byte)((_ecx >> 00) & 0xFF);
+                            _cachedescriptor = (byte) ((_ecx >> 00) & 0xFF);
                             AddCacheDescriptor(_cachedescriptor);
-                            _cachedescriptor = (byte)((_ecx >> 08) & 0xFF);
+                            _cachedescriptor = (byte) ((_ecx >> 08) & 0xFF);
                             AddCacheDescriptor(_cachedescriptor);
-                            _cachedescriptor = (byte)((_ecx >> 16) & 0xFF);
+                            _cachedescriptor = (byte) ((_ecx >> 16) & 0xFF);
                             AddCacheDescriptor(_cachedescriptor);
-                            _cachedescriptor = (byte)((_ecx >> 24) & 0xFF);
+                            _cachedescriptor = (byte) ((_ecx >> 24) & 0xFF);
                             AddCacheDescriptor(_cachedescriptor);
                         }
 
                         // Check if _edx is a valid descriptor
                         if (((_edx >> 31) & 0x01) == 0)
                         {
-                            _cachedescriptor = (byte)((_edx >> 00) & 0xFF);
+                            _cachedescriptor = (byte) ((_edx >> 00) & 0xFF);
                             AddCacheDescriptor(_cachedescriptor);
-                            _cachedescriptor = (byte)((_edx >> 08) & 0xFF);
+                            _cachedescriptor = (byte) ((_edx >> 08) & 0xFF);
                             AddCacheDescriptor(_cachedescriptor);
-                            _cachedescriptor = (byte)((_edx >> 16) & 0xFF);
+                            _cachedescriptor = (byte) ((_edx >> 16) & 0xFF);
                             AddCacheDescriptor(_cachedescriptor);
-                            _cachedescriptor = (byte)((_edx >> 24) & 0xFF);
+                            _cachedescriptor = (byte) ((_edx >> 24) & 0xFF);
                             AddCacheDescriptor(_cachedescriptor);
                         }
 
@@ -1040,7 +1060,7 @@ namespace AlienEngine.Core.Utils
 
         private static string Value2String(byte value)
         {
-            return Convert.ToString((char)value);
+            return Convert.ToString((char) value);
         }
 
         private static string Value2String(ushort value, bool LowNibbleFirst = false)
