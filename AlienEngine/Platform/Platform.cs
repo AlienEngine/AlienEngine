@@ -25,7 +25,7 @@ namespace AlienEngine
     /// <summary>
     /// Detected platforms.
     /// </summary>
-    internal class Platform
+    public static class Platform
     {
         /// <summary>
         /// Static constructor.
@@ -67,9 +67,29 @@ namespace AlienEngine
         }
 
         /// <summary>
+        /// Checks if the current platform is Windows.
+        /// </summary>
+        public static bool IsWindows => _CurrentPlatformId == Id.WindowsNT;
+
+        /// <summary>
+        /// Checks if the current platform is Linux.
+        /// </summary>
+        public static bool IsLinux => _CurrentPlatformId == Id.Linux;
+
+        /// <summary>
+        /// Checks if the current platform is MacOS.
+        /// </summary>
+        public static bool IsMacOS => _CurrentPlatformId == Id.MacOS;
+
+        /// <summary>
+        /// Checks if the current platform is Android.
+        /// </summary>
+        public static bool IsAndroid => _CurrentPlatformId == Id.Android;
+
+        /// <summary>
         /// Get the current platform ID.
         /// </summary>
-        public static Id CurrentPlatformId { get { return (_CurrentPlatformId); } }
+        public static Id CurrentPlatformId => _CurrentPlatformId;
 
         /// <summary>
         /// The current platform ID.
@@ -89,6 +109,7 @@ namespace AlienEngine
             {
                 case PlatformID.Win32NT:
                     return (Id.WindowsNT);
+
                 case PlatformID.Unix:
                     // Android special case
                     if (Type.GetType("Android.OS.Build, Mono.Android.dll") != null)
@@ -104,8 +125,10 @@ namespace AlienEngine
                         default:
                             return (Id.Linux);
                     }
+
                 case PlatformID.MacOSX:
                     return (Id.MacOS);
+
                 default:
                     return (Id.Unknown);
             }

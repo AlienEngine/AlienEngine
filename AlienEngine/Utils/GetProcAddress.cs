@@ -19,19 +19,19 @@ namespace AlienEngine.Core.Utils
             switch (Platform.CurrentPlatformId)
             {
                 case Platform.Id.WindowsNT:
-                    _GetProcAddress = new GetProcAddressWindows();
+                    GetProcAddressImplementation = new GetProcAddressWindows();
                     break;
                 case Platform.Id.Linux:
-                    _GetProcAddress = new GetProcAddressX11();
+                    GetProcAddressImplementation = new GetProcAddressX11();
                     break;
                 case Platform.Id.MacOS:
-                    _GetProcAddress = new GetProcAddressOSX();
+                    GetProcAddressImplementation = new GetProcAddressOSX();
                     break;
                 case Platform.Id.Android:
-                    _GetProcAddress = new GetProcAddressEgl();
+                    GetProcAddressImplementation = new GetProcAddressEgl();
                     break;
                 default:
-                    throw new NotSupportedException(String.Format("platform {0} not supported", Platform.CurrentPlatformId));
+                    throw new NotSupportedException($"Platform {Platform.CurrentPlatformId} not supported by AlienEngine.");
             }
         }
 
@@ -48,9 +48,9 @@ namespace AlienEngine.Core.Utils
         /// </param>
         public static void AddLibraryDirectory(string libraryDirPath)
         {
-            if (_GetProcAddress == null)
+            if (GetProcAddressImplementation == null)
                 throw new PlatformNotSupportedException();
-            _GetProcAddress.AddLibraryDirectory(libraryDirPath);
+            GetProcAddressImplementation.AddLibraryDirectory(libraryDirPath);
         }
 
         /// <summary>
@@ -68,9 +68,9 @@ namespace AlienEngine.Core.Utils
         /// </returns>
         public static IntPtr GetAddress(string path, string function)
         {
-            if (_GetProcAddress == null)
+            if (GetProcAddressImplementation == null)
                 throw new PlatformNotSupportedException();
-            return (_GetProcAddress.GetProcAddress(path, function));
+            return (GetProcAddressImplementation.GetProcAddress(path, function));
         }
 
 
@@ -84,15 +84,15 @@ namespace AlienEngine.Core.Utils
         /// </returns>
         public static IntPtr GetOpenGLAddress(string function)
         {
-            if (_GetProcAddress == null)
+            if (GetProcAddressImplementation == null)
                 throw new PlatformNotSupportedException();
-            return (_GetProcAddress.GetOpenGLProcAddress(function));
+            return (GetProcAddressImplementation.GetOpenGLProcAddress(function));
         }
 
         /// <summary>
         /// Interface for loading external symbols.
         /// </summary>
-        private static IGetProcAddress _GetProcAddress;
+        private static readonly IGetProcAddress GetProcAddressImplementation;
 
         #endregion
     }
@@ -100,7 +100,7 @@ namespace AlienEngine.Core.Utils
     /// <summary>
     /// Interface implemented by those classes which are able to get function pointers from dynamically loaded libraries.
     /// </summary>
-    interface IGetProcAddress
+    internal interface IGetProcAddress
     {
         /// <summary>
         /// Add a path of a directory as additional path for searching libraries.
@@ -154,47 +154,47 @@ namespace AlienEngine.Core.Utils
     /// <summary>
     /// Class able to get function pointers on Windows platform.
     /// </summary>
-    class GetProcAddressWindows : IGetProcAddress
+    internal class GetProcAddressWindows : IGetProcAddress
     {
         #region Windows Platform Imports
 
         private enum LoadLibraryExFlags : uint
         {
-            DONT_RESOLVE_DLL_REFERENCES = 0x00000001,
+            DontResolveDllReferences = 0x00000001,
 
-            LOAD_IGNORE_CODE_AUTHZ_LEVEL = 0x00000010,
+            LoadIgnoreCodeAuthzLevel = 0x00000010,
 
-            LOAD_LIBRARY_AS_DATAFILE = 0x00000002,
+            LoadLibraryAsDatafile = 0x00000002,
 
-            LOAD_LIBRARY_AS_DATAFILE_EXCLUSIVE = 0x00000040,
+            LoadLibraryAsDatafileExclusive = 0x00000040,
 
-            LOAD_LIBRARY_AS_IMAGE_RESOURCE = 0x00000020,
+            LoadLibraryAsImageResource = 0x00000020,
 
-            LOAD_LIBRARY_SEARCH_APPLICATION_DIR = 0x00000200,
+            LoadLibrarySearchApplicationDir = 0x00000200,
 
-            LOAD_LIBRARY_SEARCH_DEFAULT_DIRS = 0x00001000,
+            LoadLibrarySearchDefaultDirs = 0x00001000,
 
-            LOAD_LIBRARY_SEARCH_DLL_LOAD_DIR = 0x00000100,
+            LoadLibrarySearchDllLoadDir = 0x00000100,
 
-            LOAD_LIBRARY_SEARCH_SYSTEM32 = 0x00000800,
+            LoadLibrarySearchSystem32 = 0x00000800,
 
-            LOAD_LIBRARY_SEARCH_USER_DIRS = 0x00000400,
+            LoadLibrarySearchUserDirs = 0x00000400,
 
-            LOAD_WITH_ALTERED_SEARCH_PATH = 0x00000008,
+            LoadWithAlteredSearchPath = 0x00000008,
         }
 
-        unsafe static class UnsafeNativeMethods
+        private static unsafe class UnsafeNativeMethods
         {
-            [DllImport("Kernel32.dll", SetLastError = true)]
+            [DllImport("kernel32.dll", SetLastError = true)]
             public static extern IntPtr LoadLibrary(String lpFileName);
 
-            [DllImport("Kernel32.dll", SetLastError = true)]
+            [DllImport("kernel32.dll", SetLastError = true)]
             public static extern IntPtr LoadLibraryEx(String lpFilename, IntPtr hFile, LoadLibraryExFlags dwFlags);
 
-            [DllImport("Kernel32.dll", SetLastError = true)]
+            [DllImport("kernel32.dll", SetLastError = true)]
             public static extern void FreeLibrary(IntPtr hModule);
 
-            [DllImport("Kernel32.dll", EntryPoint = "GetProcAddress", CharSet = CharSet.Ansi, ExactSpelling = true, SetLastError = true)]
+            [DllImport("kernel32.dll", EntryPoint = "GetProcAddress", CharSet = CharSet.Ansi, ExactSpelling = true, SetLastError = true)]
             public static extern IntPtr Win32GetProcAddress(IntPtr hModule, String lpProcName);
 
             [DllImport(Library, EntryPoint = "wglGetProcAddress", ExactSpelling = true, SetLastError = true)]
@@ -216,7 +216,7 @@ namespace AlienEngine.Core.Utils
         {
             string path = Environment.GetEnvironmentVariable("PATH");
 
-            Environment.SetEnvironmentVariable("PATH", String.Format("{0};{1}", path, libraryDirPath), EnvironmentVariableTarget.Process);
+            Environment.SetEnvironmentVariable("PATH", $"{path};{libraryDirPath}", EnvironmentVariableTarget.Process);
         }
 
         /// <summary>
@@ -253,9 +253,9 @@ namespace AlienEngine.Core.Utils
         public IntPtr GetProcAddress(IntPtr library, string function)
         {
             if (library == IntPtr.Zero)
-                throw new ArgumentNullException("library");
+                throw new ArgumentNullException(nameof(library));
             if (function == null)
-                throw new ArgumentNullException("function");
+                throw new ArgumentNullException(nameof(function));
 
             IntPtr procAddress = UnsafeNativeMethods.Win32GetProcAddress(library, function);
 
@@ -294,19 +294,16 @@ namespace AlienEngine.Core.Utils
         {
             IntPtr libraryHandle;
 
-            if (_LibraryHandles.TryGetValue(libraryPath, out libraryHandle) == false)
+            if (LibraryHandles.TryGetValue(libraryPath, out libraryHandle) == false)
             {
                 // Load library
                 libraryHandle = UnsafeNativeMethods.LoadLibrary(libraryPath);
-#if PLATFORM_LOG_ENABLED
-				KhronosApi.LogFunction("LoadLibrary({0}) = 0x{1}", libraryPath, libraryHandle.ToString("X8"));
-#endif
 
-                _LibraryHandles.Add(libraryPath, libraryHandle);
+                LibraryHandles.Add(libraryPath, libraryHandle);
             }
 
             if (libraryHandle == IntPtr.Zero)
-                throw new InvalidOperationException(String.Format("unable to load library at {0}", libraryPath));
+                throw new InvalidOperationException($"Unable to load library at {libraryPath}.");
 
             return (libraryHandle);
         }
@@ -319,7 +316,7 @@ namespace AlienEngine.Core.Utils
         /// <summary>
         /// Currently loaded libraries.
         /// </summary>
-        private static readonly Dictionary<string, IntPtr> _LibraryHandles = new Dictionary<string, IntPtr>();
+        private static readonly Dictionary<string, IntPtr> LibraryHandles = new Dictionary<string, IntPtr>();
 
         #endregion
     }
@@ -327,13 +324,13 @@ namespace AlienEngine.Core.Utils
     /// <summary>
     /// Class able to get function pointers on X11 platform.
     /// </summary>
-    class GetProcAddressX11 : IGetProcAddress
+    internal class GetProcAddressX11 : IGetProcAddress
     {
         #region X11 Platform Imports
 
-        unsafe static class UnsafeNativeMethods
+        private static unsafe class UnsafeNativeMethods
         {
-            public const int RTLD_NOW = 2;
+            public const int RtldNow = 2;
 
             [DllImport("dl")]
             public static extern IntPtr dlopen([MarshalAs(UnmanagedType.LPTStr)] string filename, int flags);
@@ -395,9 +392,9 @@ namespace AlienEngine.Core.Utils
         public IntPtr GetProcAddress(IntPtr library, string function)
         {
             if (library == IntPtr.Zero)
-                throw new ArgumentNullException("library");
+                throw new ArgumentNullException(nameof(library));
             if (function == null)
-                throw new ArgumentNullException("function");
+                throw new ArgumentNullException(nameof(function));
 
             return (UnsafeNativeMethods.dlsym(library, function));
         }
@@ -420,14 +417,14 @@ namespace AlienEngine.Core.Utils
         {
             IntPtr libraryHandle;
 
-            if (_LibraryHandles.TryGetValue(libraryPath, out libraryHandle) == false)
+            if (LibraryHandles.TryGetValue(libraryPath, out libraryHandle) == false)
             {
-                libraryHandle = UnsafeNativeMethods.dlopen(libraryPath, UnsafeNativeMethods.RTLD_NOW);
-                _LibraryHandles.Add(libraryPath, libraryHandle);
+                libraryHandle = UnsafeNativeMethods.dlopen(libraryPath, UnsafeNativeMethods.RtldNow);
+                LibraryHandles.Add(libraryPath, libraryHandle);
             }
 
             if (libraryHandle == IntPtr.Zero)
-                throw new InvalidOperationException(String.Format("unable to load library at {0}", libraryPath));
+                throw new InvalidOperationException($"unable to load library at {libraryPath}");
 
             return (libraryHandle);
         }
@@ -440,7 +437,7 @@ namespace AlienEngine.Core.Utils
         /// <summary>
         /// Currently loaded libraries.
         /// </summary>
-        private static readonly Dictionary<string, IntPtr> _LibraryHandles = new Dictionary<string, IntPtr>();
+        private static readonly Dictionary<string, IntPtr> LibraryHandles = new Dictionary<string, IntPtr>();
 
         #endregion
     }
@@ -448,11 +445,11 @@ namespace AlienEngine.Core.Utils
     /// <summary>
     /// Class able to get function pointers on OSX platform.
     /// </summary>
-    class GetProcAddressOSX : IGetProcAddress
+    internal class GetProcAddressOSX : IGetProcAddress
     {
         #region OSX Platform Imports
 
-        unsafe static class UnsafeNativeMethods
+        private static unsafe class UnsafeNativeMethods
         {
             [DllImport(Library, EntryPoint = "NSIsSymbolNameDefined")]
             public static extern bool NSIsSymbolNameDefined(string s);
@@ -547,7 +544,7 @@ namespace AlienEngine.Core.Utils
     /// <summary>
     /// Class able to get function pointers on different platforms supporting EGL.
     /// </summary>
-    class GetProcAddressEgl : IGetProcAddress
+    internal class GetProcAddressEgl : IGetProcAddress
     {
         internal const string Library = "libEGL.dll";
 

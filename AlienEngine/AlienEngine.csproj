@@ -229,7 +229,6 @@
     <Compile Include="Audio\OpenAL\AL\EffectsExtensionEnums.cs" />
     <Compile Include="Audio\OpenAL\AL\EffectsExtensionPresets.cs" />
     <Compile Include="Audio\OpenAL\AL\XRamExtension.cs" />
-    <Compile Include="ContextHandle.cs" />
     <Compile Include="Engine.cs" />
     <Compile Include="Audio\AudioSourceState.cs" />
     <Compile Include="GameWindow.cs" />
@@ -270,7 +269,19 @@
     <Compile Include="Graphics\Buffers\UBV.cs" />
     <Compile Include="Graphics\Buffers\VAO.cs" />
     <Compile Include="Graphics\Buffers\VBO.cs" />
+    <Compile Include="Graphics\DevicePixelFormat.cs" />
+    <Compile Include="Graphics\DevicePixelFormatCollection.cs" />
+    <Compile Include="Graphics\GraphicsApi.cs" />
+    <Compile Include="Graphics\GraphicsContext.cs" />
+    <Compile Include="Graphics\GraphicsManager.cs" />
+    <Compile Include="Graphics\GraphicsProfile.cs" />
     <Compile Include="Graphics\OpenGL\GL.Extensions.cs" />
+    <Compile Include="Graphics\OpenGL\Windows\WGL.Structs.cs" />
+    <Compile Include="Graphics\OpenGL\Windows\WGL.cs" />
+    <Compile Include="Graphics\OpenGL\Windows\WGL.Delegates.cs" />
+    <Compile Include="Graphics\OpenGL\Windows\WGL.Enums.cs" />
+    <Compile Include="Graphics\OpenGL\Windows\WGL.Extensions.cs" />
+    <Compile Include="Graphics\OpenGL\Windows\WGL.Methods.cs" />
     <Compile Include="Imaging\DevIL\Collections.cs" />
     <Compile Include="Imaging\DevIL\FilterEngine.cs" />
     <Compile Include="Imaging\DevIL\Image.cs" />
@@ -793,6 +804,7 @@
     <Compile Include="UI\Anchor.cs" />
     <Compile Include="Math\Range.cs" />
     <Compile Include="UI\TextChangeEventArgs.cs" />
+    <Compile Include="Utils\ContextHandle.cs" />
     <Compile Include="Utils\ConvertX.cs" />
     <Compile Include="Utils\CPUInfo.cs" />
     <Compile Include="Utils\DataStructures\ConcurrentDeque.cs" />
