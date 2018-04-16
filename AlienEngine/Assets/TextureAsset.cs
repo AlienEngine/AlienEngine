@@ -90,6 +90,11 @@ namespace AlienEngine.Core.Assets
             }
         }
 
+        public static TextureAsset Deserialize(byte[] data)
+        {
+            return ZeroFormatterSerializer.Deserialize<IAsset>(data) as TextureAsset;
+        }
+        
         public IResource ToResource()
         {
             return new AlienEngine.Imaging.Texture(new Image(Data.ToDevilImage()));
