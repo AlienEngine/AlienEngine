@@ -74,6 +74,10 @@ namespace AlienEngine
         /// Defines an instance with all components set to 1.
         /// </summary>
         public static readonly Vector3f One = new Vector3f(1);
+        
+        public static readonly Vector3f MinValue = new Vector3f(float.MinValue);
+        
+        public static readonly Vector3f MaxValue = new Vector3f(float.MaxValue);
 
         /// <summary>
         /// Defines the size of the Vector3f struct in bytes.
@@ -1074,7 +1078,7 @@ namespace AlienEngine
         /// <param name="result">Row vector product of the transformation.</param>
         public static Vector3f Transform(Vector3f v, Matrix4f matrix)
         {
-            var result = new Vector3f();
+            Vector3f result;
             Transform(ref v, ref matrix, out result);
             return result;
         }
