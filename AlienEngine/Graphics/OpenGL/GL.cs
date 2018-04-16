@@ -26,6 +26,7 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Security;
+using AlienEngine.Core.Graphics.OpenGL.Windows;
 using AlienEngine.Core.Utils;
 
 namespace AlienEngine.Core.Graphics.OpenGL
@@ -83,6 +84,10 @@ namespace AlienEngine.Core.Graphics.OpenGL
             Load_VERSION_4_3();
             Load_VERSION_4_4();
             Load_VERSION_4_5();
+            
+            // Load platform specific implementation
+            if (Platform.IsWindows)
+                WGL.LoadWGLExtensions();
 
             Marshal.GetLastWin32Error(); // clear 127 'procedure not found' error
         }
