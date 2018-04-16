@@ -21,11 +21,8 @@ namespace AlienEngine
         /// </summary>
         public Point3f Position
         {
-            get { return (Point3f)_translation; }
-            set
-            {
-                Translation = Point3f.CreateVector(Point3f.Zero, value);
-            }
+            get { return (Point3f) _translation; }
+            set { Translation = Point3f.CreateVector(Point3f.Zero, value); }
         }
 
         /// <summary>
@@ -84,7 +81,7 @@ namespace AlienEngine
             get
             {
                 Matrix4f transformation = GetTransformation();
-                return transformation.Forward;
+                return transformation.Forward.Normalized;
             }
             set
             {
@@ -101,7 +98,7 @@ namespace AlienEngine
             get
             {
                 Matrix4f transformation = GetTransformation();
-                return transformation.Right;
+                return transformation.Right.Normalized;
             }
         }
 
@@ -113,7 +110,7 @@ namespace AlienEngine
             get
             {
                 Matrix4f transformation = GetTransformation();
-                return transformation.Up;
+                return transformation.Up.Normalized;
             }
         }
 
@@ -496,6 +493,15 @@ namespace AlienEngine
             Rotation = rotation;
         }
 
+        public Transform Clone()
+        {
+            var transform = (Transform) MemberwiseClone();
+            transform.Translation = Translation;
+            transform.Rotation = Rotation;
+            transform.Scale = Scale;
+            return transform;
+        }
+
         #endregion
 
         #region IEquatable Implementation
@@ -536,7 +542,7 @@ namespace AlienEngine
         /// <returns>True if both objects are <see cref="Transform"/> of equal value. Otherwise it returns false.</returns>
         public override bool Equals(object other)
         {
-            return (other is Transform) && Equals((Transform)other);
+            return (other is Transform) && Equals((Transform) other);
         }
 
         /// <summary>
