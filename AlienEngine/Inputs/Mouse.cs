@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using AlienEngine.Core.Game;
 using AlienEngine.Core.Graphics.GLFW;
 
 namespace AlienEngine.Core.Inputs
@@ -23,7 +24,7 @@ namespace AlienEngine.Core.Inputs
         }
 
         public static Point2d PreviousPosition => _prevMousePosition;
-
+        
         public static bool Grabbed
         {
             get

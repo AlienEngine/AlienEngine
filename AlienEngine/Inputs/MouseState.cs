@@ -74,7 +74,7 @@ namespace AlienEngine
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
-            return obj is MouseState && Equals((MouseState) obj);
+            return obj is MouseState state && Equals(state);
         }
 
         /// <summary>
