@@ -142,7 +142,7 @@ namespace AlienEngine
         /// </summary>
         /// <param name="points">Points to enclose with a bounding box.</param>
         /// <returns>Bounding box which contains the list of points.</returns>
-        public static BoundingBox CreateFromPoints(IList<Vector3f> points)
+        public static BoundingBox CreateFromPoints(IEnumerable<Vector3f> points)
         {
             return CreateFromPoints(points.ToArray());
         }
