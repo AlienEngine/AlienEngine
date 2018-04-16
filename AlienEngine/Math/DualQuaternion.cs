@@ -1,4 +1,5 @@
 #region License
+
 // Copyright (C) 2017 AlienGames
 // 
 // This library is free software; you can redistribute it and/or
@@ -15,6 +16,7 @@
 // License along with this library; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301
 // USA
+
 #endregion
 
 namespace AlienEngine
@@ -74,7 +76,7 @@ namespace AlienEngine
         /// Construct a new <see cref="DualQuaternion"/>.
         /// </summary>
         /// <param name="rotation">The rotation <see cref="Quaternion"/></param>
-        /// <param name="tranlation">The translation <see cref="Vector3f"/></param>
+        /// <param name="translation">The translation <see cref="Vector3f"/></param>
         public DualQuaternion(Quaternion rotation, Vector3f translation)
         {
             Real = rotation;
@@ -101,19 +103,13 @@ namespace AlienEngine
         /// <summary>
         /// Gets the rotation <see cref="Quaternion"/> of this instance.
         /// </summary>
-        public Quaternion Rotation
-        {
-            get { return Real; }
-        }
+        public Quaternion Rotation => Real;
 
         /// <summary>
         /// Gets the translation <see cref="Quaternion"/> of this instance.
         /// </summary>
-        public Quaternion Translation
-        {
-            get { return 2.0f * Dual * (Quaternion.Conjugate(Real)); }
-        }
-            
+        public Quaternion Translation => 2.0f * Dual * (Quaternion.Conjugate(Real));
+
         #endregion
 
         #region Methods
@@ -222,7 +218,7 @@ namespace AlienEngine
         /// </summary>
         public override string ToString()
         {
-            return string.Format("[DualQuaternion: dual={0}, real={1}]", Dual, Real);
+            return $"[DualQuaternion: dual={Dual}, real={Real}]";
         }
 
         #endregion
