@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using AlienEngine.Core.Graphics;
 
 namespace AlienEngine
 {
@@ -12,16 +13,11 @@ namespace AlienEngine
     /// They can interact with the user and have defined behaviour
     /// through <see cref="Component"/>s.
     /// </summary>
-    public class GameElement: IDisposable
+    public class GameElement : IDisposable
     {
         #region Static Members
 
-        #region Properties
-
-        /// <summary>
-        /// Create a new empty <see cref="GameElement"/>.
-        /// </summary>
-        public static GameElement Empty => new GameElement("GameElement");
+        #region Fields
 
         /// <summary>
         /// An internal counter used to automaticaly rename
@@ -33,6 +29,20 @@ namespace AlienEngine
         /// The list of registered <see cref="GameElement"/>s.
         /// </summary>
         private static Dictionary<string, GameElement> _gameElements;
+
+        #endregion Fields
+
+        #region Properties
+
+        /// <summary>
+        /// Create a new empty <see cref="GameElement"/>.
+        /// </summary>
+        public static GameElement Empty => new GameElement("GameElement");
+
+        /// <summary>
+        /// Gets the list 
+        /// </summary>
+        public static IReadOnlyDictionary<string, GameElement> GameElements => _gameElements;
 
         #endregion Properties
 
@@ -105,7 +115,7 @@ namespace AlienEngine
         {
             _gameElements.Clear();
         }
-        
+
         /// <summary>
         /// Executes <see cref="Component.Start()"/> in all components of all
         /// registered <see cref="GameElement"/>s.
@@ -248,7 +258,7 @@ namespace AlienEngine
         /// The list of attached <see cref="Component"/>s to this <see cref="GameElement"/>.
         /// </summary>
         public List<Component> Components => _attachedComponents;
-        
+
         /// <summary>
         /// The name of this <see cref="GameElement"/>.
         /// </summary>
@@ -343,7 +353,8 @@ namespace AlienEngine
         public bool HasChild(GameElement child)
         {
             foreach (GameElement c in _childs)
-                if (c == child) return true;
+                if (c == child)
+                    return true;
 
             return false;
         }
@@ -355,7 +366,8 @@ namespace AlienEngine
         public bool HasChild(string name)
         {
             foreach (GameElement c in _childs)
-                if (c.Name == name) return true;
+                if (c.Name == name)
+                    return true;
 
             return false;
         }
@@ -388,7 +400,8 @@ namespace AlienEngine
             List<GameElement> collection = new List<GameElement>();
 
             foreach (GameElement c in _childs)
-                if (c.Name == name) collection.Add(c);
+                if (c.Name == name)
+                    collection.Add(c);
 
             return collection.ToArray();
         }
@@ -396,7 +409,8 @@ namespace AlienEngine
         public T GetComponent<T>() where T : Component
         {
             foreach (IComponent component in _attachedComponents)
-                if (component is T) return component as T;
+                if (component is T)
+                    return component as T;
 
             return null;
         }
@@ -406,7 +420,8 @@ namespace AlienEngine
             List<T> collection = new List<T>();
 
             foreach (IComponent component in _attachedComponents)
-                if (component is T) collection.Add(component as T);
+                if (component is T)
+                    collection.Add(component as T);
 
             return collection.ToArray();
         }
@@ -455,8 +470,9 @@ namespace AlienEngine
         {
             if (HasComponent<T>())
             {
-                foreach (IComponent component in _attachedComponents)
-                    if (component is T) DetachComponent((T) component);
+                foreach (Component component in _attachedComponents)
+                    if (component is T)
+                        DetachComponent((T) component);
             }
         }
 
@@ -467,8 +483,25 @@ namespace AlienEngine
 
         public bool HasComponent<T>() where T : Component
         {
-            foreach (IComponent component in _attachedComponents)
-                if (component is T) return true;
+            foreach (Component component in _attachedComponents)
+                if (component is T)
+                    return true;
+
+            return false;
+        }
+
+        public bool HasComponent<T>(out T comonent) where T : Component
+        {
+            comonent = null;
+
+            foreach (Component c in _attachedComponents)
+            {
+                if (c is T)
+                {
+                    comonent = c as T;
+                    return true;
+                }
+            }
 
             return false;
         }
@@ -500,7 +533,7 @@ namespace AlienEngine
         public void Update()
         {
             if (_attachedComponents == null) return;
-            
+
             Component[] arrayComponents = _attachedComponents.ToArray();
 
             for (int i = 0, l = arrayComponents.Length; i < l; i++)
@@ -562,6 +595,19 @@ namespace AlienEngine
             _parentScene = parent;
         }
 
+        public GameElement Clone()
+        {
+            var element = (GameElement) MemberwiseClone();
+            element._childs = Childs;
+            element._attachedComponents = _attachedComponents;
+            element._name = Name;
+            element._parent = Parent;
+            element._parentScene = ParentScene;
+            element._tag = Tag;
+            element.LocalTransform = LocalTransform;
+            return element;
+        }
+
         public override string ToString()
         {
             return Name;
@@ -572,11 +618,11 @@ namespace AlienEngine
         #endregion Public Members
 
         private bool _disposed;
-        
+
         protected virtual void Dispose(bool disposing)
         {
             if (_disposed) return;
-            
+
             if (disposing)
             {
                 Component[] arrayComponents = _attachedComponents.ToArray();
@@ -588,10 +634,10 @@ namespace AlienEngine
                 }
 
                 arrayComponents = null;
-                
+
                 _attachedComponents.Clear();
                 _attachedComponents = null;
-                
+
                 _childs.Dispose();
                 _childs = null;
             }
