@@ -424,14 +424,39 @@ namespace AlienEngine
             SetRoll((float) angle);
         }
 
+        /// <summary>
+        /// Gets a ray from a screen position.
+        /// </summary>
+        /// <param name="position">The position at screen.</param>
+        /// <returns>The projected ray.</returns>
+        public Ray Ray(Point2f position)
+        {
+            Point2f normalizedCoords = new Point2f()
+            {
+                X = (2.0f * position.X) / Viewport.Width - 1.0f,
+                Y = 1.0f - (2.0f * position.Y) / Viewport.Height
+            };
+
+            float vLength = MathHelper.Tan(MathHelper.Deg2Rad(FieldOfView) / 2) * Near;
+            float hLength = vLength * AspectRatio;
+
+            Vector3f v = Up * vLength;
+            Vector3f h = Right * hLength;
+
+            Vector3f camPos = gameElement.WorldTransform.Translation;
+            Vector3f rayPos = camPos + Forward * Near + h * normalizedCoords.X + v * normalizedCoords.Y;
+            Vector3f rayDir = rayPos - camPos;
+
+            return new Ray(rayPos, rayDir);
+        }
+
         public override void Start()
         {
-            _init();
+            // _init();
 
             gameElement.LocalTransform.AddOnChangeEvent((_old, _new) => _shouldUpdate = true);
 
-            if (Cubemap != null)
-                Cubemap.Load();
+            Cubemap?.Load();
 
             _shouldUpdate = true;
         }
