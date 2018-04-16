@@ -37,6 +37,7 @@
         /// Construct a new Joystick state.
         /// </summary>
         /// <param name="connected">The device connection state.</param>
+        /// <param name="id">The joystick device id.</param>
         /// <param name="name">The joystick's name.</param>
         /// <param name="buttons">The state of all buttons on the joystick.</param>
         /// <param name="axes">The state of all axes on the joystick.</param>
@@ -53,6 +54,7 @@
         /// Construct a new Joystick state.
         /// </summary>
         /// <param name="connected">The device connection state.</param>
+        /// <param name="id">The joystick device id.</param>
         /// <param name="name">The joystick's name.</param>
         /// <param name="buttons">The state of all buttons on the joystick.</param>
         /// <param name="axes">The state of all axes on the joystick.</param>
