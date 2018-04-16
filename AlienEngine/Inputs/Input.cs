@@ -692,7 +692,7 @@ namespace AlienEngine
 
                     case InputState.Released:
                         foreach (var e in _keyUpEvents)
-                    e?.Invoke(null, new KeyboardKeyEventArgs(key, state, mods));
+                            e?.Invoke(null, new KeyboardKeyEventArgs(key, state, mods));
                         break;
                 }
             });
