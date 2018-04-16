@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Security;
+using AlienEngine.Core.Utils;
 
 /* Type Mapping
 // 8-bit boolean 

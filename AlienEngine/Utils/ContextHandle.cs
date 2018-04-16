@@ -1,16 +1,6 @@
-﻿#region --- License ---
-/* Licensed under the MIT/X11 license.
- * Copyright (c) 2006-2008 the OpenTK Team.
- * This notice may not be removed from any source distribution.
- * See license.txt for licensing detailed licensing details.
- */
-#endregion
+﻿using System;
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace AlienEngine.Core
+namespace AlienEngine.Core.Utils
 {
     /// <summary>
     /// Represents a handle to an OpenGL or OpenAL context.
@@ -19,12 +9,12 @@ namespace AlienEngine.Core
     {
         #region Fields
 
-        IntPtr handle;
+        private IntPtr _handle;
 
         /// <summary>
         /// Gets a System.IntPtr that represents the handle of this ContextHandle.
         /// </summary>
-        public IntPtr Handle { get { return handle; } }
+        public IntPtr Handle => _handle;
 
         /// <summary>A read-only field that represents a handle that has been initialized to zero.</summary>
         public static readonly ContextHandle Zero = new ContextHandle(IntPtr.Zero);
@@ -37,7 +27,10 @@ namespace AlienEngine.Core
         /// Constructs a new instance with the specified handle.
         /// </summary>
         /// <param name="h">A System.IntPtr containing the value for this instance.</param>
-        public ContextHandle(IntPtr h) { handle = h; }
+        public ContextHandle(IntPtr h)
+        {
+            _handle = h;
+        }
 
         #endregion
 
@@ -65,8 +58,8 @@ namespace AlienEngine.Core
         /// <returns>True if obj is a ContextHandle that is equal to this instance; false otherwise.</returns>
         public override bool Equals(object obj)
         {
-            if (obj is ContextHandle)
-                return this.Equals((ContextHandle)obj);
+            if (obj is ContextHandle handle)
+                return Equals(handle);
             return false;
         }
 
@@ -94,7 +87,7 @@ namespace AlienEngine.Core
         /// <returns>A System.IntPtr equivalent to the specified ContextHandle.</returns>
         public static explicit operator IntPtr(ContextHandle c)
         {
-            return c != ContextHandle.Zero ? c.handle : IntPtr.Zero;
+            return c != Zero ? c._handle : IntPtr.Zero;
         }
 
         #endregion
@@ -155,7 +148,10 @@ namespace AlienEngine.Core
         /// <returns>Less than 0, if this instance is less than other; 0 if both are equal; Greater than 0 if other is greater than this instance.</returns>
         public int CompareTo(ContextHandle other)
         {
-            unsafe { return (int)((int*)other.handle.ToPointer() - (int*)this.handle.ToPointer()); }
+            unsafe
+            {
+                return (int) ((int*) other._handle.ToPointer() - (int*) _handle.ToPointer());
+            }
         }
 
         #endregion
