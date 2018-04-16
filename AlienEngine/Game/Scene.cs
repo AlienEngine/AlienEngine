@@ -82,6 +82,11 @@ namespace AlienEngine.Core.Game
         private List<RenderScript> _renderScripts;
 
         /// <summary>
+        /// Defines if this <see cref="Scene"/> has started or not.
+        /// </summary>
+        private bool _started;
+
+        /// <summary>
         /// The name of this <see cref="Scene"/>.
         /// </summary>
         public string Name => _name;
@@ -145,14 +150,19 @@ namespace AlienEngine.Core.Game
         public List<RenderScript> RenderScripts => _renderScripts;
 
         /// <summary>
+        /// Defines if this <see cref="Scene"/> has started or not.
+        /// </summary>
+        public bool Started => _started;
+
+        /// <summary>
         /// Event triggered when a <see cref="GameElement"/> is added in this <see cref="Scene"/>.
         /// </summary>
-        public event Action<GameElement> GameElementAdded;
+        public event Action<Scene, GameElement> GameElementAdded;
 
         /// <summary>
         /// Event triggered when a <see cref="GameElement"/> is removed in this <see cref="Scene"/>.
         /// </summary>
-        public event Action<GameElement> GameElementRemoved;
+        public event Action<Scene, GameElement> GameElementRemoved;
 
         /// <summary>
         /// Creates a new scene.
@@ -334,7 +344,7 @@ namespace AlienEngine.Core.Game
                 arrayRenderScripts[i].Load();
 
             arrayRenderScripts = null;
-            
+
             // Setup Physics
             _loadPhysics();
         }
@@ -351,10 +361,10 @@ namespace AlienEngine.Core.Game
                 arrayRenderScripts[i].Unload();
 
             arrayRenderScripts = null;
-            
+
             // Unload physics.
             _unloadPhysics();
-            
+
             GameElement[] arrayGameElements = _gameElements.ToArray();
 
             for (int i = 0, l = arrayGameElements.Length; i < l; i++)
@@ -366,7 +376,7 @@ namespace AlienEngine.Core.Game
             arrayGameElements = null;
 
             _gameElements.Clear();
-                
+
             GameElement.Clear();
         }
 
@@ -376,6 +386,8 @@ namespace AlienEngine.Core.Game
         public virtual void Start()
         {
             _gameElements.Start();
+
+            _started = true;
         }
 
         /// <summary>
@@ -429,6 +441,8 @@ namespace AlienEngine.Core.Game
         public virtual void Stop()
         {
             _gameElements.Stop();
+
+            _started = false;
         }
 
         /// <summary>
@@ -437,7 +451,7 @@ namespace AlienEngine.Core.Game
         /// </summary>
         protected virtual void OnAddGameElement(GameElement gameElement)
         {
-            GameElementAdded?.Invoke(gameElement);
+            GameElementAdded?.Invoke(this, gameElement);
         }
 
         /// <summary>
@@ -446,7 +460,7 @@ namespace AlienEngine.Core.Game
         /// </summary>
         protected virtual void OnRemoveGameElement(GameElement gameElement)
         {
-            GameElementRemoved?.Invoke(gameElement);
+            GameElementRemoved?.Invoke(this, gameElement);
         }
 
         /// <summary>
@@ -562,7 +576,7 @@ namespace AlienEngine.Core.Game
         private void _unloadPhysics()
         {
             if (_parallelLooper == null) return;
-            
+
             if (Environment.ProcessorCount > 1)
             {
                 for (int i = 0; i < Environment.ProcessorCount; i++)
@@ -597,7 +611,7 @@ namespace AlienEngine.Core.Game
 
                 _gameElements.Dispose();
                 _gameElements = null;
-                
+
                 GameElement.Clear();
             }
 
