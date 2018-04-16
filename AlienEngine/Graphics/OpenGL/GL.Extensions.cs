@@ -1,7 +1,32 @@
-﻿namespace AlienEngine.Core.Graphics.OpenGL
+﻿using System;
+using AlienEngine.Core.Graphics.OpenGL.Windows;
+
+namespace AlienEngine.Core.Graphics.OpenGL
 {
     public static partial class GL
     {
+        public static class PlatformExtensions
+        {
+            public static bool IsSupported(IntPtr device, string name)
+            {
+                if (Platform.IsWindows)
+                    return WGL.IsExtensionSupported(device, name);
+
+                return false;
+            }
+
+            public static readonly string CreateContextARB;
+            public static readonly string CreateContextProfileARB;
+            public static readonly string CreateContextRobustnessARB;
+
+            static PlatformExtensions()
+            {
+                CreateContextARB = Platform.IsWindows ? WGL.ARB.CreateContext : "";
+                CreateContextProfileARB = Platform.IsWindows ? WGL.ARB.CreateContextProfile : "";
+                CreateContextRobustnessARB = Platform.IsWindows ? WGL.ARB.CreateContextRobustness : "";
+            }
+        }
+        
         public static class EXT
         {
             public const string _422Pixels = "GL_EXT_422_pixels";
